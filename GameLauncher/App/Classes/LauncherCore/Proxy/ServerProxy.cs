@@ -1,5 +1,5 @@
 ﻿using System;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using Nancy.Hosting.Self;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
@@ -32,25 +32,37 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         public void Start(string From)
         {
-            if (Running())
+            try
             {
-                Log.Warning("PROXY: Local Proxy Server Already Running! (" + From + ")");
-            }
-            else
-            {
-                Log.Info("PROXY: Local Proxy Server has Fully Initialized (" + From + ")");
-
-                var hostConfigs = new HostConfiguration()
+                if (Running())
                 {
-                    UrlReservations = new UrlReservations()
-                    {
-                        CreateAutomatically = true,
-                    },
-                    AllowChunkedEncoding = false
-                };
+                    Log.Warning("PROXY: Local Proxy Server already Running! (" + From + ")");
+                }
+                else
+                {
+                    Log.Info("PROXY: Local Proxy Server has Fully Initialized (" + From + ")");
 
-                Host = new NancyHost(new Uri("http://127.0.0.1:" + ProxyPort), new NancyBootstrapper(), hostConfigs);
-                Host.Start();
+                    HostConfiguration Configs = new HostConfiguration()
+                    {
+                        AllowChunkedEncoding = false,
+                        RewriteLocalhost = false,
+                        UrlReservations = new UrlReservations()
+                        {
+                            CreateAutomatically = true
+                        }
+                    };
+
+                    Host = new NancyHost(new Uri("http://127.0.0.1:" + ProxyPort), new NancyBootstrapper(), Configs);
+                    Host.Start();
+                }
+            }
+            catch (AutomaticUrlReservationCreationFailureException Error)
+            {
+                LogToFileAddons.OpenLog("PROXY [U.R.]", null, Error, null, true);
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("PROXY", null, Error, null, true);
             }
         }
 

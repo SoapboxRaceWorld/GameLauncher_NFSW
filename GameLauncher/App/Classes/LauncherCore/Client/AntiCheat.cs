@@ -141,45 +141,62 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
 
             if (cheats_detected != 0)
             {
-                if (cheats_detected == 64 && CompletedEvent == false) 
+                if (cheats_detected == 64 && !CompletedEvent) 
                 { 
                     /* You Know the Rules and So Do I */
                 }
                 else
                 {
-                    try
+                    if (ServerProxy.Running())
                     {
-                        if (ServerProxy.Running())
+                        foreach (string report_url in URLs.AntiCheatFD)
                         {
-                            foreach (string report_url in URLs.AntiCheatFD)
+                            if (Completed == 0)
                             {
-                                if (Completed == 0)
-                                {
-                                    Completed++;
-                                    FunctionStatus.ExternalToolsWasUsed = true;
-                                }
+                                Completed++;
+                                FunctionStatus.ExternalToolsWasUsed = true;
+                            }
 
-                                if (report_url.EndsWith("?"))
+                            if (report_url.EndsWith("?"))
+                            {
+                                try
                                 {
-                                    string NTVersion = WindowsProductVersion.GetWindowsBuildNumber() != 0 ? WindowsProductVersion.GetWindowsBuildNumber().ToString() : "Wine";
                                     FunctionStatus.TLS();
-                                    Uri sendReport = new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt() + "&car_used=" + DiscordGamePresence.PersonaCarName + "&os_platform=" + InformationCache.OSName + "&event_status=" + CompletedEvent);
+                                    Uri sendReport = new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebHelpers.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt() + "&car_used=" + DiscordGamePresence.PersonaCarName + "&os_platform=" + InformationCache.OSName + "&event_status=" + CompletedEvent);
                                     ServicePointManager.FindServicePoint(sendReport).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
-                                    WebClient update_data = new WebClient();
-                                    update_data.CancelAsync();
-                                    update_data.Headers.Add ("user-agent", "GameLauncher " + Application.ProductVersion + " - (" + InsiderInfo.BuildNumberOnly() + ")");
-                                    update_data.Headers.Add("os-version", NTVersion);
-                                    update_data.DownloadStringAsync(sendReport);
+                                    var Client = new WebClient
+                                    {
+                                        Encoding = Encoding.UTF8
+                                    };
+
+                                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                    else
+                                    {
+                                        Client.Headers.Add("user-agent", "SBRW Launcher " + Application.ProductVersion + " - (" + InsiderInfo.BuildNumberOnly() + ")");
+                                    }
+                                    Client.DownloadStringCompleted += (Nice, Brock) => { Client.Dispose(); };
+
+                                    try
+                                    {
+                                        string NTVersion = WindowsProductVersion.GetWindowsBuildNumber() != 0 ? WindowsProductVersion.GetWindowsBuildNumber().ToString() : "Wine";
+                                        Client.Headers.Add("os-version", NTVersion);
+                                        Client.DownloadStringAsync(sendReport);
+                                    }
+                                    catch { }
                                 }
-                                else
+                                catch { }
+                            }
+                            else
+                            {
+                                try
                                 {
                                     FunctionStatus.TLS();
                                     Uri sendReport = new Uri(report_url);
                                     ServicePointManager.FindServicePoint(sendReport).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
                                     var request = (HttpWebRequest)WebRequest.Create(sendReport);
-                                    var postData = "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt() + "&car_used=" + DiscordGamePresence.PersonaCarName + "&os_platform=" + InformationCache.OSName + "&event_status=" + CompletedEvent;
+                                    var postData = "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebHelpers.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt() + "&car_used=" + DiscordGamePresence.PersonaCarName + "&os_platform=" + InformationCache.OSName + "&event_status=" + CompletedEvent;
 
                                     var data = Encoding.ASCII.GetBytes(postData);
                                     request.Method = "POST";
@@ -195,33 +212,50 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                                     var response = (HttpWebResponse)request.GetResponse();
                                     String responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
                                 }
+                                catch { }
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        if (Completed != URLs.AntiCheatSD.Length)
                         {
-                            if (Completed != URLs.AntiCheatSD.Length)
+                            foreach (string report_url in URLs.AntiCheatSD)
                             {
-                                foreach (string report_url in URLs.AntiCheatSD)
+                                Completed++;
+                                if (report_url.EndsWith("?"))
                                 {
-                                    Completed++;
-                                    if (report_url.EndsWith("?"))
+                                    try
                                     {
-                                        string NTVersion = WindowsProductVersion.GetWindowsBuildNumber() != 0 ? WindowsProductVersion.GetWindowsBuildNumber().ToString() : "Wine";
                                         FunctionStatus.TLS();
-                                        Uri sendReport = new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt() + "&os_platform=" + InformationCache.OSName);
+                                        Uri sendReport = new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&launcher_hash=" + WebHelpers.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt() + "&os_platform=" + InformationCache.OSName);
                                         ServicePointManager.FindServicePoint(sendReport).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
-                                        WebClient update_data = new WebClient();
-                                        update_data.CancelAsync();
-                                        update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " - (" + InsiderInfo.BuildNumberOnly() + ")");
-                                        update_data.Headers.Add("os-version", NTVersion);
-                                        update_data.DownloadStringAsync(sendReport);
+                                        var Client = new WebClient
+                                        {
+                                            Encoding = Encoding.UTF8
+                                        };
+
+                                        if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                        else
+                                        {
+                                            Client.Headers.Add("user-agent", "SBRW Launcher " + Application.ProductVersion + " - (" + InsiderInfo.BuildNumberOnly() + ")");
+                                        }
+                                        Client.DownloadStringCompleted += (Nice, Brock) => { Client.Dispose(); };
+
+                                        try
+                                        {
+                                            string NTVersion = WindowsProductVersion.GetWindowsBuildNumber() != 0 ? WindowsProductVersion.GetWindowsBuildNumber().ToString() : "Wine";
+                                            Client.Headers.Add("os-version", NTVersion);
+                                            Client.DownloadStringAsync(sendReport);
+                                        }
+                                        catch { }
                                     }
+                                    catch { }
                                 }
                             }
                         }
                     }
-                    catch { }
 
                     TimeConversions.MUFRTime();
                 }

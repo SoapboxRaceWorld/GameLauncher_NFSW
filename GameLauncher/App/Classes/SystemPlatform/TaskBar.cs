@@ -1,6 +1,6 @@
 ﻿//Credits: https://stackoverflow.com/a/24187171
 
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 using System;
 using System.Runtime.InteropServices;
 
@@ -57,7 +57,7 @@ public static class TaskbarProgress
     {
         try
         {
-            if (taskbarSupported && !DetectLinux.LinuxDetected()) taskbarInstance.SetProgressState(windowHandle, taskbarState);
+            if (taskbarSupported && !UnixOS.Detected()) taskbarInstance.SetProgressState(windowHandle, taskbarState);
         }
         catch { }
     }
@@ -66,7 +66,7 @@ public static class TaskbarProgress
     {
         try
         {
-            if (taskbarSupported && !DetectLinux.LinuxDetected()) taskbarInstance.SetProgressValue(windowHandle, (ulong)progressValue, (ulong)progressMax);
+            if (taskbarSupported && !UnixOS.Detected()) taskbarInstance.SetProgressValue(windowHandle, (ulong)progressValue, (ulong)progressMax);
         }
         catch { }
     }

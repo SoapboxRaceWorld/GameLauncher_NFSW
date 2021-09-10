@@ -1,16 +1,20 @@
 ﻿using GameLauncher.App.Classes.Auth;
 using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -18,17 +22,37 @@ namespace GameLauncher.App
 {
     public partial class RegisterScreen : Form
     {
+        private static bool IsRegisterScreenOpen = false;
         private bool _ticketRequired;
+
+        public static void OpenScreen()
+        {
+            if (IsRegisterScreenOpen || Application.OpenForms["RegisterScreen"] != null)
+            {
+                if (Application.OpenForms["RegisterScreen"] != null) { Application.OpenForms["RegisterScreen"].Activate(); }
+            }
+            else
+            {
+                try { new RegisterScreen().ShowDialog(); }
+                catch (Exception Error)
+                {
+                    string ErrorMessage = "Register Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("Register Screen", ErrorMessage, Error, "Exclamation", false);
+                }
+            }
+        }
 
         public RegisterScreen()
         {
+            IsRegisterScreenOpen = true;
             InitializeComponent();
-            DiscordLauncherPresense.Status("Register", ServerListUpdater.ServerName("Register"));
+            SetVisuals();
+            DiscordLauncherPresence.Status("Register", ServerListUpdater.ServerName("Register"));
             this.Closing += (x, y) =>
             {
-                DiscordLauncherPresense.Status("Idle Ready", null);
+                DiscordLauncherPresence.Status("Idle Ready", null);
+                IsRegisterScreenOpen = false;
             };
-            SetVisuals();
         }
 
         private void RegisterButton_Click(object sender, EventArgs e)
@@ -85,40 +109,77 @@ namespace GameLauncher.App
 
                 try
                 {
-                    String checkPassword = SHA.HashPassword(RegisterPassword.Text.ToString()).ToUpper();
+                    String checkPassword = SHA.Hashes(RegisterPassword.Text.ToString()).ToUpper();
                     var regex = new Regex(@"([0-9A-Z]{5})([0-9A-Z]{35})").Split(checkPassword);
                     String range = regex[1];
 
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri("https://api.pwnedpasswords.com/range/" + range);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient breachCheck = new WebClient();
-
-                    String verify = regex[2];
-                    String serverReply = breachCheck.DownloadString(URLCall);
-
-                    string[] hashes = serverReply.Split('\n');
-                    foreach (string hash in hashes)
+                    var Client = new WebClient
                     {
-                        var splitChecks = hash.Split(':');
-                        if (splitChecks[0] == verify)
+                        Encoding = Encoding.UTF8
+                    };
+                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
+                    String serverReply = null;
+                    try
+                    {
+                        serverReply = Client.DownloadString(URLCall);
+                    }
+                    catch (WebException Error)
+                    {
+                        APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped), 
+                            Error, (HttpWebResponse)Error.Response);
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("Register", null, Error, null, true);
+                    }
+                    finally
+                    {
+                        if (Client != null)
                         {
-                            var passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1]) + 
-                                " times, you should consider using different one.\n\nAlternatively you can use the unsafe password anyway." +
-                                "\nWould you like to Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                            if (passwordCheckReply == DialogResult.Yes)
+                            Client.Dispose();
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(serverReply))
+                    {
+                        String verify = regex[2];
+
+                        string[] hashes = serverReply.Split('\n');
+                        foreach (string hash in hashes)
+                        {
+                            var splitChecks = hash.Split(':');
+                            if (splitChecks[0] == verify)
                             {
-                                allowReg = true;
+                                var passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1]) +
+                                    " times, you should consider using a different one.\n\nAlternatively you can use the unsafe password anyway." +
+                                    "\nWould you like to continue to use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                                if (passwordCheckReply == DialogResult.Yes)
+                                {
+                                    allowReg = true;
+                                }
+                                else
+                                {
+                                    allowReg = false;
+                                }
                             }
                             else
                             {
-                                allowReg = false;
+                                allowReg = true;
                             }
                         }
-                        else
-                        {
-                            allowReg = true;
-                        }
+                    }
+                    else
+                    {
+                        allowReg = true;
                     }
                 }
                 catch
@@ -130,22 +191,55 @@ namespace GameLauncher.App
                 {
                     Tokens.Clear();
 
-                    String username = RegisterEmail.Text.ToString();
-                    String realpass;
-                    String token = (_ticketRequired) ? RegisterTicket.Text : null;
+                    String Email;
+                    String Password;
+                    String Ticket = (_ticketRequired) ? RegisterTicket.Text : null;
 
-                    Tokens.IPAddress = InformationCache.SelectedServerData.IpAddress;
+                    Tokens.IPAddress = InformationCache.SelectedServerData.IPAddress;
                     Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
-                    if (InformationCache.ModernAuthSupport == false)
+                    switch (Authentication.HashType(InformationCache.ModernAuthHashType))
                     {
-                        realpass = SHA.HashPassword(RegisterPassword.Text.ToString()).ToLower();
-                        Authentication.Client("Register", "Non Secure", username, realpass, token);
+                        case AuthHash.H10:
+                            Email = RegisterEmail.Text.ToString();
+                            Password = RegisterPassword.Text.ToString();
+                            break;
+                        case AuthHash.H11:
+                            Email = RegisterEmail.Text.ToString();
+                            Password = MDFive.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            break;
+                        case AuthHash.H12:
+                            Email = RegisterEmail.Text.ToString();
+                            Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            break;
+                        case AuthHash.H13:
+                            Email = RegisterEmail.Text.ToString();
+                            Password = SHATwoFiveSix.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            break;
+                        case AuthHash.H20:
+                            Email = MDFive.Hashes(RegisterEmail.Text.ToString()).ToLower();
+                            Password = MDFive.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            break;
+                        case AuthHash.H21:
+                            Email = SHA.Hashes(RegisterEmail.Text.ToString()).ToLower();
+                            Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            break;
+                        case AuthHash.H22:
+                            Email = SHATwoFiveSix.Hashes(RegisterEmail.Text.ToString()).ToLower();
+                            Password = SHATwoFiveSix.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            break;
+                        default:
+                            Log.Error("HASH TYPE: Unknown Hash Standard was Provided");
+                            return;
+                    }
+
+                    if (!InformationCache.ModernAuthSecureChannel)
+                    {
+                        Authentication.Client("Register", "Non Secure", Email, Password, Ticket);
                     }
                     else
                     {
-                        realpass = RegisterPassword.Text.ToString();
-                        Authentication.Client("Register", "Secure", username, realpass, token);
+                        Authentication.Client("Register", "Secure", Email, Password, Ticket);
                     }
 
                     if (!String.IsNullOrWhiteSpace(Tokens.Success))
@@ -267,14 +361,8 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-
-            if (DetectLinux.LinuxDetected())
-            {
-                MainFontSize = 9f;
-                SecondaryFontSize = 8f;
-            }
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
 
             /* Registering Panel */
@@ -285,6 +373,7 @@ namespace GameLauncher.App
             RegisterAgree.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             RegisterButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             RegisterCancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            CurrentWindowInfo.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
 
             /********************************/
             /* Set Theme Colors & Images     /
@@ -294,14 +383,31 @@ namespace GameLauncher.App
             BackgroundImage = Theming.RegisterScreen;
             TransparencyKey = Theming.RegisterScreenTransparencyKey;
 
+            CurrentWindowInfo.ForeColor = Theming.FivithTextForeColor;
+
+            RegisterEmail.BackColor = Theming.Input;
+            RegisterEmail.ForeColor = Theming.FivithTextForeColor;
             RegisterEmailBorder.Image = Theming.BorderEmail;
+
             RegisterPasswordBorder.Image = Theming.BorderPassword;
+            RegisterPassword.BackColor = Theming.Input;
+            RegisterPassword.ForeColor = Theming.FivithTextForeColor;
+
             RegisterConfirmPasswordBorder.Image = Theming.BorderPassword;
+            RegisterConfirmPassword.BackColor = Theming.Input;
+            RegisterConfirmPassword.ForeColor = Theming.FivithTextForeColor;
+
             RegisterTicketBorder.Image = Theming.BorderTicket;
+            RegisterTicket.BackColor = Theming.Input;
+            RegisterTicket.ForeColor = Theming.FivithTextForeColor;
+
             RegisterAgree.ForeColor = Theming.WinFormWarningTextForeColor;
 
             RegisterButton.BackgroundImage = Theming.GreenButton;
+            RegisterButton.ForeColor = Theming.SeventhTextForeColor;
+
             RegisterCancel.BackgroundImage = Theming.GrayButton;
+            RegisterCancel.ForeColor = Theming.FivithTextForeColor;
 
             /********************************/
             /* Events                        /
@@ -333,7 +439,7 @@ namespace GameLauncher.App
 
             try
             {
-                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.requireTicket))
+                if (InformationCache.SelectedServerJSON.requireTicket != null && !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.requireTicket))
                 {
                     _ticketRequired = InformationCache.SelectedServerJSON.requireTicket.ToLower() == "true";
                 }

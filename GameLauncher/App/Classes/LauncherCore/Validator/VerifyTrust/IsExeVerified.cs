@@ -1,8 +1,10 @@
-﻿using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
-using GameLauncher.App.Classes.Logger;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
 {
@@ -12,9 +14,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
 
         public static void Check()
         {
-            LauncherSigned = CheckExeVerified.Signed(Application.ExecutablePath);
+            LauncherSigned = CheckExeVerified.Signed(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher)));
             Log.Info("SIGNED: " + LauncherSigned);
 
+            Log.Info("LAUNCHER UPDATER: Moved to Function");
             /* (Start Process) Check If Updater Exists or Requires an Update */
             UpdaterExecutable.Check();
         }
@@ -33,24 +36,28 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
 
         public static bool Signed(string filePath)
         {
-            if (filePath == null)
+            if (string.IsNullOrWhiteSpace(filePath))
             {
-                Log.Error("SIGNED: File Path can Not be Null");
+                Log.Error("SIGNED: File Path cannot be Null");
             }
             else
             {
                 try
                 {
-                    var File = new WINTRUST_FILE_INFO();
-                    File.cbStruct = Marshal.SizeOf(typeof(WINTRUST_FILE_INFO));
-                    File.pcwszFilePath = filePath;
+                    var File = new WINTRUST_FILE_INFO
+                    {
+                        cbStruct = Marshal.SizeOf(typeof(WINTRUST_FILE_INFO)),
+                        pcwszFilePath = filePath
+                    };
 
-                    var Data = new WINTRUST_DATA();
-                    Data.cbStruct = Marshal.SizeOf(typeof(WINTRUST_DATA));
-                    Data.dwUIChoice = WTD_UI_NONE;
-                    Data.dwUnionChoice = WTD_CHOICE_FILE;
-                    Data.fdwRevocationChecks = WTD_REVOKE_NONE;
-                    Data.pFile = Marshal.AllocHGlobal(File.cbStruct);
+                    var Data = new WINTRUST_DATA
+                    {
+                        cbStruct = Marshal.SizeOf(typeof(WINTRUST_DATA)),
+                        dwUIChoice = WTD_UI_NONE,
+                        dwUnionChoice = WTD_CHOICE_FILE,
+                        fdwRevocationChecks = WTD_REVOKE_NONE,
+                        pFile = Marshal.AllocHGlobal(File.cbStruct)
+                    };
                     Marshal.StructureToPtr(File, Data.pFile, false);
 
                     int hr;
@@ -65,11 +72,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
 
                     return hr == 0;
                 }
-                catch (Exception error)
+                catch (Exception Error)
                 {
-                    Log.Error("SIGNED: " + error.Message);
+                    LogToFileAddons.OpenLog("SIGNED", null, Error, null, true);
                     return false;
-                }                
+                }
             }
 
             return false;

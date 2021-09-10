@@ -1,4 +1,4 @@
-﻿using GameLauncher.App.Classes.SystemPlatform.Linux;
+﻿using GameLauncher.App.Classes.SystemPlatform.Unix;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -25,7 +25,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         public static int GetWindowsBuildNumber()
         {
             /* Get the Kernel32 DLL File Version */
-            if (CachedWindowsBuildNumber == 0 && !DetectLinux.LinuxDetected())
+            if (CachedWindowsBuildNumber == 0 && !UnixOS.Detected())
             {
                 FileVersionInfo osVersionInfo = FileVersionInfo.GetVersionInfo(Environment.GetEnvironmentVariable("windir") + @"\System32\Kernel32.dll");
                 CachedWindowsBuildNumber = osVersionInfo.FileBuildPart;
@@ -47,7 +47,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         public static double GetWindowsNumber()
         {
             /* Get the Kernel32 DLL File Version */
-            if (CachedWindowsNumber == 0 && !DetectLinux.LinuxDetected())
+            if (CachedWindowsNumber == 0 && !UnixOS.Detected())
             {
                 FileVersionInfo osVersionInfo = FileVersionInfo.GetVersionInfo(Environment.GetEnvironmentVariable("windir") + @"\System32\Kernel32.dll");
                 CachedWindowsNumber = double.Parse(osVersionInfo.FileMajorPart + "." + osVersionInfo.FileMinorPart, CultureInfo.InvariantCulture);

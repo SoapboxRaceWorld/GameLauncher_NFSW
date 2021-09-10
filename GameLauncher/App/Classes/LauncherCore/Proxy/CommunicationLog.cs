@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using Newtonsoft.Json;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
@@ -10,7 +13,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         Request,
         Response,
         Info,
-        Error
+        Error,
+        Rejected,
+        Warning,
+        Unknown
     }
 
     public interface ICommunicationLogData
@@ -21,10 +27,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
     public class CommunicationLogEntry
     {
-        public DateTimeOffset RecordedAt { get; set; }
+        public string RecordedAt { get; set; }
         public string ServerId { get; set; }
         public string Category { get; set; }
-        public CommunicationLogEntryType Type { get; set; }
+        public string Type { get; set; }
         public ICommunicationLogData Data { get; set; }
     }
 
@@ -72,30 +78,58 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
     public static class CommunicationLog
     {
-        private static readonly string LogFileName;
-
-        static CommunicationLog()
+        public static void RecordEntry(string ID, string CAT, CommunicationLogEntryType TYPE, ICommunicationLogData DATA)
         {
-            LogFileName = "communication.log";
-            if (File.Exists(LogFileName))
-                File.Delete(LogFileName);
+            try
+            {
+                if (!Directory.Exists(Strings.Encode(Locations.LogCurrentFolder)))
+                {
+                    Directory.CreateDirectory(Strings.Encode(Locations.LogCurrentFolder));
+                }
+            }
+            catch { }
+
+            try
+            {
+                CommunicationLogEntry Entry = new CommunicationLogEntry
+                {
+                    ServerId = ID,
+                    Category = CAT,
+                    Data = DATA,
+                    Type = CallMethod(TYPE),
+                    RecordedAt = Time.GetTime("Now - UTC Time (Offset)")
+                };
+
+                File.AppendAllLines(Locations.LogCommunication, new List<string>
+                {
+                    JsonConvert.SerializeObject(Entry, Formatting.Indented)
+                });
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("Communication", null, Error, null, true);
+            }
         }
 
-        public static void RecordEntry(string serverId, string category, CommunicationLogEntryType type, ICommunicationLogData data)
+        private static string CallMethod(CommunicationLogEntryType Type)
         {
-            CommunicationLogEntry entry = new CommunicationLogEntry
+            switch (Type) 
             {
-                ServerId = serverId,
-                Category = category,
-                Data = data,
-                Type = type,
-                RecordedAt = DateTimeOffset.Now
-            };
-
-            File.AppendAllLines(LogFileName, new List<string>
-            {
-                JsonConvert.SerializeObject(entry, Formatting.Indented)
-            });
+                case CommunicationLogEntryType.Error:
+                    return "ERROR";
+                case CommunicationLogEntryType.Info:
+                    return "INFO";
+                case CommunicationLogEntryType.Request:
+                    return "REQUEST";
+                case CommunicationLogEntryType.Response:
+                    return "RESPONSE";
+                case CommunicationLogEntryType.Rejected:
+                    return "REJECTED";
+                case CommunicationLogEntryType.Warning:
+                    return "WARNING";
+                default:
+                    return "UNKNOWN";
+            }
         }
     }
 }

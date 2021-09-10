@@ -1,7 +1,10 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.Logger;
+﻿using GameLauncher.App.Classes.LauncherCore.Downloader;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using System;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -12,7 +15,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         /* Language */
         public static string Language = "EN";
         /* Audio */
-        public static string AudioMode = "0";
+        public static string AudioMode = "1";
         public static string MasterAudio = "100";
         public static string SFXAudio = "52";
         public static string CarAudio = "52";
@@ -23,11 +26,13 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         public static string Camera = "2";
         public static string Transmission = "2";
         public static string Damage = "1";
+        public static string Moments = "1";
         public static string SpeedUnits = "1";
         /* Physics */
         public static string CameraPOV = "2";
         public static string TransmissionType = "1";
         /* VideoConfig */
+        public static string AudioM = "1";
         public static string AudioQuality = "0";
         public static string Brightness = "0";
         public static string EnableAero = "0";
@@ -66,26 +71,24 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
     class FileGameSettings
     {
-        public static string UserSettingsLocation = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
-
         public static XmlDocument UserSettingsFile = new XmlDocument();
 
         public static void Read(string FileReadStatus)
         {
-            if (File.Exists(UserSettingsLocation))
+            if (File.Exists(Locations.UserSettingsXML))
             {
                 try
                 {
-                    UserSettingsFile.Load(UserSettingsLocation);
+                    UserSettingsFile.Load(Locations.UserSettingsXML);
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("USX File: " + Error.Message);
+                    LogToFileAddons.OpenLog("USX File", null, Error, null, true);
                 }
             }
             else
             {
-                Log.Error("USX File: How Could This Happen!? - Heavy");
+                Log.Error("USX File: How Could This Happen!? - No UserSettings.xml found!");
                 return;
             }
 
@@ -93,7 +96,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             {
                 /* Language */
                 FileGameSettingsData.Language = (NodeReader("InnerText", "Settings/UI/Language", null) != "ERROR") ?
-                                                 NodeReader("InnerText", "Settings/UI/Language", null) : FunctionStatus.SpeechFiles(null).ToUpper();
+                                                 NodeReader("InnerText", "Settings/UI/Language", null) : DownloaderAddons.SpeechFiles(null).ToUpper();
             }
             else if (FileReadStatus == "Full File")
             {
@@ -119,6 +122,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                                                      NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "transmission") : "2";
                 FileGameSettingsData.Damage = (NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "damage") != "ERROR") ?
                                                NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "damage") : "1";
+                FileGameSettingsData.Moments = (NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "moments") != "ERROR") ?
+                                               NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "moments") : "1";
                 FileGameSettingsData.SpeedUnits = (NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "speedUnits") != "ERROR") ?
                                                    NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "speedUnits") : "1";
                 /* Physics */
@@ -127,6 +132,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 FileGameSettingsData.TransmissionType = (NodeReader("InnerText", "Settings/Physics/TransmissionType", null) != "ERROR") ?
                                                          NodeReader("InnerText", "Settings/Physics/TransmissionType", null) : "1";
                 /* VideoConfig */
+                FileGameSettingsData.AudioM = (NodeReader("InnerText", "Settings/VideoConfig/audiomode", null) != "ERROR") ?
+                                                     NodeReader("InnerText", "Settings/VideoConfig/audiomode", null) : "0";
                 FileGameSettingsData.AudioQuality = (NodeReader("InnerText", "Settings/VideoConfig/audioquality", null) != "ERROR") ?
                                                      NodeReader("InnerText", "Settings/VideoConfig/audioquality", null) : "0";
                 FileGameSettingsData.Brightness = (NodeReader("InnerText", "Settings/VideoConfig/brightness", null) != "ERROR") ?
@@ -227,9 +234,10 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "camera", FileGameSettingsData.CameraPOV, FileGameSettingsData.CameraPOV);
                     NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "transmission", FileGameSettingsData.Transmission, FileGameSettingsData.Transmission);
                     NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "damage", FileGameSettingsData.Damage, FileGameSettingsData.Damage);
+                    NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "moments", FileGameSettingsData.Moments, FileGameSettingsData.Moments);
                     NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "speedUnits", FileGameSettingsData.SpeedUnits, FileGameSettingsData.SpeedUnits);
                     /* Physics */
-                    NodeUpdater("InnerText", "Settings/Physics", "CameraPOV", "Type", "int", FileGameSettingsData.SpeedUnits);
+                    NodeUpdater("InnerText", "Settings/Physics", "CameraPOV", "Type", "int", FileGameSettingsData.CameraPOV);
                     NodeUpdater("InnerText", "Settings/Physics", "TransmissionType", "Type", "int", FileGameSettingsData.Transmission);
                     /* VideoConfig */
                     NodeUpdater("InnerText", "Settings/VideoConfig", "audiomode", "Type", "int", FileGameSettingsData.AudioMode);
@@ -270,9 +278,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     Log.Warning("USX File: Unknown File Read Type -> " + FileReadStatus);
                 }
 
-                if (new FileInfo(UserSettingsLocation).IsReadOnly != true)
+                if (new FileInfo(Locations.UserSettingsXML).IsReadOnly != true)
                 {
-                    UserSettingsFile.Save(UserSettingsLocation);
+                    UserSettingsFile.Save(Locations.UserSettingsXML);
                     if (MessageBoxAlert == "Display")
                     {
                         MessageBox.Show(null, "XML Settings Saved", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -280,16 +288,16 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 }
                 else
                 {
-                    Log.Error("USX File: User Game Settings File is ReadOnly. Settings Not Saved! Sorry Chief");
+                    Log.Error("USX File: UserSettings File is Read-Only. Settings Not Saved!");
                     if (MessageBoxAlert == "Display")
                     {
-                        MessageBox.Show(null, "XML Settings Not Saved \nRead-Only File ", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(null, "XML Settings Not Saved: \n Connot write to a Read-Only File ", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
             catch (Exception Error)
             {
-                Log.Error("USX File: " + Error.Message);
+                LogToFileAddons.OpenLog("USX File", null, Error, null, true);
             }
         }
 
@@ -326,16 +334,16 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static void NodeUpdater(string Type, string NodePath, string SingleNode, string AttributeName, string AttributeValue, string ValueComparison)
         {
-            string FullNodePath = NodePath + "/" + SingleNode;
+            string FullNodePath = Strings.Encode(NodePath + "/" + SingleNode);
 
             if (NodeChecker(Type, FullNodePath, AttributeName) == false)
             {
                 try
                 {
-                    XmlNode Root = UserSettingsFile.SelectSingleNode(NodePath);
-                    XmlNode CustomNode = UserSettingsFile.CreateElement(SingleNode);
-                    XmlAttribute CustomNodeAttribute = UserSettingsFile.CreateAttribute(AttributeName);
-                    CustomNodeAttribute.Value = AttributeValue;
+                    XmlNode Root = UserSettingsFile.SelectSingleNode(Strings.Encode(NodePath));
+                    XmlNode CustomNode = UserSettingsFile.CreateElement(Strings.Encode(SingleNode));
+                    XmlAttribute CustomNodeAttribute = UserSettingsFile.CreateAttribute(Strings.Encode(AttributeName));
+                    CustomNodeAttribute.Value = Strings.Encode(AttributeValue);
                     CustomNode.Attributes.Append(CustomNodeAttribute);
                     Root.AppendChild(CustomNode);
                     Log.Info("USX File: Created XML Node [Type: '" + Type + "' NodePath: '" + NodePath + "' SingleNode: '" +
@@ -345,6 +353,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 {
                     Log.Error("USX File: Unable to Create XML Node [Type: '" + Type + "' NodePath: '" + NodePath + "' SingleNode: '" +
                                 SingleNode + "' AttributeName: '" + AttributeName + "' AttributeValue: '" + AttributeValue + "']" + Error.Message);
+                    Log.ErrorIC("USX File: " + Error.HResult);
+                    Log.ErrorFR("USX File: " + Error.ToString());
                     return;
                 }
             }
@@ -357,9 +367,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                               "' COMPARING NEW: '" + ValueComparison + "'");
                 }
 
-                if (UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[AttributeName].Value != ValueComparison)
+                if (UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[Strings.Encode(AttributeName)].Value != Strings.Encode(ValueComparison))
                 {
-                    UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[AttributeName].Value = ValueComparison;
+                    UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[Strings.Encode(AttributeName)].Value = Strings.Encode(ValueComparison);
                 }
             }
             else
@@ -370,9 +380,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                               "' COMPARING NEW: '" + ValueComparison + "'");
                 }
 
-                if (UserSettingsFile.SelectSingleNode(FullNodePath).InnerText != ValueComparison)
+                if (UserSettingsFile.SelectSingleNode(FullNodePath).InnerText != Strings.Encode(ValueComparison))
                 {
-                    UserSettingsFile.SelectSingleNode(FullNodePath).InnerText = ValueComparison;
+                    UserSettingsFile.SelectSingleNode(FullNodePath).InnerText = Strings.Encode(ValueComparison);
                 }
             }
         }
@@ -402,6 +412,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             catch (Exception Error)
             {
                 Log.Error("USX File: Unable to Read XML Node [NodePath: '" + FullNodePath + "' AttributeName: '" + AttributeName + "']" + Error.Message);
+                Log.ErrorIC("USX File: " + Error.HResult);
+                Log.ErrorFR("USX File: " + Error.ToString());
                 return "ERROR";
             }
         }

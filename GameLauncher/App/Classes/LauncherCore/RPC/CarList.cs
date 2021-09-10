@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using Newtonsoft.Json;
 using System;
 
@@ -13,7 +14,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             /* Let's load the "Cached From Server" version first */
             if (remoteCarsList != String.Empty)
             {
-                dynamic dynJson = JsonConvert.DeserializeObject(remoteCarsList);
+                dynamic dynJson = JsonConvert.DeserializeObject(Strings.Encode(remoteCarsList));
 
                 foreach (var item in dynJson)
                 {
@@ -27,7 +28,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             /* If we don't have a Server version, load "default" version */
             if (remoteCarsList == String.Empty)
             {
-                dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.LauncherCore.RPC.JSON.cars.json"));
+                dynamic dynJson = JsonConvert.DeserializeObject(Strings.Encode(ExtractResource.AsString("GameLauncher.App.Classes.LauncherCore.RPC.JSON.cars.json")));
 
                 foreach (var item in dynJson)
                 {

@@ -2,12 +2,15 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Components;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Microsoft.Win32;
 
 // based on https://github.com/bitbeans/RedistributableChecker/blob/master/RedistributableChecker/RedistributablePackage.cs
@@ -28,6 +31,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
     /// <see cref="//https://stackoverflow.com/questions/12206314/detect-if-visual-c-redistributable-for-visual-studio-2012-is-installed"/>
     public static class RedistributablePackage
     {
+        private static RegistryKey sk = null;
+        private static string InstalledVersion;
         /// <summary>
         /// Check if a Microsoft Redistributable Package is installed.
         /// </summary>
@@ -35,59 +40,100 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /// <returns><c>true</c> if the package is installed, otherwise <c>false</c></returns>
         public static bool IsInstalled(RedistributablePackageVersion redistributableVersion)
         {
-            try
             {
                 switch (redistributableVersion)
                 {
                     case RedistributablePackageVersion.VC2015to2019x86:
-                        var parametersVc2015to2019x86 = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86", false);
-                        if (parametersVc2015to2019x86 == null) return false;
-                        var vc2015to2019x86Version = parametersVc2015to2019x86.GetValue("Version");
-                        if (((string)vc2015to2019x86Version).StartsWith("v14.2"))
-                        {
-                            return true;
-                        }
-                        break;
                     case RedistributablePackageVersion.VC2015to2019x64:
-                        var parametersVc2015to2019x64 = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64", false);
-                        if (parametersVc2015to2019x64 == null) return false;
-                        var vc2015to2019x64Version = parametersVc2015to2019x64.GetValue("Version");
-                        if (((string)vc2015to2019x64Version).StartsWith("v14.2"))
+                        try
                         {
-                            return true;
+                            string subKey = Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", "14.0", "VC", "Runtimes",
+                                (redistributableVersion == RedistributablePackageVersion.VC2015to2019x86) ? "x86" : "x64");
+
+                            sk = Registry.LocalMachine.OpenSubKey(subKey, false);
+
+                            if (sk != null)
+                            {
+                                InstalledVersion = sk.GetValue("Version").ToString();
+
+                                if (!string.IsNullOrWhiteSpace(InstalledVersion))
+                                {
+                                    if (InstalledVersion.StartsWith("v"))
+                                    {
+                                        char[] charsToTrim = { 'v' };
+                                        InstalledVersion = InstalledVersion.Trim(charsToTrim);
+                                    }
+
+                                    if (InstalledVersion.CompareTo("14.20") >= 0)
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                return false;
+                            }
                         }
-                        break;
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("Redistributable Package", null, Error, null, true);
+                            return false;
+                        }
+                        finally
+                        {
+                            if (InstalledVersion != null)
+                            {
+                                InstalledVersion = null;
+                            }
+                            if (sk != null)
+                            {
+                                sk.Close();
+                                sk.Dispose();
+                            }
+                        }
+                    default:
+                        return false;
                 }
-                return false;
-            }
-            catch (Exception)
-            {
-                return false;
+
             }
         }
     }
 
     class Redistributable
     {
+        public static bool ErrorFree = true;
         public static void Check()
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
-                DiscordLauncherPresense.Status("Start Up", "Checking Redistributable Package Visual Code 2015 to 2019");
+                Log.Checking("REDISTRIBUTABLE: Is Installed or Not");
+                DiscordLauncherPresence.Status("Start Up", "Checking Redistributable Package Visual Code 2015 to 2019");
 
                 if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
                 {
                     var result = MessageBox.Show(
-                        "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
+                        "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed." +
+                        "\n\nThis will install in the Background" +
+                        "\n\nThis may restart your computer." +
+                        "\n\nClick OK to install it.",
                         "Compatibility",
                         MessageBoxButtons.OKCancel,
                         MessageBoxIcon.Warning);
 
                     if (result != DialogResult.OK)
                     {
+                        ErrorFree = false;
                         MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
-                        return;
                     }
 
                     try
@@ -95,53 +141,122 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         FunctionStatus.TLS();
                         Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x86.exe");
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                        WebClient Client = new WebClient();
-                        Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        Client.DownloadFile(URLCall, "VC_redist.x86.exe");
+                        var Client = new WebClient
+                        {
+                            Encoding = Encoding.UTF8
+                        };
+
+                        if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        else
+                        {
+                            Client.Headers.Add("user-agent", "SBRW Launcher " +
+                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        }
+
+                        try
+                        {
+                            Client.DownloadFile(URLCall, "VC_redist.x86.exe");
+                        }
+                        catch (WebException Error)
+                        {
+                            APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                                Error, (HttpWebResponse)Error.Response);
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("REDISTRIBUTABLE", null, Error, null, true);
+                        }
+                        finally
+                        {
+                            if (Client != null)
+                            {
+                                Client.Dispose();
+                            }
+                        }
                     }
-                    catch (Exception error)
+                    catch (Exception Error)
                     {
-                        Log.Error("LAUNCHER UPDATER: " + error.Message);
+                        LogToFileAddons.OpenLog("REDISTRIBUTABLE", null, Error, null, true);
                     }
 
                     if (File.Exists("VC_redist.x86.exe"))
                     {
-                        var proc = Process.Start(new ProcessStartInfo
+                        try
                         {
-                            Verb = "runas",
-                            Arguments = "/quiet",
-                            FileName = "VC_redist.x86.exe"
-                        });
+                            var proc = Process.Start(new ProcessStartInfo
+                            {
+                                Verb = "runas",
+                                Arguments = "/quiet",
+                                FileName = "VC_redist.x86.exe"
+                            });
+                            proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
 
-                        if (proc == null)
+                            if (proc == null)
+                            {
+                                ErrorFree = false;
+                                MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                            }
+                            else if (proc != null)
+                            {
+                                if (!proc.HasExited)
+                                {
+                                    if (proc.Responding) { proc.CloseMainWindow(); }
+                                    else { proc.Kill(); ErrorFree = false; }
+                                }
+                                
+                                if(proc.ExitCode != 0)
+                                {
+                                    ErrorFree = false;
+                                    Log.Error("REDISTRIBUTABLE INSTALLER [EXIT CODE]: " + proc.ExitCode.ToString() + 
+                                        " HEX: (0x" + proc.ExitCode.ToString("X") + ")");
+                                    MessageBox.Show("Failed to run package installer. Installer Exit Code " + proc.ExitCode.ToString() + 
+                                        " (0x" + proc.ExitCode.ToString("X") + ")" +
+                                        "\nThe game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                        MessageBoxIcon.Error);
+                                }
+
+                                proc.Close();
+                            }
+                        }
+                        catch (Exception Error)
                         {
-                            MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                            LogToFileAddons.OpenLog("REDISTRIBUTABLE x86 Process", null, Error, null, true);
+                            ErrorFree = false;
+                            MessageBox.Show("Failed to start package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
-                            return;
                         }
                     }
                     else
                     {
+                        ErrorFree = false;
                         MessageBox.Show("Failed to download package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
                     }
                 }
+                else
+                {
+                    Log.Info("REDISTRIBUTABLE: 32-bit 2015-2019 VC++ Redistributable Package is Installed");
+                }
 
-                if (Environment.Is64BitOperatingSystem == true)
+                if (Environment.Is64BitOperatingSystem)
                 {
                     if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64))
                     {
                         var result = MessageBox.Show(
-                            "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
+                            "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed." +
+                            "\n\nThis will install in the Background" +
+                            "\n\nThis may restart your computer. " +
+                            "\n\nClick OK to install it.",
                             "Compatibility",
                             MessageBoxButtons.OKCancel,
                             MessageBoxIcon.Warning);
 
                         if (result != DialogResult.OK)
                         {
+                            ErrorFree = false;
                             MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
-                            return;
                         }
 
                         try
@@ -149,40 +264,110 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             FunctionStatus.TLS();
                             Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x64.exe");
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                            WebClient Client = new WebClient();
-                            Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                            Client.DownloadFile(URLCall, "VC_redist.x64.exe");
+                            var Client = new WebClient
+                            {
+                                Encoding = Encoding.UTF8
+                            };
+
+                            if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            else
+                            {
+                                Client.Headers.Add("user-agent", "SBRW Launcher " +
+                                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            }
+
+                            try
+                            {
+                                Client.DownloadFile(URLCall, "VC_redist.x64.exe");
+                            }
+                            catch (WebException Error)
+                            {
+                                APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                                    Error, (HttpWebResponse)Error.Response);
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("REDISTRIBUTABLE", null, Error, null, true);
+                            }
+                            finally
+                            {
+                                if (Client != null)
+                                {
+                                    Client.Dispose();
+                                }
+                            }
                         }
-                        catch (Exception error)
+                        catch (Exception Error)
                         {
-                            Log.Error("LAUNCHER UPDATER: " + error.Message);
+                            LogToFileAddons.OpenLog("REDISTRIBUTABLE x64", null, Error, null, true);
                         }
 
                         if (File.Exists("VC_redist.x64.exe"))
                         {
-                            var proc = Process.Start(new ProcessStartInfo
+                            try
                             {
-                                Verb = "runas",
-                                Arguments = "/quiet",
-                                FileName = "VC_redist.x64.exe"
-                            });
+                                var proc = Process.Start(new ProcessStartInfo
+                                {
+                                    Verb = "runas",
+                                    Arguments = "/quiet",
+                                    FileName = "VC_redist.x64.exe"
+                                });
 
-                            if (proc == null)
+                                proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
+
+                                if (proc == null)
+                                {
+                                    ErrorFree = false;
+                                    MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                        MessageBoxIcon.Error);
+                                }
+                                else if (proc != null)
+                                {
+                                    if (!proc.HasExited)
+                                    {
+                                        if (proc.Responding) { proc.CloseMainWindow(); }
+                                        else { proc.Kill(); ErrorFree = false; }
+                                    }
+
+                                    if (proc.ExitCode != 0)
+                                    {
+                                        ErrorFree = false;
+                                        Log.Error("REDISTRIBUTABLE INSTALLER [EXIT CODE]: " + proc.ExitCode.ToString() +
+                                            " HEX: (0x" + proc.ExitCode.ToString("X") + ")");
+                                        MessageBox.Show("Failed to run package installer. Installer Exit Code " + proc.ExitCode.ToString() +
+                                            " (0x" + proc.ExitCode.ToString("X") + ")" +
+                                            "\nThe game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                            MessageBoxIcon.Error);
+                                    }
+
+                                    proc.Close();
+                                }
+                            }
+                            catch (Exception Error)
                             {
-                                MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                LogToFileAddons.OpenLog("REDISTRIBUTABLE x64 Process", null, Error, null, true);
+                                ErrorFree = false;
+                                MessageBox.Show("Failed to start package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
-                                return;
                             }
                         }
                         else
                         {
+                            ErrorFree = false;
                             MessageBox.Show("Failed to download package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
                         }
                     }
+                    else
+                    {
+                        Log.Info("REDISTRIBUTABLE: 64-bit 2015-2019 VC++ Redistributable Package is Installed");
+                    }
                 }
+
+                Log.Completed("REDISTRIBUTABLE: Done");
             }
 
+            Log.Info("ID: Moved to Function");
             /* (Start Process) */
             HardwareID.FingerPrint.Get();
         }

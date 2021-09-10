@@ -1,4 +1,4 @@
-﻿using GameLauncher.App.Classes.Logger;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,32 +15,46 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.JSON
 
         public static bool ValidJson(string strInput)
         {
-            if (string.IsNullOrWhiteSpace(strInput)) { return false; }
-            strInput = strInput.Trim();
-            if ((strInput.StartsWith("{") && strInput.EndsWith("}")) || /* For object */
-                (strInput.StartsWith("[") && strInput.EndsWith("]"))) /* For array */
-            {
-                try
-                {
-                    var obj = JToken.Parse(strInput);
-                    return true;
-                }
-                catch (JsonReaderException jex)
-                {
-                    /* Exception in parsing json */
-                    Log.Error(jex.Message);
-                    return false;
-                }
-                catch (Exception ex)
-                {
-                    /* General Exception */
-                    Log.Error(ex.ToString());
-                    return false;
-                }
+            if (string.IsNullOrWhiteSpace(strInput)) 
+            { 
+                return false; 
             }
             else
             {
-                return false;
+                try
+                {
+                    strInput = strInput.Trim();
+                    if ((strInput.StartsWith("{") && strInput.EndsWith("}")) || /* For object */
+                        (strInput.StartsWith("[") && strInput.EndsWith("]"))) /* For array */
+                    {
+                        try
+                        {
+                            var obj = JToken.Parse(strInput);
+                            return true;
+                        }
+                        catch (JsonReaderException Error)
+                        {
+                            /* Exception in parsing json */
+                            LogToFileAddons.OpenLog("VALID JSON", null, Error, null, true);
+                            return false;
+                        }
+                        catch (Exception Error)
+                        {
+                            /* General Exception */
+                            LogToFileAddons.OpenLog("VALID JSON", null, Error, null, true);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("VALID JSON", null, Error, null, true);
+                    return false;
+                }
             }
         }
 

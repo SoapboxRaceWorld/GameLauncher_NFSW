@@ -158,10 +158,8 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "UpdatePopup";
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Update Available - SBRW Launcher";
-            this.TopMost = true;
             this.ChangelogBox.ResumeLayout(false);
             this.ChangelogBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.UpdateIcon)).EndInit();

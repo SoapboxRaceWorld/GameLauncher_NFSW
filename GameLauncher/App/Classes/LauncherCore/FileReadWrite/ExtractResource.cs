@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
+using System;
 using System.IO;
 using System.Reflection;
 
@@ -6,25 +7,64 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 {
     class ExtractResource
     {
-        public static byte[] AsByte(String filename)
+        public static byte[] AsByte(String File_Name)
         {
-            Assembly a = Assembly.GetExecutingAssembly();
-            using (Stream resFilestream = a.GetManifestResourceStream(filename))
+            if (string.IsNullOrWhiteSpace(File_Name))
             {
-                if (resFilestream == null) return null;
-                byte[] ba = new byte[resFilestream.Length];
-                resFilestream.Read(ba, 0, ba.Length);
-                return ba;
+                return null;
+            }
+            else
+            {
+                try
+                {
+                    Assembly TheRun = Assembly.GetExecutingAssembly();
+                    using (Stream LiveStream = TheRun.GetManifestResourceStream(File_Name))
+                    {
+                        if (LiveStream == null) { return null; }
+                        else
+                        {
+                            byte[] ba = new byte[LiveStream.Length];
+                            LiveStream.Read(ba, 0, ba.Length);
+                            return ba;
+                        }
+                    }
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Extract Resource AsByte", null, Error, null, true);
+                    return null;
+                }
             }
         }
 
-        public static String AsString(String filename)
+        public static String AsString(String File_Name)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (Stream stream = assembly.GetManifestResourceStream(filename))
-            using (StreamReader reader = new StreamReader(stream))
+            if (string.IsNullOrWhiteSpace(File_Name))
             {
-                return reader.ReadToEnd();
+                return String.Empty;
+            }
+            else
+            {
+                try
+                {
+                    Assembly TheRun = Assembly.GetExecutingAssembly();
+                    using (Stream LiveStream = TheRun.GetManifestResourceStream(File_Name))
+                    {
+                        if (LiveStream == null) { return String.Empty; }
+                        else
+                        {
+                            using (StreamReader StreamViewer = new StreamReader(LiveStream))
+                            {
+                                return StreamViewer.ReadToEnd();
+                            }
+                        }
+                    }
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Extract Resource AsString", null, Error, null, true);
+                    return String.Empty;
+                }
             }
         }
     }

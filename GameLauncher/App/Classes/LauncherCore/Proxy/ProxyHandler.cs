@@ -6,17 +6,17 @@ using Nancy.Bootstrapper;
 using Nancy.Extensions;
 using Nancy.Responses;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UrlFlurl = Flurl.Url;
-using GameLauncher.App.Classes.Logger;
-using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Client;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.InsiderKit;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
@@ -30,152 +30,127 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             pipelines.OnError += OnError;
         }
 
-        private async Task<TextResponse> OnError(NancyContext context, Exception exception)
+        private TextResponse OnError(NancyContext context, Exception Error)
         {
-            Log.Error($"PROXY HANDLER [handling {context.Request.Path}]");
-            Log.Error($"\tMESSAGE: {exception.Message}");
-            Log.Error($"\t{exception.StackTrace}");
-            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
-                CommunicationLogEntryType.Error,
-                new CommunicationLogLauncherError(exception.Message, context.Request.Path,
-                    context.Request.Method));
-            
-            context.Request.Dispose();
-            await SubmitError(exception);
+            Log.Error("PROXY HANDLER: " + context.Request.Path);
+            LogToFileAddons.OpenLog("PROXY HANDLER", null, Error, null, true);
 
-            return new TextResponse(HttpStatusCode.BadRequest, exception.Message);
+            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "LAUNCHER", CommunicationLogEntryType.Error,
+                new CommunicationLogLauncherError(Error.Message, context.Request.Path, context.Request.Method));
+
+            context.Request.Dispose();
+
+            return new TextResponse(HttpStatusCode.BadRequest, Error.Message);
         }
 
         private async Task<Response> ProxyRequest(NancyContext context, CancellationToken cancellationToken)
         {
-            string path = context.Request.Path;
-            string method = context.Request.Method.ToUpperInvariant();
+            string path = Strings.Encode(context.Request.Path);
+            string method = Strings.Encode(context.Request.Method.ToUpperInvariant());
 
             if (!path.StartsWith("/nfsw/Engine.svc"))
             {
-                Log.Error("PROXY HANDLER: Invalid request path " +  path);
-                throw new ProxyException("Invalid request path: " + path);
+                Log.Error("PROXY HANDLER: Invalid Request: " + path);
+                return "SBRW Launcher Version: " + Theming.PrivacyRPCBuild + "\nBuild Date: " + InsiderInfo.BuildNumberOnly();
             }
-
-            path = path.Substring("/nfsw/Engine.svc".Length);
-
-            UrlFlurl resolvedUrl = new UrlFlurl(ServerProxy.Instance.GetServerUrl()).AppendPathSegment(path);
-            FlurlClient Test = new FlurlClient();
-            foreach (var queryParamName in context.Request.Query)
+            else
             {
-                resolvedUrl = resolvedUrl.SetQueryParam(queryParamName, context.Request.Query[queryParamName],
-                    NullValueHandling.Ignore);
-            }
+                path = path.Substring("/nfsw/Engine.svc".Length);
 
-            IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus();
+                UrlFlurl resolvedUrl = new UrlFlurl(ServerProxy.Instance.GetServerUrl()).AppendPathSegment(path, false);
 
-
-            foreach (var header in context.Request.Headers)
-            {
-                /* Don't send Content-Length for GET requests */
-                if (method == "GET" && header.Key.ToLowerInvariant() == "content-length")
+                foreach (var queryParamName in context.Request.Query)
                 {
-                    continue;
+                    resolvedUrl = resolvedUrl.SetQueryParam(queryParamName, context.Request.Query[queryParamName],
+                        NullValueHandling.Ignore);
                 }
 
-                request = request.WithHeader(header.Key,
-                    header.Key == "Host" ? resolvedUrl.ToUri().Host : header.Value.First());
-            }
+                IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus();
 
-            var requestBody = method != "GET" ? context.Request.Body.AsString(UTF8) : string.Empty;
-
-            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
-                CommunicationLogEntryType.Request,
-                new CommunicationLogRequest(requestBody, resolvedUrl.ToString(), method));
-
-            IFlurlResponse responseMessage;
-
-            var POSTContent = string.Empty;
-
-            var queryParams = new Dictionary<string, object>();
-
-            foreach (var param in context.Request.Query)
-            {
-                var value = context.Request.Query[param];
-                queryParams[param] = value;
-            }
-
-            var GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
-
-            if (path == "/event/arbitration") 
-            {
-                requestBody = requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>");
-                foreach (var header in context.Request.Headers) 
+                foreach (var header in context.Request.Headers)
                 {
-                    if(header.Key.ToLowerInvariant() == "content-length") 
+                    /* Don't send Content-Length for GET requests - HeyItsLeo */
+                    if (method == "GET" && header.Key.ToLowerInvariant() == "content-length")
                     {
-                        int KonamiCode = Convert.ToInt32(header.Value.First()) + 
-                            ("<Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>").Length;
-                        request = request.WithHeader(header.Key, KonamiCode);
+                        continue;
+                    }
+
+                    request = request.WithHeader
+                        (header.Key, (header.Key == "Host") ? resolvedUrl.ToUri().Host : ((header.Value != null) ? header.Value.First() : string.Empty));
+                }
+
+                string requestBody = (method != "GET") ? context.Request.Body.AsString(UTF8) : string.Empty;
+
+                CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER", CommunicationLogEntryType.Request,
+                    new CommunicationLogRequest(requestBody, resolvedUrl.ToString(), method));
+
+                IFlurlResponse responseMessage;
+
+                if (path == "/event/arbitration" && !string.IsNullOrWhiteSpace(requestBody))
+                {
+                    requestBody = Strings.Encode(
+                    requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>"));
+                    foreach (var header in context.Request.Headers)
+                    {
+                        if (header.Key.ToLowerInvariant() == "content-length")
+                        {
+                            int KonamiCode = Convert.ToInt32(header.Value.First()) +
+                                ("<Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>").Length;
+                            request = request.WithHeader(header.Key, KonamiCode);
+                        }
                     }
                 }
+
+                switch (method)
+                {
+                    case "GET":
+                        responseMessage = await request.GetAsync(cancellationToken);
+                        break;
+                    case "POST":
+                        responseMessage = await request.PostAsync(new CapturedStringContent(requestBody),
+                            cancellationToken);
+                        break;
+                    case "PUT":
+                        responseMessage = await request.PutAsync(new CapturedStringContent(requestBody),
+                            cancellationToken);
+                        break;
+                    case "DELETE":
+                        responseMessage = await request.DeleteAsync(cancellationToken);
+                        break;
+                    default:
+                        Log.Error("PROXY HANDLER: Cannot handle Request Method " + method);
+                        responseMessage = null;
+                        break;
+                }
+
+                string responseBody = Strings.Encode(await responseMessage.GetStringAsync());
+
+                if (path == "/User/GetPermanentSession")
+                {
+                    responseBody = CleanFromUnknownChars(responseBody);
+                }
+
+                int statusCode = responseMessage.StatusCode;
+
+                DiscordGamePresence.HandleGameState(path, responseBody, context.Request.Query);
+
+                TextResponse Response = new TextResponse(responseBody,
+                    responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
+                {
+                    StatusCode = (HttpStatusCode)statusCode
+                };
+
+                CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER", CommunicationLogEntryType.Response,
+                    new CommunicationLogResponse(responseBody, resolvedUrl.ToString(), method));
+
+                return Response;
             }
-
-            switch (method)
-            {
-                case "GET":
-                    responseMessage = await request.GetAsync(cancellationToken);
-                    break;
-                case "POST":
-                    responseMessage = await request.PostAsync(new CapturedStringContent(requestBody),
-                        cancellationToken);
-                    POSTContent = context.Request.Body.AsString(UTF8);
-                    break;
-                case "PUT":
-                    responseMessage = await request.PutAsync(new CapturedStringContent(requestBody),
-                        cancellationToken);
-                    break;
-                case "DELETE":
-                    responseMessage = await request.DeleteAsync(cancellationToken);
-                    break;
-                default:
-                    Log.Error("PROXY HANDLER: Cannot handle request method " + method);
-                    throw new ProxyException("Cannot handle request method: " + method);
-            }
-
-            var responseBody = await responseMessage.GetStringAsync();
-
-            if (path == "/User/GetPermanentSession")
-            {
-                responseBody = CleanFromUnknownChars(responseBody);
-            }
-
-            int statusCode = responseMessage.StatusCode;
-
-            try
-            {
-                DiscordGamePresence.HandleGameState(path, responseBody, GETContent);
-            }
-            catch (Exception e)
-            {
-                Log.Error($"DISCORD RPC ERROR [handling {context.Request.Path}]");
-                Log.Error($"\tMESSAGE: {e.Message}");
-                Log.Error($"\t{e.StackTrace}");
-                await SubmitError(e);
-            }
-
-            TextResponse Response = new TextResponse(responseBody,
-                responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
-            {
-                StatusCode = (HttpStatusCode)statusCode
-            };;
-
-            queryParams.Clear();
-
-            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
-                CommunicationLogEntryType.Response, new CommunicationLogResponse(
-                    responseBody, resolvedUrl.ToString(), method));
-
-            return Response;
         }
 
         private static string CleanFromUnknownChars(string s)
         {
+            if (string.IsNullOrWhiteSpace(s)) { return null;  }
+
             StringBuilder sb = new StringBuilder(s.Length);
             foreach (char c in s)
             {
@@ -193,25 +168,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 }
             }
 
-            return sb.ToString();
-        }
-
-        private static async Task SubmitError(Exception exception)
-        {
-            try
-            {
-                var mainsrv = DetectLinux.LinuxDetected() ? URLs.Main.Replace("https", "http") : URLs.Main;
-                UrlFlurl url = new UrlFlurl(mainsrv + "/error-report");
-                await url.PostJsonAsync(new
-                {
-                    message = exception.Message ?? "no message",
-                    stackTrace = exception.StackTrace ?? "no stack trace"
-                });
-            }
-            catch (Exception error)
-            {
-                Log.Error("PROXY HANDLER: " + error.Message);
-            }
+            return Strings.Encode(sb.ToString(0, sb.Length));
         }
     }
 }

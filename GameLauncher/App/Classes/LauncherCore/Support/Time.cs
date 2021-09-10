@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Support
 {
@@ -18,6 +17,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                 {
                     return DateTime.Now.ToString("HH:mm:ss.ff");
                 }
+                else if (Mode == "Log")
+                {
+                    return DateTime.Now.ToString("MM dd yyyy - HH mm.ss");
+                }
+                else if (Mode == "Now - Local Time")
+                {
+                    return DateTime.Now.ToString();
+                }
+                else if (Mode == "Now - UTC Time (Offset)")
+                {
+                    return DateTimeOffset.Now.ToString();
+                }
                 else
                 {
                     return string.Empty;
@@ -25,22 +36,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             }
             catch
             {
-                return "Unknown Time/Date";
+                return "Unknown-Time-Date";
             }
         }
 
-        /* Count Down Timer */
-        public static void SecondsRemaining(int sec)
-        {
-            if (sec < 1) return;
-            DateTime _desired = DateTime.Now.AddSeconds(sec);
-            while (DateTime.Now < _desired)
-            {
-                Application.DoEvents();
-            }
-        }
-
-        /* Moved "AddMilliseconds" Code to Gist */
-        /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/15d5ef79b6c5e3dbca112a65b2a77623c5712411/Delay.cs */
+        /* Old Removed Code Moved to Gist */
+        /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/e26ab9bc5f9ce69da5d2294cc65aea69ab88c4fb/Time.cs */
     }
 }

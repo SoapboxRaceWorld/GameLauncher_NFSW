@@ -1,55 +1,83 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System.Diagnostics;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App
 {
     public partial class USXEditor : Form
     {
+        private static bool IsUSXEditorOpen = false;
         public static bool FileReadOnly = false;
         public static int AmountofCenterTimes = 0;
         public static bool ResolutionsListLoaded = false;
-        public USXEditor()
-        {
-            if (File.Exists(FileGameSettings.UserSettingsLocation))
-            {
-                DiscordLauncherPresense.Status("User XML Editor", null);
-                Log.Debug("UXE: Success, a UserSettings.xml file was found!");
-                if (new FileInfo(FileGameSettings.UserSettingsLocation).IsReadOnly == true)
-                {
-                    FileReadOnly = true;
-                    Log.Warning("UXE: UserSettings.xml is ReadOnly!");
-                }
-                else
-                {
-                    Log.Debug("UXE: UserSettings.xml can be modified!");
-                }
+        public static bool PresetLoaded = false;
 
-                FileGameSettings.Read("Full File");
-                ResolutionsListUpdater.Get();
-                InitializeComponent();
-                SetVisuals();
-                this.Closing += (x, y) =>
-                {
-                    DiscordLauncherPresense.Status("Settings", null);
-                };
+        public static void OpenScreen()
+        {
+            if (IsUSXEditorOpen || Application.OpenForms["USXEditor"] != null)
+            {
+                if (Application.OpenForms["USXEditor"] != null) { Application.OpenForms["USXEditor"].Activate(); }
             }
             else
             {
-                MessageBox.Show(null, "How is this even possible? There is no UserSettings.xml file found!", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Log.Warning("UXE: No UserSettings.xml file was found!");
-                return;
+                if (File.Exists(Locations.UserSettingsXML))
+                {
+                    try { new USXEditor().ShowDialog(); }
+                    catch (Exception Error)
+                    {
+                        string ErrorMessage = "USX Editor Screen Encountered an Error";
+                        LogToFileAddons.OpenLog("USX Editor Screen", ErrorMessage, Error, "Exclamation", false);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(null, "How is this even possible? There is no UserSettings.xml file found!", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Log.Warning("UXE: No UserSettings.xml file was found!");
+                }
             }
+        }
+
+        public USXEditor()
+        {
+            IsUSXEditorOpen = true;
+            DiscordLauncherPresence.Status("User XML Editor", null);
+            Log.Checking("UXE: Success, a UserSettings.xml file was found!");
+            if (new FileInfo(Locations.UserSettingsXML).IsReadOnly == true)
+            {
+                FileReadOnly = true;
+                Log.Warning("UXE: UserSettings.xml is Read-Only!");
+            }
+            else
+            {
+                Log.Completed("UXE: UserSettings.xml can be modified!");
+            }
+
+            FileGameSettings.Read("Full File");
+            ResolutionsListUpdater.Get();
+            InitializeComponent();
+            SetVisuals();
+            this.Closing += (x, y) =>
+            {
+                DiscordLauncherPresence.Status("Settings", null);
+                if (IsUSXEditorOpen) { IsUSXEditorOpen = false; }
+
+                if (Hover.Active)
+                {
+                    Hover.RemoveAll();
+                    Hover.Dispose();
+                }
+            };
         }
 
         /* Settings Cancel */
@@ -58,13 +86,16 @@ namespace GameLauncher.App
             Close();
         }
 
-        private void comboBoxPerformanceLevel_SelectedIndexChanged(object sender, EventArgs e)
+        private void SetValues(int Preset)
         {
-            try
+            PresetLoaded = false;
+
+            switch (Preset)
             {
-                if (comboBoxPerformanceLevel.SelectedIndex == 0)
-                {
+                case 0:
                     /* Minimal */
+                    PresetButtonMin.Checked = true;
+
                     comboBoxBaseTextureFilter.SelectedIndex = 0;
                     comboBoxAnisotropicLevel.SelectedIndex = 0;
                     comboBoxCarEnvironmentDetail.SelectedIndex = 0;
@@ -88,10 +119,11 @@ namespace GameLauncher.App
                     SetCorrectElementValues("PostProcessingEnable", "0");
 
                     Log.Info("USXE: Selected Minimum Preset");
-                }
-                else if (comboBoxPerformanceLevel.SelectedIndex == 1)
-                {
+                    break;
+                case 1:
                     /* Low */
+                    PresetButtonLow.Checked = true;
+
                     comboBoxBaseTextureFilter.SelectedIndex = 0;
                     comboBoxAnisotropicLevel.SelectedIndex = 0;
                     comboBoxCarEnvironmentDetail.SelectedIndex = 1;
@@ -115,10 +147,11 @@ namespace GameLauncher.App
                     SetCorrectElementValues("PostProcessingEnable", "0");
 
                     Log.Info("USXE: Selected Low Preset");
-                }
-                else if (comboBoxPerformanceLevel.SelectedIndex == 2)
-                {
+                    break;
+                case 2:
                     /* Medium */
+                    PresetButtonMed.Checked = true;
+
                     comboBoxBaseTextureFilter.SelectedIndex = 1;
                     comboBoxAnisotropicLevel.SelectedIndex = 0;
                     comboBoxCarEnvironmentDetail.SelectedIndex = 2;
@@ -142,10 +175,11 @@ namespace GameLauncher.App
                     SetCorrectElementValues("PostProcessingEnable", "0");
 
                     Log.Info("USXE: Selected Medium Preset");
-                }
-                else if (comboBoxPerformanceLevel.SelectedIndex == 3)
-                {
+                    break;
+                case 3:
                     /* High */
+                    PresetButtonHigh.Checked = true;
+
                     comboBoxBaseTextureFilter.SelectedIndex = 2;
                     comboBoxAnisotropicLevel.SelectedIndex = 3;
                     comboBoxCarEnvironmentDetail.SelectedIndex = 3;
@@ -155,7 +189,7 @@ namespace GameLauncher.App
                     comboBoxWorldRoadAniso.SelectedIndex = 3;
                     comboBoxShaderFSAA.SelectedIndex = 2;
                     comboBoxShadowDetail.SelectedIndex = 2;
-                    comboBoxShaderDetail.SelectedIndex = 3;
+                    comboBoxShaderDetail.SelectedIndex = 2;
 
                     SetCorrectElementValues("BaseTextureLODBias", "0");
                     SetCorrectElementValues("CarEnvironmentMapEnable", "2");
@@ -169,10 +203,11 @@ namespace GameLauncher.App
                     SetCorrectElementValues("PostProcessingEnable", "0");
 
                     Log.Info("USXE: Selected High Preset");
-                }
-                else if (comboBoxPerformanceLevel.SelectedIndex == 4)
-                {
+                    break;
+                case 4:
                     /* Maximum */
+                    PresetButtonMax.Checked = true;
+
                     comboBoxBaseTextureFilter.SelectedIndex = 2;
                     comboBoxAnisotropicLevel.SelectedIndex = 4;
                     comboBoxCarEnvironmentDetail.SelectedIndex = 4;
@@ -182,7 +217,7 @@ namespace GameLauncher.App
                     comboBoxWorldRoadAniso.SelectedIndex = 4;
                     comboBoxShaderFSAA.SelectedIndex = 2;
                     comboBoxShadowDetail.SelectedIndex = 2;
-                    comboBoxShaderDetail.SelectedIndex = 4;
+                    comboBoxShaderDetail.SelectedIndex = 3;
 
                     SetCorrectElementValues("BaseTextureLODBias", "0");
                     SetCorrectElementValues("CarEnvironmentMapEnable", "3");
@@ -196,10 +231,11 @@ namespace GameLauncher.App
                     SetCorrectElementValues("PostProcessingEnable", "1");
 
                     Log.Info("USXE: Selected Maxium Preset");
-                }
-                else
-                {
+                    break;
+                case 5:
                     /* Custom */
+                    PresetButtonCustom.Checked = true;
+
                     comboBoxBaseTextureFilter.SelectedIndex = CheckValidRange("BaseTextureFilter", "0-2", FileGameSettingsData.BaseTextureFilter);
                     comboBoxAnisotropicLevel.SelectedIndex = CheckValidRange("AnisotropicLevel", "0-4", FileGameSettingsData.BaseTextureMaxAni);
                     comboBoxCarEnvironmentDetail.SelectedIndex = CheckValidRange("CarEnvironmentDetail", "0-4", FileGameSettingsData.CarEnvironmentMapEnable);
@@ -223,7 +259,20 @@ namespace GameLauncher.App
                     SetCorrectElementValues("PostProcessingEnable", FileGameSettingsData.PostProcessingEnable);
 
                     Log.Info("USXE: Selected Custom Preset");
-                }
+                    break;
+                default:
+                    Log.Warning("USXE: Unknown Selected Preset");
+                    break;
+            }
+
+            PresetLoaded = true;
+        }
+
+        private void comboBoxPerformanceLevel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                SetValues(comboBoxPerformanceLevel.SelectedIndex);
 
                 if (comboBoxPerformanceLevel.SelectedIndex == 5)
                 {
@@ -267,12 +316,14 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("USXE: " + Error.Message);
+                LogToFileAddons.OpenLog("USXE", null, Error, null, true);
             }
         }
 
         private void SettingsSave_Click(object sender, EventArgs e)
         {
+            if (!FileReadOnly) { SettingsSave.Text = "SAVING"; }
+
             FileGameSettingsData.ScreenWidth = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ? 
                                                numericResWidth.Value : Convert.ToDecimal(((JsonResolutions)comboResolutions.SelectedItem).Width));
             FileGameSettingsData.ScreenHeight = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
@@ -292,9 +343,12 @@ namespace GameLauncher.App
             FileGameSettingsData.Damage = (radioDamageOn.Checked == true) ? "0" : "1";
             FileGameSettingsData.SpeedUnits = (radioKmH.Checked == true) ? "0" : "1";
 
-            FileGameSettingsData.Transmission = comboBoxTransmisson.SelectedValue.ToString();
-            FileGameSettingsData.AudioMode = comboAudioMode.SelectedValue.ToString();
-            FileGameSettingsData.CameraPOV = comboBoxCamera.SelectedValue.ToString();
+            FileGameSettingsData.TransmissionType = comboBoxTransmisson.SelectedValue.ToString(); // Physics
+            FileGameSettingsData.Transmission = comboBoxTransmisson.SelectedValue.ToString(); // GamePlayOptions
+            FileGameSettingsData.AudioMode = comboAudioMode.SelectedValue.ToString(); // GamePlayOptions
+            FileGameSettingsData.AudioM = comboAudioMode.SelectedValue.ToString(); //VideoConfig
+            FileGameSettingsData.CameraPOV = comboBoxCamera.SelectedValue.ToString(); // Physics
+            FileGameSettingsData.Camera = comboBoxCamera.SelectedValue.ToString(); // GamePlayOptions
 
             FileGameSettingsData.MotionBlurEnable = (radioMotionBlurOff.Checked == true) ? "0" : "1";
             FileGameSettingsData.RoadTextureLODBias = (radioRoadLODBiasOff.Checked == true) ? "0" : "1";
@@ -320,6 +374,8 @@ namespace GameLauncher.App
             FileGameSettingsData.ShaderDetail = comboBoxShaderDetail.SelectedValue.ToString();
 
             FileGameSettings.Save("Display", "Full File");
+
+            if (!FileReadOnly) { SettingsSave.Text = "SAVED"; }
         }
 
         private int CheckValidRange(string Type, string Range, string Value)
@@ -377,76 +433,77 @@ namespace GameLauncher.App
             }
             else if (Range == "0-3")
             {
-                if (Type == "ShaderFSAA")
+                switch (Type)
                 {
-                    if (ConvertedValue == 0)
-                    {
-                        return 0;
-                    }
-                    else if (ConvertedValue == 2)
-                    {
-                        return 1;
-                    }
-                    else
-                    {
-                        return 3;
-                    }
-                }
-                else
-                {
-                    if (ConvertedValue <= 0)
-                    {
-                        return 0;
-                    }
-                    else if (ConvertedValue >= 3)
-                    {
-                        return 3;
-                    }
-                    else
-                    {
-                        return ConvertedValue;
-                    }
+                    case "ShaderFSAA":
+                        switch (ConvertedValue)
+                        {
+                            case 0:
+                                return 0;
+                            case 2:
+                                return 1;
+                            default:
+                                return 3;
+                        }
+                    default:
+                        if (ConvertedValue <= 0)
+                        {
+                            return 0;
+                        }
+                        else if (ConvertedValue >= 3)
+                        {
+                            return 3;
+                        }
+                        else
+                        {
+                            return ConvertedValue;
+                        }
                 }
             }
             else if (Range == "0-4")
             {
-                if (Type == "WorldRoadAniso" || Type == "AnisotropicLevel")
+                switch (Type)
                 {
-                    if (ConvertedValue == 0)
-                    {
-                        return 0;
-                    }
-                    if (ConvertedValue == 2)
-                    {
-                        return 1;
-                    }
-                    else if (ConvertedValue == 4)
-                    {
-                        return 2;
-                    }
-                    else if (ConvertedValue == 8)
-                    {
-                        return 3;
-                    }
-                    else
-                    {
-                        return 4;
-                    }
-                }
-                else
-                {
-                    if (ConvertedValue <= 0)
-                    {
-                        return 0;
-                    }
-                    else if (ConvertedValue >= 4)
-                    {
-                        return 4;
-                    }
-                    else
-                    {
-                        return ConvertedValue;
-                    }
+                    case "WorldRoadAniso":
+                    case "AnisotropicLevel":
+                        switch (ConvertedValue)
+                        {
+                            case 0:
+                                return 0;
+                            case 2:
+                                return 1;
+                            case 4:
+                                return 2;
+                            case 8:
+                                return 3;
+                            default:
+                                return 4;
+                        }
+                    case "ShaderDetail":
+                        switch (ConvertedValue)
+                        {
+                            case 0:
+                                return 0;
+                            case 1:
+                                return 1;
+                            case 2:
+                                return 2;
+                            default:
+                                return 4;
+                        }
+                    default:
+                        if (ConvertedValue <= 0)
+                        {
+                            return 0;
+                        }
+                        else if (ConvertedValue >= 4)
+                        {
+                            return 4;
+                        }
+                        else
+                        {
+                            return ConvertedValue;
+                        }
                 }
             }
             else if (Range == "0-5")
@@ -535,24 +592,23 @@ namespace GameLauncher.App
 
         private string SelectedElement(string Type)
         {
-            if (Type == "MaxSkidMarks")
+            switch (Type)
             {
-                if (radioMaxSkidMarksZero.Checked == true)
-                {
+                case "MaxSkidMarks":
+                    if (radioMaxSkidMarksZero.Checked)
+                    {
+                        return "0";
+                    }
+                    else if (radioMaxSkidMarksOne.Checked)
+                    {
+                        return "1";
+                    }
+                    else
+                    {
+                        return "2";
+                    }
+                default:
                     return "0";
-                }
-                else if (radioMaxSkidMarksOne.Checked == true)
-                {
-                    return "1";
-                }
-                else
-                {
-                    return "2";
-                }
-            }
-            else
-            {
-                return "0";
             }
         }
 
@@ -589,133 +645,132 @@ namespace GameLauncher.App
         {
             try
             {
-                if (Element == "BaseTextureLODBias")
+                switch (Element)
                 {
-                    if (ComparisonValue == "0")
-                    {
-                        radioBaseTextureLODOff.Checked = true;
-                    }
-                    else
-                    {
-                        radioBaseTextureLODOn.Checked = true;
-                    }
-                }
-                else if (Element == "CarEnvironmentMapEnable")
-                {
-                    if (ComparisonValue == "0")
-                    {
-                        radioCarDetailLODOff.Checked = true;
-                    }
-                    else
-                    {
-                        radioCarDetailLODOn.Checked = true;
-                    }
-                }
-                else if (Element == "MaxSkidMarks")
-                {
-                    if (ComparisonValue == "0")
-                    {
-                        radioMaxSkidMarksZero.Checked = true;
-                    }
-                    else if (ComparisonValue == "1")
-                    {
-                        radioMaxSkidMarksOne.Checked = true;
-                    }
-                    else
-                    {
-                        radioMaxSkidMarksTwo.Checked = true;
-                    }
-                }
-                else if (Element == "RoadTextureLODBias")
-                {
-                    if (ComparisonValue == "0")
-                    {
-                        radioRoadLODBiasOff.Checked = true;
-                    }
-                    else
-                    {
-                        radioRoadLODBiasOn.Checked = true;
-                    }
-                }
-                else if (Element == "MotionBlurEnable")
-                {
-                    if (ComparisonValue == "0")
-                    {
-                        radioMotionBlurOff.Checked = true;
-                    }
-                    else
-                    {
-                        radioMotionBlurOn.Checked = true;
-                    }
-                }
-                else if (Element == "OverBrightEnable")
-                {
-                    if (ComparisonValue == "0")
-                    {
-                        radioOverBrightOff.Checked = true;
-                    }
-                    else
-                    {
-                        radioOverBrightOn.Checked = true;
-                    }
-                }
-                else if (Element == "ParticleSystemEnable")
-                {
-                    if (ComparisonValue == "0")
-                    {
-                        radioParticleSysOff.Checked = true;
-                    }
-                    else
-                    {
-                        radioParticleSysOn.Checked = true;
-                    }
-                }
-                else if (Element == "VisualTreatment")
-                {
-                    if (ComparisonValue == "0")
-                    {
-                        radioVisualTreatOff.Checked = true;
-                    }
-                    else
-                    {
-                        radioVisualTreatOn.Checked = true;
-                    }
-                }
-                else if (Element == "WaterSimEnable")
-                {
-                    if (ComparisonValue == "0")
-                    {
-                        radioWaterSimulationOff.Checked = true;
-                    }
-                    else
-                    {
-                        radioWaterSimulationOn.Checked = true;
-                    }
-                }
-                else if (Element == "PostProcessingEnable")
-                {
-                    if (ComparisonValue == "0")
-                    {
-                        radioPostProcOff.Checked = true;
-                    }
-                    else
-                    {
-                        radioPostProcOn.Checked = true;
-                    }
-                }
-                else
-                {
-                    Log.Error("USXE: Unknown Function Call [Element: '" + Element + "' ComparisonValue: '" + ComparisonValue + "']");
+                    case "BaseTextureLODBias":
+                        if (ComparisonValue == "0")
+                        {
+                            radioBaseTextureLODOff.Checked = true;
+                        }
+                        else
+                        {
+                            radioBaseTextureLODOn.Checked = true;
+                        }
+                        break;
+                    case "CarEnvironmentMapEnable":
+                        if (ComparisonValue == "0")
+                        {
+                            radioCarDetailLODOff.Checked = true;
+                        }
+                        else
+                        {
+                            radioCarDetailLODOn.Checked = true;
+                        }
+                        break;
+                    case "MaxSkidMarks":
+                        if (ComparisonValue == "0")
+                        {
+                            radioMaxSkidMarksZero.Checked = true;
+                        }
+                        else if (ComparisonValue == "1")
+                        {
+                            radioMaxSkidMarksOne.Checked = true;
+                        }
+                        else
+                        {
+                            radioMaxSkidMarksTwo.Checked = true;
+                        }
+                        break;
+                    case "RoadTextureLODBias":
+                        if (ComparisonValue == "0")
+                        {
+                            radioRoadLODBiasOff.Checked = true;
+                        }
+                        else
+                        {
+                            radioRoadLODBiasOn.Checked = true;
+                        }
+                        break;
+                    case "MotionBlurEnable":
+                        if (ComparisonValue == "0")
+                        {
+                            radioMotionBlurOff.Checked = true;
+                        }
+                        else
+                        {
+                            radioMotionBlurOn.Checked = true;
+                        }
+                        break;
+                    case "OverBrightEnable":
+                        if (ComparisonValue == "0")
+                        {
+                            radioOverBrightOff.Checked = true;
+                        }
+                        else
+                        {
+                            radioOverBrightOn.Checked = true;
+                        }
+                        break;
+                    case "ParticleSystemEnable":
+                        if (ComparisonValue == "0")
+                        {
+                            radioParticleSysOff.Checked = true;
+                        }
+                        else
+                        {
+                            radioParticleSysOn.Checked = true;
+                        }
+                        break;
+                    case "VisualTreatment":
+                        if (ComparisonValue == "0")
+                        {
+                            radioVisualTreatOff.Checked = true;
+                        }
+                        else
+                        {
+                            radioVisualTreatOn.Checked = true;
+                        }
+                        break;
+                    case "WaterSimEnable":
+                        if (ComparisonValue == "0")
+                        {
+                            radioWaterSimulationOff.Checked = true;
+                        }
+                        else
+                        {
+                            radioWaterSimulationOn.Checked = true;
+                        }
+                        break;
+                    case "PostProcessingEnable":
+                        if (ComparisonValue == "0")
+                        {
+                            radioPostProcOff.Checked = true;
+                        }
+                        else
+                        {
+                            radioPostProcOn.Checked = true;
+                        }
+                        break;
+                    default:
+                        Log.Error("USXE: Unknown Function Call [Element: '" + Element + "' ComparisonValue: '" + ComparisonValue + "']");
+                        break;
+
                 }
             }
             catch (Exception Error)
             {
-                Log.Error("USXE: " + Error.Message);
+                LogToFileAddons.OpenLog("USXE", null, Error, null, true);
             }
         }
 
         private void SetVisuals()
         {
+            /*******************************/
+            /* Set Initial Position         /
+            /*******************************/
+
+            FunctionStatus.CenterParent(this);
+
             /*******************************/
             /* Set Window Name              /
             /*******************************/
@@ -744,15 +799,10 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-
-            if (DetectLinux.LinuxDetected())
-            {
-                MainFontSize = 9f;
-                SecondaryFontSize = 8f;
-            }
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Bold);
+
             labelVideoOptions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsSave.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsCancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -765,6 +815,7 @@ namespace GameLauncher.App
             labelWorldDetails.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
             labelCarDetail.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
             labelBaseTextures.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
+            LabelGraphicPreset.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
             /* Sub-Titles */
             labelPerfLevel.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelResolution.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
@@ -841,6 +892,13 @@ namespace GameLauncher.App
             radioCarDetailLODOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             radioBaseTextureLODOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             radioBaseTextureLODOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            /* Preset Radio Buttons */
+            PresetButtonMin.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            PresetButtonLow.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            PresetButtonMed.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            PresetButtonHigh.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            PresetButtonMax.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            PresetButtonCustom.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             /* Input Boxes */
             numericResWidth.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             numericResHeight.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -871,18 +929,11 @@ namespace GameLauncher.App
             /* Set Theme Colors & Images     /
             /********************************/
 
-            if (FileReadOnly == true)
-            {
-                SettingsSave.Text = "Read-Only";
-                SettingsSave.ForeColor = Theming.WinFormErrorTextForeColor;
-            }
-            else
-            {
-                SettingsSave.ForeColor = Theming.SeventhTextForeColor;
-            }
-
+            SettingsSave.Text = FileReadOnly ? "READ-ONLY" : "SAVE";
+            SettingsSave.ForeColor = FileReadOnly ? Theming.WinFormErrorTextForeColor :  Theming.SeventhTextForeColor;
             SettingsSave.Image = Theming.GreenButton;
             SettingsCancel.Image = Theming.GrayButton;
+            SettingsCancel.ForeColor = Theming.FivithTextForeColor;
             /* Titles */
             labelVideoOptions.ForeColor = Theming.SecondaryTextForeColor;
             labelAudioOptions.ForeColor = Theming.SecondaryTextForeColor;
@@ -892,6 +943,7 @@ namespace GameLauncher.App
             labelWorldDetails.ForeColor = Theming.SecondaryTextForeColor;
             labelCarDetail.ForeColor = Theming.SecondaryTextForeColor;
             labelBaseTextures.ForeColor = Theming.SecondaryTextForeColor;
+            LabelGraphicPreset.ForeColor = Theming.SecondaryTextForeColor;
             /* Sub-Titles */
             labelPerfLevel.ForeColor = Theming.Link;
             labelResolution.ForeColor = Theming.MainTextForeColor;
@@ -967,56 +1019,63 @@ namespace GameLauncher.App
             radioCarDetailLODOff.ForeColor = Theming.MainTextForeColor;
             radioBaseTextureLODOn.ForeColor = Theming.MainTextForeColor;
             radioBaseTextureLODOff.ForeColor = Theming.MainTextForeColor;
+            /* Preset Radio Buttons */
+            PresetButtonMin.ForeColor = Theming.MainTextForeColor;
+            PresetButtonLow.ForeColor = Theming.MainTextForeColor;
+            PresetButtonMed.ForeColor = Theming.MainTextForeColor;
+            PresetButtonHigh.ForeColor = Theming.MainTextForeColor;
+            PresetButtonMax.ForeColor = Theming.MainTextForeColor;
+            PresetButtonCustom.ForeColor = Theming.MainTextForeColor;
             /* Input Boxes */
-            numericResWidth.ForeColor = Theming.CDNMenuTextForeColor;
-            numericResWidth.BackColor = Theming.CDNMenuBGForeColor;
-            numericResHeight.ForeColor = Theming.CDNMenuTextForeColor;
-            numericResHeight.BackColor = Theming.CDNMenuBGForeColor;
-            numericBrightness.ForeColor = Theming.CDNMenuTextForeColor;
-            numericBrightness.BackColor = Theming.CDNMenuBGForeColor;
-            numericMVol.ForeColor = Theming.CDNMenuTextForeColor;
-            numericMVol.BackColor = Theming.CDNMenuBGForeColor;
-            numericSFxVol.ForeColor = Theming.CDNMenuTextForeColor;
-            numericSFxVol.BackColor = Theming.CDNMenuBGForeColor;
-            numericCarVol.ForeColor = Theming.CDNMenuTextForeColor;
-            numericCarVol.BackColor = Theming.CDNMenuBGForeColor;
-            numericSpeech.ForeColor = Theming.CDNMenuTextForeColor;
-            numericSpeech.BackColor = Theming.CDNMenuBGForeColor;
-            numericGMusic.ForeColor = Theming.CDNMenuTextForeColor;
-            numericGMusic.BackColor = Theming.CDNMenuBGForeColor;
-            numericFEMusic.ForeColor = Theming.CDNMenuTextForeColor;
-            numericFEMusic.BackColor = Theming.CDNMenuBGForeColor;
+            numericResWidth.ForeColor = Theming.DropMenuTextForeColor;
+            numericResWidth.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericResHeight.ForeColor = Theming.DropMenuTextForeColor;
+            numericResHeight.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericBrightness.ForeColor = Theming.DropMenuTextForeColor;
+            numericBrightness.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericMVol.ForeColor = Theming.DropMenuTextForeColor;
+            numericMVol.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericSFxVol.ForeColor = Theming.DropMenuTextForeColor;
+            numericSFxVol.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericCarVol.ForeColor = Theming.DropMenuTextForeColor;
+            numericCarVol.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericSpeech.ForeColor = Theming.DropMenuTextForeColor;
+            numericSpeech.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericGMusic.ForeColor = Theming.DropMenuTextForeColor;
+            numericGMusic.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericFEMusic.ForeColor = Theming.DropMenuTextForeColor;
+            numericFEMusic.BackColor = Theming.DropMenuBackgroundForeColor;
             /* DropDown Menus */
-            comboBoxPerformanceLevel.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxPerformanceLevel.BackColor = Theming.CDNMenuBGForeColor;
-            comboResolutions.ForeColor = Theming.CDNMenuTextForeColor;
-            comboResolutions.BackColor = Theming.CDNMenuBGForeColor;
-            comboAudioMode.ForeColor = Theming.CDNMenuTextForeColor;
-            comboAudioMode.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxCamera.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxCamera.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxTransmisson.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxTransmisson.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxShaderFSAA.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxShaderFSAA.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxShadowDetail.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxShadowDetail.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxShaderDetail.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxShaderDetail.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxWorldGlobalDetail.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxWorldGlobalDetail.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxWorldRoadReflection.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxWorldRoadReflection.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxWorldRoadTexture.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxWorldRoadTexture.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxWorldRoadAniso.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxWorldRoadAniso.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxCarEnvironmentDetail.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxCarEnvironmentDetail.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxBaseTextureFilter.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxBaseTextureFilter.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxAnisotropicLevel.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxAnisotropicLevel.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxPerformanceLevel.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxPerformanceLevel.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboResolutions.ForeColor = Theming.DropMenuTextForeColor;
+            comboResolutions.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboAudioMode.ForeColor = Theming.DropMenuTextForeColor;
+            comboAudioMode.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxCamera.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxCamera.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxTransmisson.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxTransmisson.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxShaderFSAA.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxShaderFSAA.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxShadowDetail.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxShadowDetail.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxShaderDetail.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxShaderDetail.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxWorldGlobalDetail.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxWorldGlobalDetail.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxWorldRoadReflection.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxWorldRoadReflection.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxWorldRoadTexture.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxWorldRoadTexture.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxWorldRoadAniso.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxWorldRoadAniso.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxCarEnvironmentDetail.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxCarEnvironmentDetail.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxBaseTextureFilter.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxBaseTextureFilter.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxAnisotropicLevel.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxAnisotropicLevel.BackColor = Theming.DropMenuBackgroundForeColor;
 
             /*******************************/
             /* Comboboxes                   /
@@ -1181,7 +1240,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("Resolution: " + Error.Message);
+                LogToFileAddons.OpenLog("Resolution", null, Error, null, true);
             }
 
             /********************************/
@@ -1200,12 +1259,26 @@ namespace GameLauncher.App
 
             comboBoxPerformanceLevel.SelectedIndexChanged += new EventHandler(comboBoxPerformanceLevel_SelectedIndexChanged);
 
+            PresetButtonMin.CheckedChanged += new EventHandler(PresetButtonMin_CheckedChanged);
+            PresetButtonLow.CheckedChanged += new EventHandler(PresetButtonLow_CheckedChanged);
+            PresetButtonMed.CheckedChanged += new EventHandler(PresetButtonMed_CheckedChanged);
+            PresetButtonHigh.CheckedChanged += new EventHandler(PresetButtonHigh_CheckedChanged);
+            PresetButtonMax.CheckedChanged += new EventHandler(PresetButtonMax_CheckedChanged);
+            PresetButtonCustom.CheckedChanged += new EventHandler(PresetButtonCustom_CheckedChanged);
+
             /*********************************************************************/
             /* Set Drop Down, Radio, Input Boxes, and Set Window Size and Postion /
             /*********************************************************************/
 
             /* Bugfix: Set the Size Ahead of Time and it will change after setting the PerformanceLevel Index */
-            Size = new Size(290, 842);
+            if (WindowsProductVersion.GetWindowsNumber() >= 10)
+            {
+                Size = new Size(292, 726);
+            }
+            else
+            {
+                Size = new Size(282, 712);
+            }
 
             if (ResolutionsListLoaded == true)
             {
@@ -1306,8 +1379,73 @@ namespace GameLauncher.App
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("USXE Resolution" + Error.Message);
+                    LogToFileAddons.OpenLog("USXE Resolution", null, Error, null, true);
                 }
+            }
+
+            /*******************************/
+            /* Set ToolTip Texts            /
+            /*******************************/
+
+            Hover.SetToolTip(PresetButtonMin, "Preset: Minimum Graphics");
+            Hover.SetToolTip(PresetButtonLow, "Preset: Low Graphics");
+            Hover.SetToolTip(PresetButtonMed, "Preset: Medium Graphics");
+            Hover.SetToolTip(PresetButtonHigh, "Preset: High Graphics");
+            Hover.SetToolTip(PresetButtonMax, "Preset: Max Graphics");
+            Hover.SetToolTip(PresetButtonCustom, "Preset: Saved Graphics");
+
+            Shown += (x, y) =>
+            {
+                Application.OpenForms["USXEditor"].Activate();
+                this.BringToFront();
+            };
+        }
+
+        private void PresetButtonMin_CheckedChanged(object sender, EventArgs e)
+        {
+            if (PresetLoaded)
+            {
+                SetValues(0);
+            }
+        }
+
+        private void PresetButtonLow_CheckedChanged(object sender, EventArgs e)
+        {
+            if (PresetLoaded)
+            {
+                SetValues(1);
+            }
+        }
+
+        private void PresetButtonMed_CheckedChanged(object sender, EventArgs e)
+        {
+            if (PresetLoaded)
+            {
+                SetValues(2);
+            }
+        }
+
+        private void PresetButtonHigh_CheckedChanged(object sender, EventArgs e)
+        {
+            if (PresetLoaded)
+            {
+                SetValues(3);
+            }
+        }
+
+        private void PresetButtonMax_CheckedChanged(object sender, EventArgs e)
+        {
+            if (PresetLoaded)
+            {
+                SetValues(4);
+            }
+        }
+
+        private void PresetButtonCustom_CheckedChanged(object sender, EventArgs e)
+        {
+            if (PresetLoaded)
+            {
+                SetValues(5);
             }
         }
 
@@ -1365,7 +1503,7 @@ namespace GameLauncher.App
             }
             else
             {
-                Log.Error("USXE: User Broke the Honk!");
+                Log.Info("USXE: User Broke the Honk!");
             }
         }
     }

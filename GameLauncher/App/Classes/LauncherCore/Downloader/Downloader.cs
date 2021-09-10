@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
@@ -10,6 +9,9 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.SystemPlatform;
 
 namespace GameLauncher.App.Classes.LauncherCore.Downloader
@@ -126,13 +128,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             Downloader.mStopFlag = true;
             if (this.mDownloadManager != null && this.mDownloadManager.ManagerRunning)
             {
+                Log.Info("CDN DOWNLOADER: Stopping Game Files Download");
                 this.mDownloadManager.CancelAllDownloads();
             }
         }
 
         private void Downloader_DownloadFileCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
-            e.UserState.ToString();
             if (!e.Cancelled && e.Error == null)
             {
                 //Downloader.mLogger.DebugFormat("File '{0}' downloaded", arg);
@@ -156,18 +158,31 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                 }
                 else
                 {
+                    FunctionStatus.TLS();
+                    Uri URLCall = new Uri(url);
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    var Client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
+
+                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+                    Client.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.Downloader_DownloadFileCompleted);
 
                     try
                     {
-                        WebClientWithTimeout webClient = new WebClientWithTimeout();
-                        webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.Downloader_DownloadFileCompleted);
-                        string tempFileName = Path.GetTempFileName();
-                        webClient.DownloadFileAsync(new Uri(url), tempFileName);
-                        while (webClient.IsBusy)
+                        string tempFileName = Strings.Encode(Path.GetTempFileName());
+                        Client.DownloadFileAsync(URLCall, tempFileName);
+                        while (Client.IsBusy)
                         {
                             if (Downloader.mStopFlag)
                             {
-                                webClient.CancelAsync();
+                                Client.CancelAsync();
                                 result = null;
                                 return result;
                             }
@@ -178,15 +193,23 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         Downloader.mIndexCached = xmlDocument;
                         result = xmlDocument;
                     }
-                    catch
+                    catch (Exception Error)
                     {
+                        LogToFileAddons.OpenLog("CDN Get Index File", null, Error, null, true);
                         result = null;
+                    }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception Error)
             {
-                MessageBox.Show("GetIndexFile Exception: " + ex.ToString());
+                LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
                 result = null;
             }
             return result;
@@ -232,11 +255,21 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         num4 = (long)num;
                     }
                     long num5 = 0L;
-                    WebClientWithTimeout webClient = new WebClientWithTimeout();
-                    webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
-                    webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
-                    webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
-                    webClient.Headers.Add("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+                    var Client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
+
+                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+                    Client.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
+                    Client.Headers.Add("Accept-Language", "en-us,en;q=0.5");
+                    Client.Headers.Add("Accept-Encoding", "gzip,deflate");
+                    Client.Headers.Add("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
                     int num6 = 1;
                     array2 = null;
                     xmlNodeList = indexFile.SelectNodes("/index/fileinfo");
@@ -524,7 +557,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
 
                                         this.mFE.BeginInvoke(this.mProgressUpdated, args3);
                                     }
-                                    catch { Process.GetProcessById(Process.GetCurrentProcess().Id).Kill(); }
+                                    catch { }
                                 }
                             }
                             if (xmlNode3 != null)
@@ -566,7 +599,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                                     object[] xxxxxx = new object[] { text6, fileschecked, num4 };
                                     this.mFE.BeginInvoke(this.mShowExtract, xxxxxx);
                                 }
-                                catch { Process.GetProcessById(Process.GetCurrentProcess().Id).Kill(); }
+                                catch { }
 
                                 if (num24 != 0)
                                 {
@@ -612,16 +645,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                 }
             }
-            catch (DownloaderException ex)
+            catch (DownloaderException Error)
             {
-                MessageBox.Show("Download DownloaderException: " + ex.ToString());
+                LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
+
                 if (this.mDownloadFailed != null)
                 {
                     try
                     {
                         this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
                         {
-                            ex
+                            Error
                         });
                     }
                     catch
@@ -629,16 +663,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                 }
             }
-            catch (Exception ex2)
+            catch (Exception Error)
             {
-                MessageBox.Show("Download Exception: " + ex2.ToString());
+                LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
+
                 if (this.mDownloadFailed != null)
                 {
                     try
                     {
                         this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
                         {
-                            ex2
+                            Error
                         });
                     }
                     catch
@@ -685,11 +720,22 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                 else
                 {
                     long num = long.Parse(indexFile.SelectSingleNode("/index/header/length").InnerText);
-                    WebClientWithTimeout webClient = new WebClientWithTimeout();
-                    webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
-                    webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
-                    webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
-                    webClient.Headers.Add("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+
+                    var Client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
+
+                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+                    Client.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
+                    Client.Headers.Add("Accept-Language", "en-us,en;q=0.5");
+                    Client.Headers.Add("Accept-Encoding", "gzip,deflate");
+                    Client.Headers.Add("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
                     XmlNodeList xmlNodeList = indexFile.SelectNodes("/index/fileinfo");
                     DownloaderHashReader.Instance.Clear();
                     DownloaderHashReader.Instance.Start(indexFile, text2, text + ".hsh", this.mHashThreads);
@@ -785,18 +831,22 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                 }
             }
-            catch (DownloaderException ex)
+            catch (DownloaderException Error)
             {
+                LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
+
                 this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
                 {
-                    ex
+                    Error
                 });
             }
-            catch (Exception ex2)
+            catch (Exception Error)
             {
+                LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
+
                 this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
                 {
-                    ex2
+                    Error
                 });
             }
             finally
@@ -821,14 +871,27 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
 
         public static byte[] GetData(string url)
         {
-            WebClientWithTimeout webClient = new WebClientWithTimeout();
-            webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-            webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
-            webClient.Headers.Add("Accept-Encoding", "gzip");
-            webClient.Headers.Add("Accept-Charset", "utf-8;q=0.7,*;q=0.7");
-            webClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
-            byte[] result = webClient.DownloadData(url);
-            webClient.Dispose();
+            FunctionStatus.TLS();
+            Uri URLCall = new Uri(url);
+            ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+            var Client = new WebClient
+            {
+                Encoding = Encoding.UTF8
+            };
+
+            if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+            else
+            {
+                Client.Headers.Add("user-agent", "SBRW Launcher " +
+                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+            }
+            Client.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            Client.Headers.Add("Accept-Language", "en-us,en;q=0.5");
+            Client.Headers.Add("Accept-Encoding", "gzip");
+            Client.Headers.Add("Accept-Charset", "utf-8;q=0.7,*;q=0.7");
+            Client.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
+            byte[] result = Client.DownloadData(URLCall);
+            Client.Dispose();
             return result;
         }
 

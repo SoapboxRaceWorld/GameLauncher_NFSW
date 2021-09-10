@@ -1,54 +1,51 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
+using System;
 using System.Management;
+using System.Runtime.InteropServices;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Windows
 {
     class ManagementSearcher
     {
-        /* Checks AntiVirus is running (Windows 10 Only) */
-        public static bool SecurityCenter(string Query)
-        {
-            bool ServiceStatus = false;
-
-            try
-            {
-                ManagementObjectSearcher Search =
-                    new ManagementObjectSearcher("root\\Microsoft\\Windows\\Defender",
-                    "SELECT * FROM MSFT_MpComputerStatus");
-
-                foreach (ManagementObject queryObj in Search.Get())
-                {
-                    ServiceStatus = (bool)queryObj[Query];
-                }
-            }
-            catch
-            {
-                ServiceStatus = false;
-            }
-
-            return ServiceStatus;
-        }
-
         /* Searches for Installed Windows Updates */
         public static bool GetInstalledHotFix(string identification)
         {
-            try
+            if (!UnixOS.Detected())
             {
-                var search = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
-                var collection = search.Get();
+                ManagementObjectSearcher ObjectPath = null;
+                ManagementObjectCollection ObjectCollection = null;
 
-                foreach (ManagementObject quickFix in collection)
+                try
                 {
-                    Console.WriteLine("Updates installed: " + quickFix["HotFixID"].ToString());
-                    if (quickFix["HotFixID"].ToString() == identification)
+                    ObjectPath = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
+                    ObjectCollection = ObjectPath.Get();
+
+                    foreach (ManagementBaseObject SearchBase in ObjectCollection)
                     {
-                        return true;
+                        if (SearchBase.Properties["HotFixID"].Value.ToString() == identification)
+                        {
+                            return true;
+                        }
                     }
                 }
-            }
-            catch
-            {
-                return false;
+                catch (ManagementException Error)
+                {
+                    LogToFileAddons.OpenLog("Installed KB [M.E.]", null, Error, null, true);
+                }
+                catch (COMException Error)
+                {
+                    LogToFileAddons.OpenLog("Installed KB [C.O.M.]", null, Error, null, true);
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Installed KB", null, Error, null, true);
+                }
+                finally
+                {
+                    if (ObjectPath != null) { ObjectPath.Dispose(); }
+                    if (ObjectCollection != null) { ObjectCollection.Dispose(); }
+                }
             }
 
             return false;

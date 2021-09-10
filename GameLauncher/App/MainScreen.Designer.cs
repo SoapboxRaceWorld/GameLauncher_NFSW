@@ -75,10 +75,11 @@
             this.MainEmailBorder = new System.Windows.Forms.PictureBox();
             this.MainPasswordBorder = new System.Windows.Forms.PictureBox();
             this.ProgressBarOutline = new System.Windows.Forms.PictureBox();
-            this.VerticalBanner = new System.Windows.Forms.PictureBox();
+            this.Banner = new System.Windows.Forms.PictureBox();
+            this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
+            this.ButtonSecurityCenter = new System.Windows.Forms.PictureBox();
             this.ExtractingProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
             this.PlayProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
-            this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
             this.ShowPlayPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).BeginInit();
@@ -94,7 +95,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.MainEmailBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MainPasswordBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProgressBarOutline)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.VerticalBanner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Banner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ButtonSecurityCenter)).BeginInit();
             this.SuspendLayout();
             // 
             // Timeout
@@ -146,7 +148,7 @@
             this.AddServer.ForeColor = System.Drawing.Color.Black;
             this.AddServer.Location = new System.Drawing.Point(833, 49);
             this.AddServer.Name = "AddServer";
-            this.AddServer.Size = new System.Drawing.Size(24, 24);
+            this.AddServer.Size = new System.Drawing.Size(25, 25);
             this.AddServer.TabIndex = 3;
             this.AddServer.Text = "+";
             this.AddServer.UseVisualStyleBackColor = false;
@@ -184,7 +186,7 @@
             this.LauncherStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.LauncherStatusDesc.Location = new System.Drawing.Point(53, 486);
             this.LauncherStatusDesc.Name = "LauncherStatusDesc";
-            this.LauncherStatusDesc.Size = new System.Drawing.Size(152, 14);
+            this.LauncherStatusDesc.Size = new System.Drawing.Size(152, 30);
             this.LauncherStatusDesc.TabIndex = 5;
             this.LauncherStatusDesc.Text = "Version: vX.X.X.X";
             this.LauncherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -468,7 +470,6 @@
             this.CloseBTN.Size = new System.Drawing.Size(25, 25);
             this.CloseBTN.TabIndex = 0;
             this.CloseBTN.TabStop = false;
-            this.CloseBTN.Click += new System.EventHandler(this.CloseBTN_Click);
             // 
             // ServerInfoPanel
             // 
@@ -699,16 +700,32 @@
             this.ProgressBarOutline.TabIndex = 174;
             this.ProgressBarOutline.TabStop = false;
             // 
-            // VerticalBanner
+            // Banner
             // 
-            this.VerticalBanner.BackColor = System.Drawing.Color.Transparent;
-            this.VerticalBanner.InitialImage = null;
-            this.VerticalBanner.Location = new System.Drawing.Point(28, 81);
-            this.VerticalBanner.Name = "VerticalBanner";
-            this.VerticalBanner.Size = new System.Drawing.Size(523, 223);
-            this.VerticalBanner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.VerticalBanner.TabIndex = 22;
-            this.VerticalBanner.TabStop = false;
+            this.Banner.BackColor = System.Drawing.Color.Transparent;
+            this.Banner.InitialImage = null;
+            this.Banner.Location = new System.Drawing.Point(28, 81);
+            this.Banner.Name = "Banner";
+            this.Banner.Size = new System.Drawing.Size(523, 223);
+            this.Banner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.Banner.TabIndex = 22;
+            this.Banner.TabStop = false;
+            // 
+            // Notification
+            // 
+            this.Notification.Text = "notifyIcon1";
+            this.Notification.Visible = true;
+            // 
+            // ButtonSecurityCenter
+            // 
+            this.ButtonSecurityCenter.BackColor = System.Drawing.Color.Transparent;
+            this.ButtonSecurityCenter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ButtonSecurityCenter.InitialImage = null;
+            this.ButtonSecurityCenter.Location = new System.Drawing.Point(770, 15);
+            this.ButtonSecurityCenter.Name = "ButtonSecurityCenter";
+            this.ButtonSecurityCenter.Size = new System.Drawing.Size(25, 25);
+            this.ButtonSecurityCenter.TabIndex = 176;
+            this.ButtonSecurityCenter.TabStop = false;
             // 
             // ExtractingProgress
             // 
@@ -745,17 +762,13 @@
             this.PlayProgress.Size = new System.Drawing.Size(519, 13);
             this.PlayProgress.Text = "downloadProgress";
             // 
-            // Notification
-            // 
-            this.Notification.Text = "notifyIcon1";
-            this.Notification.Visible = true;
-            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.ButtonSecurityCenter);
             this.Controls.Add(this.InsiderBuildNumberText);
             this.Controls.Add(this.CurrentWindowInfo);
             this.Controls.Add(this.logo);
@@ -789,7 +802,7 @@
             this.Controls.Add(this.ExtractingProgress);
             this.Controls.Add(this.PlayProgress);
             this.Controls.Add(this.ProgressBarOutline);
-            this.Controls.Add(this.VerticalBanner);
+            this.Controls.Add(this.Banner);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -814,7 +827,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.MainEmailBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MainPasswordBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProgressBarOutline)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.VerticalBanner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Banner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ButtonSecurityCenter)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -830,7 +844,7 @@
         private System.Windows.Forms.PictureBox SettingsButton;
         private System.Windows.Forms.ComboBox ServerPick;
         private System.Windows.Forms.Button AddServer;
-        private System.Windows.Forms.PictureBox VerticalBanner;
+        private System.Windows.Forms.PictureBox Banner;
         internal System.Windows.Forms.Label PlayProgressText;
         private GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx ExtractingProgress;
         private GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx PlayProgress;
@@ -871,5 +885,6 @@
         private System.Windows.Forms.Label InsiderBuildNumberText;
         private System.Windows.Forms.PictureBox ProgressBarOutline;
         private System.Windows.Forms.NotifyIcon Notification;
+        private System.Windows.Forms.PictureBox ButtonSecurityCenter;
     }
 }

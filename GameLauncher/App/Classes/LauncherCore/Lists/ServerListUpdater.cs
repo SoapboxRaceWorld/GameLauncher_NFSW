@@ -1,7 +1,5 @@
-﻿using GameLauncher.App.Classes.Logger;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
-using System.Net;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,69 +8,71 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using System.Globalization;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using System.Windows.Forms;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
     public class ServerListUpdater
     {
+        public static bool LoadedList = false;
+
         public static List<ServerList> NoCategoryList = new List<ServerList>();
 
         public static List<ServerList> CleanList = new List<ServerList>();
 
+        public static string CachedJSONList;
+
         public static void GetList()
         {
-            DiscordLauncherPresense.Status("Start Up", "Creating Server List");
+            Log.Checking("SERVER LIST CORE: Creating Server List");
+            DiscordLauncherPresence.Status("Start Up", "Creating Server List");
 
             List<ServerList> serverInfos = new List<ServerList>();
 
             try
             {
-                Log.UrlCall("LIST CORE: Loading Server List from: " + URLs.OnlineServerList);
-                FunctionStatus.TLS();
-                Uri URLCall = new Uri(URLs.OnlineServerList);
-                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                WebClient Client = new WebClient();
-                Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
-                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                var response = Client.DownloadString(URLCall);
-                Log.UrlCall("LIST CORE: Loaded Server List from: " + URLs.OnlineServerList);
+                serverInfos.AddRange(JsonConvert.DeserializeObject<List<ServerList>>(CachedJSONList));
+                LoadedList = true;
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("SERVER LIST CORE", null, Error, null, true);
+                LoadedList = false;
+            }
+            finally
+            {
+                if (CachedJSONList != null)
+                {
+                    CachedJSONList = null;
+                }
+            }
 
+            if (File.Exists(Locations.LauncherCustomServers))
+            {
                 try
                 {
-                    serverInfos.AddRange(JsonConvert.DeserializeObject<List<ServerList>>(response));
-                    InformationCache.ServerListStatus = "Loaded";
-                }
-                catch (Exception error)
-                {
-                    Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + URLs.OnlineServerList + "]: " + error.Message);
-                    InformationCache.ServerListStatus = "Error";
-                }
-            }
-            catch (Exception error)
-            {
-                Log.Error("LIST CORE: Error occurred while loading Server List from [" + URLs.OnlineServerList + "]: " + error.Message);
-                InformationCache.ServerListStatus = "Error";
-            }
+                    var fileItems = JsonConvert.DeserializeObject<List<ServerList>>
+                    (Strings.Encode(File.ReadAllText(Locations.LauncherCustomServers))) ?? new List<ServerList>();
 
-            if (File.Exists("servers.json"))
-            {
-                var fileItems = JsonConvert.DeserializeObject<List<ServerList>>(File.ReadAllText("servers.json")) ?? new List<ServerList>();
-
-                if (fileItems.Count > 0)
-                {
-                    fileItems.Select(si =>
+                    if (fileItems.Count > 0)
                     {
-                        si.DistributionUrl = "";
-                        si.Id = SHA.HashPassword($"{si.Name}:{si.Id}:{si.IpAddress}");
-                        si.IsSpecial = false;
-                        si.Category = "CUSTOM";
+                        fileItems.Select(si =>
+                        {
+                            si.ID = string.IsNullOrWhiteSpace(si.ID) ? SHA.Hashes($"{si.Name}:{si.ID}:{si.IPAddress}") : si.ID;
+                            si.IsSpecial = false;
+                            si.Category = string.IsNullOrWhiteSpace(si.Category) ? "CUSTOM" : si.Category;
 
-                        return si;
-                    }).ToList().ForEach(si => serverInfos.Add(si));
+                            return si;
+                        }).ToList().ForEach(si => serverInfos.Add(si));
+                        LoadedList = true;
+                    }
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("SERVER LIST CORE", null, Error, null, true);
                 }
             }
 
@@ -83,9 +83,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     Name = "Offline Built-In Server",
                     Category = "OFFLINE",
                     IsSpecial = false,
-                    DistributionUrl = "",
-                    IpAddress = "http://localhost:4416/sbrw/Engine.svc",
-                    Id = "OFFLINE"
+                    IPAddress = "http://localhost:4416/sbrw/Engine.svc",
+                    ID = "OFFLINE"
                 });
             }
 
@@ -96,47 +95,69 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     Name = "Local Debug Server",
                     Category = "DEBUG",
                     IsSpecial = false,
-                    DistributionUrl = "",
-                    IpAddress = "http://localhost:8680",
-                    Id = "DEV"
+                    IPAddress = "http://localhost:8680",
+                    ID = "DEV"
                 });
             }
 
-            /* Create Final Server List without Categories */
-            foreach (ServerList NoCatList in serverInfos)
+            try
             {
-                if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
+                if (serverInfos != null)
                 {
-                    NoCategoryList.Add(NoCatList);
-                }
-            }
-
-            /* Create Rough Draft Server List with Categories */
-            List<ServerList> RawList = new List<ServerList>();
-
-            foreach (var serverItemGroup in serverInfos.GroupBy(s => s.Category))
-            {
-                if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
-                {
-                    RawList.Add(new ServerList
+                    if (serverInfos.Any())
                     {
-                        Id = $"__category-{serverItemGroup.Key}__",
-                        Name = $"<GROUP>{serverItemGroup.Key} Servers",
-                        IsSpecial = true
-                    });
-                }
-                RawList.AddRange(serverItemGroup.ToList());
-            }
+                        /* Create Final Server List without Categories */
+                        foreach (ServerList NoCatList in serverInfos)
+                        {
+                            if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
+                            {
+                                NoCategoryList.Add(NoCatList);
+                            }
+                        }
 
-            /* Create Final Server List with Categories */
-            foreach (ServerList CList in RawList)
-            {
-                if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
+                        /* Create Rough Draft Server List with Categories */
+                        List<ServerList> RawList = new List<ServerList>();
+
+                        foreach (var serverItemGroup in serverInfos.GroupBy(s => s.Category))
+                        {
+                            if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
+                            {
+                                RawList.Add(new ServerList
+                                {
+                                    ID = $"__category-{serverItemGroup.Key}__",
+                                    Name = $"<GROUP>{serverItemGroup.Key} Servers",
+                                    IsSpecial = true
+                                });
+                            }
+                            RawList.AddRange(serverItemGroup.ToList());
+                        }
+
+                        /* Create Final Server List with Categories */
+                        foreach (ServerList CList in RawList)
+                        {
+                            if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
+                            {
+                                CleanList.Add(CList);
+                            }
+                        }
+                        Log.Completed("SERVER LIST CORE: Server List Done");
+                    }
+                    else
+                    {
+                        Log.Completed("SERVER LIST CORE: Server List has no Elements");
+                    }
+                }
+                else
                 {
-                    CleanList.Add(CList);
+                    Log.Completed("SERVER LIST CORE: Server List is NULL");
                 }
             }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("SERVER LIST CORE", null, Error, null, true);
+            }
 
+            Log.Info("CERTIFICATE STORE: Moved to Function");
             /* (Start Process) Check Up to Date Certificate Status */
             CertificateStore.Latest();
         }
@@ -144,15 +165,22 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
         /* Converts 2 Letter Country Code and Returns Full Country Name (In English) */
         public static string CountryName(string twoLetterCountryCode)
         {
-            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
-
-            foreach (CultureInfo culture in cultures)
+            try
             {
-                RegionInfo region = new RegionInfo(culture.LCID);
-                if (region.TwoLetterISORegionName.ToUpper() == twoLetterCountryCode.ToUpper())
+                CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+
+                foreach (CultureInfo culture in cultures)
                 {
-                    return region.EnglishName;
+                    RegionInfo region = new RegionInfo(culture.LCID);
+                    if (region.TwoLetterISORegionName.ToUpper() == twoLetterCountryCode.ToUpper())
+                    {
+                        return region.EnglishName;
+                    }
                 }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("COUNTRYNAME", null, Error, null, true);
             }
 
             return "Unknown";
@@ -165,38 +193,45 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
          *  otherwise it will be "uknown" **/
         public static string ServerName(string State)
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.serverName))
+            try
             {
-                return InformationCache.SelectedServerJSON.serverName;
-            }
-            else if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.Name))
-            {
-                return InformationCache.SelectedServerData.Name;
-            }
-            else if (InformationCache.SelectedServerCategory == "CUSTOM")
-            {
-                if (State == "Register")
+                if (InformationCache.SelectedServerJSON != null &&
+                    !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.serverName))
                 {
-                    return "Custom Server";
+                    return InformationCache.SelectedServerJSON.serverName;
                 }
-                else if (State == "Settings")
+                else if (InformationCache.SelectedServerData != null &&
+                    !string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.Name))
                 {
-                    if (FileAccountSave.ChoosenGameServer.StartsWith("https"))
-                    {
-                        return "The Saved Server";
-                    }
-                    else
-                    {
-                        return "The Selected Server";
-                    }
+                    return InformationCache.SelectedServerData.Name;
                 }
                 else
                 {
-                    return "Custom";
+                    switch (State)
+                    {
+                        case "Register":
+                        case "RPC":
+                            return "Custom Server";
+                        case "Settings":
+                            return "The Selected Server";
+                        case "Select Server":
+                            if (SelectServer.ServerJsonData != null &&
+                                !string.IsNullOrWhiteSpace(SelectServer.ServerJsonData.serverName))
+                            {
+                                return SelectServer.ServerJsonData.serverName;
+                            }
+                            else
+                            {
+                                return SelectServer.ServerName;
+                            }
+                        default:
+                            return "Custom";
+                    }
                 }
             }
-            else
+            catch (Exception Error)
             {
+                LogToFileAddons.OpenLog("Server Name Provider", null, Error, null, true);
                 return "Unknown";
             }
         }

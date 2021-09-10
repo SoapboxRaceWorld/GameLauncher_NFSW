@@ -1,5 +1,4 @@
-﻿using GameLauncher.App.Classes.SystemPlatform.Linux;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
@@ -13,7 +12,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 Height = 180,
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 Text = caption,
-                StartPosition = FormStartPosition.CenterScreen,
+                StartPosition = FormStartPosition.CenterParent,
                 MaximizeBox = false
             };
 

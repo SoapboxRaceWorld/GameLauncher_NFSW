@@ -1,279 +1,412 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Global;
+﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using System;
 using System.Net;
+using System.Text;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 {
     class APIChecker
     {
-        public static APIStatus CheckStatus(string APIURI)
+        public static APIStatus CheckStatus(string URI, int Timer)
         {
-            if (!string.IsNullOrWhiteSpace(APIURI))
+            if (!string.IsNullOrWhiteSpace(URI))
             {
-                HttpWebResponse serverResponse = null;
+                HttpWebResponse ServerResponse = null;
+                HttpWebRequest URLConnection = null;
 
                 try
                 {
+                    Log.Checking("Checking Status: ".ToUpper() + URI);
                     FunctionStatus.TLS();
-                    Uri ConvertedAPIURI = new Uri(APIURI);
+                    Uri ConvertedAPIURI = new Uri(URI);
                     /* Releases Connection Socket after 30 seconds */
-                    ServicePointManager.FindServicePoint(ConvertedAPIURI).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-                    HttpWebRequest requestAPIStatus = (HttpWebRequest)WebRequest.Create(ConvertedAPIURI);
-                    requestAPIStatus.AllowAutoRedirect = false; /* Find out if this site is up and don't follow a redirector */
-                    requestAPIStatus.Method = "GET";
-                    requestAPIStatus.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                    requestAPIStatus.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-                    requestAPIStatus.KeepAlive = false;
-                    serverResponse = (HttpWebResponse)requestAPIStatus.GetResponse();
-                    Log.Info("CORE: " + APIURI + " is Online!");
-                    return APIStatus.Online;
-                    /* Do something with response.Headers to find out information about the request */
+                    ServicePointManager.FindServicePoint(ConvertedAPIURI).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Timer + 1).TotalMilliseconds;
+                    URLConnection = (HttpWebRequest)WebRequest.Create(ConvertedAPIURI);
+                    URLConnection.AllowAutoRedirect = false; /* Find out if this site is up and don't follow a redirector */
+                    URLConnection.Method = "GET";
+                    URLConnection.UserAgent = "SBRW Launcher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                    URLConnection.Timeout = (int)TimeSpan.FromSeconds(Timer).TotalMilliseconds;
+                    URLConnection.KeepAlive = false;
+
+                    try
+                    {
+                        ServerResponse = (HttpWebResponse)URLConnection.GetResponse();
+                        Log.Completed("Checking Status: ".ToUpper() + URI + " [Is Online]");
+                        return APIStatus.Online;
+                        /* Do something with response.Headers to find out information about the request */
+                    }
+                    catch (WebException Error)
+                    {
+                        Log.Completed("Checking Status: ".ToUpper() + URI + " [WebException]");
+                        return StatusCodes(URI, Error, (HttpWebResponse)Error.Response);
+                    }
                 }
-                catch (WebException e)
+                catch (Exception Error)
                 {
-                    if (e.Status == WebExceptionStatus.ProtocolError)
-                    {
-                        serverResponse = (HttpWebResponse)e.Response;
-
-                        Console.Write("Errorcode: {0}\n", (int)serverResponse.StatusCode);
-                        Log.Error("CORE: " + APIURI + " has an Error! Status Code: " + (int)serverResponse.StatusCode);
-
-                        if ((int)serverResponse.StatusCode == 404)
-                        {
-                            return APIStatus.NotFound;
-                        }
-                        else if ((int)serverResponse.StatusCode == 500)
-                        {
-                            return APIStatus.ServerError;
-                        }
-                        else if ((int)serverResponse.StatusCode == 502)
-                        {
-                            return APIStatus.ServerOverloaded;
-                        }
-                        else if ((int)serverResponse.StatusCode == 503)
-                        {
-                            return APIStatus.ServerUnavailable;
-                        }
-                        else if ((int)serverResponse.StatusCode == 504)
-                        {
-                            return APIStatus.GetWayTimeOut;
-                        }
-                        else if ((int)serverResponse.StatusCode == 520)
-                        {
-                            return APIStatus.Unknown;
-                        }
-                        else if ((int)serverResponse.StatusCode == 521)
-                        {
-                            return APIStatus.Offline;
-                        }
-                        else if ((int)serverResponse.StatusCode == 522)
-                        {
-                            return APIStatus.ConnectionTimeOut;
-                        }
-                        else if ((int)serverResponse.StatusCode == 523)
-                        {
-                            return APIStatus.OriginUnreachable;
-                        }
-                        else if ((int)serverResponse.StatusCode == 524)
-                        {
-                            return APIStatus.Timeout;
-                        }
-                        else if ((int)serverResponse.StatusCode == 525)
-                        {
-                            return APIStatus.SSLFailed;
-                        }
-                        else if ((int)serverResponse.StatusCode == 526)
-                        {
-                            return APIStatus.InvaildSSL;
-                        }
-                        /* Set flag if there was a timeout or some other issues */
-                    }
-                    else
-                    {
-                        Console.Write("------------");
-                        Console.Write("Error: {0}", e.Status);
-                        Console.Write("------------\n");
-                        Log.Error("CORE: " + APIURI + " is Offline!");
-                        return APIStatus.Offline;
-                    }
+                    Log.Completed("Checking Status: ".ToUpper() + URI + " [Exception]");
+                    LogToFileAddons.OpenLog("API Checker", null, Error, null, true);
+                    return APIStatus.UnknownError;
                 }
                 finally
                 {
-                    if (serverResponse != null)
+                    if (ServerResponse != null)
                     {
-                        serverResponse.Close();
+                        ServerResponse.Close();
+                        ServerResponse.Dispose();
+                    }
+
+                    if (URLConnection != null)
+                    {
+                        URLConnection.Abort();
                     }
                 }
             }
-            return APIStatus.Null;
+            else
+            {
+                Log.Error("CORE: " + URI + " URI can not be Null!");
+                return APIStatus.Null;
+            }
+        }
+
+        public static APIStatus StatusCodes(string URI, WebException Error, HttpWebResponse Response)
+        {
+            if (!string.IsNullOrWhiteSpace(Error.GetBaseException().Message)) 
+            { Log.Error("CORE: " + URI + " Additional Details -> " + Error.GetBaseException().Message); }
+
+            if (!string.IsNullOrWhiteSpace(URI))
+            {
+                switch (Error.Status)
+                {
+                    case WebExceptionStatus.CacheEntryNotFound:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Cache Entry Not Found");
+                        return APIStatus.CacheEntryNotFound;
+                    case WebExceptionStatus.ConnectFailure:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Connect Failure");
+                        return APIStatus.ConnectFailure;
+                    case WebExceptionStatus.ConnectionClosed:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Connection Closed");
+                        return APIStatus.ConnectionClosed;
+                    case WebExceptionStatus.KeepAliveFailure:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Keep Alive Failure");
+                        return APIStatus.KeepAliveFailure;
+                    case WebExceptionStatus.MessageLengthLimitExceeded:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Message Length Limit Exceeded");
+                        return APIStatus.MessageLengthLimitExceeded;
+                    case WebExceptionStatus.NameResolutionFailure:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Name Resolution Failure");
+                        return APIStatus.NameResolutionFailure;
+                    case WebExceptionStatus.Pending:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Pending");
+                        return APIStatus.Pending;
+                    case WebExceptionStatus.PipelineFailure:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Pipeline Failure");
+                        return APIStatus.PipelineFailure;
+                    case WebExceptionStatus.ProtocolError:
+                        Log.Error("CORE: " + URI + " has an Error! Status Code: " + (int)Response.StatusCode);
+
+                        /* Set flag if there was a timeout or some other issues */
+                        switch ((int)Response.StatusCode)
+                        {
+                            case 404:
+                                return APIStatus.NotFound;
+                            case 500:
+                                return APIStatus.ServerError;
+                            case 502:
+                                return APIStatus.ServerOverloaded;
+                            case 503:
+                                return APIStatus.ServerUnavailable;
+                            case 504:
+                                return APIStatus.GetWayTimeOut;
+                            case 520:
+                                return APIStatus.Unknown;
+                            case 521:
+                                return APIStatus.Offline;
+                            case 522:
+                                return APIStatus.ConnectionTimeOut;
+                            case 523:
+                                return APIStatus.OriginUnreachable;
+                            case 524:
+                                return APIStatus.Timeout;
+                            case 525:
+                                return APIStatus.SSLFailed;
+                            case 526:
+                                return APIStatus.InvaildSSL;
+                            default:
+                                return APIStatus.UnknownStatusCode;
+                        }
+                    case WebExceptionStatus.ProxyNameResolutionFailure:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Proxy Name Resolution Failure");
+                        return APIStatus.ProxyNameResolutionFailure;
+                    case WebExceptionStatus.ReceiveFailure:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Receive Failure");
+                        return APIStatus.ReceiveFailure;
+                    case WebExceptionStatus.RequestCanceled:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Request Canceled");
+                        return APIStatus.RequestCanceled;
+                    case WebExceptionStatus.RequestProhibitedByCachePolicy:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Request Prohibited By Cache Policy");
+                        return APIStatus.RequestProhibitedByCachePolicy;
+                    case WebExceptionStatus.SecureChannelFailure:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Secure Channel Failure");
+                        return APIStatus.SecureChannelFailure;
+                    case WebExceptionStatus.SendFailure:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Send Failure");
+                        return APIStatus.SendFailure;
+                    case WebExceptionStatus.ServerProtocolViolation:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Server Protocol Violation");
+                        return APIStatus.ServerProtocolViolation;
+                    case WebExceptionStatus.Success:
+                        Log.Warning("CORE: " + URI + " has Encounterd an Error -> Success");
+                        return APIStatus.Success;
+                    case WebExceptionStatus.Timeout:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Timeout");
+                        return APIStatus.Timeout;
+                    case WebExceptionStatus.TrustFailure:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Trust Failure");
+                        return APIStatus.TrustFailure;
+                    case WebExceptionStatus.UnknownError:
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Unknown Error");
+                        return APIStatus.UnknownError;
+                    default:
+                        Log.Error("CORE: " + URI + " is Offline!");
+                        return APIStatus.Offline;
+                }
+            }
+            else
+            {
+                Log.Error("CORE: " + URI + " URI can not be Null!");
+                return APIStatus.Null;
+            }
         }
     }
 
     class VisualsAPIChecker
     {
-        public static bool UnitedAPI = true;
+        public static bool UnitedSL = false;
+        public static bool UnitedCDNL = false;
+        public static bool UnitedAPI() => (UnitedSL && UnitedCDNL);
 
-        public static bool CarbonAPI = true;
+        public static bool CarbonSL = false;
+        public static bool CarbonCDNL = false;
+        public static bool CarbonAPI() => (CarbonSL && CarbonCDNL);
 
-        public static bool CarbonAPITwo = true;
+        public static bool CarbonTwoSL = false;
+        public static bool CarbonTwoCDNL = false;
+        public static bool CarbonAPITwo() => (CarbonTwoSL && CarbonTwoCDNL);
 
-        public static bool WOPLAPI = true;
+        public static bool WOPLSL = false;
+        public static bool WOPLCDNL = false;
+        public static bool WOPLAPI() => (WOPLSL && WOPLCDNL);
 
-        public static bool GitHubAPI = true;
+        public static bool GitHubAPI = false;
 
-        public static bool LoadedServerList = false;
-
-        public static bool LoadedCDNList = false;
-
-        public static void PingAPIStatus(string Mode, string From)
+        public static void PingAPIStatus()
         {
-            if (!LoadedServerList || !LoadedCDNList)
+            Log.Checking("API: Checking Status");
+            Log.Checking("API Status: WorldUnited");
+            switch (APIChecker.CheckStatus(URLs.Main + "/serverlist.json", 15))
             {
-                switch (APIChecker.CheckStatus(URLs.Main + "/" + ((!LoadedServerList)? "serverlist.json" : "cdn_list.json")))
+                case APIStatus.Online:
+                    UnitedSL = RetriveJSON(URLs.Main + "/serverlist.json", "SL");
+                    if (UnitedSL) { UnitedCDNL = RetriveJSON(URLs.Main + "/cdn_list.json", "CDNL"); }
+                    Log.Completed("API Status: WorldUnited");
+                    break;
+                default:
+                    Log.Completed("API Status: WorldUnited");
+                    break;
+            }
+
+            if (!UnitedAPI())
+            {
+                Log.Checking("API Status: DavidCarbon");
+                switch (APIChecker.CheckStatus(URLs.Static + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
-                        if (!LoadedServerList)
-                        {
-                            URLs.OnlineServerList = URLs.Main + "/serverlist.json";
-                        }
-                        else if (!LoadedCDNList)
-                        {
-                            URLs.OnlineCDNList = URLs.Main + "/cdn_list.json";
-                        }
+                        if (!UnitedSL) { CarbonSL = RetriveJSON(URLs.Static + "/serverlist.json", "SL"); }
+                        else { CarbonSL = true; }
+                        if (!UnitedCDNL) { CarbonCDNL = RetriveJSON(URLs.Static + "/cdn_list.json", "CDNL"); }
+                        else { CarbonCDNL = true; }
+                        Log.Completed("API Status: DavidCarbon");
                         break;
                     default:
-                        UnitedAPI = false;
+                        Log.Completed("API Status: DavidCarbon");
                         break;
                 }
-
-                if (!UnitedAPI)
-                {
-                    switch (APIChecker.CheckStatus(URLs.Static + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
-                    {
-                        case APIStatus.Online:
-                            if (!LoadedServerList)
-                            {
-                                URLs.OnlineServerList = URLs.Static + "/serverlist.json";
-                            }
-                            else if (!LoadedCDNList)
-                            {
-                                URLs.OnlineCDNList = URLs.Static + "/cdn_list.json";
-                            }
-                            break;
-                        default:
-                            CarbonAPI = false;
-                            break;
-                    }
-                }
-
-                if (!CarbonAPI)
-                {
-                    switch (APIChecker.CheckStatus(URLs.Static_Alt + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
-                    {
-                        case APIStatus.Online:
-                            if (!LoadedServerList)
-                            {
-                                URLs.OnlineServerList = URLs.Static_Alt + "/serverlist.json";
-                            }
-                            else if (!LoadedCDNList)
-                            {
-                                URLs.OnlineCDNList = URLs.Static_Alt + "/cdn_list.json";
-                            }
-                            break;
-                        default:
-                            CarbonAPITwo = false;
-                            break;
-                    }
-                }
-
-                if (!CarbonAPITwo)
-                {
-                    switch (APIChecker.CheckStatus(URLs.WOPL + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
-                    {
-                        case APIStatus.Online:
-                            if (!LoadedServerList)
-                            {
-                                URLs.OnlineServerList = URLs.WOPL + "/serverlist.json";
-                            }
-                            else if (!LoadedCDNList)
-                            {
-                                URLs.OnlineCDNList = URLs.WOPL + "/cdn_list.json";
-                            }
-                            break;
-                        default:
-                            WOPLAPI = false;
-                            break;
-                    }
-                }
+            }
+            else
+            {
+                CarbonSL = true;
+                CarbonCDNL = true;
             }
 
-            if (Mode == "Startup")
+            if (!CarbonAPI())
             {
-                if (!LoadedServerList)
+                Log.Checking("API Status: DavidCarbon [Second]");
+                switch (APIChecker.CheckStatus(URLs.Static_Alt + "/serverlist.json", 15))
                 {
-                    LoadedServerList = true;
-
-                    /* Check If Launcher Failed to Connect to any APIs */
-                    if (!WOPLAPI)
-                    {
-                        DiscordLauncherPresense.Status("Start Up", "Launcher Encountered API Errors");
-
-                        DialogResult restartAppNoApis = MessageBox.Show(null, "Unable to Connect to Any Server List API. Please check your connection." +
-                        "\n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To Any Server List API",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                        if (restartAppNoApis == DialogResult.No)
-                        {
-                            MessageBox.Show("Please keep in Mind Launcher Might Crash Past This Point. Make sure to Resolve the Issue Next Time",
-                                "GameLauncher Will Continue, When It Failed To Connect To API");
-                            Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
-                        }
-
-                        if (restartAppNoApis == DialogResult.Yes)
-                        {
-                            FunctionStatus.LauncherForceClose = true;
-                        }
-                    }
-
-                    if (FunctionStatus.LauncherForceClose)
-                    {
-                        FunctionStatus.ErrorCloseLauncher("Closing From API Check Error", false);
-                    }
-                    else
-                    {
-                        FunctionStatus.IsVisualAPIsChecked = true;
-
-                        /* (Start Process) Check ServerList Status */
-                        ServerListUpdater.GetList();
-                    }
+                    case APIStatus.Online:
+                        if (!CarbonSL) { CarbonTwoSL = RetriveJSON(URLs.Static_Alt + "/serverlist.json", "SL"); }
+                        else { CarbonTwoSL = true; }
+                        if (!CarbonCDNL) { CarbonTwoCDNL = RetriveJSON(URLs.Static_Alt + "/cdn_list.json", "CDNL"); }
+                        else { CarbonTwoCDNL = true; }
+                        Log.Completed("API Status: DavidCarbon [Second]");
+                        break;
+                    default:
+                        Log.Completed("API Status: DavidCarbon [Second]");
+                        break;
                 }
             }
-            else if (Mode == "CDN List")
+            else
             {
-                if (!LoadedCDNList)
+                CarbonTwoSL = true;
+                CarbonTwoCDNL = true;
+            }
+
+            if (!CarbonAPITwo())
+            {
+                Log.Checking("API Status: WorldOnline");
+                switch (APIChecker.CheckStatus(URLs.WOPL + "/serverlist.json", 15))
                 {
-                    LoadedCDNList = true;
+                    case APIStatus.Online:
+                        if (!CarbonTwoSL) { WOPLSL = RetriveJSON(URLs.WOPL + "/serverlist.json", "SL"); }
+                        else { WOPLSL = true; }
+                        if (!CarbonTwoCDNL) { WOPLCDNL = RetriveJSON(URLs.WOPL + "/cdn_list.json", "CDNL"); }
+                        else { WOPLCDNL = true; }
+                        Log.Completed("API Status: WorldOnline");
+                        break;
+                    default:
+                        Log.Completed("API Status: WorldOnline");
+                        break;
+                }
+            }
+            else
+            {
+                WOPLSL = true;
+                WOPLCDNL = true;
+            }
 
-                    /* Check If Launcher Failed to Connect to any APIs */
-                    if (!WOPLAPI)
+            Log.Checking("API: Test #2");
+
+            /* Check If Launcher Failed to Connect to any APIs */
+            if (!WOPLAPI())
+            {
+                DiscordLauncherPresence.Status("Start Up", "Launcher Encountered API Errors");
+
+                DialogResult restartAppNoApis = MessageBox.Show(null, "Unable to Connect to any Server List API. Please check your connection." +
+                "\n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect to any Server List API",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (restartAppNoApis == DialogResult.No)
+                {
+                    MessageBox.Show("Please keep in Mind Launcher might crash past this point. Make sure to resolve the issue next time",
+                        "GameLauncher will continue, despite failing To Connect To API");
+                    Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and will Continue");
+                }
+
+                if (restartAppNoApis == DialogResult.Yes)
+                {
+                    FunctionStatus.LauncherForceClose = true;
+                }
+            }
+            Log.Completed("API: Test #2 Done");
+
+            if (FunctionStatus.LauncherForceClose)
+            {
+                FunctionStatus.ErrorCloseLauncher("Closing From API Check Error", false);
+            }
+            else
+            {
+                FunctionStatus.IsVisualAPIsChecked = true;
+
+                Log.Info("LIST CORE: Moved to Function");
+                /* (Start Process) Check ServerList Status */
+                ServerListUpdater.GetList();
+            }
+        }
+
+        private static string OnlineListJson;
+
+        private static bool RetriveJSON(string JSONUrl, string Function)
+        {
+            Log.Checking("JSON LIST: Retriving " + JSONUrl);
+            try
+            {
+                FunctionStatus.TLS();
+                Uri URLCall = new Uri(JSONUrl);
+                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                var Client = new WebClient
+                {
+                    Encoding = Encoding.UTF8
+                };
+
+                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                else
+                {
+                    Client.Headers.Add("user-agent", "SBRW Launcher " +
+                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                }
+                
+                try
+                {
+                    OnlineListJson = Client.DownloadString(URLCall);
+                    Log.UrlCall("JSON LIST: Retrived " + JSONUrl);
+                }
+                catch (WebException Error)
+                {
+                    APIChecker.StatusCodes(JSONUrl, Error, (HttpWebResponse)Error.Response);
+                    return false;
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("JSON LIST", null, Error, null, true);
+                    return false;
+                }
+                finally
+                {
+                    if (Client != null)
                     {
-                        MessageBox.Show(null, "Unable to Connect to Any CDN List API. Please check your connection." +
-                        "\n\nCDN Dropdown List will not be Available in on " + From + " Screen",
-                        "GameLauncher has Stopped, Failed To Connect To Any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        Client.Dispose();
                     }
+                }
 
-                    /*******************************/
-                    /* Load CDN List                /
-                    /*******************************/
-
-                    if (InformationCache.CDNListStatus != "Loaded")
+                if (IsJSONValid.ValidJson(OnlineListJson))
+                {
+                    switch (Function)
                     {
-                        CDNListUpdater.GetList();
+                        case "SL":
+                            ServerListUpdater.CachedJSONList = OnlineListJson;
+                            break;
+                        case "CDNL":
+                            CDNListUpdater.CachedJSONList = OnlineListJson;
+                            break;
+                        default:
+                            break;
                     }
+                    Log.Completed("JSON LIST: Valid " + JSONUrl);
+
+                    return true;
+                }
+                else
+                {
+                    Log.Completed("JSON LIST: Invalid " + JSONUrl);
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                if (OnlineListJson != null)
+                {
+                    OnlineListJson = null;
                 }
             }
         }

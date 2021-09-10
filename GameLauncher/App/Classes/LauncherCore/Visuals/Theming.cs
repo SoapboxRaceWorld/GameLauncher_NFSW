@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
@@ -54,15 +54,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Color USXEETransparencyKey = Color.FromArgb(255, 0, 255);
 
+        public static Bitmap SecurityCenterScreen = Properties.Resources.Background_Settings;
+
+        public static Color SecurityCenterScreenTransparencyKey = Color.FromArgb(255, 0, 255);
+
         /* MainScreen Icons */
 
-        public static Bitmap UpdateIconError = Properties.Resources.icon_shield_error;
+        public static Bitmap UpdateIconError = Properties.Resources.icon_engine_error;
 
-        public static Bitmap UpdateIconSuccess = Properties.Resources.icon_shield_success;
+        public static Bitmap UpdateIconSuccess = Properties.Resources.icon_engine_success;
 
-        public static Bitmap UpdateIconUnknown = Properties.Resources.icon_shield_unknown;
+        public static Bitmap UpdateIconUnknown = Properties.Resources.icon_engine_unknown;
 
-        public static Bitmap UpdateIconWarning = Properties.Resources.icon_shield_warning;
+        public static Bitmap UpdateIconWarning = Properties.Resources.icon_engine_warning;
 
 
         public static Bitmap APIIconChecking = Properties.Resources.icon_api_checking;
@@ -70,6 +74,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Bitmap APIIconError = Properties.Resources.icon_api_offline;
 
         public static Bitmap APIIconSuccess = Properties.Resources.icon_api_online;
+
+        public static Bitmap APIIconWarning = Properties.Resources.icon_api_warning;
 
         public static Bitmap APIIconUnkown = Properties.Resources.icon_api_unknown;
 
@@ -79,6 +85,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Bitmap ServerIconOffline = Properties.Resources.icon_game_server_offline;
 
         public static Bitmap ServerIconSuccess = Properties.Resources.icon_game_server_online;
+
+        public static Bitmap ServerIconWarning = Properties.Resources.icon_game_server_warning;
 
         public static Bitmap ServerIconUnkown = Properties.Resources.icon_game_server_unknown;
 
@@ -128,6 +136,80 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Bitmap GearButtonClick = Properties.Resources.icon_gear_click;
 
         public static Bitmap GearButtonHover = Properties.Resources.icon_gear_hover;
+
+
+        /// <summary>RGB: 230, 159, 0</summary>
+        /// <remarks>HEX: E69F00</remarks>
+        public static Bitmap GearButtonWarning = Properties.Resources.icon_gear_warning;
+
+        /// <summary>RGB: 230, 129, 0</summary>
+        /// <remarks>HEX: E68100</remarks>
+        public static Bitmap GearButtonWarningClick = Properties.Resources.icon_gear_warning_click;
+
+        /// <summary>RGB: 230, 99, 0</summary>
+        /// <remarks>HEX: E66300</remarks>
+        public static Bitmap GearButtonWarningHover = Properties.Resources.icon_gear_warning_hover;
+
+
+        /// <summary>RGB: 93, 93, 93</summary>
+        /// <remarks>HEX: 5D5D5D</remarks>
+        public static Bitmap ShieldButtonUnknown = Properties.Resources.icon_shield_unknown;
+
+        /// <summary>RGB: 66, 66, 66</summary>
+        /// <remarks>HEX: 424242</remarks>
+        public static Bitmap ShieldButtonUnknownClick = Properties.Resources.icon_shield_unknown_click;
+
+        /// <summary>RGB: 132, 132, 132</summary>
+        /// <remarks>HEX: 848484</remarks>
+        public static Bitmap ShieldButtonUnknownHover = Properties.Resources.icon_shield_unknown_hover;
+
+        /// <summary>RGB: 66, 179, 189</summary>
+        /// <remarks>HEX: 42B3BD</remarks>
+        public static Bitmap ShieldButtonChecking = Properties.Resources.icon_shield_checking;
+
+        /// <summary>RGB: 66, 159, 189</summary>
+        /// <remarks>HEX: 429FBD</remarks>
+        public static Bitmap ShieldButtonCheckingClick = Properties.Resources.icon_shield_checking_click;
+
+        /// <summary>RGB: 66, 129, 189</summary>
+        /// <remarks>HEX: 4281BD</remarks>
+        public static Bitmap ShieldButtonCheckingHover = Properties.Resources.icon_shield_checking_hover;
+
+        /// <summary>RGB: 159, 193, 32</summary>
+        /// <remarks>HEX: 9FC120</remarks>
+        public static Bitmap ShieldButtonSuccess = Properties.Resources.icon_shield_success;
+
+        /// <summary>RGB: 127, 156, 29</summary>
+        /// <remarks>HEX: 7F9C1D</remarks>
+        public static Bitmap ShieldButtonSuccessClick = Properties.Resources.icon_shield_success_click;
+
+        /// <summary>RGB: 104, 255, 0</summary>
+        /// <remarks>HEX: 68FF08</remarks>
+        public static Bitmap ShieldButtonSuccessHover = Properties.Resources.icon_shield_success_hover;
+
+        /// <summary>RGB: 230, 159, 0</summary>
+        /// <remarks>HEX: E69F00</remarks>
+        public static Bitmap ShieldButtonWarning = Properties.Resources.icon_shield_warning;
+
+        /// <summary>RGB: 230, 129, 0</summary>
+        /// <remarks>HEX: E68100</remarks>
+        public static Bitmap ShieldButtonWarningClick = Properties.Resources.icon_shield_warning_click;
+
+        /// <summary>RGB: 230, 99, 0</summary>
+        /// <remarks>HEX: E66300</remarks>
+        public static Bitmap ShieldButtonWarningHover = Properties.Resources.icon_shield_warning_hover;
+
+        /// <summary>RGB: 254, 0, 0</summary>
+        /// <remarks>HEX: FE0000</remarks>
+        public static Bitmap ShieldButtonError = Properties.Resources.icon_shield_error;
+
+        /// <summary>RGB: 224, 0, 0</summary>
+        /// <remarks>HEX: E00000</remarks>
+        public static Bitmap ShieldButtonErrorClick = Properties.Resources.icon_shield_error_click;
+
+        /// <summary>RGB: 194, 0, 0</summary>
+        /// <remarks>HEX: C20000</remarks>
+        public static Bitmap ShieldButtonErrorHover = Properties.Resources.icon_shield_error_hover;
 
 
         public static Bitmap PlayButton = Properties.Resources.playbutton;
@@ -202,22 +284,51 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color RedMouseOverBackColorButton = Color.FromArgb(44, 58, 76);
 
 
+        public static Color GreenBackColorButton = Color.FromArgb(22, 29, 38);
+
+        public static Color GreenBorderColorButton = Color.FromArgb(159, 193, 32);
+
+        public static Color GreenForeColorButton = Color.FromArgb(119, 145, 22);
+
+        public static Color GreenMouseOverBackColorButton = Color.FromArgb(44, 58, 76);
+
+
+        public static Color GrayBackColorButton = Color.FromArgb(22, 29, 38);
+
+        public static Color GrayBorderColorButton = Color.FromArgb(128, 128, 128);
+
+        public static Color GrayForeColorButton = Color.FromArgb(100, 100, 100);
+
+        public static Color GrayMouseOverBackColorButton = Color.FromArgb(44, 58, 76);
+
+
         /* Main Text Colors */
 
-        /* Silver */
+        ///<summary>Silver</summary>
         public static Color MainTextForeColor = Color.FromArgb(224, 224, 224);
-        /* Pinging Blue */
+
+        ///<summary>Pinging Blue</summary>
         public static Color SecondaryTextForeColor = Color.FromArgb(66, 179, 189);
-        /* Gray */
+
+        ///<summary>Gray</summary>
         public static Color ThirdTextForeColor = Color.FromArgb(132, 132, 132);
-        /* Dark Blue */
+
+        ///<summary>Dark Blue</summary>
         public static Color FourthTextForeColor = Color.FromArgb(44, 58, 76);
-        /* White */
+
+        ///<summary>White</summary>
         public static Color FivithTextForeColor = Color.FromArgb(255, 255, 255);
-        /* Grey (Slightly Darker) */
+
+        ///<summary>Grey</summary>
+        ///<remarks>Slightly Darker</remarks>
         public static Color SixTextForeColor = Color.FromArgb(128, 128, 128);
-        /* Successful Green */
+
+        ///<summary>Successful Green</summary>
         public static Color SeventhTextForeColor = Color.FromArgb(159, 193, 32);
+
+        ///<summary>Orange</summary>
+        ///<remarks>Color Bind</remarks>
+        public static Color EighthTextForeColor = Color.FromArgb(230, 159, 0);
 
 
         /* WinForm (Screens) Text and Background Colors */
@@ -246,38 +357,80 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color AboutTextForeColor = Color.FromArgb(178, 210, 255);
 
 
-        /* CDN Drop Down Menu */
+        /* Drop Down Menu */
 
-        public static Color CDNMenuTextForeColor = Color.FromArgb(178, 210, 255);
+        public static Color DropMenuTextForeColor = Color.FromArgb(178, 210, 255);
 
-        public static Color CDNMenuBGForeColor = Color.FromArgb(44, 58, 76);
+        public static Color DropMenuBackgroundForeColor = Color.FromArgb(44, 58, 76);
 
-        public static Color CDNMenuTextForeColor_Category = Color.FromArgb(150, 194, 255);
+        public static Color DropMenuTextForeColor_Category = Color.FromArgb(150, 194, 255);
 
-        public static Color CDNMenuBGForeColor_Category = Color.FromArgb(31, 41, 54);
+        public static Color DropMenuBackgroundForeColor_Category = Color.FromArgb(31, 41, 54);
+
+
+        /* Drop Down Menu - Colors */
+
+        /// <summary>Color: PaleGreen</summary>
+        /// <remarks>
+        /// RGB: 152, 251, 152 <code></code>
+        /// HEX: 98FB98
+        /// </remarks>
+        public static Color DropMenuPingSuccess = Color.FromArgb(152, 251, 152);
+
+        /// <summary>Color: Khaki</summary>
+        /// <remarks>
+        /// RGB: 240, 230, 140 <code></code>
+        /// HEX: F0E68C
+        /// </remarks>
+        public static Color DropMenuPingChecking = Color.FromArgb(240, 230, 140);
+
+        /// <summary>Color: Khaki</summary>
+        /// <remarks>
+        /// RGB: 240, 128, 128 <code></code>
+        /// HEX: F08080
+        /// </remarks>
+        public static Color DropMenuPingError = Color.FromArgb(240, 128, 128);
+
+        /// <summary>
+        /// RGB: 230, 159, 0 <code></code>
+        /// HEX: E69F00</summary>
+        /// <remarks>Used as an Alert Color, but is currently used for Invalid GSI JSON</remarks>
+        public static Color DropMenuPingWarning = Color.FromArgb(230, 159, 0);
+
+        /// <summary>Color: Black</summary>
+        /// <remarks>Default Color Text</remarks>
+        public static Color DropMenuBlack = Color.FromArgb(0, 0, 0);
+
+        /// <summary>Color: White</summary>
+        /// <remarks>Default Color Background</remarks>
+        public static Color DropMenuWhite = Color.FromArgb(255, 255, 255);
 
 
         /* Status Colors */
 
         /* Successful Green*/
         public static Color Sucess = Color.FromArgb(159, 193, 32);
+
         /* Red */
         public static Color Error = Color.FromArgb(254, 0, 0);
-        /* Yellow */
-        public static Color Alert = Color.FromArgb(255, 255, 0);
-        
 
-        /* Vertical Banner */
+        /* Orange [Color Bind] */
+        public static Color Warning = Color.FromArgb(230, 159, 0);
 
-        public static Color VerticalBannerBackColor = Color.FromArgb(0, 0, 0);
+
+        /* Server Banner */
+
+        public static Color BannerBackColor = Color.FromArgb(0, 0, 0);
 
 
         /* Settings Label Links */
 
         /* LawnGreen */
         public static Color SettingsLink = Color.FromArgb(124, 252, 0);
+
         /* Silver */
         public static Color SettingsActiveLink = Color.FromArgb(224, 224, 224);
+
         /* Dark Goldenrod */
         public static Color SettingsCheckBoxes = Color.FromArgb(184, 134, 11);
 
@@ -305,17 +458,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("Logo")))
                     {
-                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("Logo")))
+                        if (File.Exists(ThemeFolder + "\\Logos\\" + ThemeFile.Read("Logo")))
                         {
-                            LogoMain = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("Logo"));
+                            LogoMain = new Bitmap(ThemeFolder + "\\Logos\\" + ThemeFile.Read("Logo"));
                         }
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("LogoSplashScreen")))
                     {
-                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("LogoSplashScreen")))
+                        if (File.Exists(ThemeFolder + "\\Logos\\" + ThemeFile.Read("LogoSplashScreen")))
                         {
-                            LogoSplash = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("LogoSplashScreen"));
+                            LogoSplash = new Bitmap(ThemeFolder + "\\Logos\\" + ThemeFile.Read("LogoSplashScreen"));
                         }
                     }
 
@@ -358,6 +511,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         if (File.Exists(ThemeFolder + "\\USXEScreen\\" + ThemeFile.Read("USXEScreenBG")))
                         {
                             USXEEditor = new Bitmap(ThemeFolder + "\\USXEScreen\\" + ThemeFile.Read("USXEScreenBG"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SecurityCenterScreenBG")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\SecurityCenterScreen\\" + ThemeFile.Read("SecurityCenterScreenBG")))
+                        {
+                            SecurityCenterScreen = new Bitmap(ThemeFolder + "\\SecurityCenterScreen\\" + ThemeFile.Read("SecurityCenterScreenBG"));
                         }
                     }
 
@@ -427,6 +588,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("APIWarningIcon")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("APIWarningIcon")))
+                        {
+                            APIIconWarning = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("APIWarningIcon"));
+                        }
+                    }
+
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ServerCheckingIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerCheckingIcon")))
@@ -448,6 +617,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerSuccessIcon")))
                         {
                             ServerIconSuccess = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerSuccessIcon"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ServerWarningIcon")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerWarningIcon")))
+                        {
+                            ServerIconWarning = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerWarningIcon"));
                         }
                     }
 
@@ -623,6 +800,30 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GearButtonWarning")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonWarning")))
+                        {
+                            GearButtonWarning = new Bitmap(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonWarning"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GearButtonWarningClick")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonWarningClick")))
+                        {
+                            GearButtonWarningClick = new Bitmap(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonWarningClick"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GearButtonWarningHover")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonWarningHover")))
+                        {
+                            GearButtonWarningHover = new Bitmap(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonWarningHover"));
+                        }
+                    }
+
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("PlayButton")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("PlayButton")))
@@ -647,7 +848,127 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    /* Custom Inputs Borders */
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonUnknown")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknown")))
+                        {
+                            ShieldButtonUnknown = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknown"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonUnknownClick")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknownClick")))
+                        {
+                            ShieldButtonUnknownClick = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknownClick"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonUnknownHover")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknownHover")))
+                        {
+                            ShieldButtonUnknownHover = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknownHover"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonChecking")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonChecking")))
+                        {
+                            ShieldButtonChecking = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonChecking"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonCheckingClick")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonCheckingClick")))
+                        {
+                            ShieldButtonCheckingClick = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonCheckingClick"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonCheckingHover")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonCheckingHover")))
+                        {
+                            ShieldButtonCheckingHover = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonCheckingHover"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonSuccess")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccess")))
+                        {
+                            ShieldButtonSuccess = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccess"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonSuccessClick")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccessClick")))
+                        {
+                            ShieldButtonSuccessClick = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccessClick"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonSuccessHover")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccessHover")))
+                        {
+                            ShieldButtonSuccessHover = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccessHover"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonWarning")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarning")))
+                        {
+                            ShieldButtonWarning = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarning"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonWarningClick")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarningClick")))
+                        {
+                            ShieldButtonWarningClick = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarningClick"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonWarningHover")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarningHover")))
+                        {
+                            ShieldButtonWarningHover = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarningHover"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonError")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonError")))
+                        {
+                            ShieldButtonError = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonError"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonErrorClick")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonErrorClick")))
+                        {
+                            ShieldButtonErrorClick = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonErrorClick"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonErrorHover")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonErrorHover")))
+                        {
+                            ShieldButtonErrorHover = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonErrorHover"));
+                        }
+                    }
+
+                    /* Custom Inputs Borders for MainScreen */
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BorderTicket")))
                     {
@@ -801,6 +1122,46 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         RedMouseOverBackColorButton = ToColor(ThemeFile.Read("RedMouseOverBackColorButton"));
                     }
 
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GreenBackColorButton")))
+                    {
+                        GreenBackColorButton = ToColor(ThemeFile.Read("GreenBackColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GreenBorderColorButton")))
+                    {
+                        GreenBorderColorButton = ToColor(ThemeFile.Read("GreenBorderColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GreenForeColorButton")))
+                    {
+                        GreenForeColorButton = ToColor(ThemeFile.Read("GreenForeColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GreenMouseOverBackColorButton")))
+                    {
+                        GreenMouseOverBackColorButton = ToColor(ThemeFile.Read("GreenMouseOverBackColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GrayBackColorButton")))
+                    {
+                        GrayBackColorButton = ToColor(ThemeFile.Read("GrayBackColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GrayBorderColorButton")))
+                    {
+                        GrayBorderColorButton = ToColor(ThemeFile.Read("GrayBorderColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GrayForeColorButton")))
+                    {
+                        GrayForeColorButton = ToColor(ThemeFile.Read("GrayForeColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GrayMouseOverBackColorButton")))
+                    {
+                        GrayMouseOverBackColorButton = ToColor(ThemeFile.Read("GrayMouseOverBackColorButton"));
+                    }
+
                     /* Text Colors */
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("MainTextForeColor")))
@@ -838,14 +1199,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         Error = ToColor(ThemeFile.Read("ErrorForeColor"));
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("AlertForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("WarningForeColor")))
                     {
-                        Alert = ToColor(ThemeFile.Read("AlertForeColor"));
+                        Warning = ToColor(ThemeFile.Read("WarningForeColor"));
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("VerticalBannerBackColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BannerBackColor")))
                     {
-                        VerticalBannerBackColor = ToColor(ThemeFile.Read("VerticalBannerBackColor"));
+                        BannerBackColor = ToColor(ThemeFile.Read("BannerBackColor"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ExtractingProgressColor")))
@@ -878,19 +1239,24 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         USXEETransparencyKey = ToColor(ThemeFile.Read("USXEEScreenTransparencyKey"));
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("InputForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SecurityCenterScreenTransparencyKey")))
                     {
-                        Input = ToColor(ThemeFile.Read("InputForeColor"));
+                        SecurityCenterScreenTransparencyKey = ToColor(ThemeFile.Read("SecurityCenterScreenTransparencyKey"));
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("LinkForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("MainScreenInputForeColor")))
                     {
-                        Link = ToColor(ThemeFile.Read("LinkForeColor"));
+                        Input = ToColor(ThemeFile.Read("MainScreenInputForeColor"));
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ActiveLinkForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("MainScreenLinkForeColor")))
                     {
-                        ActiveLink = ToColor(ThemeFile.Read("ActiveLinkForeColor"));
+                        Link = ToColor(ThemeFile.Read("MainScreenLinkForeColor"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("MainScreenActiveLinkForeColor")))
+                    {
+                        ActiveLink = ToColor(ThemeFile.Read("MainScreenActiveLinkForeColor"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SettingsLinkForeColor")))
@@ -911,6 +1277,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SeventhTextForeColorForeColor")))
                     {
                         SeventhTextForeColor = ToColor(ThemeFile.Read("SeventhTextForeColorForeColor"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("EighthTextForeColorForeColor")))
+                    {
+                        EighthTextForeColor = ToColor(ThemeFile.Read("EighthTextForeColorForeColor"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("WinFormTextForeColor")))
@@ -963,6 +1334,56 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         AboutTextForeColor = ToColor(ThemeFile.Read("AboutTextForeColor"));
                     }
 
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuTextForeColor")))
+                    {
+                        DropMenuTextForeColor = ToColor(ThemeFile.Read("DropMenuTextForeColor"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuBackgroundForeColor")))
+                    {
+                        DropMenuBackgroundForeColor = ToColor(ThemeFile.Read("DropMenuBackgroundForeColor"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuTextForeColorCategory")))
+                    {
+                        DropMenuTextForeColor_Category = ToColor(ThemeFile.Read("DropMenuTextForeColorCategory"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuBackgroundForeColorCategory")))
+                    {
+                        DropMenuBackgroundForeColor_Category = ToColor(ThemeFile.Read("DropMenuBackgroundForeColorCategory"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuPingSuccess")))
+                    {
+                        DropMenuPingSuccess = ToColor(ThemeFile.Read("DropMenuPingSuccess"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuPingChecking")))
+                    {
+                        DropMenuPingChecking = ToColor(ThemeFile.Read("DropMenuPingChecking"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuPingError")))
+                    {
+                        DropMenuPingError = ToColor(ThemeFile.Read("DropMenuPingError"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuPingWarning")))
+                    {
+                        DropMenuPingWarning = ToColor(ThemeFile.Read("DropMenuPingWarning"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuBlack")))
+                    {
+                        DropMenuBlack = ToColor(ThemeFile.Read("DropMenuBlack"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuWhite")))
+                    {
+                        DropMenuWhite = ToColor(ThemeFile.Read("DropMenuWhite"));
+                    }
+
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("PrivacyRPCBuild")))
                     {
                         PrivacyRPCBuild = ThemeFile.Read("PrivacyRPCBuild");
@@ -970,28 +1391,38 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("THEMING: " + Error.Message);
+                    LogToFileAddons.OpenLog("THEMING", null, Error, null, true);
                 }
             }
+
+            SplashScreen.ThreadStatus("Start");
         }
 
         /* Convert User Inputed String into a Valid RBG Spectrum Values */
 
         public static Color ToColor(string color)
         {
-            var arrColorFragments = color?.Split(',').Select(sFragment => { int.TryParse(sFragment, out int fragment); return fragment; }).ToArray();
-
-            switch (arrColorFragments?.Length)
+            try
             {
-                case 3:
-                    /* Regular RGB Conversion */
-                    return Color.FromArgb(arrColorFragments[0], arrColorFragments[1], arrColorFragments[2]);
-                case 4:
-                    /* Regular ARGB Conversion */
-                    return Color.FromArgb(arrColorFragments[0], arrColorFragments[1], arrColorFragments[2], arrColorFragments[3]);
-                default:
-                    /* Fail Safe Color */
-                    return Color.Silver;
+                var arrColorFragments = color?.Split(',').Select(sFragment => { int.TryParse(sFragment, out int fragment); return fragment; }).ToArray();
+
+                switch (arrColorFragments?.Length)
+                {
+                    case 3:
+                        /* Regular RGB Conversion */
+                        return Color.FromArgb(arrColorFragments[0], arrColorFragments[1], arrColorFragments[2]);
+                    case 4:
+                        /* Regular ARGB Conversion */
+                        return Color.FromArgb(arrColorFragments[0], arrColorFragments[1], arrColorFragments[2], arrColorFragments[3]);
+                    default:
+                        /* Fail Safe Color */
+                        return Color.Silver;
+                }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("THEMING", null, Error, null, true);
+                return Color.Silver;
             }
         }
 

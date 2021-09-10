@@ -1,47 +1,113 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 
 namespace GameLauncher.App.Classes.LauncherCore.ModNet
 {
     class ModNetHandler
     {
-        public static void ResetModDat(string gameDir)
+        public static void FileANDFolder(string Paths)
         {
-            File.Delete(Path.Combine(gameDir, "ModManager.dat"));
+            String[] FoldersToRemove = new string[]
+            {
+                /* Folders */
+                "modules"
+            };
+
+            String[] FoldersToCreate = new string[]
+            {
+                /* Folders */
+                "scripts"
+            };
+
+            String[] FilesToRemove = new string[] 
+            {
+                /* Legacy Files */
+                "modules/udpcrc.soapbox.module",
+                "modules/udpcrypt1.soapbox.module",
+                "modules/udpcrypt2.soapbox.module",
+                "modules/xmppsubject.soapbox.module",
+                "scripts/global.ini",
+                "lightfx.dll",
+                "ModManager.dat",
+                "PocoFoundation.dll",
+                "PocoNet.dll"
+            };
+
+            foreach (string Folder in FoldersToRemove)
+            {
+                if (Directory.Exists(Path.Combine(Paths, Folder)))
+                {
+                    try
+                    {
+                        Directory.Delete(Path.Combine(Paths, Folder), true);
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("ModNet Folder Removal", null, Error, null, true);
+                    }
+                }
+            }
+
+            foreach (string Folder in FoldersToCreate)
+            {
+                if (!Directory.Exists(Path.Combine(Paths, Folder)))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(Path.Combine(Paths, Folder));
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("ModNet Folder Creator", null, Error, null, true);
+                    }
+                }
+            }
+
+            foreach (string Files in FilesToRemove)
+            {
+                if (File.Exists(Path.Combine(Paths, Files)))
+                {
+                    try
+                    {
+                        File.Delete(Path.Combine(Paths, Files));
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("ModNet Legacy Removal", null, Error, null, true);
+                    }
+                }
+            }
         }
 
-        public static string ModNetSupported(string ServerIP)
+        public static bool Supported()
         {
-            try
+            if (APIChecker.CheckStatus(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo", 10) == APIStatus.NotFound)
             {
-                FunctionStatus.TLS();
-                Uri newModNetUri = new Uri(ServerIP + "/Modding/GetModInfo");
-                ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                WebClient x = new WebClient();
-                return x.DownloadString(newModNetUri);
+                return false;
             }
-            catch (Exception Error)
+            else
             {
-                Log.Error("LAUNCHER: Umable to Retrive Modding Information -> " + Error.Message);
-                return String.Empty;
+                return true;
             }
         }
 
         public static int FileErrors = 0;
 
-        public static void CleanLinks(string linksPath)
+        public static void CleanLinks(string LinksFile, string GamePath)
         {
             try
             {
-                if (File.Exists(linksPath))
+                if (File.Exists(LinksFile))
                 {
                     Log.Info("CLEANLINKS: Found Server Mod Files to remove {Process}");
-                    string dir = FileSettingsSave.GameInstallation;
+                    string dir = Strings.Encode(GamePath);
+                    string linksPath = Strings.Encode(Path.Combine(GamePath, ".links"));
                     foreach (var readLine in File.ReadLines(linksPath))
                     {
                         var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
@@ -106,12 +172,12 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                                 
                                 File.Move(origPath, realLoc);
                             }
-                            catch (Exception ex)
+                            catch (Exception Error)
                             {
                                 FileErrors++;
 
                                 Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
-                                Log.Error("CLEANLINKS: " + ex.Message);
+                                LogToFileAddons.OpenLog("CLEANLINKS", null, Error, null, true);
                             }
                         }
                         else
@@ -150,9 +216,9 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                     File.Delete(linksPath);
                 }
             }
-            catch (Exception ex)
+            catch (Exception Error)
             {
-                Log.Error("CLEANLINKS: " + ex.Message);
+                LogToFileAddons.OpenLog("CLEANLINKS", null, Error, null, true);
             }
         }
 

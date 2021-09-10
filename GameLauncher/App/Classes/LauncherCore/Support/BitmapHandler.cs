@@ -1,4 +1,4 @@
-﻿using GameLauncher.App.Classes.Logger;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -55,7 +55,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             }
             catch (Exception Error)
             {
-                Log.Error("SUPPORT CLASS: GrayScale -> " + Error.Message);
+                LogToFileAddons.OpenLog("SUPPORT CLASS [GrayScale]", null, Error, null, true);
                 return null;
             }
         }

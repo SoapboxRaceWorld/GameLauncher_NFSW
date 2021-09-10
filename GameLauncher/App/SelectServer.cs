@@ -7,182 +7,60 @@ using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using System.Text;
+using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
+using System.Net;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App
 {
     public partial class SelectServer : Form
     {
-        private readonly int ID = 1;
-        readonly Dictionary<int, GetServerInformation> rememberServerInformationID = new Dictionary<int, GetServerInformation>();
-        public GetServerInformation ServerList;
-        readonly Dictionary<int, ServerList> data = new Dictionary<int, ServerList>();
+        private static bool IsSelectServerOpen = false;
+        private static int ID = 1;
+        private static readonly Dictionary<int, ServerList> ServerListBook = new Dictionary<int, ServerList>();
 
         /* Used to ping the Server in ms */
-        public Queue<string> servers = new Queue<string>();
+        public static Queue<string> ServersToPing = new Queue<string>();
+
+        public static string ServerName;
+        public static GetServerInformation ServerJsonData;
+
+        public static void OpenScreen()
+        {
+            if (IsSelectServerOpen || Application.OpenForms["SelectServer"] != null)
+            {
+                if (Application.OpenForms["SelectServer"] != null) { Application.OpenForms["SelectServer"].Activate(); }
+            }
+            else
+            {
+                try { new SelectServer().ShowDialog(); }
+                catch (Exception Error)
+                {
+                    string ErrorMessage = "Select Server Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("Select Server", ErrorMessage, Error, "Exclamation", false);
+                }
+            }
+        }
 
         public SelectServer()
         {
+            IsSelectServerOpen = true;
             InitializeComponent();
             SetVisuals();
-
-            Version.Text = "Version: v" + Application.ProductVersion;
-
-            /* And one for keeping data about server, IP tbh */
-            ServerListRenderer.View = View.Details;
-            ServerListRenderer.FullRowSelect = true;
-
-            ServerListRenderer.Columns.Add("");
-            ServerListRenderer.Columns[0].Width = 1;
-
-            ServerListRenderer.Columns.Add("Name");
-            ServerListRenderer.Columns[1].Width = 210;
-
-            ServerListRenderer.Columns.Add("Country");
-            ServerListRenderer.Columns[2].Width = 100;
-            ServerListRenderer.Columns[2].TextAlign = HorizontalAlignment.Center;
-
-            ServerListRenderer.Columns.Add("Online");
-            ServerListRenderer.Columns[3].Width = 75;
-            ServerListRenderer.Columns[3].TextAlign = HorizontalAlignment.Center;
-
-            ServerListRenderer.Columns.Add("Registered");
-            ServerListRenderer.Columns[4].Width = 85;
-            ServerListRenderer.Columns[4].TextAlign = HorizontalAlignment.Center;
-
-            ServerListRenderer.Columns.Add("Ping");
-            ServerListRenderer.Columns[5].Width = 60;
-            ServerListRenderer.Columns[5].TextAlign = HorizontalAlignment.Center;
-
-            foreach (var substring in ServerListUpdater.NoCategoryList)
+            this.Closing += (x, y) =>
             {
-                try
-                {
-                    servers.Enqueue(ID + "_|||_" + substring.IpAddress + "_|||_" + substring.Name);
-
-                    ServerListRenderer.Items.Add(new ListViewItem(
-                        new[]
-                        {
-                                ID.ToString(), substring.Name, "", "", "", "", ""
-                        }
-                    ));
-
-                    data.Add(ID, substring);
-                    ID++;
-                }
-                catch
-                {
-
-                }
-            }
-
-            Thread newList = new Thread(() =>
-            {
-                //Thread.Sleep(200);
-                this.BeginInvoke((MethodInvoker)delegate
-                {
-                    while (servers.Count != 0)
-                    {
-                        string QueueContent = servers.Dequeue();
-                        string[] QueueContent2 = QueueContent.Split(new string[] { "_|||_" }, StringSplitOptions.None);
-
-                        int serverid = Convert.ToInt32(QueueContent2[0]) - 1;
-                        string serverurl = QueueContent2[1] + "/GetServerInformation";
-                        string servername = QueueContent2[2];
-
-                        try
-                        {
-                            WebClientWithTimeout getdata = new WebClientWithTimeout();
-                            GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(getdata.DownloadString(serverurl));
-
-                            if (content == null)
-                            {
-                                ServerListRenderer.Items[serverid].SubItems[1].Text = servername;
-                                ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
-                                ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
-                                ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
-                                ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
-                            }
-                            else
-                            {
-                                ServerListRenderer.Items[serverid].SubItems[1].Text = servername;
-                                ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(content.country.ToString());
-                                ServerListRenderer.Items[serverid].SubItems[3].Text = content.onlineNumber.ToString();
-                                ServerListRenderer.Items[serverid].SubItems[4].Text = content.numberOfRegistered.ToString();
-
-                                Ping CheckMate = null;
-
-                                try
-                                {
-                                    Uri StringToUri = new Uri(serverurl);
-                                    CheckMate = new Ping();
-                                    CheckMate.PingCompleted += (sender3, e3) => {
-                                        if (e3.Reply != null)
-                                        {
-                                            if (e3.Reply.Status == IPStatus.Success && servername != "Offline Built-In Server")
-                                            {
-                                                ServerListRenderer.Items[serverid].SubItems[5].Text = e3.Reply.RoundtripTime + "ms";
-                                            }
-                                            else
-                                            {
-                                                ServerListRenderer.Items[serverid].SubItems[5].Text = "!?";
-                                            }
-                                        }
-                                        else
-                                        {
-                                            ServerListRenderer.Items[serverid].SubItems[5].Text = "N/A";
-                                        }
-
-                                        ((AutoResetEvent)e3.UserState).Set();
-                                    };
-                                    CheckMate.SendAsync(StringToUri.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
-                                }
-                                catch
-                                {
-                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "?";
-                                }
-                                finally
-                                {
-                                    if (CheckMate != null)
-                                    {
-                                        CheckMate.Dispose();
-                                    }
-                                }
-                            }
-                        }
-                        catch
-                        {
-                            ServerListRenderer.Items[serverid].SubItems[1].Text = servername;
-                            ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
-                            ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
-                            ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
-                            ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
-                        }
-
-                        if (servers.Count == 0)
-                        {
-                            Loading.Text = "";
-                        }
-
-                        Application.DoEvents();
-                    }
-                });
-            }) { IsBackground = true };
-            newList.Start();
-
-            ServerListRenderer.AllowColumnReorder = false;
-            ServerListRenderer.ColumnWidthChanging += (handler, args) =>
-            {
-                args.Cancel = true;
-                args.NewWidth = ServerListRenderer.Columns[args.ColumnIndex].Width;
+                ID = 1;
+                ServerListBook.Clear();
+                ServersToPing.Clear();
+                ServerName = null;
+                ServerJsonData = null;
+                IsSelectServerOpen = false;
             };
-
-            ServerListRenderer.DoubleClick += new EventHandler((handler, args) =>
-            {
-                SelectedGameServerToRemember();
-            });
         }
 
         private void SetVisuals()
@@ -196,7 +74,7 @@ namespace GameLauncher.App
 
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 MainFontSize = 9f;
             }
@@ -235,11 +113,317 @@ namespace GameLauncher.App
             BtnClose.BackColor = Theming.BlueBackColorButton;
             BtnClose.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
             BtnClose.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            /********************************/
+            /* Functions                     /
+            /********************************/
+
+            Version.Text = "Version: v" + Application.ProductVersion;
+
+            /* And one for keeping data about server, IP tbh */
+            ServerListRenderer.View = View.Details;
+            ServerListRenderer.FullRowSelect = true;
+
+            ServerListRenderer.Columns.Add("");
+            ServerListRenderer.Columns[0].Width = 1;
+
+            ServerListRenderer.Columns.Add("Name");
+            ServerListRenderer.Columns[1].Width = 210;
+
+            ServerListRenderer.Columns.Add("Country");
+            ServerListRenderer.Columns[2].Width = 100;
+            ServerListRenderer.Columns[2].TextAlign = HorizontalAlignment.Center;
+
+            ServerListRenderer.Columns.Add("Online");
+            ServerListRenderer.Columns[3].Width = 75;
+            ServerListRenderer.Columns[3].TextAlign = HorizontalAlignment.Center;
+
+            ServerListRenderer.Columns.Add("Registered");
+            ServerListRenderer.Columns[4].Width = 85;
+            ServerListRenderer.Columns[4].TextAlign = HorizontalAlignment.Center;
+
+            ServerListRenderer.Columns.Add("Ping");
+            ServerListRenderer.Columns[5].Width = 60;
+            ServerListRenderer.Columns[5].TextAlign = HorizontalAlignment.Center;
+
+            foreach (var substring in ServerListUpdater.NoCategoryList)
+            {
+                try
+                {
+                    ServersToPing.Enqueue(ID + "_|||_" + substring.IPAddress + "_|||_" + substring.Name);
+
+                    ServerListRenderer.Items.Add(new ListViewItem(
+                        new[]
+                        {
+                                ID.ToString(), substring.Name, "", "", "", "", ""
+                        }
+                    ));
+
+                    ServerListBook.Add(ID, substring);
+                    ID++;
+                }
+                catch { }
+            }
+
+            ServerListRenderer.AllowColumnReorder = false;
+            ServerListRenderer.ColumnWidthChanging += (handler, args) =>
+            {
+                args.Cancel = true;
+                args.NewWidth = ServerListRenderer.Columns[args.ColumnIndex].Width;
+            };
+
+            ServerListRenderer.DoubleClick += new EventHandler((handler, args) =>
+            {
+                SelectedGameServerToRemember();
+            });
+
+            Shown += (x, y) =>
+            {
+                Application.OpenForms["SelectServer"].Activate();
+                this.BringToFront();
+
+                new Thread(() =>
+                {
+                    while (ServersToPing.Count != 0)
+                    {
+                        string QueueContent = ServersToPing.Dequeue();
+                        string[] QueueContent2 = QueueContent.Split(new string[] { "_|||_" }, StringSplitOptions.None);
+
+                        int serverid = Convert.ToInt32(QueueContent2[0]) - 1;
+                        string serverurl = QueueContent2[1] + "/GetServerInformation";
+                        ServerName = QueueContent2[2];
+                        string ServerJson = null;
+
+                        try
+                        {
+                            try
+                            {
+                                FunctionStatus.TLS();
+                                Uri URLCall = new Uri(URLs.GitHub_Launcher);
+                                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                var Client = new WebClient
+                                {
+                                    Encoding = Encoding.UTF8
+                                };
+
+                                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                else
+                                {
+                                    Client.Headers.Add("user-agent", "SBRW Launcher " +
+                                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                }
+
+                                try
+                                {
+                                    ServerJson = Client.DownloadString(serverurl);
+                                }
+                                catch { }
+                                finally
+                                {
+                                    if (Client != null)
+                                    {
+                                        Client.Dispose();
+                                    }
+                                }
+                            }
+                            catch { }
+
+                            if (string.IsNullOrWhiteSpace(ServerJson))
+                            {
+                                if (this.ServerListRenderer.InvokeRequired)
+                                {
+                                    ServerListRenderer.Invoke(new Action(delegate ()
+                                    {
+                                        ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                        ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
+                                        ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
+                                        ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
+                                        ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                    }));
+                                }
+                                else
+                                {
+                                    ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                    ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
+                                    ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
+                                    ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
+                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                }
+                            }
+                            else if (!IsJSONValid.ValidJson(ServerJson))
+                            {
+                                if (this.ServerListRenderer.InvokeRequired)
+                                {
+                                    ServerListRenderer.Invoke(new Action(delegate ()
+                                    {
+                                        ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                        ServerListRenderer.Items[serverid].SubItems[2].Text = "-?-";
+                                        ServerListRenderer.Items[serverid].SubItems[3].Text = "-?-";
+                                        ServerListRenderer.Items[serverid].SubItems[4].Text = "-?-";
+                                        ServerListRenderer.Items[serverid].SubItems[5].Text = "-?-";
+                                    }));
+                                }
+                                else
+                                {
+                                    ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                    ServerListRenderer.Items[serverid].SubItems[2].Text = "-?-";
+                                    ServerListRenderer.Items[serverid].SubItems[3].Text = "-?-";
+                                    ServerListRenderer.Items[serverid].SubItems[4].Text = "-?-";
+                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "-?-";
+                                }
+                            }
+                            else
+                            {
+                                ServerJsonData = JsonConvert.DeserializeObject<GetServerInformation>(ServerJson);
+
+                                if (this.ServerListRenderer.InvokeRequired)
+                                {
+                                    ServerListRenderer.Invoke(new Action(delegate ()
+                                    {
+                                        ServerListRenderer.Items[serverid].SubItems[1].Text = (!string.IsNullOrWhiteSpace(ServerJsonData.serverName)) ? 
+                                        ServerJsonData.serverName : ServerName;
+                                        ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(ServerJsonData.country.ToString());
+                                        ServerListRenderer.Items[serverid].SubItems[3].Text = ServerJsonData.onlineNumber.ToString();
+                                        ServerListRenderer.Items[serverid].SubItems[4].Text = ServerJsonData.numberOfRegistered.ToString();
+                                    }));
+                                }
+                                else
+                                {
+                                    ServerListRenderer.Items[serverid].SubItems[1].Text = (!string.IsNullOrWhiteSpace(ServerJsonData.serverName)) ? 
+                                    ServerJsonData.serverName : ServerName;
+                                    ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(ServerJsonData.country.ToString());
+                                    ServerListRenderer.Items[serverid].SubItems[3].Text = ServerJsonData.onlineNumber.ToString();
+                                    ServerListRenderer.Items[serverid].SubItems[4].Text = ServerJsonData.numberOfRegistered.ToString();
+                                }
+
+                                Ping CheckMate = null;
+
+                                try
+                                {
+                                    Uri StringToUri = new Uri(serverurl);
+                                    ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                    CheckMate = new Ping();
+                                    CheckMate.PingCompleted += (sender3, e3) => {
+                                        if (e3.Reply != null)
+                                        {
+                                            if (e3.Reply.Status == IPStatus.Success && ServerName != "Offline Built-In Server")
+                                            {
+                                                if (this.ServerListRenderer.InvokeRequired)
+                                                {
+                                                    ServerListRenderer.Invoke(new Action(delegate ()
+                                                    {
+                                                        ServerListRenderer.Items[serverid].SubItems[5].Text = e3.Reply.RoundtripTime + "ms";
+                                                    }));
+                                                }
+                                                else { ServerListRenderer.Items[serverid].SubItems[5].Text = e3.Reply.RoundtripTime + "ms"; }
+                                            }
+                                            else
+                                            {
+                                                if (this.ServerListRenderer.InvokeRequired)
+                                                {
+                                                    ServerListRenderer.Invoke(new Action(delegate ()
+                                                    {
+                                                        ServerListRenderer.Items[serverid].SubItems[5].Text = "!?";
+                                                    }));
+                                                }
+                                                else { ServerListRenderer.Items[serverid].SubItems[5].Text = "!?"; }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (this.ServerListRenderer.InvokeRequired)
+                                            {
+                                                ServerListRenderer.Invoke(new Action(delegate ()
+                                                {
+                                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "N/A";
+                                                }));
+                                            }
+                                            else { ServerListRenderer.Items[serverid].SubItems[5].Text = "N/A"; }
+                                        }
+
+                                        ((AutoResetEvent)e3.UserState).Set();
+                                    };
+                                    CheckMate.SendAsync(StringToUri.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
+                                }
+                                catch
+                                {
+                                    if (this.ServerListRenderer.InvokeRequired)
+                                    {
+                                        ServerListRenderer.Invoke(new Action(delegate ()
+                                        {
+                                            ServerListRenderer.Items[serverid].SubItems[5].Text = "?";
+                                        }));
+                                    }
+                                    else { ServerListRenderer.Items[serverid].SubItems[5].Text = "?"; }
+                                }
+                                finally
+                                {
+                                    if (CheckMate != null)
+                                    {
+                                        CheckMate.Dispose();
+                                    }
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            if (this.ServerListRenderer.InvokeRequired)
+                            {
+                                ServerListRenderer.Invoke(new Action(delegate ()
+                                {
+                                    ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                    ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
+                                    ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
+                                    ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
+                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                }));
+                            }
+                            else
+                            {
+                                ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
+                                ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
+                                ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
+                                ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                            }
+                        }
+                        finally
+                        {
+                            if (ServerJson != null)
+                            {
+                                ServerJson = null;
+                            }
+                            if (ServerJsonData != null)
+                            {
+                                ServerJsonData = null;
+                            }
+                            if (ServerName != null)
+                            {
+                                ServerName = null;
+                            }
+                        }
+
+                        if (ServersToPing.Count == 0)
+                        {
+                            if (this.Loading.InvokeRequired)
+                            {
+                                Loading.Invoke(new Action(delegate ()
+                                {
+                                    Loading.Text = string.Empty;
+                                }));
+                            }
+                            else { Loading.Text = string.Empty; }
+                        }
+
+                        Application.DoEvents();
+                    }
+                }).Start();
+            };
         }
 
         private void BtnAddServer_Click(object sender, EventArgs e)
         {
-            new AddServer().Show();
+            AddServer.OpenScreen();
         }
 
         private void BtnSelectServer_Click(object sender, EventArgs e)
@@ -256,10 +440,7 @@ namespace GameLauncher.App
         {
             if (ServerListRenderer.SelectedItems.Count == 1)
             {
-                rememberServerInformationID.TryGetValue(ServerListRenderer.SelectedIndices[0], out ServerList);
-
-                SelectedServer.Data = data[ServerListRenderer.SelectedIndices[0] + 1];
-
+                SelectedServer.Data = ServerListBook[ServerListRenderer.SelectedIndices[0] + 1];
                 this.Close();
             }
         }

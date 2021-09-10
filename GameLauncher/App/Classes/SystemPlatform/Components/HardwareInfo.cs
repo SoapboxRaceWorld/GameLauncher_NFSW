@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
+using System;
 using System.IO;
 using System.Linq;
 using System.Management;
@@ -11,17 +12,35 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
         {
             public static string CardName()
             {
-                string _cardName = (from x in new ManagementObjectSearcher("select * from Win32_VideoController").Get()
+                string _cardName = "Unknown";
+                try
+                {
+                    _cardName = (from x in new ManagementObjectSearcher("select * from Win32_VideoController").Get()
                     .Cast<ManagementObject>()
-                                    select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
+                                 select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Hardware Info", null, Error, null, true);
+                }
+                
                 return _cardName;
             }
 
             public static string DriverVersion()
             {
-                string _driverVersion = (from x in new ManagementObjectSearcher("select * from Win32_VideoController").Get()
+                string _driverVersion = "Unknown";
+                try
+                {
+                    _driverVersion = (from x in new ManagementObjectSearcher("select * from Win32_VideoController").Get()
                     .Cast<ManagementObject>()
-                                         select x.GetPropertyValue("DriverVersion")).FirstOrDefault().ToString();
+                                      select x.GetPropertyValue("DriverVersion")).FirstOrDefault().ToString();
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Hardware Info", null, Error, null, true);
+                }
+
                 return _driverVersion;
             }
         }
@@ -31,18 +50,25 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
 
         public static bool CheckArchitectureFile(string fileName)
         {
-            const int PE_POINTER_OFFSET = 60;
-            const int MACHINE_OFFSET = 4;
-            byte[] data = new byte[4096];
-
-            using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            try
             {
-                s.Read(data, 0, 4096);
-            }
+                const int PE_POINTER_OFFSET = 60;
+                const int MACHINE_OFFSET = 4;
+                byte[] data = new byte[4096];
 
-            int PE_HEADER_ADDR = BitConverter.ToInt32(data, PE_POINTER_OFFSET);
-            int machineUint = BitConverter.ToUInt16(data, PE_HEADER_ADDR + MACHINE_OFFSET);
-            return machineUint == 0x014c;
+                using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+                {
+                    s.Read(data, 0, 4096);
+                }
+
+                int PE_HEADER_ADDR = BitConverter.ToInt32(data, PE_POINTER_OFFSET);
+                int machineUint = BitConverter.ToUInt16(data, PE_HEADER_ADDR + MACHINE_OFFSET);
+                return machineUint == 0x014c;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

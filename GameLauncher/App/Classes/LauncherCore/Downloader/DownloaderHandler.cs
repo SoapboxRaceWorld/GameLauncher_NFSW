@@ -1,10 +1,13 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using System.Net.Cache;
+using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace GameLauncher.App.Classes.LauncherCore.Downloader
@@ -49,82 +52,163 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
         {
             try
             {
-                using (WebClientWithTimeout webClient = new WebClientWithTimeout())
+                if (WebCalls.Alternative())
                 {
-                    webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.DownloadManager_DownloadDataCompleted);
-                    webClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-                    while (true)
+                    using (WebClient webClient = new WebClient { Encoding = Encoding.UTF8 })
                     {
-                        if (this._freeChunks <= 0)
+                        webClient.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.DownloadManager_DownloadDataCompleted);
+                        webClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+                        while (true)
                         {
-                            Thread.Sleep(100);
-                        }
-                        else
-                        {
-                            lock (this._downloadQueue)
-                            {
-                                if (this._downloadQueue.Count == 0)
-                                {
-                                    lock (this._workers)
-                                    {
-                                        this._workers.Remove((BackgroundWorker)sender);
-                                    }
-                                    DownloaderHandler._workerCount--;
-                                    break;
-                                }
-                            }
-                            string value = null;
-                            lock (this._downloadQueue)
-                            {
-                                value = this._downloadQueue.Last.Value;
-                                this._downloadQueue.RemoveLast();
-                                lock (this._freeChunksLock)
-                                {
-                                    this._freeChunks--;
-                                }
-                            }
-                            lock (this._downloadList[value])
-                            {
-                                if (this._downloadList[value].Status != DownloaderHandler.DownloadStatus.Canceled)
-                                {
-                                    this._downloadList[value].Status = DownloaderHandler.DownloadStatus.Downloading;
-                                }
-                            }
-                            while (webClient.IsBusy)
+                            if (this._freeChunks <= 0)
                             {
                                 Thread.Sleep(100);
                             }
-                            webClient.DownloadDataAsync(new Uri(value), value);
-                            DownloaderHandler.DownloadStatus status = DownloaderHandler.DownloadStatus.Downloading;
-                            while (status == DownloaderHandler.DownloadStatus.Downloading)
+                            else
                             {
-                                status = this._downloadList[value].Status;
+                                lock (this._downloadQueue)
+                                {
+                                    if (this._downloadQueue.Count == 0)
+                                    {
+                                        lock (this._workers)
+                                        {
+                                            this._workers.Remove((BackgroundWorker)sender);
+                                        }
+                                        DownloaderHandler._workerCount--;
+                                        break;
+                                    }
+                                }
+                                string value = null;
+                                lock (this._downloadQueue)
+                                {
+                                    value = this._downloadQueue.Last.Value;
+                                    this._downloadQueue.RemoveLast();
+                                    lock (this._freeChunksLock)
+                                    {
+                                        this._freeChunks--;
+                                    }
+                                }
+                                lock (this._downloadList[value])
+                                {
+                                    if (this._downloadList[value].Status != DownloaderHandler.DownloadStatus.Canceled)
+                                    {
+                                        this._downloadList[value].Status = DownloaderHandler.DownloadStatus.Downloading;
+                                    }
+                                }
+                                while (webClient.IsBusy)
+                                {
+                                    Thread.Sleep(100);
+                                }
+                                webClient.DownloadDataAsync(new Uri(value), value);
+                                DownloaderHandler.DownloadStatus status = DownloaderHandler.DownloadStatus.Downloading;
+                                while (status == DownloaderHandler.DownloadStatus.Downloading)
+                                {
+                                    status = this._downloadList[value].Status;
+                                    if (status == DownloaderHandler.DownloadStatus.Canceled)
+                                    {
+                                        break;
+                                    }
+                                    Thread.Sleep(100);
+                                }
                                 if (status == DownloaderHandler.DownloadStatus.Canceled)
                                 {
-                                    break;
+                                    webClient.CancelAsync();
                                 }
+                                lock (this._workers)
+                                {
+                                    if (DownloaderHandler._workerCount > this._maxWorkers || !this._managerRunning)
+                                    {
+                                        this._workers.Remove((BackgroundWorker)sender);
+                                        DownloaderHandler._workerCount--;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    using (WebClientWithTimeout webClient = new WebClientWithTimeout { Encoding = Encoding.UTF8 })
+                    {
+                        webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.DownloadManager_DownloadDataCompleted);
+                        webClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+                        while (true)
+                        {
+                            if (this._freeChunks <= 0)
+                            {
                                 Thread.Sleep(100);
                             }
-                            if (status == DownloaderHandler.DownloadStatus.Canceled)
+                            else
                             {
-                                webClient.CancelAsync();
-                            }
-                            lock (this._workers)
-                            {
-                                if (DownloaderHandler._workerCount > this._maxWorkers || !this._managerRunning)
+                                lock (this._downloadQueue)
                                 {
-                                    this._workers.Remove((BackgroundWorker)sender);
-                                    DownloaderHandler._workerCount--;
-                                    break;
+                                    if (this._downloadQueue.Count == 0)
+                                    {
+                                        lock (this._workers)
+                                        {
+                                            this._workers.Remove((BackgroundWorker)sender);
+                                        }
+                                        DownloaderHandler._workerCount--;
+                                        break;
+                                    }
+                                }
+                                string value = null;
+                                lock (this._downloadQueue)
+                                {
+                                    value = this._downloadQueue.Last.Value;
+                                    this._downloadQueue.RemoveLast();
+                                    lock (this._freeChunksLock)
+                                    {
+                                        this._freeChunks--;
+                                    }
+                                }
+                                lock (this._downloadList[value])
+                                {
+                                    if (this._downloadList[value].Status != DownloaderHandler.DownloadStatus.Canceled)
+                                    {
+                                        this._downloadList[value].Status = DownloaderHandler.DownloadStatus.Downloading;
+                                    }
+                                }
+                                while (webClient.IsBusy)
+                                {
+                                    Thread.Sleep(100);
+                                }
+                                webClient.DownloadDataAsync(new Uri(value), value);
+                                DownloaderHandler.DownloadStatus status = DownloaderHandler.DownloadStatus.Downloading;
+                                while (status == DownloaderHandler.DownloadStatus.Downloading)
+                                {
+                                    status = this._downloadList[value].Status;
+                                    if (status == DownloaderHandler.DownloadStatus.Canceled)
+                                    {
+                                        break;
+                                    }
+                                    Thread.Sleep(100);
+                                }
+                                if (status == DownloaderHandler.DownloadStatus.Canceled)
+                                {
+                                    webClient.CancelAsync();
+                                }
+                                lock (this._workers)
+                                {
+                                    if (DownloaderHandler._workerCount > this._maxWorkers || !this._managerRunning)
+                                    {
+                                        this._workers.Remove((BackgroundWorker)sender);
+                                        DownloaderHandler._workerCount--;
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            catch (Exception exception1)
+            catch (Exception Error)
             {
-                Exception exception = exception1;
+                LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
+                Exception exception = Error;
                 lock (this._workers)
                 {
                     this._workers.Remove((BackgroundWorker)sender);

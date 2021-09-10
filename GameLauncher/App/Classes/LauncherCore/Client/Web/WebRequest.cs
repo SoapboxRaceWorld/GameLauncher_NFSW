@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Windows.Forms;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.Hash;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using System.Net;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using System.IO;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 {
-    public class WebClientWithTimeout : WebClient
+    class WebCalls
+    {
+        public static bool Alternative() => FileSettingsSave.WebCallMethod == "WebClient";
+    }
+
+    class WebHelpers
     {
         private static string Hash = string.Empty;
 
@@ -19,15 +28,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
         {
             if (string.IsNullOrWhiteSpace(Hash))
             {
-                Hash = SHA.HashFile(AppDomain.CurrentDomain.FriendlyName);
+                Hash = SHA.Files(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher)));
             }
 
             return Hash;
         }
+    }
 
+    public class WebClientWithTimeout : WebClient
+    {
         protected override WebRequest GetWebRequest(Uri address)
         {
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 address = new UriBuilder(address)
                 {
@@ -36,22 +48,33 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
                 }.Uri;
             }
 
+            if (!address.AbsolutePath.Contains("auth"))
+            {
+                if(!(address.OriginalString.Contains("section") && address.OriginalString.Contains(".dat")))
+                {
+                    if (!FunctionStatus.ExternalToolsWasUsed)
+                    {
+                        Log.UrlCall("WEBCLIENTWITHTIMEOUT: Calling URL -> " + address);
+                    }
+                }
+            }
+
             FunctionStatus.TLS();
-
-            if (!address.AbsolutePath.Contains("auth")) Log.UrlCall("WEBCLIENTWITHTIMEOUT: Calling URL -> " + address);
-
-            ServicePointManager.FindServicePoint(address).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(10).TotalMilliseconds;
-
+            ServicePointManager.FindServicePoint(address).ConnectionLeaseTimeout = 
+                (int)((FunctionStatus.ExternalToolsWasUsed) ? TimeSpan.FromSeconds(30).TotalMilliseconds : TimeSpan.FromSeconds(5).TotalMilliseconds);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
-            request.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            request.UserAgent = "SBRW Launcher " + Application.ProductVersion + 
+                (FunctionStatus.ExternalToolsWasUsed ? " - (" + InsiderInfo.BuildNumberOnly() + ")" : 
+                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
             request.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
             request.Headers["X-HiddenHWID"] = HardwareID.FingerPrint.ValueAlt();
-            request.Headers["X-UserAgent"] = "GameLauncherReborn " + Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            request.Headers["X-GameLauncherHash"] = Value();
+            request.Headers["X-UserAgent"] = "GameLauncherReborn " + 
+                Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            request.Headers["X-GameLauncherHash"] = WebHelpers.Value();
             request.Headers["X-GameLauncherCertificate"] = CertificateStore.LauncherSerial;
-            request.Headers["X-DiscordID"] = DiscordLauncherPresense.UserID;
-            request.Proxy = null;
-            request.Timeout = 5000;
+            request.Headers["X-DiscordID"] = DiscordLauncherPresence.UserID;
+            request.Timeout = (int)(FunctionStatus.ExternalToolsWasUsed ? 
+                TimeSpan.FromSeconds(30).TotalMilliseconds : TimeSpan.FromSeconds(5).TotalMilliseconds);
             request.KeepAlive = false;
 
             return request;

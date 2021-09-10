@@ -6,25 +6,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON
     public class ServerList
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
-
-        [JsonProperty("distribution_url")]
-        public string DistributionUrl { get; set; }
+        public string ID { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
 
         [JsonProperty("ip_address")]
-        public string IpAddress { get; set; }
+        public string IPAddress { get; set; }
 
         [JsonProperty("category")]
         public string Category { get; set; }
 
-        [JsonProperty("forceUserAgent")]
-        public string ForceUserAgent { get; set; }
-
         [JsonProperty("discord_application_id")]
-        public string DiscordAppId { get; set; }
+        public string DiscordAppID { get; set; }
 
         [JsonIgnore]
         public bool IsSpecial { get; set; }

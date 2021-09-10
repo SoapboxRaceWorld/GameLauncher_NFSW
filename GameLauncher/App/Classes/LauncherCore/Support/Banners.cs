@@ -1,5 +1,4 @@
-﻿using GameLauncher.App.Classes.Logger;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using System;
 using System.Drawing;
 using System.IO;
@@ -7,7 +6,7 @@ using System.Linq;
 
 namespace GameLauncher.App.Classes.LauncherCore.Support
 {
-    class VerticalBanners
+    class Banners
     {
         public static string GetFileExtension(String filename)
         {
@@ -28,7 +27,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             }
             catch (Exception Error)
             {
-                Log.Error("VERTICAL BANNER: " + Error.Message);
+                LogToFileAddons.OpenLog("BANNER", null, Error, null, true);
                 return null;
             }
         }

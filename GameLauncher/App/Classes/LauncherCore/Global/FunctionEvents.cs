@@ -1,4 +1,6 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+﻿using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
@@ -18,17 +20,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* ServerList Load Checks */
         public static void SelectServerBtn_Click(object sender, EventArgs e)
         {
-            new SelectServer().ShowDialog();
+            SelectServer.OpenScreen();
         }
 
         public static void AddServer_Click(object sender, EventArgs e)
         {
-            new AddServer().Show();
-        }
-
-        public static void AboutButton_Click(object sender, EventArgs e)
-        {
-            new About().ShowDialog();
+            AddServer.OpenScreen();
         }
 
         public static void RegisterText_LinkClicked(object sender, EventArgs e)
@@ -38,23 +35,24 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webSignupUrl))
                 {
                     Process.Start(InformationCache.SelectedServerJSON.webSignupUrl);
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + InformationCache.SelectedServerJSON.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + 
+                        ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if (InformationCache.SelectedServerData.Name.ToUpper() == "WORLDUNITED OFFICIAL")
                 {
-                    Process.Start("https://signup.worldunited.gg/?discordid=" + DiscordLauncherPresense.UserID);
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + InformationCache.SelectedServerData.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
+                    Process.Start("https://signup.worldunited.gg/" + ((!string.IsNullOrWhiteSpace(DiscordLauncherPresence.UserID) &&
+                        DiscordLauncherPresence.UserID != "0") ? "?discordid=" + DiscordLauncherPresence.UserID : string.Empty));
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + 
+                        InformationCache.SelectedServerData.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    new RegisterScreen().ShowDialog();
+                    RegisterScreen.OpenScreen();
                 }
             }
             else
             {
-                MessageBox.Show(null, "Server seems to be offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(null, "Server seems to be Offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -84,118 +82,173 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void ForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webRecoveryUrl))
+            if (InformationCache.SelectedServerJSON != null)
             {
-                Process.Start(InformationCache.SelectedServerJSON.webRecoveryUrl);
-                MessageBox.Show(null, "A browser window has been opened to complete password recovery on " +
-                    InformationCache.SelectedServerJSON.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            else
-            {
-                string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher");
-
-                if (!string.IsNullOrWhiteSpace(send))
+                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webRecoveryUrl))
                 {
-                    if (!IsEmailValid.Validate(send))
-                    {
-                        MessageBox.Show(null, "Email Address is not Valid. Please Check and Try Again", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    else
-                    {
-                        try
-                        {
-                            FunctionStatus.TLS();
-                            Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IpAddress + "/RecoveryPassword/forgotPassword");
-                            ServicePointManager.FindServicePoint(resetPasswordUrl).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-
-                            var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
-                            var postData = "email=" + send;
-                            var data = Encoding.ASCII.GetBytes(postData);
-                            request.Method = "POST";
-                            request.ContentType = "application/x-www-form-urlencoded";
-                            request.ContentLength = data.Length;
-                            request.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-
-                            using (var stream = request.GetRequestStream())
-                            {
-                                stream.Write(data, 0, data.Length);
-                            }
-
-                            var response = (HttpWebResponse)request.GetResponse();
-                            MessageBox.Show(null, new StreamReader(response.GetResponseStream()).ReadToEnd(), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        catch
-                        {
-                            MessageBox.Show(null, "Failed to send email!", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    }                
+                    Process.Start(InformationCache.SelectedServerJSON.webRecoveryUrl);
+                    MessageBox.Show(null, "A browser window has been opened to complete password recovery on " +
+                        InformationCache.SelectedServerJSON.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show(null, "Email Address can not be Empty. Please Check and Try Again", "GameLauncher", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher");
+
+                    if (!string.IsNullOrWhiteSpace(send))
+                    {
+                        if (!IsEmailValid.Validate(send))
+                        {
+                            MessageBox.Show(null, "Email Address is not Valid. Please Check and Try Again", "GameLauncher",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                        else
+                        {
+                            try
+                            {
+                                FunctionStatus.TLS();
+                                Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IPAddress + "/RecoveryPassword/forgotPassword");
+                                ServicePointManager.FindServicePoint(resetPasswordUrl).ConnectionLeaseTimeout =
+                                    (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+
+                                HttpWebRequest Request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
+                                string postData = "email=" + send;
+                                byte[] data = Encoding.ASCII.GetBytes(postData);
+                                Request.Method = "POST";
+                                Request.ContentType = "application/x-www-form-urlencoded";
+                                Request.ContentLength = data.Length;
+                                Request.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+
+                                using (var stream = Request.GetRequestStream())
+                                {
+                                    stream.Write(data, 0, data.Length);
+                                }
+
+                                HttpWebResponse Response = (HttpWebResponse)Request.GetResponse();
+                                string ResponseBody = new StreamReader(Response.GetResponseStream()).ReadToEnd();
+
+                                string DisplayMessage;
+                                if (!string.IsNullOrWhiteSpace(ResponseBody))
+                                {
+                                    if (ResponseBody.Contains("ERROR"))
+                                    {
+                                        if (ResponseBody.ToUpper().Contains("INVALID EMAIL"))
+                                        {
+                                            DisplayMessage = "If an Account with the Email Exists, a Password Reset will be Sent to Your Inbox.";
+                                        }
+                                        else if (ResponseBody.ToUpper().Contains("RECOVERY PASSWORD LINK ALREADY SENT"))
+                                        {
+                                            DisplayMessage = "Recovery Password Reset Link has already been sent. " +
+                                                "Please check your Spam Inbox or Try again in 1 Hour";
+                                        }
+                                        else
+                                        {
+                                            DisplayMessage = ResponseBody;
+                                        }
+                                    }
+                                    else if (ResponseBody.ToUpper().Contains("RESET PASSWORD SENT TO"))
+                                    {
+                                        DisplayMessage = "A Password Reset Link will be Sent to Your Inbox.";
+                                    }
+                                    else
+                                    {
+                                        DisplayMessage = ResponseBody;
+                                    }
+                                }
+                                else
+                                {
+                                    DisplayMessage = "The Server received the Forgot Password Request, but has not Accepted your Request.";
+                                }
+
+                                MessageBox.Show(null, DisplayMessage, "GameLauncher",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            catch (WebException Error)
+                            {
+                                LogToFileAddons.OpenLog("REGISTRATION", "Unable to Send Email to Server.", Error, "Error", false);
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("REGISTRATION", "Unable to Send Email.", Error, "Error", false);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(null, "Email Address can not be empty. Please Check and Try Again", "GameLauncher",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
             }
         }
 
-        public static void ComboBox1_DrawItem(object sender, DrawItemEventArgs e)
+        public static void ServerList_Menu_DrawItem(object sender, DrawItemEventArgs e)
         {
             try
             {
-                var font = (sender as ComboBox).Font;
-                Brush backgroundColor;
-                Brush textColor;
-
-                var serverListText = "";
-                int onlineStatus = 2; /* 0 = offline | 1 = online | 2 = checking */
+                string serverListText = string.Empty;
+                /* 0 = Offline | 1 = Online | 2 = Checking | 3 = GSI Error */
+                int onlineStatus = 2;
 
                 if (sender is ComboBox cb)
                 {
-                    if (cb.Items[e.Index] is ServerList si)
+                    if (e.Index != -1 && cb.Items != null)
                     {
-                        serverListText = si.Name;
-                        onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.Id) ? InformationCache.ServerStatusBook[si.Id] : 2;
+                        if (cb.Items[e.Index] is ServerList si)
+                        {
+                            serverListText = si.Name;
+                            onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.ID) ? InformationCache.ServerStatusBook[si.ID] : 2;
+                        }
                     }
                 }
 
-                if (serverListText.StartsWith("<GROUP>"))
+                if (!string.IsNullOrWhiteSpace(serverListText))
                 {
-                    font = new Font(font, FontStyle.Bold);
-                    e.Graphics.FillRectangle(Brushes.White, e.Bounds);
-                    e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
-                }
-                else
-                {
-                    font = new Font(font, FontStyle.Regular);
-                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                    Font font = (sender as ComboBox).Font;
+                    Brush backgroundColor;
+                    Brush textColor;
+
+                    if (serverListText.StartsWith("<GROUP>"))
                     {
-                        backgroundColor = SystemBrushes.Highlight;
-                        textColor = SystemBrushes.HighlightText;
+                        font = new Font(font, FontStyle.Bold);
+                        e.Graphics.FillRectangle(new SolidBrush(Theming.DropMenuWhite), e.Bounds);
+                        e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, new SolidBrush(Theming.DropMenuBlack), e.Bounds);
                     }
                     else
                     {
-                        if (onlineStatus == 2)
+                        font = new Font(font, FontStyle.Regular);
+                        if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
                         {
-                            /* CHECKING */
-                            backgroundColor = Brushes.Khaki;
-                        }
-                        else if (onlineStatus == 1)
-                        {
-                            /* ONLINE */
-                            backgroundColor = Brushes.PaleGreen;
+                            backgroundColor = SystemBrushes.Highlight;
+                            textColor = SystemBrushes.HighlightText;
                         }
                         else
                         {
-                            /* OFFLINE */
-                            backgroundColor = Brushes.LightCoral;
+                            switch (onlineStatus)
+                            {
+                                case 1:
+                                    /* ONLINE */
+                                    backgroundColor = new SolidBrush(Theming.DropMenuPingSuccess);
+                                    break;
+                                case 2:
+                                    /* CHECKING */
+                                    backgroundColor = new SolidBrush(Theming.DropMenuPingChecking);
+                                    break;
+                                case 3:
+                                    /* GSI ERROR */
+                                    backgroundColor = new SolidBrush(Theming.DropMenuPingWarning);
+                                    break;
+                                default:
+                                    /* OFFLINE */
+                                    backgroundColor = new SolidBrush(Theming.DropMenuPingError);
+                                    break;
+                            }
+
+                            textColor = new SolidBrush(Theming.DropMenuBlack);
                         }
 
-                        textColor = Brushes.Black;
+                        e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                        e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
                     }
-
-                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                    e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
                 }
             }
             catch { }

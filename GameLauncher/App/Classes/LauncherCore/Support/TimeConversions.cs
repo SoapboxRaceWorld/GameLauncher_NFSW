@@ -2,6 +2,7 @@
 using GameLauncher.App.Classes.LauncherCore.Client;
 using System;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App.Classes.LauncherCore.Support
 {
@@ -9,11 +10,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
     {
         public static string FormatFileSize(long byteCount, bool si = true)
         {
-            int unit = si ? 1000 : 1024;
-            if (byteCount < unit) return byteCount + " B";
-            int exp = (int)(Math.Log(byteCount) / Math.Log(unit));
-            String pre = (si ? "kMGTPE" : "KMGTPE")[exp - 1] + (si ? "" : "i");
-            return String.Format("{0}{1}B", Convert.ToDecimal(byteCount / Math.Pow(unit, exp)).ToString("0.00"), pre);
+            try
+            {
+                int unit = si ? 1000 : 1024;
+                if (byteCount < unit) return byteCount + " B";
+                int exp = (int)(Math.Log(byteCount) / Math.Log(unit));
+                String pre = (si ? "kMGTPE" : "KMGTPE")[exp - 1] + (si ? "" : "i");
+                return String.Format("{0}{1}B", Convert.ToDecimal(byteCount / Math.Pow(unit, exp)).ToString("0.00"), pre);
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("Format File Size", null, Error, null, true);
+                return String.Empty;
+            }
         }
 
         public static string EstimateFinishTime(long current, long total, DateTime keyValue)
@@ -29,53 +38,55 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                 var now = DateTime.Now - keyValue;
                 var timeSpan = TimeSpan.FromTicks((long)(now.Ticks / num)) - now;
 
+                int rDays = Convert.ToInt32(timeSpan.Days.ToString()) + 1;
                 int rHours = Convert.ToInt32(timeSpan.Hours.ToString()) + 1;
                 int rMinutes = Convert.ToInt32(timeSpan.Minutes.ToString()) + 1;
                 int rSeconds = Convert.ToInt32(timeSpan.Seconds.ToString()) + 1;
 
+                if (rDays > 1) return rDays.ToString() + " days remaining";
                 if (rHours > 1) return rHours.ToString() + " hours remaining";
                 if (rMinutes > 1) return rMinutes.ToString() + " minutes remaining";
                 if (rSeconds > 1) return rSeconds.ToString() + " seconds remaining";
 
                 return "Just now";
             }
-            catch
+            catch (Exception Error)
             {
+                LogToFileAddons.OpenLog("Estimate Finish Time", null, Error, null, true);
                 return "N/A";
             }
         }
 
-        public static String RelativeTime(int seconds) 
+        public static String RelativeTime(int TimeSeconds) 
         {
-            int calcs;
-
-            if (seconds >= 2592000) 
-            {
-                calcs = seconds / 2592000;
-                return calcs == 1 ? "1 Month" : calcs + " Months";
+            int NoCalculus;
+            if (TimeSeconds >= 2592000)
+            { 
+                NoCalculus = TimeSeconds / 2592000; 
+                return NoCalculus == 1 ? "1 Month" : NoCalculus + " Months"; 
             }
-            else if (seconds >= 86400) 
-            {
-                calcs = seconds / 86400;
-                return calcs == 1 ? "1 Day" : calcs + " Days";
+            else if (TimeSeconds >= 86400)
+            { 
+                NoCalculus = TimeSeconds / 86400; 
+                return NoCalculus == 1 ? "1 Day" : NoCalculus + " Days"; 
             }
-            else if (seconds >= 3600) 
-            {
-                calcs = seconds / 3600;
-                return calcs == 1 ? "1 Hour" : calcs + " Hours";
+            else if (TimeSeconds >= 3600)
+            { 
+                NoCalculus = TimeSeconds / 3600;
+                return NoCalculus == 1 ? "1 Hour" : NoCalculus + " Hours"; 
             }
-            else if (seconds >= 60) 
-            {
-                calcs = seconds / 60;
-                return calcs == 1 ? "1 Minute" : calcs + " Minute";
+            else if (TimeSeconds >= 60)
+            { 
+                NoCalculus = TimeSeconds / 60; 
+                return NoCalculus == 1 ? "1 Minute" : NoCalculus + " Minute"; 
             }
-            else if (seconds >= 0) 
-            {
-                return seconds == 1 ? "1 Second" : seconds + " Seconds";
+            else if (TimeSeconds >= 0)
+            { 
+                return TimeSeconds == 1 ? "1 Second" : TimeSeconds + " Seconds"; 
             }
-            else
-            {
-                return "Unknown";
+            else 
+            { 
+                return "Outta Time"; 
             }
         }
 
@@ -94,39 +105,39 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                     AntiCheat.IAmSpeed = 500;
                 }
 
-                int seconds = InformationCache.RestartTimer;
+                int TimeSeconds = InformationCache.RestartTimer;
 
-                if (seconds >= 2592000)
+                if (TimeSeconds >= 2592000)
                 {
-                    InformationCache.RestartTimer = seconds - 2592000;
+                    InformationCache.RestartTimer = TimeSeconds - 2592000;
                 }
-                else if (seconds >= 86400)
+                else if (TimeSeconds >= 86400)
                 {
-                    InformationCache.RestartTimer = seconds - 86400;
+                    InformationCache.RestartTimer = TimeSeconds - 86400;
                 }
-                else if (seconds >= 3600)
+                else if (TimeSeconds >= 3600)
                 {
-                    InformationCache.RestartTimer = seconds - 3600;
+                    InformationCache.RestartTimer = TimeSeconds - 3600;
                 }
-                else if (seconds >= 1800)
+                else if (TimeSeconds >= 1800)
                 {
-                    InformationCache.RestartTimer = seconds - 1800;
+                    InformationCache.RestartTimer = TimeSeconds - 1800;
                 }
-                else if (seconds >= 900)
+                else if (TimeSeconds >= 900)
                 {
-                    InformationCache.RestartTimer = seconds - 900;
+                    InformationCache.RestartTimer = TimeSeconds - 900;
                 }
-                else if (seconds >= 600)
+                else if (TimeSeconds >= 600)
                 {
-                    InformationCache.RestartTimer = seconds - 600;
+                    InformationCache.RestartTimer = TimeSeconds - 600;
                 }
-                else if (seconds >= 300)
+                else if (TimeSeconds >= 300)
                 {
-                    InformationCache.RestartTimer = seconds - 300;
+                    InformationCache.RestartTimer = TimeSeconds - 300;
                 }
-                else if (seconds >= 60)
+                else if (TimeSeconds >= 60)
                 {
-                    InformationCache.RestartTimer = seconds - 60;
+                    InformationCache.RestartTimer = TimeSeconds - 60;
                 }
                 else
                 {

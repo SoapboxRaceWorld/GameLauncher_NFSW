@@ -1,11 +1,11 @@
-﻿using GameLauncher.App.Classes.Logger;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
@@ -17,7 +17,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
         public static void GetList()
         {
-            DiscordLauncherPresense.Status("Start Up", "Creating Language List");
+            Log.Checking("LIST CORE: Creating Language List");
+            DiscordLauncherPresence.Status("Start Up", "Creating Language List");
 
             List<LangObject> langInfos = new List<LangObject>();
 
@@ -40,18 +41,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 json_language += "    { \"category\": \"Custom\",   \"name\": \"Italiano\",             \"xml_value\": \"EN\", \"ini_value\": \"IT\"}";
                 json_language += "]";
             }
-            catch (Exception error)
+            catch (Exception Error)
             {
-                Log.Error("LIST CORE: Error occurred while Adding to LANG List: " + error.Message);
+                LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
             }
 
             try 
             {
                 langInfos.AddRange(JsonConvert.DeserializeObject<List<LangObject>>(json_language));
-            } 
-            catch (Exception error) 
+            }
+            catch (Exception Error) 
             {
-                Log.Error("LIST CORE: Error occurred while deserializing LANG List: " + error.Message);
+                LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
             }
 
             try
@@ -87,13 +88,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     }
                 }
             }
-            catch (Exception error)
+            catch (Exception Error)
             {
-                Log.Error("LIST CORE: Error occurred while Sorting LANG List: " + error.Message);
+                LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
             }
 
+            Log.Checking("LIST CORE: Done");
+
+            Log.Info("API: Moved to Function");
             /* Run the API Checks to Make Sure it Visually Displayed Correctly */
-            VisualsAPIChecker.PingAPIStatus("Startup", "Loading");
+            VisualsAPIChecker.PingAPIStatus();
         }
     }
 }

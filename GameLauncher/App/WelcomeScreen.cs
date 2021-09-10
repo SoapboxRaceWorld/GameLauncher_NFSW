@@ -4,21 +4,46 @@ using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using System.IO;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App
 {
     public partial class WelcomeScreen : Form
     {
+        private static bool IsWelcomeScreenOpen = false;
         private bool StatusCheck = false;
+
+        public static void OpenScreen()
+        {
+            if (IsWelcomeScreenOpen || Application.OpenForms["WelcomeScreen"] != null)
+            {
+                if (Application.OpenForms["WelcomeScreen"] != null) { Application.OpenForms["WelcomeScreen"].Activate(); }
+            }
+            else
+            {
+                try { new WelcomeScreen().ShowDialog(); }
+                catch (Exception Error)
+                {
+                    string ErrorMessage = "Welcome Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("Welcome Screen", ErrorMessage, Error, "Exclamation", false);
+                }
+            }
+        }
 
         public WelcomeScreen()
         {
+            IsWelcomeScreenOpen = true;
             InitializeComponent();
             SetVisuals();
+            this.Closing += (x, CloseForm) =>
+            {
+                IsWelcomeScreenOpen = false;
+            };
         }
 
         private void SetVisuals()
@@ -27,7 +52,24 @@ namespace GameLauncher.App
             /* Load CDN List                /
             /*******************************/
 
-            VisualsAPIChecker.PingAPIStatus("CDN List", "Welcome");
+            Log.Checking("API: Test #3");
+            /* Check If Launcher Failed to Connect to any APIs */
+            if (!VisualsAPIChecker.WOPLAPI())
+            {
+                MessageBox.Show(null, "Unable to Connect to any CDN List API. Please check your connection." +
+                "\n\nCDN Dropdown List will not be available on Welcome Screen",
+                "GameLauncher has Paused, Failed To Connect to any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            Log.Checking("API: Test #3 Done");
+
+            /*******************************/
+            /* Load CDN List                /
+            /*******************************/
+
+            if (!CDNListUpdater.LoadedList)
+            {
+                CDNListUpdater.GetList();
+            }
 
             /*******************************/
             /* Set Hardcoded Text           /
@@ -35,7 +77,7 @@ namespace GameLauncher.App
 
             VersionLabel.Text = "Version: v" + Application.ProductVersion;
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 ButtonSave.Text = "Save Settings and Game Language";
             }
@@ -52,7 +94,7 @@ namespace GameLauncher.App
             var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
             var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 MainFontSize = 9f;
                 SecondaryFontSize = 8f;
@@ -104,6 +146,12 @@ namespace GameLauncher.App
 
             GameLangSource.DrawItem += new DrawItemEventHandler(GameLangSource_DrawItem);
             GameLangSource.SelectedIndexChanged += new EventHandler(GameLangSource_SelectedIndexChanged);
+
+            Shown += (x, y) =>
+            {
+                Application.OpenForms["WelcomeScreen"].Activate();
+                this.BringToFront();
+            };
         }
 
         private void CDNSource_SelectedIndexChanged(object sender, EventArgs e)
@@ -134,54 +182,45 @@ namespace GameLauncher.App
 
         private void CheckListStatus()
         {
-            if (VisualsAPIChecker.UnitedAPI)
-            {
-                ListStatusText.Text = "United List - Online";
-            }
-            
-            if (!VisualsAPIChecker.UnitedAPI)
-            {
-                if (VisualsAPIChecker.CarbonAPI)
-                {
-                    ListStatusText.Text = "Carbon List - Online";
-                }
-            }
+            ListStatusText.Text = "United List - Online";
 
-            if (!VisualsAPIChecker.CarbonAPI)
+            if (!VisualsAPIChecker.UnitedAPI())
             {
-                if (VisualsAPIChecker.CarbonAPITwo)
+                ListStatusText.Text = "Carbon List - Online";
+
+                if (!VisualsAPIChecker.CarbonAPI())
                 {
                     ListStatusText.Text = "Carbon 2nd List - Online";
-                }
-            }
 
-            if (!VisualsAPIChecker.CarbonAPITwo)
-            {
-                if (VisualsAPIChecker.WOPLAPI)
-                {
-                    ListStatusText.Text = "WOPL List - Online";
-                }
-                else
-                {
-                    StatusCheck = true;
-                }
-            }
+                    if (!VisualsAPIChecker.CarbonAPITwo())
+                    {
+                        ListStatusText.Text = "WOPL List - Online";
 
-            if (!VisualsAPIChecker.WOPLAPI && CDNListUpdater.CleanList.Count == 0)
-            {
-                ListStatusText.Text = "API Lists Connection - Error";
+                        if (!VisualsAPIChecker.WOPLAPI())
+                        {
+                            StatusCheck = true;
+
+                            if(CDNListUpdater.CleanList.Count == 0)
+                            {
+                                ListStatusText.Text = "API Lists Connection - Error";
+                            }
+                        }
+                    }
+                }
             }
 
             if (StatusCheck)
             {
-                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
+                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. " +
+                    "Clicking 'Manual Bypass' will allow you to continue with the Error";
                 APIErrorFormElements();
             }
             else
             {
                 APIErrorFormElements(false);
                 SettingsFormElements(true);
-                WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
+                WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. " +
+                    "Please specify where you want to download all required game files";
             }
         }
 
@@ -190,6 +229,12 @@ namespace GameLauncher.App
             SettingsFormElements(false);
             APIErrorFormElements(false);
             CheckListStatus();
+
+            /********************************/
+            /* Load XML (Only one Section)   /
+            /********************************/
+
+            FileGameSettings.Read("Language Only");
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -200,24 +245,32 @@ namespace GameLauncher.App
                 FileGameSettingsData.Language = ((LangObject)GameLangSource.SelectedItem).XML_Value;
             }
 
-            if (((LangObject)GameLangSource.SelectedItem).Category == "Custom")
+            try
             {
-                /* Create Custom Settings.ini for LangPicker.asi module */
-                if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts"))
+                if (((LangObject)GameLangSource.SelectedItem).Category == "Custom")
                 {
-                    Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
-                }
+                    /* Create Custom Settings.ini for LangPicker.asi module */
+                    if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts"))
+                    {
+                        Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
+                    }
 
-                IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
-                LanguagePickerFile.Write("Language", ((LangObject)GameLangSource.SelectedItem).INI_Value);
-                MessageBox.Show(null, "Please Note: If a Server does not Provide Language Pack, it will Fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini"))
-                {
-                    File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                    IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                    LanguagePickerFile.Write("Language", ((LangObject)GameLangSource.SelectedItem).INI_Value);
+                    MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English instead.", 
+                        "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+                else
+                {
+                    if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini"))
+                    {
+                        File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                    }
+                }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("WELCOME SCREEN", null, Error, null, true);
             }
 
             if (!string.IsNullOrWhiteSpace(((CDNList)CDNSource.SelectedItem).Url))
@@ -254,7 +307,8 @@ namespace GameLauncher.App
         {
             APIErrorFormElements(false);
             SettingsFormElements();
-            WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
+            WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. " +
+                "Please specify where you want to download all required game files";
         }
 
         private void APIErrorFormElements(bool hideElements = true)
@@ -281,46 +335,49 @@ namespace GameLauncher.App
         {
             try
             {
-                var font = (sender as ComboBox).Font;
-                Brush backgroundColor;
-                Brush textColor;
-                Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
-                Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
-                Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
-                Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
-
-                var cdnListText = "";
+                string cdnListText = string.Empty;
 
                 if (sender is ComboBox cb)
                 {
-                    if (cb.Items[e.Index] is CDNList si)
+                    if (e.Index != -1 && cb.Items != null)
                     {
-                        cdnListText = si.Name;
+                        if (cb.Items[e.Index] is CDNList si)
+                        {
+                            cdnListText = si.Name;
+                        }
                     }
                 }
 
-                if (cdnListText.StartsWith("<GROUP>"))
+                if (!string.IsNullOrWhiteSpace(cdnListText))
                 {
-                    font = new Font(font, FontStyle.Bold);
-                    e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
-                    e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
-                }
-                else
-                {
-                    font = new Font(font, FontStyle.Bold);
-                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                    Font font = (sender as ComboBox).Font;
+                    Brush backgroundColor;
+                    Brush textColor;
+
+                    if (cdnListText.StartsWith("<GROUP>"))
                     {
-                        backgroundColor = SystemBrushes.Highlight;
-                        textColor = SystemBrushes.HighlightText;
+                        font = new Font(font, FontStyle.Bold);
+                        e.Graphics.FillRectangle(new SolidBrush(Theming.DropMenuBackgroundForeColor_Category), e.Bounds);
+                        e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font,
+                            new SolidBrush(Theming.DropMenuTextForeColor_Category), e.Bounds);
                     }
                     else
                     {
-                        backgroundColor = customBGColor;
-                        textColor = customTextColor;
-                    }
+                        font = new Font(font, FontStyle.Bold);
+                        if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                        {
+                            backgroundColor = SystemBrushes.Highlight;
+                            textColor = SystemBrushes.HighlightText;
+                        }
+                        else
+                        {
+                            backgroundColor = new SolidBrush(Theming.DropMenuBackgroundForeColor);
+                            textColor = new SolidBrush(Theming.DropMenuTextForeColor);
+                        }
 
-                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                    e.Graphics.DrawString(cdnListText, font, textColor, e.Bounds);
+                        e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                        e.Graphics.DrawString(cdnListText, font, textColor, e.Bounds);
+                    }
                 }
             }
             catch { }
@@ -330,46 +387,49 @@ namespace GameLauncher.App
         {
             try
             {
-                var font = (sender as ComboBox).Font;
-                Brush backgroundColor;
-                Brush textColor;
-                Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
-                Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
-                Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
-                Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
-
-                var langListText = "";
+                string langListText = string.Empty;
 
                 if (sender is ComboBox cb)
                 {
-                    if (cb.Items[e.Index] is LangObject si)
+                    if (e.Index != -1 && cb.Items != null)
                     {
-                        langListText = si.Name;
+                        if (cb.Items[e.Index] is LangObject si)
+                        {
+                            langListText = si.Name;
+                        }
                     }
                 }
 
-                if (langListText.StartsWith("<GROUP>"))
+                if (!string.IsNullOrWhiteSpace(langListText))
                 {
-                    font = new Font(font, FontStyle.Bold);
-                    e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
-                    e.Graphics.DrawString(langListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
-                }
-                else
-                {
-                    font = new Font(font, FontStyle.Bold);
-                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                    Font font = (sender as ComboBox).Font;
+                    Brush backgroundColor;
+                    Brush textColor;
+
+                    if (langListText.StartsWith("<GROUP>"))
                     {
-                        backgroundColor = SystemBrushes.Highlight;
-                        textColor = SystemBrushes.HighlightText;
+                        font = new Font(font, FontStyle.Bold);
+                        e.Graphics.FillRectangle(new SolidBrush(Theming.DropMenuBackgroundForeColor_Category), e.Bounds);
+                        e.Graphics.DrawString(langListText.Replace("<GROUP>", string.Empty), font,
+                            new SolidBrush(Theming.DropMenuTextForeColor_Category), e.Bounds);
                     }
                     else
                     {
-                        backgroundColor = customBGColor;
-                        textColor = customTextColor;
-                    }
+                        font = new Font(font, FontStyle.Bold);
+                        if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                        {
+                            backgroundColor = SystemBrushes.Highlight;
+                            textColor = SystemBrushes.HighlightText;
+                        }
+                        else
+                        {
+                            backgroundColor = new SolidBrush(Theming.DropMenuBackgroundForeColor);
+                            textColor = new SolidBrush(Theming.DropMenuTextForeColor);
+                        }
 
-                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                    e.Graphics.DrawString("    " + langListText, font, textColor, e.Bounds);
+                        e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                        e.Graphics.DrawString("    " + langListText, font, textColor, e.Bounds);
+                    }
                 }
             }
             catch { }
