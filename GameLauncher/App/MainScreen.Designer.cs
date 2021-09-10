@@ -189,7 +189,6 @@
             this.LauncherStatusDesc.Size = new System.Drawing.Size(152, 30);
             this.LauncherStatusDesc.TabIndex = 5;
             this.LauncherStatusDesc.Text = "Version: vX.X.X.X";
-            this.LauncherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ServerStatusText
             // 
