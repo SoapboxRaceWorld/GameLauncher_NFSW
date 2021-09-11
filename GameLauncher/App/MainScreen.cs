@@ -688,7 +688,7 @@ namespace GameLauncher
 
         private void ServerPick_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Banner.Image != null) { try { Banner.Image.Dispose(); } catch { } }
+            try { GC.Collect(); } catch { }
             MainEmailBorder.Image = Theming.BorderEmail;
             MainPasswordBorder.Image = Theming.BorderPassword;
             /* Disable Certain Functions */
@@ -737,7 +737,6 @@ namespace GameLauncher
                                             Path.Combine(".BannerCache", SHA.Hashes(InformationCache.SelectedServerData.IPAddress) + ".bin"));
             Banner.Image = Banners.Grayscale(BannerCache);
             Banner.BackColor = Color.Transparent;
-
             string ImageUrl = string.Empty;
             string numPlayers = string.Empty;
             string numRegistered = string.Empty;
@@ -1214,8 +1213,8 @@ namespace GameLauncher
                                         if (!ServerChangeTriggered)
                                         {
                                             /* Load cached banner! */
-                                            if (Banner.Image != null) { Banner.Image.Dispose(); }
                                             Banner.Image = Banners.Grayscale(BannerCache);
+                                            try { GC.Collect(); } catch { }
                                         }
 
                                         if (Client_A != null)
@@ -1242,8 +1241,8 @@ namespace GameLauncher
                                                 Position = 0
                                             };
 
-                                            if (Banner.Image != null) { Banner.Image.Dispose(); }
                                             Banner.Image = Image.FromStream(_serverRawBanner);
+                                            try { GC.Collect(); } catch { }
 
                                             if (Banners.GetFileExtension(ImageUrl) == "gif")
                                             {
@@ -1272,13 +1271,13 @@ namespace GameLauncher
                             else if (File.Exists(BannerCache) && Application.OpenForms["MainScreen"] != null)
                             {
                                 /* Load cached banner! */
-                                if (Banner.Image != null) { Banner.Image.Dispose(); }
                                 Banner.Image = Banners.Grayscale(BannerCache);
+                                try { GC.Collect(); } catch { }
                             }
                             else if (Application.OpenForms["MainScreen"] != null)
                             {
-                                if (Banner.Image != null) { Banner.Image.Dispose(); }
                                 Banner.BackColor = Theming.BannerBackColor;
+                                try { GC.Collect(); } catch { }
                             }
                         }
                         catch (Exception Error)
@@ -1289,7 +1288,14 @@ namespace GameLauncher
                         ServerChangeTriggered = false;
                     }
                 }
+
+                if (Application.OpenForms["MainScreen"] != null)
+                {
+                    try { GC.Collect(); } catch { }
+                }
             };
+
+            try { GC.Collect(); } catch { }
         }
 
         /* Main Screen Elements */

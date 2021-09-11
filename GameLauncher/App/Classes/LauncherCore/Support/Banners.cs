@@ -10,7 +10,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
     {
         public static string GetFileExtension(String filename)
         {
-            return filename.Split('.').Last();
+            return filename.Split('.').Last().ToLower();
         }
 
         public static Image Grayscale(String filename)
