@@ -2056,11 +2056,11 @@ namespace GameLauncher
                     try
                     {
                         ModulesJSON = ModNetJsonURI.DownloadString(ModNetURI);
-                        PlayProgressText.Text = "JSON: Retrived ModNet Files Information".ToUpper();
+                        PlayProgressText.Text = "JSON: Retrieved ModNet Files Information".ToUpper();
                     }
                     catch (Exception Error)
                     {
-                        PlayProgressText.Text = ("JSON: Unable to Retrive ModNet Files Information").ToUpper();
+                        PlayProgressText.Text = ("JSON: Unable to Retrieve ModNet Files Information").ToUpper();
                         DiscordLauncherPresence.Status("ModNet Files Information Error", null);
                         CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                         string LogMessage = "There was an error with ModNet JSON Retrieval:";
@@ -2179,11 +2179,11 @@ namespace GameLauncher
                         try
                         {
                             ServerModInfo = ModInfoJson.DownloadString(newModNetUri);
-                            PlayProgressText.Text = ("JSON: Retrived Server Mod Information").ToUpper();
+                            PlayProgressText.Text = ("JSON: Retrieved Server Mod Information").ToUpper();
                         }
                         catch (Exception Error)
                         {
-                            PlayProgressText.Text = ("JSON: Unable to Retrive Server Mod Information").ToUpper();
+                            PlayProgressText.Text = ("JSON: Unable to Retrieve Server Mod Information").ToUpper();
                             DiscordLauncherPresence.Status("Server Mods Get Information Error", null);
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                             string LogMessage = "There was an error with Server Mod Information Retrieval:";
@@ -2318,13 +2318,13 @@ namespace GameLauncher
 
                             try
                             {
-                                Log.Core("CORE: Retrived Server Mods List");
+                                Log.Core("CORE: Retrieved Server Mods List");
                                 ServerModListJSON = ServerModsList.DownloadString(newIndexFile);
-                                PlayProgressText.Text = ("JSON: Retrived Server Mod List Information").ToUpper();
+                                PlayProgressText.Text = ("JSON: Retrieved Server Mod List Information").ToUpper();
                             }
                             catch (Exception Error)
                             {
-                                PlayProgressText.Text = ("JSON: Unable to Retrive Server Mod List Information").ToUpper();
+                                PlayProgressText.Text = ("JSON: Unable to Retrieve Server Mod List Information").ToUpper();
                                 DiscordLauncherPresence.Status("Server Mods Get Information Error", null);
                                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                                 string LogMessage = "There was an error with Server Mod List Information Retrieval:";

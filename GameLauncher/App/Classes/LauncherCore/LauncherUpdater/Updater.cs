@@ -193,7 +193,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
                 if (!VisualsAPIChecker.GitHubAPI)
                 {
-                    Log.Error("LAUNCHER UPDATE: Failed to retrive Latest Build information from two APIs ");
+                    Log.Error("LAUNCHER UPDATE: Failed to retrieve Latest Build information from two APIs ");
                 }
             }
 

@@ -213,8 +213,8 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             switch (APIChecker.CheckStatus(URLs.Main + "/serverlist.json", 15))
             {
                 case APIStatus.Online:
-                    UnitedSL = RetriveJSON(URLs.Main + "/serverlist.json", "SL");
-                    if (UnitedSL) { UnitedCDNL = RetriveJSON(URLs.Main + "/cdn_list.json", "CDNL"); }
+                    UnitedSL = RetrieveJSON(URLs.Main + "/serverlist.json", "SL");
+                    if (UnitedSL) { UnitedCDNL = RetrieveJSON(URLs.Main + "/cdn_list.json", "CDNL"); }
                     Log.Completed("API Status: WorldUnited");
                     break;
                 default:
@@ -228,9 +228,9 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 switch (APIChecker.CheckStatus(URLs.Static + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
-                        if (!UnitedSL) { CarbonSL = RetriveJSON(URLs.Static + "/serverlist.json", "SL"); }
+                        if (!UnitedSL) { CarbonSL = RetrieveJSON(URLs.Static + "/serverlist.json", "SL"); }
                         else { CarbonSL = true; }
-                        if (!UnitedCDNL) { CarbonCDNL = RetriveJSON(URLs.Static + "/cdn_list.json", "CDNL"); }
+                        if (!UnitedCDNL) { CarbonCDNL = RetrieveJSON(URLs.Static + "/cdn_list.json", "CDNL"); }
                         else { CarbonCDNL = true; }
                         Log.Completed("API Status: DavidCarbon");
                         break;
@@ -251,9 +251,9 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 switch (APIChecker.CheckStatus(URLs.Static_Alt + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
-                        if (!CarbonSL) { CarbonTwoSL = RetriveJSON(URLs.Static_Alt + "/serverlist.json", "SL"); }
+                        if (!CarbonSL) { CarbonTwoSL = RetrieveJSON(URLs.Static_Alt + "/serverlist.json", "SL"); }
                         else { CarbonTwoSL = true; }
-                        if (!CarbonCDNL) { CarbonTwoCDNL = RetriveJSON(URLs.Static_Alt + "/cdn_list.json", "CDNL"); }
+                        if (!CarbonCDNL) { CarbonTwoCDNL = RetrieveJSON(URLs.Static_Alt + "/cdn_list.json", "CDNL"); }
                         else { CarbonTwoCDNL = true; }
                         Log.Completed("API Status: DavidCarbon [Second]");
                         break;
@@ -274,9 +274,9 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 switch (APIChecker.CheckStatus(URLs.WOPL + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
-                        if (!CarbonTwoSL) { WOPLSL = RetriveJSON(URLs.WOPL + "/serverlist.json", "SL"); }
+                        if (!CarbonTwoSL) { WOPLSL = RetrieveJSON(URLs.WOPL + "/serverlist.json", "SL"); }
                         else { WOPLSL = true; }
-                        if (!CarbonTwoCDNL) { WOPLCDNL = RetriveJSON(URLs.WOPL + "/cdn_list.json", "CDNL"); }
+                        if (!CarbonTwoCDNL) { WOPLCDNL = RetrieveJSON(URLs.WOPL + "/cdn_list.json", "CDNL"); }
                         else { WOPLCDNL = true; }
                         Log.Completed("API Status: WorldOnline");
                         break;
@@ -332,7 +332,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
         private static string OnlineListJson;
 
-        private static bool RetriveJSON(string JSONUrl, string Function)
+        private static bool RetrieveJSON(string JSONUrl, string Function)
         {
             Log.Checking("JSON LIST: Retriving " + JSONUrl);
             try
@@ -355,7 +355,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 try
                 {
                     OnlineListJson = Client.DownloadString(URLCall);
-                    Log.UrlCall("JSON LIST: Retrived " + JSONUrl);
+                    Log.UrlCall("JSON LIST: Retrieved " + JSONUrl);
                 }
                 catch (WebException Error)
                 {

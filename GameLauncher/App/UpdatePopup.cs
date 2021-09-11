@@ -69,7 +69,7 @@ namespace GameLauncher.App
             }
             else
             {
-                ChangelogText.Text = "\nUnited API Is Currently Down. Unable to Retrive Changelog";
+                ChangelogText.Text = "\nUnited API Is Currently Down. Unable to Retrieve Changelog";
                 ChangelogBox.Text = "Changelog Error:";
             }
 

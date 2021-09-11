@@ -37,9 +37,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /* ROOT CA JSON Cache */
         private static string RootCAJson;
 
-        /* Retrive CA Information */
+        /* Retrieve CA Information */
         /// <summary>
-        /// Retrives the Root CA JSON file with the latest details of the Certificate
+        /// Retrieves the Root CA JSON file with the latest details of the Certificate
         /// </summary>
         /// <remarks>Sets the Certificate Details For Launcher Comparison</remarks>
         public static void Latest()
