@@ -16,6 +16,8 @@ using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.UI_Forms.UpdatePopup_Screen;
+using GameLauncher.App.UI_Forms.Splash_Screen;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {

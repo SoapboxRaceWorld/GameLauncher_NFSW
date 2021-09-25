@@ -12,6 +12,7 @@ using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.UI_Forms.SelectServer_Screen;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
