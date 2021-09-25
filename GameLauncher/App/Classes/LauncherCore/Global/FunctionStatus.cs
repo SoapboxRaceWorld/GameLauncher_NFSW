@@ -19,6 +19,8 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Security;
+using System.Reflection;
+using System.Resources;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -29,6 +31,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
     /* This is Used to Cache Responses From the Launcher */
     class InformationCache
     {
+        public static ResourceManager Lang_Launcher = new ResourceManager("GameLauncher.App.Languages.English_Texts", Assembly.GetExecutingAssembly());
+
         /* Detect and Set System Language */
         public static CultureInfo Lang = CultureInfo.CurrentUICulture;
 
@@ -41,11 +45,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* System OS Name */
         public static string OSName;
 
-        /* Selected Server Requires Proxy (Due to being https Only) */
+        /* Selected Server Needs Proxy (HTTPS POST Only) */
         public static bool ModernAuthSecureChannel = false;
 
         /* Selected Server ModernAuth Hash Type (Used for Login) */
         public static string ModernAuthHashType = string.Empty;
+
+        /* Selected Server Is Enforcing Proxy */
+        public static bool SelectedServerEnforceProxy = false;
 
         /* Selected Server Category */
         public static string SelectedServerCategory;

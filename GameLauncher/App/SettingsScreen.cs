@@ -871,7 +871,11 @@ namespace GameLauncher.App
                             DisplayMessageBox = FileAccountSave.ChoosenGameServer.StartsWith("https");
                         }
 
-                        if (bool.TryParse(InformationCache.ModernAuthSecureChannel.ToString(), out bool Result))
+                        if (InformationCache.SelectedServerEnforceProxy)
+                        {
+                            DisplayMessageBox = InformationCache.SelectedServerEnforceProxy;
+                        }
+                        else if (bool.TryParse(InformationCache.ModernAuthSecureChannel.ToString(), out bool Result))
                         {
                             DisplayMessageBox = InformationCache.ModernAuthSecureChannel;
                         }

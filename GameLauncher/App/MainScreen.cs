@@ -432,17 +432,17 @@ namespace GameLauncher
 
         private void ButtonSettings_MouseDown(object sender, EventArgs e)
         {
-            SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Good")? Theming.GearButtonClick : Theming.GearButtonWarningClick;
+            SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Bad") ? Theming.GearButtonWarningClick : Theming.GearButtonClick;
         }
 
         private void ButtonSettings_MouseEnter(object sender, EventArgs e)
         {
-            SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Good") ? Theming.GearButtonHover : Theming.GearButtonWarningHover;
+            SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Bad") ? Theming.GearButtonWarningHover : Theming.GearButtonHover;
         }
 
         private void ButtonSettings_MouseLeaveANDMouseUp(object sender, EventArgs e)
         {
-            SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Good") ? Theming.GearButton : Theming.GearButtonWarning;
+            SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Bad") ? Theming.GearButtonWarning : Theming.GearButton;
         }
 
         private void LoginEnter(object sender, KeyEventArgs e)
@@ -697,7 +697,7 @@ namespace GameLauncher
             InformationCache.SelectedServerJSON = null;
             FunctionStatus.AllowRegistration = false;
             InformationCache.ModernAuthHashType = string.Empty;
-            InformationCache.ModernAuthSecureChannel = false;
+            InformationCache.ModernAuthSecureChannel = InformationCache.SelectedServerEnforceProxy = false;
             /* Disable Login & Register Button */
             LoginButton.Enabled = false;
             RegisterText.Enabled = false;
@@ -947,7 +947,8 @@ namespace GameLauncher
                             {
                                 serverSecondsToShutDown =
                                 (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 7200;
-                                ServerShutDown.Text = string.Format("Gameplay Timer: " + TimeConversions.RelativeTime(serverSecondsToShutDown));
+                                ServerShutDown.Text = string.Format(InformationCache.Lang_Launcher.GetString("MainScreen_Text_ServerShutDown") + 
+                                    " " + TimeConversions.RelativeTime(serverSecondsToShutDown));
                             }
                             catch { }
 
@@ -961,7 +962,7 @@ namespace GameLauncher
                                         SceneryStatus = "Scenery: New Years";
                                         break;
                                     case "SCENERY_GROUP_OKTOBERFEST":
-                                        SceneryStatus = "Scenery: OKTOBERFEST";
+                                        SceneryStatus = "Scenery: Oktoberfest";
                                         break;
                                     case "SCENERY_GROUP_HALLOWEEN":
                                         SceneryStatus = "Scenery: Halloween";
@@ -989,7 +990,7 @@ namespace GameLauncher
                                 else if (InformationCache.SelectedServerJSON.enforceLauncherProxy != null &&
                                         !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.enforceLauncherProxy))
                                 {
-                                    InformationCache.ModernAuthSecureChannel = InformationCache.SelectedServerJSON.enforceLauncherProxy.ToLower() == "true";
+                                    InformationCache.SelectedServerEnforceProxy = InformationCache.SelectedServerJSON.enforceLauncherProxy.ToLower() == "true";
                                 }
                                 else if (InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide != null &&
                                          !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide))
@@ -1112,8 +1113,10 @@ namespace GameLauncher
 
                         try
                         {
+                            ServerPingStatusText.Text = string.Empty;
                             CheckMate = new Ping();
-                            CheckMate.PingCompleted += (_sender, _e) => {
+                            CheckMate.PingCompleted += (_sender, _e) => 
+                            {
                                 if (_e.Cancelled)
                                 {
                                     Log.Warning("SERVER PING: Ping Canceled for " + ServerListUpdater.ServerName("Ping"));
@@ -1480,7 +1483,7 @@ namespace GameLauncher
 
         private void StartGame(string UserID, string LoginToken)
         {
-            if (InformationCache.ModernAuthSecureChannel)
+            if (InformationCache.ModernAuthSecureChannel || InformationCache.SelectedServerEnforceProxy)
             {
                 if (!ServerProxy.Running())
                 {
@@ -3600,7 +3603,7 @@ namespace GameLauncher
                 }
             }
             string LogMessage = "CDN Downloader Encountered an Error:";
-            LogToFileAddons.OpenLog("MODNET FILES", LogMessage, Error, "Error", false);
+            LogToFileAddons.OpenLog("Game Download", LogMessage, Error, "Error", false);
             if (!string.IsNullOrWhiteSpace(TempEmailCache))
             {
                 if (this.MainEmail.InvokeRequired)
@@ -3773,7 +3776,7 @@ namespace GameLauncher
             TransparencyKey = Theming.MainScreenTransparencyKey;
 
             logo.BackgroundImage = Theming.LogoMain;
-            SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Good") ? Theming.GearButton : Theming.GearButtonWarning;
+            SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Bad") ? Theming.GearButtonWarning : Theming.GearButton;
             CloseBTN.BackgroundImage = Theming.CloseButton;
             ButtonSecurityCenter.BackgroundImage = SecurityCenter.SecurityCenterIcon(1);
 

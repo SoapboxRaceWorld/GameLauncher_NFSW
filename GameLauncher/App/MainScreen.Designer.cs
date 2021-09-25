@@ -326,7 +326,7 @@
             this.LoginButton.Name = "LoginButton";
             this.LoginButton.Size = new System.Drawing.Size(231, 35);
             this.LoginButton.TabIndex = 8;
-            this.LoginButton.Text = "LOG ON";
+            this.LoginButton.Text = "LOGIN";
             this.LoginButton.UseVisualStyleBackColor = false;
             // 
             // RegisterText

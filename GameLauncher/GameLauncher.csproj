@@ -168,6 +168,7 @@
     <Compile Include="App\Classes\LauncherCore\Global\FunctionStatus.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\URLs.cs" />
     <Compile Include="App\Classes\LauncherCore\Hash\SHATwoFiveSix.cs" />
+    <Compile Include="App\Classes\LauncherCore\Languages\Visual_Forms\Texts_Welcome.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterExecutable.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonCDNList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonLanguage.cs" />
@@ -224,6 +225,11 @@
     <Compile Include="App\Classes\LauncherCore\RPC\EventList.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\CertificateStore.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\ScreenResolutions.cs" />
+    <Compile Include="App\Languages\English_Texts.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>English_Texts.resx</DependentUpon>
+    </Compile>
     <Compile Include="App\RegisterScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -321,6 +327,10 @@
     <EmbeddedResource Include="App\DebugScreen.resx">
       <DependentUpon>DebugScreen.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\Languages\English_Texts.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>English_Texts.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="App\MainScreen.resx">
       <DependentUpon>MainScreen.cs</DependentUpon>

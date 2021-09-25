@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Global_Text_About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Global_Text_EG_1" xml:space="preserve">
+    <value>Obsolete</value>
+  </data>
+  <data name="MainScreen" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MainScreen_Button_Forgot_Password" xml:space="preserve">
+    <value>I Forgot My Password</value>
+    <comment>Used to Display Forgot Password Text [Default Text]</comment>
+  </data>
+  <data name="MainScreen_Button_Launch" xml:space="preserve">
+    <value>Launch</value>
+  </data>
+  <data name="MainScreen_Button_Login" xml:space="preserve">
+    <value>Login</value>
+    <comment>Used to Display on Button</comment>
+  </data>
+  <data name="MainScreen_Button_Play" xml:space="preserve">
+    <value>Play Now</value>
+    <comment>Used to Display on Button</comment>
+  </data>
+  <data name="MainScreen_Button_Register" xml:space="preserve">
+    <value>Register</value>
+    <comment>Used to Display on Button</comment>
+  </data>
+  <data name="MainScreen_Button_SelectServer" xml:space="preserve">
+    <value>Select Server</value>
+    <comment>Used to Display Button Text [Hard Coded Text]</comment>
+  </data>
+  <data name="MainScreen_Context_Close" xml:space="preserve">
+    <value>Close Launcher</value>
+  </data>
+  <data name="MainScreen_Notification_Text_Alert" xml:space="preserve">
+    <value>Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.</value>
+  </data>
+  <data name="MainScreen_Notification_Text_Restart" xml:space="preserve">
+    <value>Force Restart -</value>
+  </data>
+  <data name="MainScreen_TextBox_GameFiles_Downloading" xml:space="preserve">
+    <value>Please wait while the GameLauncher is still downloading the game files.</value>
+  </data>
+  <data name="MainScreen_TextBox_GameFiles_Invalid_Location" xml:space="preserve">
+    <value>Drive {0} was not found. Your actual installation directory is set to {1} now.</value>
+  </data>
+  <data name="MainScreen_TextBox_SettingsScreen_Error" xml:space="preserve">
+    <value>Settings Screen Encountered an Error</value>
+  </data>
+  <data name="MainScreen_Text_AccountLink_Discord" xml:space="preserve">
+    <value>Discord Invite</value>
+    <comment>[Hard Coded Text]</comment>
+  </data>
+  <data name="MainScreen_Text_AccountLink_Facebook" xml:space="preserve">
+    <value>Facebook Group</value>
+    <comment>[Hard Coded Text]</comment>
+  </data>
+  <data name="MainScreen_Text_AccountLink_Home" xml:space="preserve">
+    <value>Home Page</value>
+    <comment>[Hard Coded Text]</comment>
+  </data>
+  <data name="MainScreen_Text_AccountLink_Twitter" xml:space="preserve">
+    <value>Twitter Feed</value>
+    <comment>[Hard Coded Text]</comment>
+  </data>
+  <data name="MainScreen_Text_API_Launcher" xml:space="preserve">
+    <value>Main API
+
+- Pinging</value>
+    <comment>Used to Display API Status [Default Text]</comment>
+  </data>
+  <data name="MainScreen_Text_API_Launcher_Description_Offline" xml:space="preserve">
+    <value>Launcher is Offline</value>
+  </data>
+  <data name="MainScreen_Text_API_Launcher_Description_Online" xml:space="preserve">
+    <value>Connected to API</value>
+  </data>
+  <data name="MainScreen_Text_API_Server" xml:space="preserve">
+    <value>Players Online: ###
+Registered: ###</value>
+    <comment>Used to Display Server Player Data [Place Holder Text]</comment>
+  </data>
+  <data name="MainScreen_Text_FS_Launcher_Status_Linux" xml:space="preserve">
+    <value>Launcher Status:\n - Linux Build</value>
+    <comment>[FS -&gt; Failsafe]</comment>
+  </data>
+  <data name="MainScreen_Text_FS_Login_Greeting" xml:space="preserve">
+    <value>Pshhh Pshhh</value>
+  </data>
+  <data name="MainScreen_Text_Launcher_Status" xml:space="preserve">
+    <value>Launcher
+ 
+- Checking</value>
+  </data>
+  <data name="MainScreen_Text_Launcher_Version" xml:space="preserve">
+    <value>Version: v</value>
+  </data>
+  <data name="MainScreen_Text_Login" xml:space="preserve">
+    <value>Enter Your Account Information to Login</value>
+  </data>
+  <data name="MainScreen_Text_Login_Greeting_Afternoon" xml:space="preserve">
+    <value>Good Afternoon</value>
+  </data>
+  <data name="MainScreen_Text_Login_Greeting_Evening" xml:space="preserve">
+    <value>Good Evening</value>
+  </data>
+  <data name="MainScreen_Text_Login_Greeting_Morning" xml:space="preserve">
+    <value>Good Morning</value>
+  </data>
+  <data name="MainScreen_Text_Login_Greeting_YouNeedSleep" xml:space="preserve">
+    <value>Hello Night Owl</value>
+  </data>
+  <data name="MainScreen_Text_PH_InsiderBuildNumber" xml:space="preserve">
+    <value>Insider Build Date: ##-##-##-X</value>
+    <comment>Used to Display Build Date for Insider Builds [Default Text]</comment>
+  </data>
+  <data name="MainScreen_Text_PH_Launcher_Version" xml:space="preserve">
+    <value>Version: vX.X.X.X</value>
+    <comment>[PH -&gt; Place Holder]</comment>
+  </data>
+  <data name="MainScreen_Text_PH_SceneryGroup_Default" xml:space="preserve">
+    <value>Scenery: Default Text</value>
+    <comment>Scenery Holiday Text [Place Holder Text]</comment>
+  </data>
+  <data name="MainScreen_Text_PlayProgress" xml:space="preserve">
+    <value>Please Wait</value>
+    <comment>Used to Display Download Progress Message Status [Default Text]</comment>
+  </data>
+  <data name="MainScreen_Text_Protection_Email" xml:space="preserve">
+    <value>Email is Hidden</value>
+    <comment>[Hard Coded Text]</comment>
+  </data>
+  <data name="MainScreen_Text_SceneryGroup_Christmas" xml:space="preserve">
+    <value>Scenery: Christmas</value>
+    <comment>Scenery Holiday Text</comment>
+  </data>
+  <data name="MainScreen_Text_SceneryGroup_EG_1" xml:space="preserve">
+    <value>But It's Me!</value>
+  </data>
+  <data name="MainScreen_Text_SceneryGroup_Halloween" xml:space="preserve">
+    <value>Scenery: Halloween</value>
+    <comment>Scenery Holiday Text</comment>
+  </data>
+  <data name="MainScreen_Text_SceneryGroup_NewYears" xml:space="preserve">
+    <value>Scenery: New Years</value>
+    <comment>Scenery Holiday Text</comment>
+  </data>
+  <data name="MainScreen_Text_SceneryGroup_Normal" xml:space="preserve">
+    <value>Scenery: Normal</value>
+    <comment>Scenery Holiday Text</comment>
+  </data>
+  <data name="MainScreen_Text_SceneryGroup_Oktoberfest" xml:space="preserve">
+    <value>Scenery: Oktoberfest</value>
+    <comment>Scenery Holiday Text</comment>
+  </data>
+  <data name="MainScreen_Text_SceneryGroup_Valentines" xml:space="preserve">
+    <value>Scenery: Valentines</value>
+    <comment>Scenery Holiday Text</comment>
+  </data>
+  <data name="MainScreen_Text_ServerPingStatus" xml:space="preserve">
+    <value>Your Ping to the Server</value>
+    <comment>Used to Display Server Ping (If Supported) [Default Text]</comment>
+  </data>
+  <data name="MainScreen_Text_ServerShutDown" xml:space="preserve">
+    <value>Gameplay Timer:</value>
+    <comment>Used to Display Force Restart Timer on Panel [Default Text]</comment>
+  </data>
+  <data name="MainScreen_Text_ServerShutDown_EG_1" xml:space="preserve">
+    <value>Game Launcher!</value>
+  </data>
+  <data name="MainScreen_Text_ServerStatus_Checking" xml:space="preserve">
+    <value>Server Status:\n - Pinging</value>
+  </data>
+  <data name="MainScreen_Text_ServerStatus_Description_Cancelled" xml:space="preserve">
+    <value>Failed to Connect to Server</value>
+  </data>
+  <data name="MainScreen_Text_ServerStatus_Description_Offline" xml:space="preserve">
+    <value>Server Seems to be Offline</value>
+  </data>
+  <data name="MainScreen_Text_ServerStatus_Description_Online" xml:space="preserve">
+    <value>Online: {0}\nRegistered: {1}</value>
+  </data>
+  <data name="MainScreen_Text_ServerStatus_Description_Unstable" xml:space="preserve">
+    <value>Recevied Invalid JSON Game Server Info.</value>
+  </data>
+  <data name="MainScreen_Text_ServerStatus_Offline" xml:space="preserve">
+    <value>Server Status:\n - Offline ( OFF )</value>
+    <comment>"\n" is used to display text in a new line</comment>
+  </data>
+  <data name="MainScreen_Text_ServerStatus_Online" xml:space="preserve">
+    <value>Server Status:\n - Online ( ON )</value>
+  </data>
+  <data name="MainScreen_Text_ServerStatus_Unknown" xml:space="preserve">
+    <value>Launcher Offline:\n - Unknown</value>
+  </data>
+  <data name="MainScreen_Text_ServerStatus_Unstable" xml:space="preserve">
+    <value>Server Connection:\n - Unstable</value>
+  </data>
+</root>
