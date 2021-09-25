@@ -1338,15 +1338,15 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 {
                     DateTime currentTime = DateTime.Now;
 
-                    if ((currentTime.Hour > 5) && (currentTime.Hour < 12))
+                    if ((currentTime.Hour >= 5) && (currentTime.Hour < 12))
                     {
                         _loginWelcomeTime = "Good Morning";
                     }
-                    else if ((currentTime.Hour > 12) && (currentTime.Hour < 18))
+                    else if ((currentTime.Hour >= 12) && (currentTime.Hour < 18))
                     {
                         _loginWelcomeTime = "Good Afternoon";
                     }
-                    else if ((currentTime.Hour > 18) && (currentTime.Hour < 22))
+                    else if ((currentTime.Hour >= 18) && (currentTime.Hour < 22))
                     {
                         _loginWelcomeTime = "Good Evening";
                     }
