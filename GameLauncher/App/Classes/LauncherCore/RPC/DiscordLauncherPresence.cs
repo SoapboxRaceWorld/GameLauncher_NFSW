@@ -483,11 +483,11 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         /// <remarks>Server's Discord Application ID</remarks>
         public static string ApplicationID()
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordApplicationID))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordApplicationID ?? string.Empty))
             {
                 return InformationCache.SelectedServerJSON.discordApplicationID;
             }
-            else if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.DiscordAppID))
+            else if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.DiscordAppID ?? string.Empty))
             {
                 return InformationCache.SelectedServerData.DiscordAppID;
             }

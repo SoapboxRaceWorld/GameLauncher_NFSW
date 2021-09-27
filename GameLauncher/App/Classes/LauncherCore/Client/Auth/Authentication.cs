@@ -30,13 +30,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
         /// </summary>
         /// <remarks>Non Secure: Uses regualar URL Request. Secure: Uses Post Request</remarks>
         /// <returns>Receives UserId and Auth Key for Login. Sends Email and Password to Server</returns>
-        /// <param name="Connection">Connection Type: "Non Secure" or "Secure"</param>
+        /// <param name="ConnectionProtocol">Connection Protocol: Check AuthProtocol</param>
         /// <param name="Method">Form Type: "Login" or "Register"</param>
-        public static void Client(string Method, string Connection, String Email, String Password, String Token)
+        public static void Client(string Method, AuthProtocol ConnectionProtocol, String Email, String Password, String Token)
         {
             try
             {
-                if (Connection == "Non Secure")
+                if (ConnectionProtocol == AuthProtocol.P10 || ConnectionProtocol == AuthProtocol.P12)
                 {
                     FunctionStatus.TLS();
                     Uri URLCall = 
@@ -86,7 +86,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         }
                     }
                 }
-                else if (Connection == "Secure")
+                else if (ConnectionProtocol == AuthProtocol.P11 || ConnectionProtocol == AuthProtocol.P13)
                 {
                     FunctionStatus.TLS();
                     string ServerUrl = Tokens.IPAddress + "/User/modernAuth";
@@ -128,21 +128,21 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 }
                 else
                 {
-                    Log.Error("Authentication: [Login] Can not Determine Function with Specified Connection -> " + Connection);
+                    Log.Error("Authentication: [Login] Can not Determine Function with Specified Connection -> " + ConnectionProtocol);
                 }
             }
             catch (WebException Error)
             {
                 LogToFileAddons.OpenLog("CLIENT [LOGIN/REGISTER]", null, Error, null, true);
 
-                if (Connection == "Non Secure" || Connection == "Secure")
+                if (ConnectionProtocol != AuthProtocol.Unknown)
                 {
                     ServerResponse = (HttpWebResponse)Error.Response;
 
                     if (ServerResponse == null)
                     {
                         ServerErrorCode = 500;
-                        LoginResponse = (Connection == "Secure") ? "{\"error\":\"Failed to get reply from server. Please retry.\"}" :
+                        LoginResponse = (ConnectionProtocol == AuthProtocol.P11 || ConnectionProtocol == AuthProtocol.P13) ? "{\"error\":\"Failed to get reply from server. Please retry.\"}" :
                         "<LoginStatusVO><UserId>0</UserId><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
                     }
                     else
@@ -150,18 +150,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
                         {
                             ServerErrorCode = (int)ServerResponse.StatusCode;
-                            ServerErrorResponse = (Connection == "Secure") ? "{\"error\":\"" + ServerResponse.StatusDescription + "\"}" : null;
+                            ServerErrorResponse = (ConnectionProtocol == AuthProtocol.P11 || ConnectionProtocol == AuthProtocol.P13) ? "{\"error\":\"" + ServerResponse.StatusDescription + "\"}" : null;
                             LoginResponse = sr.ReadToEnd();
                         }
                     }
                 }
                 else
                 {
-                    Log.Error("Authentication: [WebException] Can not Determine Function with Specified Type -> " + Connection);
+                    Log.Error("Authentication: [WebException] Can not Determine Function with Specified Type -> " + ConnectionProtocol);
                 }
             }
 
-            if (Connection == "Non Secure")
+            if (ConnectionProtocol == AuthProtocol.P10 || ConnectionProtocol == AuthProtocol.P12)
             {
                 if (string.IsNullOrWhiteSpace(LoginResponse))
                 {
@@ -308,7 +308,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     }
                 }
             }
-            else if (Connection == "Secure")
+            else if (ConnectionProtocol == AuthProtocol.P11 || ConnectionProtocol == AuthProtocol.P13)
             {
                 if (String.IsNullOrWhiteSpace(LoginResponse))
                 {
@@ -377,7 +377,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
             else
             {
-                Log.Error("Authentication: [Tokens] Can not Determine Function with Specified Type -> " + Connection);
+                Log.Error("Authentication: [Tokens] Can not Determine Function with Specified Type -> " + ConnectionProtocol);
             }
         }
 
@@ -385,11 +385,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
         /// Hash Method (Used how to Authenticate Logins)
         /// </summary>
         /// <returns>A hash type standard that is used on the server</returns>
-        public static AuthHash HashType(string Type)
+        public static AuthHash HashType(string HType)
         {
-            if (!string.IsNullOrWhiteSpace(Type))
+            if (!string.IsNullOrWhiteSpace(HType))
             {
-                switch (Type)
+                switch (HType)
                 {
                     case "1.0":
                     case "true":
@@ -414,6 +414,38 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             else
             {
                 return AuthHash.H12;
+            }
+        }
+
+        /// <summary>
+        /// Protocol Method (Used how to Authenticate Logins/Registrations)
+        /// </summary>
+        /// <returns>A protocol type standard that is used on the server</returns>
+        public static AuthProtocol ProtocolType(string PType)
+        {
+            if (!string.IsNullOrWhiteSpace(PType))
+            {
+                switch (PType)
+                {
+                    case "1.0":
+                        return AuthProtocol.P10;
+                    case "1.1":
+                        return AuthProtocol.P11;
+                    case "1.2":
+                        return AuthProtocol.P12;
+                    case "1.3":
+                        return AuthProtocol.P13;
+                    default:
+                        return AuthProtocol.Unknown;
+                }
+            }
+            else if (InformationCache.SelectedServerEnforceProxy)
+            {
+                return AuthProtocol.P13;
+            }
+            else
+            {
+                return AuthProtocol.P10;
             }
         }
     }

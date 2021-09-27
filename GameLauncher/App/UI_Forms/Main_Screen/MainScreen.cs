@@ -564,16 +564,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     return;
             }
 
-            if (!InformationCache.ModernAuthSecureChannel)
-            {
-                /* ClassicAuth sends password in SHA1 */
-                Authentication.Client("Login", "Non Secure", Email, Password, null);
-            }
-            else
-            {
-                /* ModernAuth sends passwords in plaintext, but is POST request */
-                Authentication.Client("Login", "Secure", Email, Password, null);
-            }
+            Authentication.Client("Login", Authentication.ProtocolType(InformationCache.SelectedServerJSON.authProtocol ?? string.Empty), Email, Password, null);
 
             if (String.IsNullOrWhiteSpace(Tokens.Error))
             {
@@ -697,10 +688,9 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             /* Disable Certain Functions */
             _loginEnabled = false;
             _serverEnabled = false;
-            InformationCache.SelectedServerJSON = null;
             FunctionStatus.AllowRegistration = false;
+            InformationCache.SelectedServerJSON = null;
             InformationCache.ModernAuthHashType = string.Empty;
-            InformationCache.ModernAuthSecureChannel = InformationCache.SelectedServerEnforceProxy = false;
             /* Disable Login & Register Button */
             LoginButton.Enabled = false;
             RegisterText.Enabled = false;
@@ -986,56 +976,16 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                             try
                             {
-                                if (ServerURI.Scheme == "https")
-                                {
-                                    InformationCache.ModernAuthSecureChannel = true;
-                                }
-                                else if (InformationCache.SelectedServerJSON.enforceLauncherProxy != null &&
-                                        !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.enforceLauncherProxy))
-                                {
-                                    InformationCache.SelectedServerEnforceProxy = InformationCache.SelectedServerJSON.enforceLauncherProxy.ToLower() == "true";
-                                }
-                                else if (InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide != null &&
-                                         !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide))
-                                {
-                                    if (InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide.ToLower() == "true")
-                                    {
-                                        string CheckHttps = (InformationCache.SelectedServerData.IPAddress + "/GetServerInformation").Replace("http", "https");
-                                        switch (APIChecker.CheckStatus(CheckHttps, 10))
-                                        {
-                                            case APIStatus.Online:
-                                                InformationCache.ModernAuthSecureChannel = true;
-                                                break;
-                                            default:
-                                                InformationCache.ModernAuthSecureChannel = false;
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        InformationCache.ModernAuthSecureChannel = false;
-                                    }
-                                }
-                                else
-                                {
-                                    InformationCache.ModernAuthSecureChannel = false;
-                                }
+                                InformationCache.SelectedServerEnforceProxy = (InformationCache.SelectedServerJSON.enforceLauncherProxy ??
+                                (InformationCache.SelectedServerData.IPAddress.StartsWith("https") ? "true" : "false")).ToLower() == "true";
                             }
-                            catch { }
+                            catch { MessageBox.Show(null, "Can not have '??' to 'EnforceProxy'", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
 
                             try
                             {
-                                if (InformationCache.SelectedServerJSON.modernAuthSupport != null &&
-                                    !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.modernAuthSupport))
-                                {
-                                    InformationCache.ModernAuthHashType = InformationCache.SelectedServerJSON.modernAuthSupport.ToLower();
-                                }
-                                else
-                                {
-                                    InformationCache.ModernAuthHashType = string.Empty;
-                                }
+                                InformationCache.ModernAuthHashType = (InformationCache.SelectedServerJSON.modernAuthSupport ?? "1.2").ToLower();
                             }
-                            catch { }
+                            catch { MessageBox.Show(null, "Can not have '??' to 'ModernAuthHashType'", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
 
                             if (InformationCache.SelectedServerJSON.maxOnlinePlayers != 0)
                             {
@@ -1486,7 +1436,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
         private void StartGame(string UserID, string LoginToken)
         {
-            if (InformationCache.ModernAuthSecureChannel || InformationCache.SelectedServerEnforceProxy)
+            if (InformationCache.SelectedServerEnforceProxy)
             {
                 if (!ServerProxy.Running())
                 {
@@ -3943,72 +3893,75 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     {
                         foreach (ServerList Servers in ServerListUpdater.NoCategoryList)
                         {
-                            try
+                            if (_nfswstarted == null)
                             {
-                                while (StillCheckingLastServer) { }
-                                FunctionStatus.TLS();
-                                Uri URLCall = new Uri(Servers.IPAddress + "/GetServerInformation");
-                                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                                var Client = new WebClient
-                                {
-                                    Encoding = Encoding.UTF8
-                                };
-
-                                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
-                                else
-                                {
-                                    Client.Headers.Add("user-agent", "SBRW Launcher " +
-                                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                }
-
                                 try
                                 {
-                                    JsonGSI = Client.DownloadString(URLCall);
-                                    StillCheckingLastServer = true;
-                                    bool GSIErrorFree = true;
-
-                                    if (!IsJSONValid.ValidJson(JsonGSI))
+                                    while (StillCheckingLastServer) { }
+                                    FunctionStatus.TLS();
+                                    Uri URLCall = new Uri(Servers.IPAddress + "/GetServerInformation");
+                                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                    var Client = new WebClient
                                     {
-                                        GSIErrorFree = false;
-                                        if (EnableInsiderBetaTester.Allowed() || EnableInsiderBetaTester.Allowed())
-                                        {
-                                            Log.Error("Pinging GSI (Received): " + JsonGSI);
-                                        }
+                                        Encoding = Encoding.UTF8
+                                    };
+
+                                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                    else
+                                    {
+                                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                                     }
 
-                                    if (!InformationCache.ServerStatusBook.ContainsKey(Servers.ID))
+                                    try
                                     {
-                                        InformationCache.ServerStatusBook.Add(Servers.ID, (!GSIErrorFree) ? 3 : 1);
+                                        JsonGSI = Client.DownloadString(URLCall);
+                                        StillCheckingLastServer = true;
+                                        bool GSIErrorFree = true;
+
+                                        if (!IsJSONValid.ValidJson(JsonGSI))
+                                        {
+                                            GSIErrorFree = false;
+                                            if (EnableInsiderBetaTester.Allowed() || EnableInsiderBetaTester.Allowed())
+                                            {
+                                                Log.Error("Pinging GSI (Received): " + JsonGSI);
+                                            }
+                                        }
+
+                                        if (!InformationCache.ServerStatusBook.ContainsKey(Servers.ID))
+                                        {
+                                            InformationCache.ServerStatusBook.Add(Servers.ID, (!GSIErrorFree) ? 3 : 1);
+                                        }
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        LogToFileAddons.OpenLog("Pinging GSI [DownloadString]", null, Error, null, true);
+
+                                        if (!InformationCache.ServerStatusBook.ContainsKey(Servers.ID))
+                                        {
+                                            InformationCache.ServerStatusBook.Add(Servers.ID, 0);
+                                        }
+                                    }
+                                    finally
+                                    {
+                                        StillCheckingLastServer = false;
+
+                                        if (Client != null)
+                                        {
+                                            Client.Dispose();
+                                        }
                                     }
                                 }
                                 catch (Exception Error)
                                 {
-                                    LogToFileAddons.OpenLog("Pinging GSI [DownloadString]", null, Error, null, true);
-
-                                    if (!InformationCache.ServerStatusBook.ContainsKey(Servers.ID))
-                                    {
-                                        InformationCache.ServerStatusBook.Add(Servers.ID, 0);
-                                    }                                    
+                                    LogToFileAddons.OpenLog("Pinging GSI [WebClient]", null, Error, null, true);
                                 }
                                 finally
                                 {
-                                    StillCheckingLastServer = false;
-
-                                    if (Client != null)
+                                    if (JsonGSI != null)
                                     {
-                                        Client.Dispose();
+                                        JsonGSI = null;
                                     }
-                                }
-                            }
-                            catch (Exception Error)
-                            {
-                                LogToFileAddons.OpenLog("Pinging GSI [WebClient]", null, Error, null, true);
-                            }
-                            finally
-                            {
-                                if (JsonGSI != null)
-                                {
-                                    JsonGSI = null;
                                 }
                             }
                         }

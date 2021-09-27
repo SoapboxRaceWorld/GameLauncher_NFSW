@@ -48,9 +48,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* System OS Name */
         public static string OSName;
 
-        /* Selected Server Needs Proxy (HTTPS POST Only) */
-        public static bool ModernAuthSecureChannel = false;
-
         /* Selected Server ModernAuth Hash Type (Used for Login) */
         public static string ModernAuthHashType = string.Empty;
 

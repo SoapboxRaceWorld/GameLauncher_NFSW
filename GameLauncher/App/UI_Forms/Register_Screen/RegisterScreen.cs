@@ -233,14 +233,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                             return;
                     }
 
-                    if (!InformationCache.ModernAuthSecureChannel)
-                    {
-                        Authentication.Client("Register", "Non Secure", Email, Password, Ticket);
-                    }
-                    else
-                    {
-                        Authentication.Client("Register", "Secure", Email, Password, Ticket);
-                    }
+                    Authentication.Client("Login", Authentication.ProtocolType(InformationCache.SelectedServerJSON.authProtocol ?? string.Empty), Email, Password, null);
 
                     if (!String.IsNullOrWhiteSpace(Tokens.Success))
                     {

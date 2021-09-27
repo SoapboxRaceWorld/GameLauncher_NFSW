@@ -862,32 +862,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                         ServerProxy.Instance.Stop("Settings Screen");
                     }
 
-                    bool DisplayMessageBox = false;
-
-                    try
-                    {
-                        if (InformationCache.SelectedServerData != null)
-                        {
-                            DisplayMessageBox = InformationCache.SelectedServerData.IPAddress.StartsWith("https");
-                        }
-
-                        if (!string.IsNullOrWhiteSpace(FileAccountSave.ChoosenGameServer))
-                        {
-                            DisplayMessageBox = FileAccountSave.ChoosenGameServer.StartsWith("https");
-                        }
-
-                        if (InformationCache.SelectedServerEnforceProxy)
-                        {
-                            DisplayMessageBox = InformationCache.SelectedServerEnforceProxy;
-                        }
-                        else if (bool.TryParse(InformationCache.ModernAuthSecureChannel.ToString(), out bool Result))
-                        {
-                            DisplayMessageBox = InformationCache.ModernAuthSecureChannel;
-                        }
-                    }
-                    catch { DisplayMessageBox = false; }
-
-                    if (DisplayMessageBox)
+                    if (InformationCache.SelectedServerEnforceProxy)
                     {
                         MessageBox.Show(null, ServerListUpdater.ServerName("Settings") + " requires Proxy to be Enabled." +
                             "\nThe launcher will turn on Proxy, even if you have chosen to Disable it", 
