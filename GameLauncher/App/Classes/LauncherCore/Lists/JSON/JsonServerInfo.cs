@@ -31,8 +31,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON
         public int maxUsersAllowed { get; set; }
         public int maxOnlinePlayers { get; set; }
         public bool rwacallow { get; set; }
-        public string enforceLauncherProxy { get; set; }
-        public string authProtocol { get; set; }
+        public bool enforceLauncherProxy { get; set; }
+        public string authHash { get; set; }
         public string modernAuthSupport { get; set; }
         public string webSignupUrl { get; set; }
         public string webPanelUrl { get; set; }

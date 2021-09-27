@@ -198,7 +198,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                     Tokens.IPAddress = InformationCache.SelectedServerData.IPAddress;
                     Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
-                    switch (Authentication.HashType(InformationCache.ModernAuthHashType))
+                    switch (Authentication.HashType(InformationCache.SelectedServerJSON.authHash ?? string.Empty))
                     {
                         case AuthHash.H10:
                             Email = RegisterEmail.Text.ToString();
@@ -233,7 +233,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                             return;
                     }
 
-                    Authentication.Client("Login", Authentication.ProtocolType(InformationCache.SelectedServerJSON.authProtocol ?? string.Empty), Email, Password, null);
+                    Authentication.Client("Login", InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", Email, Password, null);
 
                     if (!String.IsNullOrWhiteSpace(Tokens.Success))
                     {

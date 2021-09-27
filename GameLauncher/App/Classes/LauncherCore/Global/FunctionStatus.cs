@@ -48,9 +48,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* System OS Name */
         public static string OSName;
 
-        /* Selected Server ModernAuth Hash Type (Used for Login) */
-        public static string ModernAuthHashType = string.Empty;
-
         /* Selected Server Is Enforcing Proxy */
         public static bool SelectedServerEnforceProxy = false;
 

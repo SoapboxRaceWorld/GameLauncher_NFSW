@@ -529,7 +529,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             Tokens.IPAddress = InformationCache.SelectedServerData.IPAddress;
             Tokens.ServerName = ServerListUpdater.ServerName("Login");
 
-            switch (Authentication.HashType(InformationCache.ModernAuthHashType))
+            switch (Authentication.HashType(InformationCache.SelectedServerJSON.authHash ?? string.Empty))
             {
                 case AuthHash.H10:
                     Email = MainEmail.Text.ToString();
@@ -564,7 +564,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     return;
             }
 
-            Authentication.Client("Login", Authentication.ProtocolType(InformationCache.SelectedServerJSON.authProtocol ?? string.Empty), Email, Password, null);
+            Authentication.Client("Login", InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", Email, Password, null);
 
             if (String.IsNullOrWhiteSpace(Tokens.Error))
             {
@@ -584,7 +584,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 FileAccountSave.UserRawEmail = MainEmail.Text.ToString();
                 FileAccountSave.UserRawPassword = MainPassword.Text.ToString();
 
-                switch (Authentication.HashType(InformationCache.ModernAuthHashType))
+                switch (Authentication.HashType(InformationCache.SelectedServerJSON.authHash ?? string.Empty))
                 {
                     case AuthHash.H10:
                         FileAccountSave.SavedGameServerHash = "1.0";
@@ -690,7 +690,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             _serverEnabled = false;
             FunctionStatus.AllowRegistration = false;
             InformationCache.SelectedServerJSON = null;
-            InformationCache.ModernAuthHashType = string.Empty;
             /* Disable Login & Register Button */
             LoginButton.Enabled = false;
             RegisterText.Enabled = false;
@@ -976,16 +975,11 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                             try
                             {
-                                InformationCache.SelectedServerEnforceProxy = (InformationCache.SelectedServerJSON.enforceLauncherProxy ??
-                                (InformationCache.SelectedServerData.IPAddress.StartsWith("https") ? "true" : "false")).ToLower() == "true";
+                                bool.TryParse(InformationCache.SelectedServerJSON.enforceLauncherProxy.ToString() ?? InformationCache.SelectedServerJSON.modernAuthSupport ??
+                                    InformationCache.SelectedServerData.IPAddress.StartsWith("https").ToString(), out bool Final_Result);
+                                InformationCache.SelectedServerEnforceProxy = Final_Result;
                             }
-                            catch { MessageBox.Show(null, "Can not have '??' to 'EnforceProxy'", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
-
-                            try
-                            {
-                                InformationCache.ModernAuthHashType = (InformationCache.SelectedServerJSON.modernAuthSupport ?? "1.2").ToLower();
-                            }
-                            catch { MessageBox.Show(null, "Can not have '??' to 'ModernAuthHashType'", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                            catch { }
 
                             if (InformationCache.SelectedServerJSON.maxOnlinePlayers != 0)
                             {

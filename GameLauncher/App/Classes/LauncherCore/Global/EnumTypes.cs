@@ -139,40 +139,6 @@
         Unknown
     }
 
-    /* Used with CheckHash Function in MainScreen.cs and RegisterScreen.cs
-    /* Or
-    * Other Conditionals */
-    ///<summary>(Name Only) Login/Register Protocol Standard Name that is used for Checking functions</summary>
-    ///<returns>Protocol Standard Name</returns>
-    enum AuthProtocol
-    {
-        ///<summary>Protocol Version 1.0</summary>
-        ///<remarks>Default Standard for http only servers</remarks>
-        ///<value>Sends Information in a Form of a URL and Retrives XML Body String</value>
-        P10,
-        ///<summary>Protocol Version 1.1</summary>
-        ///<remarks><c>[Requires Manual Implementation on Server Side]</c>
-        ///<br></br>
-        ///POST Standard for http only servers
-        ///</remarks>
-        ///<value>Sends Information in a Form of a POST and Reads the RESPONSE</value>
-        P11,
-        ///<summary>Protocol Version 1.2</summary>
-        ///<remarks>Request Standard for https only servers</remarks>
-        ///<value>Sends Information in a Form of a URL and Retrives XML Body String</value>
-        P12,
-        ///<summary>Protocol Version 1.3</summary>
-        ///<remarks><c>[Requires Manual Implementation on Server Side]</c>
-        ///<br></br>
-        ///POST Standard for https only servers
-        ///</remarks>
-        ///<value>Sends Information in a Form of a POST and Reads the RESPONSE</value>
-        P13,
-        ///<summary>Invalid Protocol Version</summary>
-        ///<value>Unknown Specified Protocol Version</value>
-        Unknown
-    }
-
     /// <summary>
     /// Identifies the operating system, or platform, supported by an assembly.
     /// </summary>

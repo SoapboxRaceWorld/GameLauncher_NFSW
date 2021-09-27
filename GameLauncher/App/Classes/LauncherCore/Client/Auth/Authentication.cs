@@ -32,11 +32,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
         /// <returns>Receives UserId and Auth Key for Login. Sends Email and Password to Server</returns>
         /// <param name="ConnectionProtocol">Connection Protocol: Check AuthProtocol</param>
         /// <param name="Method">Form Type: "Login" or "Register"</param>
-        public static void Client(string Method, AuthProtocol ConnectionProtocol, String Email, String Password, String Token)
+        public static void Client(string Method, string Modern_Auth_String, String Email, String Password, String Token)
         {
+            bool.TryParse(Modern_Auth_String, out bool Modern_Auth);
+
             try
             {
-                if (ConnectionProtocol == AuthProtocol.P10 || ConnectionProtocol == AuthProtocol.P12)
+                if (!Modern_Auth)
                 {
                     FunctionStatus.TLS();
                     Uri URLCall = 
@@ -86,7 +88,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         }
                     }
                 }
-                else if (ConnectionProtocol == AuthProtocol.P11 || ConnectionProtocol == AuthProtocol.P13)
+                else
                 {
                     FunctionStatus.TLS();
                     string ServerUrl = Tokens.IPAddress + "/User/modernAuth";
@@ -126,42 +128,31 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         LoginResponse = sr.ReadToEnd();
                     }
                 }
-                else
-                {
-                    Log.Error("Authentication: [Login] Can not Determine Function with Specified Connection -> " + ConnectionProtocol);
-                }
             }
             catch (WebException Error)
             {
                 LogToFileAddons.OpenLog("CLIENT [LOGIN/REGISTER]", null, Error, null, true);
 
-                if (ConnectionProtocol != AuthProtocol.Unknown)
-                {
-                    ServerResponse = (HttpWebResponse)Error.Response;
+                ServerResponse = (HttpWebResponse)Error.Response;
 
-                    if (ServerResponse == null)
-                    {
-                        ServerErrorCode = 500;
-                        LoginResponse = (ConnectionProtocol == AuthProtocol.P11 || ConnectionProtocol == AuthProtocol.P13) ? "{\"error\":\"Failed to get reply from server. Please retry.\"}" :
-                        "<LoginStatusVO><UserId>0</UserId><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
-                    }
-                    else
-                    {
-                        using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
-                        {
-                            ServerErrorCode = (int)ServerResponse.StatusCode;
-                            ServerErrorResponse = (ConnectionProtocol == AuthProtocol.P11 || ConnectionProtocol == AuthProtocol.P13) ? "{\"error\":\"" + ServerResponse.StatusDescription + "\"}" : null;
-                            LoginResponse = sr.ReadToEnd();
-                        }
-                    }
+                if (ServerResponse == null)
+                {
+                    ServerErrorCode = 500;
+                    LoginResponse = Modern_Auth ? "{\"error\":\"Failed to get reply from server. Please retry.\"}" :
+                    "<LoginStatusVO><UserId>0</UserId><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
                 }
                 else
                 {
-                    Log.Error("Authentication: [WebException] Can not Determine Function with Specified Type -> " + ConnectionProtocol);
+                    using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
+                    {
+                        ServerErrorCode = (int)ServerResponse.StatusCode;
+                        ServerErrorResponse = Modern_Auth ? "{\"error\":\"" + ServerResponse.StatusDescription + "\"}" : null;
+                        LoginResponse = sr.ReadToEnd();
+                    }
                 }
             }
 
-            if (ConnectionProtocol == AuthProtocol.P10 || ConnectionProtocol == AuthProtocol.P12)
+            if (!Modern_Auth)
             {
                 if (string.IsNullOrWhiteSpace(LoginResponse))
                 {
@@ -308,7 +299,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     }
                 }
             }
-            else if (ConnectionProtocol == AuthProtocol.P11 || ConnectionProtocol == AuthProtocol.P13)
+            else
             {
                 if (String.IsNullOrWhiteSpace(LoginResponse))
                 {
@@ -375,10 +366,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     }
                 }
             }
-            else
-            {
-                Log.Error("Authentication: [Tokens] Can not Determine Function with Specified Type -> " + ConnectionProtocol);
-            }
         }
 
         /// <summary>
@@ -413,39 +400,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
             else
             {
-                return AuthHash.H12;
-            }
-        }
-
-        /// <summary>
-        /// Protocol Method (Used how to Authenticate Logins/Registrations)
-        /// </summary>
-        /// <returns>A protocol type standard that is used on the server</returns>
-        public static AuthProtocol ProtocolType(string PType)
-        {
-            if (!string.IsNullOrWhiteSpace(PType))
-            {
-                switch (PType)
-                {
-                    case "1.0":
-                        return AuthProtocol.P10;
-                    case "1.1":
-                        return AuthProtocol.P11;
-                    case "1.2":
-                        return AuthProtocol.P12;
-                    case "1.3":
-                        return AuthProtocol.P13;
-                    default:
-                        return AuthProtocol.Unknown;
-                }
-            }
-            else if (InformationCache.SelectedServerEnforceProxy)
-            {
-                return AuthProtocol.P13;
-            }
-            else
-            {
-                return AuthProtocol.P10;
+                return (bool.TryParse(InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", out bool Final_Result) && Final_Result) ? AuthHash.H10 : AuthHash.H12;
             }
         }
     }
