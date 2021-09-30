@@ -22,6 +22,8 @@ using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using System.Linq;
+using System.Net;
+using System.ComponentModel;
 
 namespace GameLauncher
 {
@@ -125,6 +127,20 @@ namespace GameLauncher
                 }
                 else
                 {
+                    /* Check if File needs to be Downloaded */
+                    string LZMAPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLZMA));
+
+                    if (File.Exists(LZMAPath))
+                    {
+                        try
+                        {
+                            if (new FileInfo(LZMAPath).Length == 0)
+                            {
+                                File.Delete(LZMAPath);
+                            }
+                        }
+                        catch { }
+                    }
                     /* INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
                     Updated RedTheKitsune Code so it downloads the file if its missing.
                     It also restarts the launcher if the user click on yes on Prompt. - DavidCarbon */
@@ -132,20 +148,54 @@ namespace GameLauncher
                     {
                         try
                         {
-                            using (WebClientWithTimeout wc = new WebClientWithTimeout())
+                            FunctionStatus.TLS();
+                            Uri URLCall = new Uri(URLs.File + "/LZMA.dll");
+                            ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            WebClient Client = new WebClient
                             {
-                                wc.Encoding = Encoding.UTF8;
-                                wc.DownloadFile(new Uri(URLs.File + "/LZMA.dll"), "LZMA.dll");
-                            }
-
-                            DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.dll File." +
-                                "\nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                                Encoding = Encoding.UTF8
+                            };
+                            Client.Headers.Add("user-agent", "SBRW Launcher " +
+                                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
+                            {
+                                if (File.Exists(LZMAPath))
+                                {
+                                    try
+                                    {
+                                        if (new FileInfo(LZMAPath).Length == 0)
+                                        {
+                                            File.Delete(LZMAPath);
+                                        }
+                                    } 
+                                    catch { }
+                                }
+                            };
 
                             FunctionStatus.LauncherForceClose = true;
 
-                            if (restartApp == DialogResult.Yes)
+                            try
                             {
-                                LauncherMustRestart = true;
+                                Client.DownloadFile(URLCall, LZMAPath);
+
+                                DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.dll File." +
+                                "\nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                                if (restartApp == DialogResult.Yes)
+                                {
+                                    LauncherMustRestart = true;
+                                }
+                            }
+                            catch (Exception Error)
+                            {
+                                FunctionStatus.LauncherForceCloseReason = Error.Message;
+                            }
+                            finally
+                            {
+                                if (Client != null)
+                                {
+                                    Client.Dispose();
+                                }
                             }
                         }
                         catch { }

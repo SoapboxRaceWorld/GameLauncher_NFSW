@@ -1755,6 +1755,9 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 case 1450:
                                     ErrorMsg = "ModNet: Unable to load ModLoader. Please Exclude Game Files with your Antivirus Software";
                                     break;
+                                case 193:
+                                    ErrorMsg = "ModNet: Unable to load ModLoader. Please Install Microsoft Visual C++ Runtimes 2015-2019";
+                                    break;
                                 case 2:
                                     ErrorMsg = "ModNet: Game was launched with invalid command line parameters.";
                                     break;
@@ -1766,11 +1769,12 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                     break;
                                 /* Generic Error */
                                 default:
-                                    Log.Error("GAME CRASH [EXIT CODE]: " + exitCode.ToString() + " HEX: (0x" + exitCode.ToString("X") + ")");
                                     ErrorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (0x" + exitCode.ToString("X") + ")";
                                     break;
                             }
-                            
+
+                            Log.Error("GAME CRASH [EXIT CODE]: " + exitCode.ToString() + " HEX: (0x" + exitCode.ToString("X") + ")" + " REASON: " + ErrorMsg);
+
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                             PlayProgressText.Text = ErrorMsg.ToUpper();
                             PlayProgress.Value = 100;

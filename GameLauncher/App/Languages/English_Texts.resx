@@ -123,9 +123,6 @@
   <data name="Global_Text_EG_1" xml:space="preserve">
     <value>Obsolete</value>
   </data>
-  <data name="MainScreen" xml:space="preserve">
-    <value />
-  </data>
   <data name="MainScreen_Button_Forgot_Password" xml:space="preserve">
     <value>I Forgot My Password</value>
     <comment>Used to Display Forgot Password Text [Default Text]</comment>
@@ -315,5 +312,8 @@ Registered: ###</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Unstable" xml:space="preserve">
     <value>Server Connection:\n - Unstable</value>
+  </data>
+  <data name="Program_TextBox" xml:space="preserve">
+    <value />
   </data>
 </root>

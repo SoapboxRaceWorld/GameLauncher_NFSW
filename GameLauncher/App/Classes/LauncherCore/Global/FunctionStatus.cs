@@ -618,6 +618,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         public static readonly string NameUpdater = "GameLauncherUpdater.exe";
         public static readonly string NameNewServersJSON = "Servers-Custom.json";
         public static readonly string NameOldServersJSON = "servers.json";
+        public static readonly string NameLZMA = "LZMA.dll";
 
         public static readonly string LauncherFolder = Strings.Encode(AppDomain.CurrentDomain.BaseDirectory);
 
