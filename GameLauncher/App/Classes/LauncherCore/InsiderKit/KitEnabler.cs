@@ -1,4 +1,7 @@
-﻿namespace GameLauncher.App.Classes.InsiderKit
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
+
+namespace GameLauncher.App.Classes.InsiderKit
 {
     /* This sets Build Number Information */
     class InsiderInfo
@@ -15,14 +18,14 @@
         {
             if (EnableInsiderDeveloper.Allowed())
             {
-                return "DEV Build Date: " + InsiderBuildNumber;
+                return Translations.Database("KitEnabler_Dev", InformationCache.Lang.Name) + ": " + InsiderBuildNumber;
             }
             else if (EnableInsiderBetaTester.Allowed())
             {
-                return  "BETA Build Date: " + InsiderBuildNumber;
+                return Translations.Database("KitEnabler_Beta", InformationCache.Lang.Name) + ": " + InsiderBuildNumber;
             }
 
-            return "Build Date: " + InsiderBuildNumber;
+            return Translations.Database("KitEnabler_Stable", InformationCache.Lang.Name) + ": " + InsiderBuildNumber;
         }
     }
 

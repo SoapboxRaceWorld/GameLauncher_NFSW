@@ -14,7 +14,6 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
@@ -24,6 +23,7 @@ using GameLauncher.App.Classes.SystemPlatform.Unix;
 using System.Linq;
 using System.Net;
 using System.ComponentModel;
+using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 
 namespace GameLauncher
 {
@@ -35,7 +35,7 @@ namespace GameLauncher
         {
             try
             {
-                LogToFileAddons.OpenLog("Thread Exception", "SBRW Launcher will have to Close due to a Thread Exception: ", 
+                LogToFileAddons.OpenLog("Thread Exception", Translations.Database("Application_Exception_Thread", InformationCache.Lang.Name) + ": ", 
                     Error.Exception, "Error", false);
 
                 try
@@ -61,7 +61,7 @@ namespace GameLauncher
         {
             try
             {
-                LogToFileAddons.OpenLog("Unhandled Exception", "SBRW Launcher will have to Close due to a Unhandled Exception: ", 
+                LogToFileAddons.OpenLog("Unhandled Exception", Translations.Database("Application_Exception_Unhandled", InformationCache.Lang.Name) + ": ", 
                     (Exception)Error.ExceptionObject, "Error", false);
 
                 try
@@ -86,16 +86,12 @@ namespace GameLauncher
         [STAThread]
         static void Main()
         {
-            InformationCache.CurrentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
-            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
-
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo(InformationCache.Lang.Name.Split('-')[0]);
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(InformationCache.Lang.Name.Split('-')[0]);
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.ThreadException += Application_ThreadException;
-
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(true);
 
             if (Debugger.IsAttached && !NFSW.IsRunning())
             {

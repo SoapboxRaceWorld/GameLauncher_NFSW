@@ -22,11 +22,10 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Security;
-using System.Reflection;
-using System.Resources;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Global
@@ -34,16 +33,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
     /* This is Used to Cache Responses From the Launcher */
     class InformationCache
     {
-        public static ResourceManager Lang_Launcher = new ResourceManager("GameLauncher.App.Languages.English_Texts", Assembly.GetExecutingAssembly());
-
         /* Detect and Set System Language */
-        public static CultureInfo Lang = CultureInfo.CurrentUICulture;
+        public static CultureInfo Lang = Thread.CurrentThread.CurrentUICulture;
 
         /* Parent Screen Cords */
         public static Point ParentScreenLocation;
-
-        /* System Language */
-        public static string CurrentLanguage = "EN";
 
         /* System OS Name */
         public static string OSName;

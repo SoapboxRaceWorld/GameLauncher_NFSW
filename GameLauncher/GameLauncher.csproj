@@ -168,7 +168,7 @@
     <Compile Include="App\Classes\LauncherCore\Global\FunctionStatus.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\URLs.cs" />
     <Compile Include="App\Classes\LauncherCore\Hash\SHATwoFiveSix.cs" />
-    <Compile Include="App\Classes\LauncherCore\Languages\Visual_Forms\Texts_Welcome.cs" />
+    <Compile Include="App\Classes\LauncherCore\Languages\Visual_Forms\Translations.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterExecutable.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonCDNList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonLanguage.cs" />

@@ -45,6 +45,7 @@ using GameLauncher.App.UI_Forms.SelectServer_Screen;
 using GameLauncher.App.UI_Forms.SecurityCenter_Screen;
 using GameLauncher.App.UI_Forms.Settings_Screen;
 using GameLauncher.App.UI_Forms.About_Screen;
+using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 
 namespace GameLauncher.App.UI_Forms.Main_Screen
 {
@@ -130,8 +131,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             }
 
             Log.Core("LAUNCHER: NFSW Download Source is now: " + FileSettingsSave.CDN);
-
-            translatedBy.Text = string.Empty;
 
             MainEmail.Text = FileAccountSave.UserRawEmail;
             MainPassword.Text = FileAccountSave.UserRawPassword;
@@ -939,7 +938,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             {
                                 serverSecondsToShutDown =
                                 (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 7200;
-                                ServerShutDown.Text = string.Format(InformationCache.Lang_Launcher.GetString("MainScreen_Text_ServerShutDown") + 
+                                ServerShutDown.Text = string.Format(Translations.Database("MainScreen_Text_ServerShutDown", InformationCache.Lang.Name) + 
                                     " " + TimeConversions.RelativeTime(serverSecondsToShutDown));
                             }
                             catch { }
@@ -2905,20 +2904,70 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             }
             else if (!File.Exists(GameExePath))
             {
-                _downloadStartTime = DateTime.Now;
-                if (this.PlayProgressTextTimer.InvokeRequired)
+                if (FileSettingsSave.CDN.StartsWith("http://localhost") || FileSettingsSave.CDN.StartsWith("https://localhost"))
                 {
-                    PlayProgressTextTimer.Invoke(new Action(delegate ()
+                    if (this.ExtractingProgress.InvokeRequired)
                     {
-                        PlayProgressTextTimer.Text = "Downloading: Core GameFiles".ToUpper();
-                    }));
+                        ExtractingProgress.Invoke(new Action(delegate ()
+                        {
+                            ExtractingProgress.Value = 100;
+                            ExtractingProgress.Width = 519;
+                            ExtractingProgress.Image = Theming.ProgressBarWarning;
+                            ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
+                        }));
+                    }
+                    else
+                    {
+                        ExtractingProgress.Value = 100;
+                        ExtractingProgress.Width = 519;
+                        ExtractingProgress.Image = Theming.ProgressBarWarning;
+                        ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
+                    }
+
+                    if (this.PlayProgressTextTimer.InvokeRequired)
+                    {
+                        PlayProgressTextTimer.Invoke(new Action(delegate ()
+                        {
+                            PlayProgressTextTimer.Text = "Failsafe CDN Detected".ToUpper();
+                        }));
+                    }
+                    else
+                    {
+                        PlayProgressTextTimer.Text = "Failsafe CDN Detected".ToUpper();
+                    }
+
+                    if (this.PlayProgressText.InvokeRequired)
+                    {
+                        PlayProgressText.Invoke(new Action(delegate ()
+                        {
+                            PlayProgressText.Text = "Please Choose a CDN from Settings Screen".ToUpper();
+                        }));
+                    }
+                    else
+                    {
+                        PlayProgressText.Text = "Please Choose a CDN from Settings Screen".ToUpper();
+                    }
+
+                    TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
+                    TaskbarProgress.SetValue(Handle, 100, 100);
                 }
                 else
                 {
-                    PlayProgressTextTimer.Text = "Downloading: Core GameFiles".ToUpper();
+                    _downloadStartTime = DateTime.Now;
+                    if (this.PlayProgressTextTimer.InvokeRequired)
+                    {
+                        PlayProgressTextTimer.Invoke(new Action(delegate ()
+                        {
+                            PlayProgressTextTimer.Text = "Downloading: Core GameFiles".ToUpper();
+                        }));
+                    }
+                    else
+                    {
+                        PlayProgressTextTimer.Text = "Downloading: Core GameFiles".ToUpper();
+                    }
+                    Log.Info("DOWNLOAD: Getting Core Game Files");
+                    _downloader.StartDownload(FileSettingsSave.CDN, string.Empty, FileSettingsSave.GameInstallation, false, false, 1130632198);
                 }
-                Log.Info("DOWNLOAD: Getting Core Game Files");
-                _downloader.StartDownload(FileSettingsSave.CDN, string.Empty, FileSettingsSave.GameInstallation, false, false, 1130632198);
             }
             else
             {
@@ -3440,17 +3489,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
             EnablePlayButton();
 
-            if (this.ExtractingProgress.InvokeRequired)
-            {
-                ExtractingProgress.Invoke(new Action(delegate ()
-                {
-                    ExtractingProgress.Width = 519;
-                }));
-            }
-            else
-            {
-                ExtractingProgress.Width = 519;
-            }
+            ExtractingProgress.Width = 519;
 
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
@@ -3461,19 +3500,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             _isDownloading = false;
             _playenabled = true;
 
-            if (this.ExtractingProgress.InvokeRequired)
-            {
-                ExtractingProgress.Invoke(new Action(delegate ()
-                {
-                    ExtractingProgress.Value = 100;
-                    ExtractingProgress.Width = 519;
-                }));
-            }
-            else
-            {
-                ExtractingProgress.Value = 100;
-                ExtractingProgress.Width = 519;
-            }
+            ExtractingProgress.Value = 100;
+            ExtractingProgress.Width = 519;
         }
 
         private void DisablePlayButton()
@@ -3481,19 +3509,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             _isDownloading = false;
             _playenabled = false;
 
-            if (this.ExtractingProgress.InvokeRequired)
-            {
-                ExtractingProgress.Invoke(new Action(delegate ()
-                {
-                    ExtractingProgress.Value = 100;
-                    ExtractingProgress.Width = 519;
-                }));
-            }
-            else
-            {
-                ExtractingProgress.Value = 100;
-                ExtractingProgress.Width = 519;
-            }
+            ExtractingProgress.Value = 100;
+            ExtractingProgress.Width = 519;
         }
 
         private void OnDownloadFailed(Exception Error)
@@ -3502,36 +3519,13 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
             DiscordLauncherPresence.Status("Download Game Files Error", null);
 
-            if (this.ExtractingProgress.InvokeRequired)
-            {
-                ExtractingProgress.Invoke(new Action(delegate ()
-                {
-                    ExtractingProgress.Value = 100;
-                    ExtractingProgress.Width = 519;
-                    ExtractingProgress.Image = Theming.ProgressBarError;
-                    ExtractingProgress.ProgressColor = Theming.Error;
-                }));
-            }
-            else
-            {
-                ExtractingProgress.Value = 100;
-                ExtractingProgress.Width = 519;
-                ExtractingProgress.Image = Theming.ProgressBarError;
-                ExtractingProgress.ProgressColor = Theming.Error;
-            }
+            ExtractingProgress.Value = 100;
+            ExtractingProgress.Width = 519;
+            ExtractingProgress.Image = Theming.ProgressBarError;
+            ExtractingProgress.ProgressColor = Theming.Error;
 
-            if (this.PlayProgressText.InvokeRequired)
-            {
-                PlayProgressText.Invoke(new Action(delegate ()
-                {
-                    PlayProgressText.Text = (string.IsNullOrWhiteSpace(Error.Message) ? "Download Failed" : Error.Message).ToUpper();
-                }));
-            }
-            else
-            {
-                PlayProgressText.Text = (string.IsNullOrWhiteSpace(Error.Message) ? "Download Failed" : Error.Message).ToUpper();
-            }
-            
+            PlayProgressText.Text = ((Error != null) ? Error.Message : "Download Failed. No Reason Provided").ToUpper();
+
             FunctionStatus.IsVerifyHashDisabled = true;
 
             TaskbarProgress.SetValue(Handle, 100, 100);
@@ -3541,33 +3535,13 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             if (!string.IsNullOrWhiteSpace(MainEmail.Text))
             {
                 TempEmailCache = MainEmail.Text;
-                if (this.MainEmail.InvokeRequired)
-                {
-                    MainEmail.Invoke(new Action(delegate ()
-                    {
-                        MainEmail.Text = "EMAIL IS HIDDEN";
-                    }));
-                }
-                else
-                {
-                    MainEmail.Text = "EMAIL IS HIDDEN";
-                }
+                MainEmail.Text = "EMAIL IS HIDDEN";
             }
             string LogMessage = "CDN Downloader Encountered an Error:";
             LogToFileAddons.OpenLog("Game Download", LogMessage, Error, "Error", false);
             if (!string.IsNullOrWhiteSpace(TempEmailCache))
             {
-                if (this.MainEmail.InvokeRequired)
-                {
-                    MainEmail.Invoke(new Action(delegate ()
-                    {
-                        MainEmail.Text = TempEmailCache;
-                    }));
-                }
-                else
-                {
-                    MainEmail.Text = TempEmailCache;
-                }
+                MainEmail.Text = TempEmailCache;
             }
         }
 

@@ -27,22 +27,36 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
         {
             try
             {
-                Log.Error(From.ToUpper() + ": " + Error.Message);
-                Log.ErrorIC(From.ToUpper() + ": " + Error.HResult);
-                Log.ErrorFR(From.ToUpper() + ": " + Error.ToString());
+                if (Error != null)
+                {
+                    Log.Error(From.ToUpper() + ": " + Error.Message);
+                    Log.ErrorIC(From.ToUpper() + ": " + Error.HResult);
+                    Log.ErrorFR(From.ToUpper() + ": " + Error.ToString());
+                }
+                else
+                {
+                    Log.Error(From.ToUpper() + ": No Exception Provided");
+                }
             }
             catch { Log.Error("Unable to Log [" + From.ToUpper() + "] Details"); }
 
             try
             {
-                if (Error.GetBaseException() != null && (Error.GetBaseException() != Error))
+                if (Error != null)
                 {
-                    Log.Error(From.ToUpper() + " [Base]: " + Error.GetBaseException().Message);
-                    Log.ErrorIC(From.ToUpper() + " [Base]: " + Error.GetBaseException().HResult);
-                    Log.ErrorFR(From.ToUpper() + " [Base]: " + Error.GetBaseException().ToString());
+                    if (Error.GetBaseException() != null && (Error.GetBaseException() != Error))
+                    {
+                        Log.Error(From.ToUpper() + " [Base]: " + Error.GetBaseException().Message);
+                        Log.ErrorIC(From.ToUpper() + " [Base]: " + Error.GetBaseException().HResult);
+                        Log.ErrorFR(From.ToUpper() + " [Base]: " + Error.GetBaseException().ToString());
+                    }
+                }
+                else
+                {
+                    Log.Error(From.ToUpper() + ": No Exception Provided for Root [Base] Cause");
                 }
             }
-            catch { Log.Error("Unable to Log [" + From.ToUpper() + "{Base} ] Details"); }
+            catch { Log.Error("Unable to Log [" + From.ToUpper() + " {Base} ] Details"); }
 
             if (!Suppress)
             {
@@ -67,7 +81,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
                         break;
                 }
 
-                string FormattedMessage = string.IsNullOrWhiteSpace(MessageDetails) ? string.Empty : MessageDetails + "\n" + Error.Message + "\n\n";
+                string FormattedMessage = string.IsNullOrWhiteSpace(MessageDetails) ? string.Empty : MessageDetails + "\n" + ((Error != null) ? Error.Message : "Unknown Error [Null Exception]") + "\n\n";
 
                 DialogResult OpenLogFile = MessageBox.Show(null, FormattedMessage + OpenLogMessage, "GameLauncher Error Log", 
                     MessageBoxButtons.YesNo, IconBox);

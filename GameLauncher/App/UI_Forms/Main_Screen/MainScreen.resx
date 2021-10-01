@@ -144,6 +144,9 @@
   <data name="LauncherIconStatus.TabIndex" type="System.Int32, mscorlib">
     <value>79</value>
   </data>
+  <data name="&gt;&gt;InsiderBuildNumberText.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="APIStatusText.Text" xml:space="preserve">
     <value>Main API
  - Pinging</value>
@@ -157,8 +160,8 @@
   <data name="&gt;&gt;ExtractingProgress.ZOrder" xml:space="preserve">
     <value>31</value>
   </data>
-  <data name="ProgressBarOutline.ErrorImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="HomePageLink.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="&gt;&gt;DiscordInviteLink.Name" xml:space="preserve">
     <value>DiscordInviteLink</value>
@@ -205,8 +208,14 @@
   <data name="LoginButton.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>
   </data>
+  <data name="&gt;&gt;HomePageIcon.Name" xml:space="preserve">
+    <value>HomePageIcon</value>
+  </data>
   <data name="AddServer.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>None</value>
+  </data>
+  <data name="LauncherStatusText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>53, 453</value>
   </data>
   <data name="ButtonSecurityCenter.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>
@@ -214,17 +223,20 @@
   <data name="FacebookGroupLink.Location" type="System.Drawing.Point, System.Drawing">
     <value>292, 12</value>
   </data>
+  <data name="SelectServerBtn.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
   <data name="CurrentWindowInfo.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
+  </data>
+  <data name="LoginButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 35</value>
   </data>
   <data name="CloseBTN.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>
   </data>
   <data name="SettingsButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>806, 15</value>
-  </data>
-  <data name="AddServer.Font" type="System.Drawing.Font, System.Drawing">
-    <value>DejaVu Sans, 8pt, style=Bold</value>
   </data>
   <data name="LauncherStatusDesc.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -238,6 +250,9 @@
   <data name="&gt;&gt;LoginButton.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
+  <data name="LogoutButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>Off</value>
+  </data>
   <data name="&gt;&gt;DiscordInviteLink.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
@@ -250,11 +265,14 @@
   <data name="&gt;&gt;ProgressBarOutline.ZOrder" xml:space="preserve">
     <value>33</value>
   </data>
-  <data name="&gt;&gt;ServerStatusText.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="HomePageIcon.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="TwitterAccountLink.Size" type="System.Drawing.Size, System.Drawing">
     <value>88, 14</value>
+  </data>
+  <data name="SelectServerBtn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="ButtonSecurityCenter.Location" type="System.Drawing.Point, System.Drawing">
     <value>770, 15</value>
@@ -263,9 +281,6 @@
     <value>42, 404</value>
   </data>
   <data name="SceneryGroupText.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="DiscordInviteLink.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
   <data name="InsiderBuildNumberText.Text" xml:space="preserve">
@@ -277,8 +292,8 @@
   <data name="ServerShutDown.Font" type="System.Drawing.Font, System.Drawing">
     <value>DejaVu Sans, 9pt, style=Bold</value>
   </data>
-  <data name="APIStatusText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>426, 453</value>
+  <data name="AddServer.Font" type="System.Drawing.Font, System.Drawing">
+    <value>DejaVu Sans, 8pt, style=Bold</value>
   </data>
   <data name="ServerPingStatusText.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
@@ -286,8 +301,14 @@
   <data name="MainPassword.Font" type="System.Drawing.Font, System.Drawing">
     <value>DejaVu Sans, 9pt</value>
   </data>
-  <data name="TwitterIcon.Location" type="System.Drawing.Point, System.Drawing">
-    <value>407, 8</value>
+  <data name="APIStatusDesc.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;PlayProgress.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="InsiderBuildNumberText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="&gt;&gt;ServerStatusDesc.ZOrder" xml:space="preserve">
     <value>18</value>
@@ -313,26 +334,23 @@
   <data name="&gt;&gt;APIStatusDesc.ZOrder" xml:space="preserve">
     <value>20</value>
   </data>
-  <data name="&gt;&gt;ShowPlayPanel.Name" xml:space="preserve">
-    <value>ShowPlayPanel</value>
-  </data>
   <data name="SceneryGroupText.TabIndex" type="System.Int32, mscorlib">
     <value>179</value>
   </data>
-  <data name="&gt;&gt;ExtractingProgress.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="ButtonSecurityCenter.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;ServerPick.ZOrder" xml:space="preserve">
-    <value>10</value>
+  <data name="ForgotPassword.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
   </data>
-  <data name="&gt;&gt;ServerInfoPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="ServerStatusDesc.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="LogoutButton.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
+  <data name="CloseBTN.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>GameLauncher</value>
+  <data name="PlayProgressTextTimer.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;RegisterText.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -340,11 +358,14 @@
   <data name="LoginButton.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
   </data>
-  <data name="DiscordIcon.Location" type="System.Drawing.Point, System.Drawing">
-    <value>127, 8</value>
+  <data name="MainPasswordBorder.ErrorImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="LoginButton.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
+  </data>
+  <data name="&gt;&gt;RememberMe.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="PlayProgress.Font" type="System.Drawing.Font, System.Drawing">
     <value>DejaVu Sans, 9pt</value>
@@ -373,10 +394,6 @@
   <data name="ForgotPassword.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 14</value>
   </data>
-  <data name="ServerStatusText.Text" xml:space="preserve">
-    <value>Server Status
- - Pinging</value>
-  </data>
   <data name="LauncherIconStatus.Location" type="System.Drawing.Point, System.Drawing">
     <value>25, 456</value>
   </data>
@@ -385,9 +402,6 @@
   </data>
   <data name="RememberMe.Text" xml:space="preserve">
     <value>REMEMBER MY LOGIN</value>
-  </data>
-  <data name="translatedBy.Size" type="System.Drawing.Size, System.Drawing">
-    <value>126, 13</value>
   </data>
   <data name="CurrentWindowInfo.Size" type="System.Drawing.Size, System.Drawing">
     <value>211, 60</value>
@@ -413,14 +427,17 @@
   <data name="&gt;&gt;ServerPingStatusText.Parent" xml:space="preserve">
     <value>ShowPlayPanel</value>
   </data>
+  <data name="ServerPingStatusText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>Off</value>
+  </data>
   <data name="ShowPlayPanel.Font" type="System.Drawing.Font, System.Drawing">
     <value>DejaVu Sans, 8pt</value>
   </data>
   <data name="ProgressBarOutline.Size" type="System.Drawing.Size, System.Drawing">
     <value>529, 42</value>
   </data>
-  <data name="&gt;&gt;Banner.Name" xml:space="preserve">
-    <value>Banner</value>
+  <data name="ShowPlayPanel.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>None</value>
   </data>
   <data name="RememberMe.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -434,26 +451,39 @@
   <data name="&gt;&gt;DiscordIcon.Name" xml:space="preserve">
     <value>DiscordIcon</value>
   </data>
-  <data name="ServerPingStatusText.TabIndex" type="System.Int32, mscorlib">
-    <value>148</value>
-  </data>
   <data name="&gt;&gt;PlayProgressText.ZOrder" xml:space="preserve">
     <value>30</value>
   </data>
   <data name="&gt;&gt;ServerStatusIcon.ZOrder" xml:space="preserve">
     <value>14</value>
   </data>
+  <data name="&gt;&gt;ShowPlayPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="LauncherStatusDesc.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="ShowPlayPanel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>Off</value>
+  </data>
+  <data name="APIStatusIcon.TabIndex" type="System.Int32, mscorlib">
+    <value>113</value>
   </data>
   <data name="&gt;&gt;ProgressBarOutline.Name" xml:space="preserve">
     <value>ProgressBarOutline</value>
   </data>
-  <data name="logo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>17, 10</value>
+  <data name="ServerStatusText.Text" xml:space="preserve">
+    <value>Server Status
+ - Pinging</value>
+  </data>
+  <data name="SettingsButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="LauncherStatusDesc.Location" type="System.Drawing.Point, System.Drawing">
     <value>53, 486</value>
+  </data>
+  <data name="&gt;&gt;ServerStatusDesc.Name" xml:space="preserve">
+    <value>ServerStatusDesc</value>
   </data>
   <data name="&gt;&gt;CurrentWindowInfo.Parent" xml:space="preserve">
     <value>$this</value>
@@ -491,6 +521,9 @@
   <data name="MainEmailBorder.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>StretchImage</value>
   </data>
+  <data name="&gt;&gt;CloseBTN.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
   <data name="LogoutButton.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>
   </data>
@@ -508,6 +541,9 @@
   </data>
   <data name="&gt;&gt;LoginButton.Name" xml:space="preserve">
     <value>LoginButton</value>
+  </data>
+  <data name="InsiderBuildNumberText.Font" type="System.Drawing.Font, System.Drawing">
+    <value>DejaVu Sans, 9pt</value>
   </data>
   <data name="&gt;&gt;ServerPick.Name" xml:space="preserve">
     <value>ServerPick</value>
@@ -539,6 +575,9 @@
   <data name="&gt;&gt;InsiderBuildNumberText.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
+  <data name="&gt;&gt;DiscordInviteLink.Parent" xml:space="preserve">
+    <value>ServerInfoPanel</value>
+  </data>
   <data name="&gt;&gt;ForgotPassword.ZOrder" xml:space="preserve">
     <value>26</value>
   </data>
@@ -564,6 +603,9 @@ Registered: ###</value>
   <data name="&gt;&gt;FacebookIcon.Parent" xml:space="preserve">
     <value>ServerInfoPanel</value>
   </data>
+  <data name="TwitterAccountLink.Location" type="System.Drawing.Point, System.Drawing">
+    <value>437, 12</value>
+  </data>
   <data name="ServerStatusIcon.InitialImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
@@ -573,11 +615,11 @@ Registered: ###</value>
   <data name="HomePageLink.Size" type="System.Drawing.Size, System.Drawing">
     <value>79, 14</value>
   </data>
+  <data name="MainEmailBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="&gt;&gt;DiscordIcon.Parent" xml:space="preserve">
     <value>ServerInfoPanel</value>
-  </data>
-  <data name="ShowPlayPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>600, 281</value>
   </data>
   <data name="&gt;&gt;PlayButton.Parent" xml:space="preserve">
     <value>ShowPlayPanel</value>
@@ -585,8 +627,8 @@ Registered: ###</value>
   <data name="Banner.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>StretchImage</value>
   </data>
-  <data name="&gt;&gt;SettingsButton.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="SceneryGroupText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="PlayButton.Text" xml:space="preserve">
     <value>PLAY NOW</value>
@@ -606,9 +648,6 @@ Registered: ###</value>
   <data name="APIStatusIcon.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>CenterImage</value>
   </data>
-  <data name="PlayButton.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Zoom</value>
-  </data>
   <data name="&gt;&gt;RememberMe.ZOrder" xml:space="preserve">
     <value>25</value>
   </data>
@@ -618,14 +657,14 @@ Registered: ###</value>
   <data name="ServerStatusText.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
-  <data name="&gt;&gt;DiscordInviteLink.Parent" xml:space="preserve">
-    <value>ServerInfoPanel</value>
-  </data>
-  <data name="MainPasswordBorder.ErrorImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="PlayButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>Off</value>
   </data>
   <data name="&gt;&gt;PlayButton.ZOrder" xml:space="preserve">
     <value>2</value>
+  </data>
+  <data name="InsiderBuildNumberText.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;MainPasswordBorder.Type" xml:space="preserve">
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -636,11 +675,17 @@ Registered: ###</value>
   <data name="&gt;&gt;ServerPick.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;SettingsButton.Name" xml:space="preserve">
-    <value>SettingsButton</value>
+  <data name="ServerPingStatusText.TabIndex" type="System.Int32, mscorlib">
+    <value>148</value>
   </data>
   <data name="ServerShutDown.Size" type="System.Drawing.Size, System.Drawing">
     <value>220, 15</value>
+  </data>
+  <data name="LoginButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="ForgotPassword.Text" xml:space="preserve">
+    <value>I FORGOT MY PASSWORD</value>
   </data>
   <data name="HomePageIcon.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>
@@ -648,8 +693,14 @@ Registered: ###</value>
   <data name="&gt;&gt;ForgotPassword.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
+  <data name="&gt;&gt;PlayProgress.Name" xml:space="preserve">
+    <value>PlayProgress</value>
+  </data>
   <data name="translatedBy.Font" type="System.Drawing.Font, System.Drawing">
     <value>DejaVu Sans, 8pt</value>
+  </data>
+  <data name="Banner.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="&gt;&gt;AddServer.Parent" xml:space="preserve">
     <value>$this</value>
@@ -660,11 +711,20 @@ Registered: ###</value>
   <data name="SettingsButton.InitialImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="MainPasswordBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;SettingsButton.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
   <data name="&gt;&gt;Banner.Type" xml:space="preserve">
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="MainEmailBorder.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 37</value>
+  </data>
+  <data name="APIStatusText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>426, 453</value>
   </data>
   <data name="&gt;&gt;TwitterIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -702,17 +762,20 @@ Registered: ###</value>
   <data name="LauncherStatusDesc.Font" type="System.Drawing.Font, System.Drawing">
     <value>DejaVu Sans, 9pt</value>
   </data>
+  <data name="ProgressBarOutline.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="ServerPick.Location" type="System.Drawing.Point, System.Drawing">
     <value>586, 50</value>
   </data>
   <data name="RememberMe.Size" type="System.Drawing.Size, System.Drawing">
     <value>190, 18</value>
   </data>
-  <data name="&gt;&gt;FacebookIcon.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="logo.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Zoom</value>
   </data>
-  <data name="InsiderBuildNumberText.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
+  <data name="SceneryGroupText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>220, 15</value>
   </data>
   <data name="SceneryGroupText.Location" type="System.Drawing.Point, System.Drawing">
     <value>64, 43</value>
@@ -722,9 +785,6 @@ Registered: ###</value>
   </data>
   <data name="APIStatusText.Font" type="System.Drawing.Font, System.Drawing">
     <value>DejaVu Sans, 9pt, style=Bold</value>
-  </data>
-  <data name="ServerStatusText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>242, 453</value>
   </data>
   <data name="HomePageLink.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -738,23 +798,14 @@ Registered: ###</value>
   <data name="Notification.Visible" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="ExtractingProgress.Font" type="System.Drawing.Font, System.Drawing">
-    <value>DejaVu Sans, 9pt, style=Bold</value>
+  <data name="LauncherStatusText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>152, 30</value>
   </data>
   <data name="ProgressBarOutline.InitialImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
-  <data name="SceneryGroupText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>220, 15</value>
-  </data>
-  <data name="&gt;&gt;ButtonSecurityCenter.Name" xml:space="preserve">
-    <value>ButtonSecurityCenter</value>
-  </data>
   <data name="Banner.Size" type="System.Drawing.Size, System.Drawing">
     <value>523, 223</value>
-  </data>
-  <data name="PlayProgress.Location" type="System.Drawing.Point, System.Drawing">
-    <value>30, 430</value>
   </data>
   <data name="ButtonSecurityCenter.InitialImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
@@ -768,9 +819,6 @@ Registered: ###</value>
   <data name="CurrentWindowInfo.Text" xml:space="preserve">
     <value>ENTER YOUR ACCOUNT INFORMATION
  TO LOG IN</value>
-  </data>
-  <data name="HomePageLink.Font" type="System.Drawing.Font, System.Drawing">
-    <value>DejaVu Sans, 9pt</value>
   </data>
   <data name="InsiderBuildNumberText.Location" type="System.Drawing.Point, System.Drawing">
     <value>352, 65</value>
@@ -823,8 +871,8 @@ Registered: ###</value>
   <data name="TwitterAccountLink.Font" type="System.Drawing.Font, System.Drawing">
     <value>DejaVu Sans, 9pt</value>
   </data>
-  <data name="&gt;&gt;ServerStatusDesc.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;SettingsButton.Name" xml:space="preserve">
+    <value>SettingsButton</value>
   </data>
   <data name="&gt;&gt;ServerShutDown.ZOrder" xml:space="preserve">
     <value>8</value>
@@ -832,8 +880,8 @@ Registered: ###</value>
   <data name="ServerStatusDesc.Location" type="System.Drawing.Point, System.Drawing">
     <value>242, 486</value>
   </data>
-  <data name="&gt;&gt;MainPassword.Name" xml:space="preserve">
-    <value>MainPassword</value>
+  <data name="&gt;&gt;RememberMe.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
   <data name="&gt;&gt;MainEmail.ZOrder" xml:space="preserve">
     <value>21</value>
@@ -855,6 +903,9 @@ Registered: ###</value>
   </data>
   <data name="ServerStatusIcon.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 25</value>
+  </data>
+  <data name="LogoutButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>DejaVu Sans, 10pt, style=Bold</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -2875,14 +2926,14 @@ Registered: ###</value>
   <data name="FacebookIcon.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>
   </data>
+  <data name="&gt;&gt;MainEmail.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
   <data name="ForgotPassword.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
   <data name="DiscordInviteLink.Location" type="System.Drawing.Point, System.Drawing">
     <value>154, 12</value>
-  </data>
-  <data name="&gt;&gt;MainPasswordBorder.Parent" xml:space="preserve">
-    <value>$this</value>
   </data>
   <data name="&gt;&gt;AddServer.ZOrder" xml:space="preserve">
     <value>11</value>
@@ -2893,14 +2944,14 @@ Registered: ###</value>
   <data name="&gt;&gt;MainPasswordBorder.ZOrder" xml:space="preserve">
     <value>24</value>
   </data>
-  <data name="ServerInfoPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 305</value>
-  </data>
   <data name="&gt;&gt;HomePageLink.Name" xml:space="preserve">
     <value>HomePageLink</value>
   </data>
   <data name="&gt;&gt;Timeout.Name" xml:space="preserve">
     <value>Timeout</value>
+  </data>
+  <data name="PlayProgressTextTimer.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="PlayProgressText.Size" type="System.Drawing.Size, System.Drawing">
     <value>510, 14</value>
@@ -2911,11 +2962,8 @@ Registered: ###</value>
   <data name="TwitterAccountLink.TabIndex" type="System.Int32, mscorlib">
     <value>174</value>
   </data>
-  <data name="MainEmailBorder.InitialImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ButtonSecurityCenter.TabIndex" type="System.Int32, mscorlib">
-    <value>176</value>
+  <data name="&gt;&gt;SceneryGroupText.Parent" xml:space="preserve">
+    <value>ServerInfoPanel</value>
   </data>
   <data name="APIStatusDesc.Text" xml:space="preserve">
     <value>Checking Status</value>
@@ -2935,6 +2983,9 @@ Registered: ###</value>
   <data name="PlayProgressText.Text" xml:space="preserve">
     <value>PLEASE WAIT</value>
   </data>
+  <data name="&gt;&gt;ServerStatusText.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
   <data name="SelectServerBtn.Size" type="System.Drawing.Size, System.Drawing">
     <value>228, 24</value>
   </data>
@@ -2944,8 +2995,8 @@ Registered: ###</value>
   <data name="logo.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>StretchImage</value>
   </data>
-  <data name="PlayProgressText.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
+  <data name="APIStatusDesc.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="RegisterText.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>
@@ -2965,6 +3016,9 @@ Registered: ###</value>
   <data name="&gt;&gt;ServerPick.Type" xml:space="preserve">
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;PlayProgress.Type" xml:space="preserve">
+    <value>GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx, GameLauncher, Version=2.1.8.7, Culture=neutral, PublicKeyToken=null</value>
+  </data>
   <data name="SceneryGroupText.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
   </data>
@@ -2973,9 +3027,6 @@ Registered: ###</value>
   </data>
   <data name="&gt;&gt;LauncherStatusText.Parent" xml:space="preserve">
     <value>$this</value>
-  </data>
-  <data name="&gt;&gt;PlayProgressTextTimer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;translatedBy.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -2986,20 +3037,20 @@ Registered: ###</value>
   <data name="&gt;&gt;LauncherStatusDesc.Name" xml:space="preserve">
     <value>LauncherStatusDesc</value>
   </data>
-  <data name="APIStatusDesc.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+  <data name="HomePageLink.TabIndex" type="System.Int32, mscorlib">
+    <value>171</value>
   </data>
-  <data name="&gt;&gt;HomePageIcon.Name" xml:space="preserve">
-    <value>HomePageIcon</value>
+  <data name="TwitterIcon.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;ServerStatusDesc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="TwitterIcon.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 25</value>
   </data>
-  <data name="ShowPlayPanel.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="LoginButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>231, 35</value>
+  <data name="ButtonSecurityCenter.TabIndex" type="System.Int32, mscorlib">
+    <value>176</value>
   </data>
   <data name="&gt;&gt;HomePageLink.Parent" xml:space="preserve">
     <value>ServerInfoPanel</value>
@@ -3007,20 +3058,26 @@ Registered: ###</value>
   <data name="MainPassword.WordWrap" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
+  <data name="&gt;&gt;Banner.Name" xml:space="preserve">
+    <value>Banner</value>
+  </data>
   <data name="&gt;&gt;SceneryGroupText.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="ButtonSecurityCenter.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 25</value>
   </data>
-  <data name="ExtractingProgress.Size" type="System.Drawing.Size, System.Drawing">
-    <value>519, 13</value>
+  <data name="ServerShutDown.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="logo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>17, 10</value>
   </data>
   <data name="HomePageLink.Location" type="System.Drawing.Point, System.Drawing">
     <value>36, 12</value>
   </data>
-  <data name="logo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>215, 71</value>
+  <data name="&gt;&gt;logo.Name" xml:space="preserve">
+    <value>logo</value>
   </data>
   <data name="APIStatusIcon.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>
@@ -3031,20 +3088,23 @@ Registered: ###</value>
   <data name="&gt;&gt;TwitterIcon.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="logo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>215, 71</value>
+  </data>
   <data name="&gt;&gt;PlayProgressText.Name" xml:space="preserve">
     <value>PlayProgressText</value>
   </data>
   <data name="&gt;&gt;ForgotPassword.Type" xml:space="preserve">
     <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="ServerStatusText.Font" type="System.Drawing.Font, System.Drawing">
+    <value>DejaVu Sans, 9pt, style=Bold</value>
+  </data>
   <data name="FacebookIcon.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 25</value>
   </data>
   <data name="&gt;&gt;ServerInfoPanel.Parent" xml:space="preserve">
     <value>$this</value>
-  </data>
-  <data name="&gt;&gt;LauncherIconStatus.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;PlayProgressTextTimer.Parent" xml:space="preserve">
     <value>$this</value>
@@ -3055,6 +3115,9 @@ Registered: ###</value>
   <data name="&gt;&gt;DiscordIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="LauncherIconStatus.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="ServerStatusDesc.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
   </data>
@@ -3064,17 +3127,17 @@ Registered: ###</value>
   <data name="&gt;&gt;HomePageIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="DiscordIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 25</value>
-  </data>
-  <data name="&gt;&gt;PlayProgress.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="PlayButton.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
   </data>
   <data name="&gt;&gt;SettingsButton.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
   <data name="ServerPick.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
+  </data>
+  <data name="AddServer.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="&gt;&gt;ExtractingProgress.Type" xml:space="preserve">
     <value>GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx, GameLauncher, Version=2.1.8.7, Culture=neutral, PublicKeyToken=null</value>
@@ -3086,13 +3149,22 @@ Registered: ###</value>
     <value>$this</value>
   </data>
   <data name="translatedBy.Text" xml:space="preserve">
-    <value>Translated by: meme</value>
+    <value>Language: Neutral</value>
+  </data>
+  <data name="FacebookGroupLink.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="FacebookGroupLink.Size" type="System.Drawing.Size, System.Drawing">
+    <value>110, 14</value>
+  </data>
+  <data name="PlayProgressText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="MainEmailBorder.TabIndex" type="System.Int32, mscorlib">
     <value>144</value>
   </data>
-  <data name="&gt;&gt;ServerStatusDesc.Name" xml:space="preserve">
-    <value>ServerStatusDesc</value>
+  <data name="DiscordIcon.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 25</value>
   </data>
   <data name="&gt;&gt;LauncherStatusText.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -3118,8 +3190,8 @@ Registered: ###</value>
   <data name="PlayButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>230, 63</value>
   </data>
-  <data name="ForgotPassword.Text" xml:space="preserve">
-    <value>I FORGOT MY PASSWORD</value>
+  <data name="ForgotPassword.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="&gt;&gt;FacebookIcon.ZOrder" xml:space="preserve">
     <value>2</value>
@@ -3151,8 +3223,8 @@ Registered: ###</value>
   <data name="LauncherIconStatus.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>
   </data>
-  <data name="&gt;&gt;PlayProgress.Type" xml:space="preserve">
-    <value>GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx, GameLauncher, Version=2.1.8.7, Culture=neutral, PublicKeyToken=null</value>
+  <data name="logo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="MainPasswordBorder.Location" type="System.Drawing.Point, System.Drawing">
     <value>606, 210</value>
@@ -3178,8 +3250,8 @@ Registered: ###</value>
   <data name="ServerStatusIcon.Location" type="System.Drawing.Point, System.Drawing">
     <value>211, 456</value>
   </data>
-  <data name="FacebookGroupLink.Size" type="System.Drawing.Size, System.Drawing">
-    <value>110, 14</value>
+  <data name="ExtractingProgress.Font" type="System.Drawing.Font, System.Drawing">
+    <value>DejaVu Sans, 9pt, style=Bold</value>
   </data>
   <data name="FacebookGroupLink.TabIndex" type="System.Int32, mscorlib">
     <value>173</value>
@@ -3196,8 +3268,8 @@ Registered: ###</value>
   <data name="FacebookIcon.Location" type="System.Drawing.Point, System.Drawing">
     <value>263, 8</value>
   </data>
-  <data name="&gt;&gt;LauncherStatusText.Name" xml:space="preserve">
-    <value>LauncherStatusText</value>
+  <data name="ShowPlayPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>600, 281</value>
   </data>
   <data name="&gt;&gt;CloseBTN.Parent" xml:space="preserve">
     <value>$this</value>
@@ -3205,8 +3277,8 @@ Registered: ###</value>
   <data name="SceneryGroupText.Text" xml:space="preserve">
     <value>Scenery: SetByServInfo</value>
   </data>
-  <data name="LogoutButton.Font" type="System.Drawing.Font, System.Drawing">
-    <value>DejaVu Sans, 10pt, style=Bold</value>
+  <data name="LogoutButton.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
   </data>
   <data name="Banner.TabIndex" type="System.Int32, mscorlib">
     <value>22</value>
@@ -3214,8 +3286,8 @@ Registered: ###</value>
   <data name="ServerInfoPanel.Size" type="System.Drawing.Size, System.Drawing">
     <value>525, 68</value>
   </data>
-  <data name="&gt;&gt;ShowPlayPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="translatedBy.Size" type="System.Drawing.Size, System.Drawing">
+    <value>196, 25</value>
   </data>
   <data name="CurrentWindowInfo.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
@@ -3226,6 +3298,12 @@ Registered: ###</value>
   <data name="&gt;&gt;ExtractingProgress.Name" xml:space="preserve">
     <value>ExtractingProgress</value>
   </data>
+  <data name="LauncherStatusText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;APIStatusText.Name" xml:space="preserve">
+    <value>APIStatusText</value>
+  </data>
   <data name="ShowPlayPanel.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
@@ -3234,9 +3312,6 @@ Registered: ###</value>
   </data>
   <data name="MainPasswordBorder.InitialImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
-  </data>
-  <data name="&gt;&gt;PlayProgressTextTimer.Name" xml:space="preserve">
-    <value>PlayProgressTextTimer</value>
   </data>
   <data name="SelectServerBtn.Text" xml:space="preserve">
     <value>Select Server</value>
@@ -3250,11 +3325,11 @@ Registered: ###</value>
   <data name="InsiderBuildNumberText.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 14</value>
   </data>
-  <data name="DiscordInviteLink.Text" xml:space="preserve">
-    <value>Discord Invite</value>
-  </data>
   <data name="&gt;&gt;HomePageIcon.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="&gt;&gt;ExtractingProgress.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
   <data name="Banner.InitialImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
@@ -3262,11 +3337,17 @@ Registered: ###</value>
   <data name="HomePageIcon.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>CenterImage</value>
   </data>
+  <data name="ServerStatusIcon.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="&gt;&gt;ServerShutDown.Parent" xml:space="preserve">
     <value>ServerInfoPanel</value>
   </data>
   <data name="&gt;&gt;FacebookGroupLink.Type" xml:space="preserve">
     <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="translatedBy.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="AddServer.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -3292,8 +3373,8 @@ Registered: ###</value>
   <data name="PlayProgressTextTimer.Size" type="System.Drawing.Size, System.Drawing">
     <value>529, 14</value>
   </data>
-  <data name="LauncherStatusText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 30</value>
+  <data name="HomePageLink.Font" type="System.Drawing.Font, System.Drawing">
+    <value>DejaVu Sans, 9pt</value>
   </data>
   <data name="APIStatusIcon.InitialImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
@@ -3301,11 +3382,11 @@ Registered: ###</value>
   <data name="logo.InitialImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
-  <data name="PlayProgressTextTimer.Font" type="System.Drawing.Font, System.Drawing">
-    <value>DejaVu Sans, 9pt, style=Bold</value>
+  <data name="&gt;&gt;PlayProgressTextTimer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="TwitterAccountLink.Location" type="System.Drawing.Point, System.Drawing">
-    <value>437, 12</value>
+  <data name="APIStatusText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="DiscordInviteLink.Size" type="System.Drawing.Size, System.Drawing">
     <value>95, 14</value>
@@ -3316,8 +3397,8 @@ Registered: ###</value>
   <data name="ShowPlayPanel.TabIndex" type="System.Int32, mscorlib">
     <value>153</value>
   </data>
-  <data name="&gt;&gt;APIStatusText.Name" xml:space="preserve">
-    <value>APIStatusText</value>
+  <data name="&gt;&gt;LauncherStatusText.Name" xml:space="preserve">
+    <value>LauncherStatusText</value>
   </data>
   <data name="DiscordIcon.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>CenterImage</value>
@@ -3335,16 +3416,19 @@ Registered: ###</value>
     <value>MainPasswordBorder</value>
   </data>
   <data name="translatedBy.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, -1</value>
+    <value>355, 15</value>
   </data>
   <data name="PlayButton.Font" type="System.Drawing.Font, System.Drawing">
     <value>DejaVu Sans, 14pt, style=Bold</value>
   </data>
-  <data name="&gt;&gt;MainEmail.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;ShowPlayPanel.Name" xml:space="preserve">
+    <value>ShowPlayPanel</value>
   </data>
   <data name="APIStatusDesc.Location" type="System.Drawing.Point, System.Drawing">
     <value>426, 486</value>
+  </data>
+  <data name="&gt;&gt;FacebookIcon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="PlayProgress.Size" type="System.Drawing.Size, System.Drawing">
     <value>519, 13</value>
@@ -3352,11 +3436,14 @@ Registered: ###</value>
   <data name="&gt;&gt;translatedBy.ZOrder" xml:space="preserve">
     <value>9</value>
   </data>
+  <data name="PlayProgressTextTimer.Font" type="System.Drawing.Font, System.Drawing">
+    <value>DejaVu Sans, 9pt, style=Bold</value>
+  </data>
   <data name="logo.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="ServerShutDown.TabIndex" type="System.Int32, mscorlib">
-    <value>169</value>
+  <data name="TwitterAccountLink.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="RememberMe.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>BottomLeft</value>
@@ -3364,11 +3451,8 @@ Registered: ###</value>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainScreen</value>
   </data>
-  <data name="&gt;&gt;Banner.ZOrder" xml:space="preserve">
-    <value>34</value>
-  </data>
-  <data name="HomePageLink.TabIndex" type="System.Int32, mscorlib">
-    <value>171</value>
+  <data name="ServerStatusText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="&gt;&gt;ServerShutDown.Name" xml:space="preserve">
     <value>ServerShutDown</value>
@@ -3379,8 +3463,8 @@ Registered: ###</value>
   <data name="&gt;&gt;MainEmail.Name" xml:space="preserve">
     <value>MainEmail</value>
   </data>
-  <data name="&gt;&gt;RememberMe.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;ServerStatusText.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="ServerStatusText.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -3412,6 +3496,9 @@ Registered: ###</value>
   <data name="CloseBTN.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
+  <data name="CurrentWindowInfo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="LauncherStatusDesc.Text" xml:space="preserve">
     <value>Version: vX.X.X.X</value>
   </data>
@@ -3421,8 +3508,8 @@ Registered: ###</value>
   <data name="&gt;&gt;TwitterAccountLink.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="TwitterAccountLink.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+  <data name="FacebookIcon.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="InsiderBuildNumberText.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>BottomLeft</value>
@@ -3430,11 +3517,11 @@ Registered: ###</value>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>891, 529</value>
   </data>
-  <data name="TwitterIcon.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Zoom</value>
+  <data name="DiscordInviteLink.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="SelectServerBtn.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+  <data name="&gt;&gt;ServerPick.ZOrder" xml:space="preserve">
+    <value>10</value>
   </data>
   <data name="&gt;&gt;LauncherStatusDesc.Parent" xml:space="preserve">
     <value>$this</value>
@@ -3442,11 +3529,17 @@ Registered: ###</value>
   <data name="RegisterText.Text" xml:space="preserve">
     <value>REGISTER</value>
   </data>
-  <data name="&gt;&gt;RememberMe.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="ExtractingProgress.Size" type="System.Drawing.Size, System.Drawing">
+    <value>519, 13</value>
   </data>
-  <data name="&gt;&gt;PlayProgress.Name" xml:space="preserve">
-    <value>PlayProgress</value>
+  <data name="DiscordInviteLink.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;LauncherIconStatus.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>GameLauncher</value>
   </data>
   <data name="MainEmail.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 14</value>
@@ -3454,14 +3547,14 @@ Registered: ###</value>
   <data name="ProgressBarOutline.TabIndex" type="System.Int32, mscorlib">
     <value>174</value>
   </data>
-  <data name="&gt;&gt;logo.Name" xml:space="preserve">
-    <value>logo</value>
+  <data name="DiscordIcon.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="ServerInfoPanel.Font" type="System.Drawing.Font, System.Drawing">
-    <value>DejaVu Sans, 8pt</value>
+  <data name="ProgressBarOutline.ErrorImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="PlayButton.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
+  <data name="&gt;&gt;MainPassword.Name" xml:space="preserve">
+    <value>MainPassword</value>
   </data>
   <data name="&gt;&gt;Banner.Parent" xml:space="preserve">
     <value>$this</value>
@@ -3472,8 +3565,8 @@ Registered: ###</value>
   <data name="APIStatusIcon.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 25</value>
   </data>
-  <data name="&gt;&gt;SceneryGroupText.Parent" xml:space="preserve">
-    <value>ServerInfoPanel</value>
+  <data name="ServerStatusText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>242, 453</value>
   </data>
   <data name="ServerPingStatusText.Text" xml:space="preserve">
     <value>Your Ping to the Server</value>
@@ -3484,23 +3577,35 @@ Registered: ###</value>
   <data name="&gt;&gt;TwitterAccountLink.Type" xml:space="preserve">
     <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;LauncherIconStatus.ZOrder" xml:space="preserve">
-    <value>12</value>
+  <data name="&gt;&gt;ServerInfoPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Banner.ZOrder" xml:space="preserve">
+    <value>34</value>
   </data>
   <data name="FacebookIcon.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>CenterImage</value>
   </data>
-  <data name="logo.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Zoom</value>
-  </data>
   <data name="&gt;&gt;Notification.Name" xml:space="preserve">
     <value>Notification</value>
+  </data>
+  <data name="PlayProgressText.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
   </data>
   <data name="AddServer.Location" type="System.Drawing.Point, System.Drawing">
     <value>833, 49</value>
   </data>
-  <data name="LauncherStatusText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>53, 453</value>
+  <data name="TwitterAccountLink.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="APIStatusIcon.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="RememberMe.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="TwitterIcon.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Zoom</value>
   </data>
   <data name="&gt;&gt;ServerStatusText.ZOrder" xml:space="preserve">
     <value>17</value>
@@ -3511,41 +3616,50 @@ Registered: ###</value>
   <data name="APIStatusDesc.Font" type="System.Drawing.Font, System.Drawing">
     <value>DejaVu Sans, 9pt</value>
   </data>
-  <data name="PlayProgressTextTimer.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+  <data name="DiscordInviteLink.Text" xml:space="preserve">
+    <value>Discord Invite</value>
   </data>
-  <data name="InsiderBuildNumberText.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+  <data name="MainEmailBorder.InitialImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="&gt;&gt;APIStatusText.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;CloseBTN.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="SettingsButton.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+  <data name="PlayButton.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>
   </data>
-  <data name="&gt;&gt;ServerStatusText.Parent" xml:space="preserve">
+  <data name="ServerInfoPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 305</value>
+  </data>
+  <data name="&gt;&gt;MainPasswordBorder.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;MainPassword.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="ServerStatusText.Font" type="System.Drawing.Font, System.Drawing">
-    <value>DejaVu Sans, 9pt, style=Bold</value>
+  <data name="ServerInfoPanel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>DejaVu Sans, 8pt</value>
   </data>
   <data name="SceneryGroupText.Font" type="System.Drawing.Font, System.Drawing">
     <value>DejaVu Sans, 9pt, style=Bold</value>
   </data>
-  <data name="&gt;&gt;InsiderBuildNumberText.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="&gt;&gt;PlayProgressTextTimer.Name" xml:space="preserve">
+    <value>PlayProgressTextTimer</value>
   </data>
   <data name="MainEmailBorder.ErrorImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="InsiderBuildNumberText.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="ServerShutDown.TabIndex" type="System.Int32, mscorlib">
+    <value>169</value>
+  </data>
   <data name="&gt;&gt;SettingsButton.Type" xml:space="preserve">
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DiscordIcon.Location" type="System.Drawing.Point, System.Drawing">
+    <value>127, 8</value>
   </data>
   <data name="ShowPlayPanel.Size" type="System.Drawing.Size, System.Drawing">
     <value>237, 173</value>
@@ -3572,17 +3686,26 @@ Registered: ###</value>
   <data name="LogoutButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 35</value>
   </data>
-  <data name="APIStatusIcon.TabIndex" type="System.Int32, mscorlib">
-    <value>113</value>
+  <data name="PlayProgress.Location" type="System.Drawing.Point, System.Drawing">
+    <value>30, 430</value>
   </data>
   <data name="&gt;&gt;SceneryGroupText.ZOrder" xml:space="preserve">
     <value>9</value>
+  </data>
+  <data name="SettingsButton.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Zoom</value>
   </data>
   <data name="&gt;&gt;TwitterIcon.Name" xml:space="preserve">
     <value>TwitterIcon</value>
   </data>
   <data name="$this.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Stretch</value>
+  </data>
+  <data name="RegisterText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="TwitterIcon.Location" type="System.Drawing.Point, System.Drawing">
+    <value>407, 8</value>
   </data>
   <data name="Banner.Location" type="System.Drawing.Point, System.Drawing">
     <value>28, 81</value>
@@ -3596,14 +3719,14 @@ Registered: ###</value>
   <data name="RememberMe.Location" type="System.Drawing.Point, System.Drawing">
     <value>645, 260</value>
   </data>
-  <data name="ForgotPassword.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
+  <data name="&gt;&gt;LauncherIconStatus.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="TwitterIcon.InitialImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
-  <data name="InsiderBuildNumberText.Font" type="System.Drawing.Font, System.Drawing">
-    <value>DejaVu Sans, 9pt</value>
+  <data name="&gt;&gt;ButtonSecurityCenter.Name" xml:space="preserve">
+    <value>ButtonSecurityCenter</value>
   </data>
   <data name="LoginButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>605, 362</value>
@@ -3616,9 +3739,6 @@ Registered: ###</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
-  </metadata>
-  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>en</value>
   </metadata>
   <metadata name="Timeout.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>

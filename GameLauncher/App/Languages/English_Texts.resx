@@ -313,7 +313,22 @@ Registered: ###</value>
   <data name="MainScreen_Text_ServerStatus_Unstable" xml:space="preserve">
     <value>Server Connection:\n - Unstable</value>
   </data>
-  <data name="Program_TextBox" xml:space="preserve">
-    <value />
+  <data name="Program_TextBox_GameIsRunning" xml:space="preserve">
+    <value>An instance of Need for Speed: World is already running</value>
+  </data>
+  <data name="Application_Exception_Unhandled" xml:space="preserve">
+    <value>SBRW Launcher will have to Close due to a Unhandled Exception</value>
+  </data>
+  <data name="Application_Exception_Thread" xml:space="preserve">
+    <value>SBRW Launcher will have to Close due to a Thread Exception</value>
+  </data>
+  <data name="KitEnabler_Dev" xml:space="preserve">
+    <value>DEV Build Date</value>
+  </data>
+  <data name="KitEnabler_Beta" xml:space="preserve">
+    <value>BETA Build Date</value>
+  </data>
+  <data name="KitEnabler_Public" xml:space="preserve">
+    <value>Build Date</value>
   </data>
 </root>
