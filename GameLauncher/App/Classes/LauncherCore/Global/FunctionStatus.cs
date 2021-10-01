@@ -163,7 +163,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             try
             {
                 /* TLS 1.3 */
-                ServicePointManager.SecurityProtocol |= (SecurityProtocolType)12288 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                ServicePointManager.SecurityProtocol |= (SecurityProtocolType)12288 | SecurityProtocolType.Tls12; /*| SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;*/
             }
             catch (NotSupportedException Error)
             {
@@ -172,31 +172,31 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 try
                 {
                     /* TLS 1.2 */
-                    ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                    ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12; /* | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;*/
                 }
                 catch (NotSupportedException ErrorTls12)
                 {
                     Log.Error("SecurityProtocol: Tls12 -> " + ErrorTls12.Message);
 
-                    try
-                    {
+                    //try
+                    //{
                         /* TLS 1.1 */
-                        ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-                    }
-                    catch (NotSupportedException ErrorTls11)
-                    {
-                        Log.Error("SecurityProtocol: Tls11 -> " + ErrorTls11.Message);
+                    //    ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                    //}
+                    //catch (NotSupportedException ErrorTls11)
+                    //{
+                    //    Log.Error("SecurityProtocol: Tls11 -> " + ErrorTls11.Message);
 
-                        try
-                        {
-                            /* TLS 1.0 */
-                            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls;
-                        }
-                        catch (NotSupportedException ErrorTls)
-                        {
-                            Log.Error("SecurityProtocol: Tls -> " + ErrorTls.Message);
-                        }
-                    }
+                    //    try
+                    //    {
+                    //        /* TLS 1.0 */
+                    //        ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls;
+                    //    }
+                    //    catch (NotSupportedException ErrorTls)
+                    //    {
+                    //        Log.Error("SecurityProtocol: Tls -> " + ErrorTls.Message);
+                    //    }
+                    //}
                 }
             }
             ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) =>
