@@ -705,7 +705,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             /********************************/
 
             /* Check If Launcher Failed to Connect to any APIs */
-            if (!VisualsAPIChecker.WOPLAPI())
+            if (!VisualsAPIChecker.CarbonAPITwo())
             {
                 MessageBox.Show(null, "Unable to Connect to any CDN List API. Please check your connection." +
                 "\nCDN Dropdown List will not be available on Settings Screen",
@@ -1384,7 +1384,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 SettingsBkupCDNText.Visible = true;
             }
 
-            if (VisualsAPIChecker.WOPLAPI())
+            /*if (VisualsAPIChecker.WOPLAPI())
             {
                 SettingsBkupCDNText.Text = "[API] WOPL: ONLINE";
                 SettingsBkupCDNText.ForeColor = Theming.Sucess;
@@ -1395,7 +1395,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 if (VisualsAPIChecker.WOPLSL && !VisualsAPIChecker.WOPLCDNL) { SettingsBkupCDNText.Text = "[API] WOPL: SERVER LIST ONLY"; }
                 else if (!VisualsAPIChecker.WOPLSL && VisualsAPIChecker.WOPLCDNL) { SettingsBkupCDNText.Text = "[API] WOPL: CDN LIST ONLY"; }
                 else { SettingsBkupCDNText.Text = "[API] WOPL: OFFLINE"; SettingsBkupCDNText.ForeColor = Theming.Error; }
-            }
+            }*/
         }
 
         private void RememberLastCDN()

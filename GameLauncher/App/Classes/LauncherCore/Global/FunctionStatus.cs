@@ -563,7 +563,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
 
                 /* Check If Launcher Failed to Connect to any APIs */
-                if (!VisualsAPIChecker.WOPLAPI())
+                if (!VisualsAPIChecker.CarbonAPITwo())
                 {
                     DiscordLauncherPresence.Status("Start Up", "Launcher Encountered API Errors");
 

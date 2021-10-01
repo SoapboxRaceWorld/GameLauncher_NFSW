@@ -1491,6 +1491,14 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                     if (!VisualsAPIChecker.CarbonAPITwo())
                     {
+                        APIStatusText.Text = "Connection API:\n - Error";
+                        APIStatusText.ForeColor = Theming.Error;
+                        APIStatusDesc.Text = "Launcher is Offline";
+                        APIStatusIcon.BackgroundImage = Theming.APIIconError;
+                        Log.Api("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
+                    }
+                    /*if (!VisualsAPIChecker.CarbonAPITwo())
+                    {
                         APIStatusText.Text = "WOPL API:\n - Online";
                         APIStatusText.ForeColor = Theming.Sucess;
                         APIStatusDesc.Text = "Connected to API";
@@ -1504,7 +1512,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             APIStatusIcon.BackgroundImage = Theming.APIIconError;
                             Log.Api("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
                         }
-                    }
+                    }*/
                 }
             }
         }

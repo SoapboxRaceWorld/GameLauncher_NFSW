@@ -53,7 +53,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
 
             Log.Checking("API: Test #3");
             /* Check If Launcher Failed to Connect to any APIs */
-            if (!VisualsAPIChecker.WOPLAPI())
+            if (!VisualsAPIChecker.CarbonAPITwo())
             {
                 MessageBox.Show(null, "Unable to Connect to any CDN List API. Please check your connection." +
                 "\n\nCDN Dropdown List will not be available on Welcome Screen",
@@ -193,8 +193,9 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
 
                     if (!VisualsAPIChecker.CarbonAPITwo())
                     {
-                        ListStatusText.Text = "WOPL List - Online";
-
+                        //ListStatusText.Text = "WOPL List - Online";
+                        ListStatusText.Text = "API Lists Connection - Error";
+                        /*
                         if (!VisualsAPIChecker.WOPLAPI())
                         {
                             StatusCheck = true;
@@ -203,7 +204,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
                             {
                                 ListStatusText.Text = "API Lists Connection - Error";
                             }
-                        }
+                        }*/
                     }
                 }
             }

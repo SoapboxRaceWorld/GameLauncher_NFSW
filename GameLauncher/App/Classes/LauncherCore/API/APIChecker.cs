@@ -200,9 +200,9 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
         public static bool CarbonTwoCDNL = false;
         public static bool CarbonAPITwo() => (CarbonTwoSL && CarbonTwoCDNL);
 
-        public static bool WOPLSL = false;
-        public static bool WOPLCDNL = false;
-        public static bool WOPLAPI() => (WOPLSL && WOPLCDNL);
+        //public static bool WOPLSL = false;
+        //public static bool WOPLCDNL = false;
+        //public static bool WOPLAPI() => (WOPLSL && WOPLCDNL);
 
         public static bool GitHubAPI = false;
 
@@ -268,7 +268,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 CarbonTwoCDNL = true;
             }
 
-            if (!CarbonAPITwo())
+            /*if (!CarbonAPITwo())
             {
                 Log.Checking("API Status: WorldOnline");
                 switch (APIChecker.CheckStatus(URLs.WOPL + "/serverlist.json", 15))
@@ -289,12 +289,12 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             {
                 WOPLSL = true;
                 WOPLCDNL = true;
-            }
+            }*/
 
             Log.Checking("API: Test #2");
 
             /* Check If Launcher Failed to Connect to any APIs */
-            if (!WOPLAPI())
+            if (!CarbonAPITwo())
             {
                 DiscordLauncherPresence.Status("Start Up", "Launcher Encountered API Errors");
 
