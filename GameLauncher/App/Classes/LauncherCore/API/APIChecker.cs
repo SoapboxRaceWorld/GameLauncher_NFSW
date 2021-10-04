@@ -184,33 +184,105 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 return APIStatus.Null;
             }
         }
+
+        public static string StatusStrings(APIStatus Error)
+        {
+            switch (Error)
+            {
+                case APIStatus.CacheEntryNotFound:
+                    return "Cache Entry Not Found";
+                case APIStatus.ConnectFailure:
+                    return "Connect Failure";
+                case APIStatus.ConnectionClosed:
+                    return "Connection Closed";
+                case APIStatus.KeepAliveFailure:
+                    return "Keep Alive Failure";
+                case APIStatus.MessageLengthLimitExceeded:
+                    return "Message Length Limit Exceeded";
+                case APIStatus.NameResolutionFailure:
+                    return "Name Resolution Failure";
+                case APIStatus.Pending:
+                    return "Pending";
+                case APIStatus.PipelineFailure:
+                    return "Pipeline Failure";
+                case APIStatus.NotFound:
+                    return "Not Found";
+                case APIStatus.ServerError:
+                    return "Server Error";
+                case APIStatus.ServerOverloaded:
+                    return "Server Overloaded";
+                case APIStatus.ServerUnavailable:
+                    return "Server Unavailable";
+                case APIStatus.GetWayTimeOut:
+                    return "GetWay Time Out";
+                case APIStatus.ConnectionTimeOut:
+                    return "Connection Timed Out";
+                case APIStatus.OriginUnreachable:
+                    return "Origin Unreachable";
+                case APIStatus.Timeout:
+                    return "Timed Out";
+                case APIStatus.SSLFailed:
+                    return "SSL Failed";
+                case APIStatus.InvaildSSL:
+                    return "Invalid SSL";
+                case APIStatus.UnknownStatusCode:
+                    return "Unknown Status Code";
+                case APIStatus.ProxyNameResolutionFailure:
+                    return "Proxy Name Resolution Failure";
+                case APIStatus.ReceiveFailure:
+                    return "Receive Failure";
+                case APIStatus.RequestCanceled:
+                    return "Request Canceled";
+                case APIStatus.RequestProhibitedByCachePolicy:
+                    return "Request Prohibited By Cache Policy";
+                case APIStatus.SecureChannelFailure:
+                    return "Secure Channel Failure";
+                case APIStatus.SendFailure:
+                    return "Send Failure";
+                case APIStatus.ServerProtocolViolation:
+                    return "Server Protocol Violation";
+                case APIStatus.Success:
+                    return "Success";
+                case APIStatus.TrustFailure:
+                    return "Trust Failure";
+                case APIStatus.Unknown:
+                case APIStatus.UnknownError:
+                    return "Unknown Error";
+                case APIStatus.Null:
+                    return "URL was Null";
+                case APIStatus.Online:
+                    return "Online";
+                default:
+                    return "Offline";
+            }
+        }
     }
 
     class VisualsAPIChecker
     {
         public static bool UnitedSL = false;
         public static bool UnitedCDNL = false;
+        public static APIStatus UnitedSC = APIStatus.Unknown;
         public static bool UnitedAPI() => (UnitedSL && UnitedCDNL);
 
         public static bool CarbonSL = false;
         public static bool CarbonCDNL = false;
+        public static APIStatus CarbonSC = APIStatus.Unknown;
         public static bool CarbonAPI() => (CarbonSL && CarbonCDNL);
 
         public static bool CarbonTwoSL = false;
         public static bool CarbonTwoCDNL = false;
+        public static APIStatus CarbonTwoSC = APIStatus.Unknown;
         public static bool CarbonAPITwo() => (CarbonTwoSL && CarbonTwoCDNL);
 
-        //public static bool WOPLSL = false;
-        //public static bool WOPLCDNL = false;
-        //public static bool WOPLAPI() => (WOPLSL && WOPLCDNL);
-
         public static bool GitHubAPI = false;
+        public static APIStatus GitHubAPISC = APIStatus.Unknown;
 
         public static void PingAPIStatus()
         {
             Log.Checking("API: Checking Status");
             Log.Checking("API Status: WorldUnited");
-            switch (APIChecker.CheckStatus(URLs.Main + "/serverlist.json", 15))
+            switch (UnitedSC = APIChecker.CheckStatus(URLs.Main + "/serverlist.json", 15))
             {
                 case APIStatus.Online:
                     UnitedSL = RetrieveJSON(URLs.Main + "/serverlist.json", "SL");
@@ -225,7 +297,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             if (!UnitedAPI())
             {
                 Log.Checking("API Status: DavidCarbon");
-                switch (APIChecker.CheckStatus(URLs.Static + "/serverlist.json", 15))
+                switch (CarbonSC = APIChecker.CheckStatus(URLs.Static + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
                         if (!UnitedSL) { CarbonSL = RetrieveJSON(URLs.Static + "/serverlist.json", "SL"); }
@@ -248,7 +320,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             if (!CarbonAPI())
             {
                 Log.Checking("API Status: DavidCarbon [Second]");
-                switch (APIChecker.CheckStatus(URLs.Static_Alt + "/serverlist.json", 15))
+                switch (CarbonTwoSC = APIChecker.CheckStatus(URLs.Static_Alt + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
                         if (!CarbonSL) { CarbonTwoSL = RetrieveJSON(URLs.Static_Alt + "/serverlist.json", "SL"); }
@@ -267,29 +339,6 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 CarbonTwoSL = true;
                 CarbonTwoCDNL = true;
             }
-
-            /*if (!CarbonAPITwo())
-            {
-                Log.Checking("API Status: WorldOnline");
-                switch (APIChecker.CheckStatus(URLs.WOPL + "/serverlist.json", 15))
-                {
-                    case APIStatus.Online:
-                        if (!CarbonTwoSL) { WOPLSL = RetrieveJSON(URLs.WOPL + "/serverlist.json", "SL"); }
-                        else { WOPLSL = true; }
-                        if (!CarbonTwoCDNL) { WOPLCDNL = RetrieveJSON(URLs.WOPL + "/cdn_list.json", "CDNL"); }
-                        else { WOPLCDNL = true; }
-                        Log.Completed("API Status: WorldOnline");
-                        break;
-                    default:
-                        Log.Completed("API Status: WorldOnline");
-                        break;
-                }
-            }
-            else
-            {
-                WOPLSL = true;
-                WOPLCDNL = true;
-            }*/
 
             Log.Checking("API: Test #2");
 
@@ -337,6 +386,8 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             Log.Checking("JSON LIST: Retriving " + JSONUrl);
             try
             {
+                
+
                 FunctionStatus.TLS();
                 Uri URLCall = new Uri(JSONUrl);
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
@@ -355,16 +406,40 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 try
                 {
                     OnlineListJson = Client.DownloadString(URLCall);
+
+                    if (URLCall.OriginalString.Contains(URLs.Main))
+                    { UnitedSC = APIStatus.Online; }
+                    else if (URLCall.OriginalString.Contains(URLs.Static))
+                    { CarbonSC = APIStatus.Online; }
+                    else if (URLCall.OriginalString.Contains(URLs.Static_Alt))
+                    { CarbonTwoSC = APIStatus.Online; }
+
                     Log.UrlCall("JSON LIST: Retrieved " + JSONUrl);
                 }
                 catch (WebException Error)
                 {
-                    APIChecker.StatusCodes(JSONUrl, Error, (HttpWebResponse)Error.Response);
+                    APIStatus API_Status = APIChecker.StatusCodes(JSONUrl, Error, (HttpWebResponse)Error.Response);
+
+                    if (URLCall.OriginalString.Contains(URLs.Main))
+                    { UnitedSC = API_Status; }
+                    else if (URLCall.OriginalString.Contains(URLs.Static))
+                    { CarbonSC = API_Status; }
+                    else if (URLCall.OriginalString.Contains(URLs.Static_Alt))
+                    { CarbonTwoSC = API_Status; }
+                    
                     return false;
                 }
                 catch (Exception Error)
                 {
                     LogToFileAddons.OpenLog("JSON LIST", null, Error, null, true);
+
+                    if (URLCall.OriginalString.Contains(URLs.Main))
+                    { UnitedSC = APIStatus.Unknown; }
+                    else if (URLCall.OriginalString.Contains(URLs.Static))
+                    { CarbonSC = APIStatus.Unknown; }
+                    else if (URLCall.OriginalString.Contains(URLs.Static_Alt))
+                    { CarbonTwoSC = APIStatus.Unknown; }
+
                     return false;
                 }
                 finally

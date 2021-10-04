@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainScreen));
-            this.Timeout = new System.Windows.Forms.Timer(this.components);
             this.SelectServerBtn = new System.Windows.Forms.Button();
             this.translatedBy = new System.Windows.Forms.Label();
             this.ServerPick = new System.Windows.Forms.ComboBox();
@@ -99,10 +98,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.ButtonSecurityCenter)).BeginInit();
             this.SuspendLayout();
             // 
-            // Timeout
-            // 
-            this.Timeout.Interval = 3000;
-            // 
             // SelectServerBtn
             // 
             resources.ApplyResources(this.SelectServerBtn, "SelectServerBtn");
@@ -111,85 +106,85 @@
             // 
             // translatedBy
             // 
-            resources.ApplyResources(this.translatedBy, "translatedBy");
             this.translatedBy.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.translatedBy, "translatedBy");
             this.translatedBy.ForeColor = System.Drawing.Color.DarkGray;
             this.translatedBy.Name = "translatedBy";
             // 
             // ServerPick
             // 
-            resources.ApplyResources(this.ServerPick, "ServerPick");
             this.ServerPick.BackColor = System.Drawing.Color.White;
             this.ServerPick.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.ServerPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            resources.ApplyResources(this.ServerPick, "ServerPick");
             this.ServerPick.ForeColor = System.Drawing.Color.Black;
             this.ServerPick.FormattingEnabled = true;
             this.ServerPick.Name = "ServerPick";
             // 
             // AddServer
             // 
-            resources.ApplyResources(this.AddServer, "AddServer");
             this.AddServer.BackColor = System.Drawing.SystemColors.Control;
+            resources.ApplyResources(this.AddServer, "AddServer");
             this.AddServer.ForeColor = System.Drawing.Color.Black;
             this.AddServer.Name = "AddServer";
             this.AddServer.UseVisualStyleBackColor = false;
             // 
             // PlayProgressText
             // 
-            resources.ApplyResources(this.PlayProgressText, "PlayProgressText");
             this.PlayProgressText.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.PlayProgressText, "PlayProgressText");
             this.PlayProgressText.ForeColor = System.Drawing.Color.White;
             this.PlayProgressText.Name = "PlayProgressText";
             // 
             // LauncherStatusText
             // 
-            resources.ApplyResources(this.LauncherStatusText, "LauncherStatusText");
             this.LauncherStatusText.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.LauncherStatusText, "LauncherStatusText");
             this.LauncherStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(132)))), ((int)(((byte)(132)))));
             this.LauncherStatusText.Name = "LauncherStatusText";
             this.LauncherStatusText.UseCompatibleTextRendering = true;
             // 
             // LauncherStatusDesc
             // 
-            resources.ApplyResources(this.LauncherStatusDesc, "LauncherStatusDesc");
             this.LauncherStatusDesc.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.LauncherStatusDesc, "LauncherStatusDesc");
             this.LauncherStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.LauncherStatusDesc.Name = "LauncherStatusDesc";
             // 
             // ServerStatusText
             // 
-            resources.ApplyResources(this.ServerStatusText, "ServerStatusText");
             this.ServerStatusText.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.ServerStatusText, "ServerStatusText");
             this.ServerStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ServerStatusText.Name = "ServerStatusText";
             // 
             // ServerStatusDesc
             // 
-            resources.ApplyResources(this.ServerStatusDesc, "ServerStatusDesc");
             this.ServerStatusDesc.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.ServerStatusDesc, "ServerStatusDesc");
             this.ServerStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ServerStatusDesc.Name = "ServerStatusDesc";
             // 
             // APIStatusText
             // 
-            resources.ApplyResources(this.APIStatusText, "APIStatusText");
             this.APIStatusText.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.APIStatusText, "APIStatusText");
             this.APIStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.APIStatusText.Name = "APIStatusText";
             // 
             // APIStatusDesc
             // 
-            resources.ApplyResources(this.APIStatusDesc, "APIStatusDesc");
             this.APIStatusDesc.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.APIStatusDesc, "APIStatusDesc");
             this.APIStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.APIStatusDesc.Name = "APIStatusDesc";
             // 
             // CurrentWindowInfo
             // 
-            resources.ApplyResources(this.CurrentWindowInfo, "CurrentWindowInfo");
             this.CurrentWindowInfo.BackColor = System.Drawing.Color.Transparent;
             this.CurrentWindowInfo.Cursor = System.Windows.Forms.Cursors.Default;
             this.CurrentWindowInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            resources.ApplyResources(this.CurrentWindowInfo, "CurrentWindowInfo");
             this.CurrentWindowInfo.ForeColor = System.Drawing.Color.White;
             this.CurrentWindowInfo.Name = "CurrentWindowInfo";
             this.CurrentWindowInfo.UseCompatibleTextRendering = true;
@@ -197,18 +192,18 @@
             // 
             // MainEmail
             // 
-            resources.ApplyResources(this.MainEmail, "MainEmail");
             this.MainEmail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
             this.MainEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            resources.ApplyResources(this.MainEmail, "MainEmail");
             this.MainEmail.ForeColor = System.Drawing.Color.White;
             this.MainEmail.Name = "MainEmail";
             this.MainEmail.TextChanged += new System.EventHandler(this.Email_TextChanged);
             // 
             // MainPassword
             // 
-            resources.ApplyResources(this.MainPassword, "MainPassword");
             this.MainPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
             this.MainPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            resources.ApplyResources(this.MainPassword, "MainPassword");
             this.MainPassword.ForeColor = System.Drawing.Color.White;
             this.MainPassword.Name = "MainPassword";
             this.MainPassword.UseSystemPasswordChar = true;
@@ -216,17 +211,17 @@
             // 
             // RememberMe
             // 
-            resources.ApplyResources(this.RememberMe, "RememberMe");
             this.RememberMe.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.RememberMe, "RememberMe");
             this.RememberMe.ForeColor = System.Drawing.Color.White;
             this.RememberMe.Name = "RememberMe";
             this.RememberMe.UseVisualStyleBackColor = false;
             // 
             // ForgotPassword
             // 
-            resources.ApplyResources(this.ForgotPassword, "ForgotPassword");
             this.ForgotPassword.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(228)))), ((int)(((byte)(0)))));
             this.ForgotPassword.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.ForgotPassword, "ForgotPassword");
             this.ForgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.ForgotPassword.Name = "ForgotPassword";
             this.ForgotPassword.TabStop = true;
@@ -234,8 +229,8 @@
             // 
             // LoginButton
             // 
-            resources.ApplyResources(this.LoginButton, "LoginButton");
             this.LoginButton.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.LoginButton, "LoginButton");
             this.LoginButton.FlatAppearance.BorderSize = 0;
             this.LoginButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.LoginButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
@@ -245,8 +240,8 @@
             // 
             // RegisterText
             // 
-            resources.ApplyResources(this.RegisterText, "RegisterText");
             this.RegisterText.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.RegisterText, "RegisterText");
             this.RegisterText.FlatAppearance.BorderSize = 0;
             this.RegisterText.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.RegisterText.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
@@ -256,17 +251,17 @@
             // 
             // ServerPingStatusText
             // 
-            resources.ApplyResources(this.ServerPingStatusText, "ServerPingStatusText");
             this.ServerPingStatusText.BackColor = System.Drawing.Color.Transparent;
             this.ServerPingStatusText.Cursor = System.Windows.Forms.Cursors.Default;
             this.ServerPingStatusText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            resources.ApplyResources(this.ServerPingStatusText, "ServerPingStatusText");
             this.ServerPingStatusText.ForeColor = System.Drawing.Color.White;
             this.ServerPingStatusText.Name = "ServerPingStatusText";
             // 
             // LogoutButton
             // 
-            resources.ApplyResources(this.LogoutButton, "LogoutButton");
             this.LogoutButton.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.LogoutButton, "LogoutButton");
             this.LogoutButton.FlatAppearance.BorderSize = 0;
             this.LogoutButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.LogoutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
@@ -276,8 +271,8 @@
             // 
             // PlayButton
             // 
-            resources.ApplyResources(this.PlayButton, "PlayButton");
             this.PlayButton.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.PlayButton, "PlayButton");
             this.PlayButton.FlatAppearance.BorderSize = 0;
             this.PlayButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.PlayButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
@@ -287,8 +282,8 @@
             // 
             // PlayProgressTextTimer
             // 
-            resources.ApplyResources(this.PlayProgressTextTimer, "PlayProgressTextTimer");
             this.PlayProgressTextTimer.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.PlayProgressTextTimer, "PlayProgressTextTimer");
             this.PlayProgressTextTimer.ForeColor = System.Drawing.Color.White;
             this.PlayProgressTextTimer.Name = "PlayProgressTextTimer";
             // 
@@ -304,36 +299,36 @@
             // 
             // InsiderBuildNumberText
             // 
-            resources.ApplyResources(this.InsiderBuildNumberText, "InsiderBuildNumberText");
             this.InsiderBuildNumberText.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.InsiderBuildNumberText, "InsiderBuildNumberText");
             this.InsiderBuildNumberText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.InsiderBuildNumberText.Name = "InsiderBuildNumberText";
             // 
             // logo
             // 
-            resources.ApplyResources(this.logo, "logo");
             this.logo.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.logo, "logo");
             this.logo.Name = "logo";
             this.logo.TabStop = false;
             // 
             // SettingsButton
             // 
-            resources.ApplyResources(this.SettingsButton, "SettingsButton");
             this.SettingsButton.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.SettingsButton, "SettingsButton");
             this.SettingsButton.Name = "SettingsButton";
             this.SettingsButton.TabStop = false;
             // 
             // CloseBTN
             // 
-            resources.ApplyResources(this.CloseBTN, "CloseBTN");
             this.CloseBTN.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.CloseBTN, "CloseBTN");
             this.CloseBTN.Name = "CloseBTN";
             this.CloseBTN.TabStop = false;
             // 
             // ServerInfoPanel
             // 
-            resources.ApplyResources(this.ServerInfoPanel, "ServerInfoPanel");
             this.ServerInfoPanel.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.ServerInfoPanel, "ServerInfoPanel");
             this.ServerInfoPanel.Controls.Add(this.HomePageIcon);
             this.ServerInfoPanel.Controls.Add(this.DiscordIcon);
             this.ServerInfoPanel.Controls.Add(this.FacebookIcon);
@@ -349,30 +344,30 @@
             // 
             // HomePageIcon
             // 
-            resources.ApplyResources(this.HomePageIcon, "HomePageIcon");
             this.HomePageIcon.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.HomePageIcon, "HomePageIcon");
             this.HomePageIcon.Name = "HomePageIcon";
             this.HomePageIcon.TabStop = false;
             // 
             // DiscordIcon
             // 
-            resources.ApplyResources(this.DiscordIcon, "DiscordIcon");
             this.DiscordIcon.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.DiscordIcon, "DiscordIcon");
             this.DiscordIcon.Name = "DiscordIcon";
             this.DiscordIcon.TabStop = false;
             // 
             // FacebookIcon
             // 
-            resources.ApplyResources(this.FacebookIcon, "FacebookIcon");
             this.FacebookIcon.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.FacebookIcon, "FacebookIcon");
             this.FacebookIcon.Name = "FacebookIcon";
             this.FacebookIcon.TabStop = false;
             // 
             // TwitterAccountLink
             // 
-            resources.ApplyResources(this.TwitterAccountLink, "TwitterAccountLink");
             this.TwitterAccountLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.TwitterAccountLink.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.TwitterAccountLink, "TwitterAccountLink");
             this.TwitterAccountLink.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.TwitterAccountLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.TwitterAccountLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
@@ -381,16 +376,16 @@
             // 
             // TwitterIcon
             // 
-            resources.ApplyResources(this.TwitterIcon, "TwitterIcon");
             this.TwitterIcon.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.TwitterIcon, "TwitterIcon");
             this.TwitterIcon.Name = "TwitterIcon";
             this.TwitterIcon.TabStop = false;
             // 
             // FacebookGroupLink
             // 
-            resources.ApplyResources(this.FacebookGroupLink, "FacebookGroupLink");
             this.FacebookGroupLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.FacebookGroupLink.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.FacebookGroupLink, "FacebookGroupLink");
             this.FacebookGroupLink.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.FacebookGroupLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.FacebookGroupLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
@@ -399,9 +394,9 @@
             // 
             // HomePageLink
             // 
-            resources.ApplyResources(this.HomePageLink, "HomePageLink");
             this.HomePageLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.HomePageLink.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.HomePageLink, "HomePageLink");
             this.HomePageLink.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.HomePageLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.HomePageLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
@@ -410,9 +405,9 @@
             // 
             // DiscordInviteLink
             // 
-            resources.ApplyResources(this.DiscordInviteLink, "DiscordInviteLink");
             this.DiscordInviteLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.DiscordInviteLink.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.DiscordInviteLink, "DiscordInviteLink");
             this.DiscordInviteLink.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.DiscordInviteLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
@@ -421,64 +416,64 @@
             // 
             // ServerShutDown
             // 
-            resources.ApplyResources(this.ServerShutDown, "ServerShutDown");
             this.ServerShutDown.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.ServerShutDown, "ServerShutDown");
             this.ServerShutDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ServerShutDown.Name = "ServerShutDown";
             // 
             // SceneryGroupText
             // 
-            resources.ApplyResources(this.SceneryGroupText, "SceneryGroupText");
             this.SceneryGroupText.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.SceneryGroupText, "SceneryGroupText");
             this.SceneryGroupText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.SceneryGroupText.Name = "SceneryGroupText";
             // 
             // LauncherIconStatus
             // 
-            resources.ApplyResources(this.LauncherIconStatus, "LauncherIconStatus");
             this.LauncherIconStatus.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.LauncherIconStatus, "LauncherIconStatus");
             this.LauncherIconStatus.Name = "LauncherIconStatus";
             this.LauncherIconStatus.TabStop = false;
             // 
             // APIStatusIcon
             // 
-            resources.ApplyResources(this.APIStatusIcon, "APIStatusIcon");
             this.APIStatusIcon.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.APIStatusIcon, "APIStatusIcon");
             this.APIStatusIcon.Name = "APIStatusIcon";
             this.APIStatusIcon.TabStop = false;
             // 
             // ServerStatusIcon
             // 
-            resources.ApplyResources(this.ServerStatusIcon, "ServerStatusIcon");
             this.ServerStatusIcon.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.ServerStatusIcon, "ServerStatusIcon");
             this.ServerStatusIcon.Name = "ServerStatusIcon";
             this.ServerStatusIcon.TabStop = false;
             // 
             // MainEmailBorder
             // 
-            resources.ApplyResources(this.MainEmailBorder, "MainEmailBorder");
             this.MainEmailBorder.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.MainEmailBorder, "MainEmailBorder");
             this.MainEmailBorder.Name = "MainEmailBorder";
             this.MainEmailBorder.TabStop = false;
             // 
             // MainPasswordBorder
             // 
-            resources.ApplyResources(this.MainPasswordBorder, "MainPasswordBorder");
             this.MainPasswordBorder.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.MainPasswordBorder, "MainPasswordBorder");
             this.MainPasswordBorder.Name = "MainPasswordBorder";
             this.MainPasswordBorder.TabStop = false;
             // 
             // ProgressBarOutline
             // 
-            resources.ApplyResources(this.ProgressBarOutline, "ProgressBarOutline");
             this.ProgressBarOutline.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.ProgressBarOutline, "ProgressBarOutline");
             this.ProgressBarOutline.Name = "ProgressBarOutline";
             this.ProgressBarOutline.TabStop = false;
             // 
             // Banner
             // 
-            resources.ApplyResources(this.Banner, "Banner");
             this.Banner.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.Banner, "Banner");
             this.Banner.Name = "Banner";
             this.Banner.TabStop = false;
             // 
@@ -488,18 +483,18 @@
             // 
             // ButtonSecurityCenter
             // 
-            resources.ApplyResources(this.ButtonSecurityCenter, "ButtonSecurityCenter");
             this.ButtonSecurityCenter.BackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.ButtonSecurityCenter, "ButtonSecurityCenter");
             this.ButtonSecurityCenter.Name = "ButtonSecurityCenter";
             this.ButtonSecurityCenter.TabStop = false;
             // 
             // ExtractingProgress
             // 
-            resources.ApplyResources(this.ExtractingProgress, "ExtractingProgress");
             this.ExtractingProgress.BackColor = System.Drawing.Color.Transparent;
             this.ExtractingProgress.BackgroundColor = System.Drawing.Color.Black;
             this.ExtractingProgress.Border = false;
             this.ExtractingProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            resources.ApplyResources(this.ExtractingProgress, "ExtractingProgress");
             this.ExtractingProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ExtractingProgress.GradiantColor = System.Drawing.Color.Transparent;
             this.ExtractingProgress.Image = global::GameLauncher.Properties.Resources.progress_success;
@@ -509,12 +504,12 @@
             // 
             // PlayProgress
             // 
-            resources.ApplyResources(this.PlayProgress, "PlayProgress");
             this.PlayProgress.BackColor = System.Drawing.Color.Transparent;
             this.PlayProgress.BackgroundColor = System.Drawing.Color.Black;
             this.PlayProgress.Border = false;
             this.PlayProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.PlayProgress.Cursor = System.Windows.Forms.Cursors.Default;
+            resources.ApplyResources(this.PlayProgress, "PlayProgress");
             this.PlayProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.PlayProgress.GradiantColor = System.Drawing.Color.Transparent;
             this.PlayProgress.Image = global::GameLauncher.Properties.Resources.progress_preload;
@@ -524,9 +519,9 @@
             // 
             // MainScreen
             // 
-            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
+            resources.ApplyResources(this, "$this");
             this.Controls.Add(this.ButtonSecurityCenter);
             this.Controls.Add(this.InsiderBuildNumberText);
             this.Controls.Add(this.CurrentWindowInfo);
@@ -590,8 +585,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Timer Timeout;
         private System.Windows.Forms.PictureBox logo;
         private System.Windows.Forms.PictureBox CloseBTN;
         private System.Windows.Forms.Button SelectServerBtn;

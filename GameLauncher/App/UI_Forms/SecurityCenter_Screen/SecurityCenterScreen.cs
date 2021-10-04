@@ -98,6 +98,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                 DiscordLauncherPresence.Status(RPCStateCache, null);
                 IsSecurityCenterOpen = DisableButtonFRAPI = DisableButtonDRAPI = DisableButtonDRAPI = DisableButtonPRC = false;
                 RPCStateCache = null;
+                GC.Collect();
             };
 
             DiscordLauncherPresence.Status("Security Center", null);

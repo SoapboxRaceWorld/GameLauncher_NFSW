@@ -42,6 +42,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             this.Closing += (x, CloseForm) =>
             {
                 IsWelcomeScreenOpen = false;
+                GC.Collect();
             };
         }
 
@@ -193,18 +194,8 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
 
                     if (!VisualsAPIChecker.CarbonAPITwo())
                     {
-                        //ListStatusText.Text = "WOPL List - Online";
                         ListStatusText.Text = "API Lists Connection - Error";
-                        /*
-                        if (!VisualsAPIChecker.WOPLAPI())
-                        {
-                            StatusCheck = true;
-
-                            if(CDNListUpdater.CleanList.Count == 0)
-                            {
-                                ListStatusText.Text = "API Lists Connection - Error";
-                            }
-                        }*/
+                        StatusCheck = true;
                     }
                 }
             }

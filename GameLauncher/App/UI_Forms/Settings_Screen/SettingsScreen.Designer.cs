@@ -215,7 +215,6 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsCDNPick.Name = "SettingsCDNPick";
             this.SettingsCDNPick.Size = new System.Drawing.Size(287, 21);
             this.SettingsCDNPick.TabIndex = 101;
-            this.SettingsCDNPick.SelectedIndexChanged += new System.EventHandler(this.SettingsCDNPick_SelectedIndexChanged);
             // 
             // SettingsLanguageText
             // 
@@ -379,9 +378,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsNetworkText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsNetworkText.Location = new System.Drawing.Point(418, 222);
             this.SettingsNetworkText.Name = "SettingsNetworkText";
-            this.SettingsNetworkText.Size = new System.Drawing.Size(164, 14);
+            this.SettingsNetworkText.Size = new System.Drawing.Size(210, 14);
             this.SettingsNetworkText.TabIndex = 178;
-            this.SettingsNetworkText.Text = "CONNECTION STATUS:";
+            this.SettingsNetworkText.Text = "API CONNECTION STATUS:";
             this.SettingsNetworkText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // SettingsMainSrvText

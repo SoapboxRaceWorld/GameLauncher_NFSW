@@ -147,6 +147,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\Classes\LauncherCore\Support\FormsControls.cs" />
     <Compile Include="App\UI_Forms\AddServer_Screen\AddServer.cs">
       <SubType>Form</SubType>
     </Compile>

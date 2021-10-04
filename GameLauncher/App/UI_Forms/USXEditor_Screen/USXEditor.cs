@@ -77,6 +77,8 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
                     Hover.RemoveAll();
                     Hover.Dispose();
                 }
+
+                GC.Collect();
             };
         }
 

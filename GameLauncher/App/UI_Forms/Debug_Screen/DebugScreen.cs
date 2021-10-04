@@ -50,14 +50,13 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
 
             data.ForeColor = Theming.WinFormSecondaryTextForeColor;
             data.GridColor = Theming.WinFormGridForeColor;
-
+            this.Closing += (x, y) =>
+            {
+                GC.Collect();
+            };
             Shown += (x, y) =>
             {
-                try
-                {
-                    Application.OpenForms["DebugScreen"].Activate();
-                }
-                catch { }
+                Application.OpenForms[this.Name].Activate();
                 this.BringToFront();
             };
         }

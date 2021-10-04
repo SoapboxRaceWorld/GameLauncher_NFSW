@@ -43,6 +43,7 @@ namespace GameLauncher.App.UI_Forms.About_Screen
             this.Closing += (x, y) =>
             {
                 IsAboutOpen = false;
+                GC.Collect();
             };
         }
 

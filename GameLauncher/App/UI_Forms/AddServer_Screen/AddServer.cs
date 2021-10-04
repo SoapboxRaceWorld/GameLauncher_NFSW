@@ -48,6 +48,7 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
             this.Closing += (x, CloseForm) =>
             {
                 IsAddServerOpen = false;
+                GC.Collect();
             };
         }
 

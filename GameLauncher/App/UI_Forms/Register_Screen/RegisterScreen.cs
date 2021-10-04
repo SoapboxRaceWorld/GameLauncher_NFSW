@@ -52,6 +52,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
             {
                 DiscordLauncherPresence.Status("Idle Ready", null);
                 IsRegisterScreenOpen = false;
+                GC.Collect();
             };
         }
 

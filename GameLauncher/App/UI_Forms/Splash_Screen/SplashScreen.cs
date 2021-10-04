@@ -71,6 +71,7 @@ namespace GameLauncher.App.UI_Forms.Splash_Screen
             this.Closing += (x, y) =>
             {
                 IsSplashScreenLive = false;
+                GC.Collect();
             };
             Shown += (x, y) =>
             {
