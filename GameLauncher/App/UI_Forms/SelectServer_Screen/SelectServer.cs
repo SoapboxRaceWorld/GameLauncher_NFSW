@@ -233,38 +233,38 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
 
                             if (string.IsNullOrWhiteSpace(ServerJson))
                             {
-                                ServerListRenderer.SafeInvoke(() =>
+                                ServerListRenderer.SafeBeginInvokeAction(ServerListRenderer => 
                                 {
                                     ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
                                     ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
                                     ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
                                     ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
                                     ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
-                                }, this);
+                                });
                             }
                             else if (!IsJSONValid.ValidJson(ServerJson))
                             {
-                                ServerListRenderer.SafeInvoke(() =>
+                                ServerListRenderer.SafeBeginInvokeAction(ServerListRenderer =>
                                 {
                                     ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
                                     ServerListRenderer.Items[serverid].SubItems[2].Text = "-?-";
                                     ServerListRenderer.Items[serverid].SubItems[3].Text = "-?-";
                                     ServerListRenderer.Items[serverid].SubItems[4].Text = "-?-";
                                     ServerListRenderer.Items[serverid].SubItems[5].Text = "-?-";
-                                }, this);
+                                });
                             }
                             else
                             {
                                 ServerJsonData = JsonConvert.DeserializeObject<GetServerInformation>(ServerJson);
 
-                                ServerListRenderer.SafeInvoke(() =>
+                                ServerListRenderer.SafeBeginInvokeAction(ServerListRenderer =>
                                 {
                                     ServerListRenderer.Items[serverid].SubItems[1].Text = (!string.IsNullOrWhiteSpace(ServerJsonData.serverName)) ?
                                         ServerJsonData.serverName : ServerName;
                                     ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(ServerJsonData.country.ToString());
                                     ServerListRenderer.Items[serverid].SubItems[3].Text = ServerJsonData.onlineNumber.ToString();
                                     ServerListRenderer.Items[serverid].SubItems[4].Text = ServerJsonData.numberOfRegistered.ToString();
-                                }, this);
+                                });
 
                                 Ping CheckMate = null;
 
@@ -278,25 +278,19 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                                         {
                                             if (e3.Reply.Status == IPStatus.Success && ServerName != "Offline Built-In Server")
                                             {
-                                                ServerListRenderer.SafeInvoke(() =>
-                                                {
-                                                    ServerListRenderer.Items[serverid].SubItems[5].Text = e3.Reply.RoundtripTime + "ms";
-                                                }, this);
+                                                ServerListRenderer.SafeBeginInvokeAction(ServerListRenderer =>
+                                                ServerListRenderer.Items[serverid].SubItems[5].Text = e3.Reply.RoundtripTime + "ms");
                                             }
                                             else
                                             {
-                                                ServerListRenderer.SafeInvoke(() =>
-                                                {
-                                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "!?";
-                                                }, this);
+                                                ServerListRenderer.SafeBeginInvokeAction(ServerListRenderer =>
+                                                ServerListRenderer.Items[serverid].SubItems[5].Text = "!?");
                                             }
                                         }
                                         else
                                         {
-                                            ServerListRenderer.SafeInvoke(() =>
-                                            {
-                                                ServerListRenderer.Items[serverid].SubItems[5].Text = "N/A";
-                                            }, this);
+                                            ServerListRenderer.SafeBeginInvokeAction(ServerListRenderer =>
+                                            ServerListRenderer.Items[serverid].SubItems[5].Text = "N/A");
                                         }
 
                                         ((AutoResetEvent)e3.UserState).Set();
@@ -305,10 +299,8 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                                 }
                                 catch
                                 {
-                                    ServerListRenderer.SafeInvoke(() =>
-                                    {
-                                        ServerListRenderer.Items[serverid].SubItems[5].Text = "?";
-                                    }, this);
+                                    ServerListRenderer.SafeBeginInvokeAction(ServerListRenderer =>
+                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "?");
                                 }
                                 finally
                                 {
@@ -321,14 +313,14 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                         }
                         catch
                         {
-                            ServerListRenderer.SafeInvoke(() =>
+                            ServerListRenderer.SafeBeginInvokeAction(ServerListRenderer =>
                             {
                                 ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
                                 ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
                                 ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
                                 ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
                                 ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
-                            }, this);
+                            });
                         }
                         finally
                         {
@@ -350,10 +342,8 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
 
                         if (ServersToPing.Count == 0)
                         {
-                            Loading.SafeInvoke(() =>
-                            {
-                                Loading.Text = string.Empty;
-                            }, this);
+                            Loading.SafeBeginInvokeAction(Loading =>
+                            Loading.Text = string.Empty);
                         }
 
                         Application.DoEvents();

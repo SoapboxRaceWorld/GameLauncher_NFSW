@@ -185,8 +185,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     {
                         if (XMLServerCore.NodeReader(sbrwXml, "NodeOnly", "LoginStatusVO", "NodeOnly") == "VAILD NODE - LAUNCHER")
                         {
-                            if (XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/Ban", "InnerText") != "INVALID VALUE - LAUNCHER" &&
-                                XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/Ban", "InnerText") != "ERROR VALUE - LAUNCHER")
+                            if (XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/Ban", "InnerText") != "EMPTY VALUE - LAUNCHER")
                             {
                                 if (XMLServerCore.NodeReader(sbrwXml, "NodeOnly", "LoginStatusVO/Description", "NodeOnly") == "VAILD NODE - LAUNCHER")
                                 {
@@ -417,7 +416,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 }
                 if (Type == "InnerText")
                 {
-                    if (string.IsNullOrWhiteSpace(LocationData.SelectSingleNode(FullNodePath).InnerText))
+                    if (string.IsNullOrWhiteSpace(LocationData.SelectSingleNode(FullNodePath) != null ? LocationData.SelectSingleNode(FullNodePath).InnerText : string.Empty))
                     {
                         if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                         {
@@ -430,7 +429,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 }
                 else if (Type == "NodeOnly")
                 {
-                    if (LocationData.SelectSingleNode(FullNodePath) == null)
+                    if ((LocationData.SelectSingleNode(FullNodePath)??null) == null)
                     {
                         if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                         {
