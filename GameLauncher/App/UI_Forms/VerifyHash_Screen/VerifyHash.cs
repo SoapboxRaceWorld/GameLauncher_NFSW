@@ -373,8 +373,10 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 else
                 {
                     /* Fetch and Read Remote checksums.dat */
-                    ScanProgressText.SafeBeginInvokeAction(ScanProgressText =>
-                    ScanProgressText.Text = "Downloading Checksums File");
+                    ScanProgressText.SafeInvoke(() =>
+                    {
+                        ScanProgressText.Text = "Downloading Checksums File";
+                    }, this);
                     
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri(FinalCDNURL + "/unpacked/checksums.dat");
@@ -428,11 +430,11 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 totalFilesScanned = 0;
 
                 /* START Show Warning Text */
-                VerifyHashText.SafeBeginInvokeAction(VerifyHashText =>
+                VerifyHashText.SafeInvoke(() =>
                 {
                     VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
                     VerifyHashText.Text = "Warning:\n Stopping the Scan before it is complete\nWill result in needing to start over!";
-                });
+                }, this);
                 /* END Show Warning Text */
 
                 foreach (string[] file in scannedHashes)
@@ -459,52 +461,67 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                         }
                     }
                     totalFilesScanned++;
-                    ScanProgressText.SafeBeginInvokeAction(ScanProgressText =>
-                    ScanProgressText.Text = "Scanning Files: " + (totalFilesScanned * 100 / getFilesToCheck.Length) + "%");
+                    ScanProgressText.SafeInvoke(() =>
+                    {
+                        ScanProgressText.Text = "Scanning Files: " + (totalFilesScanned * 100 / getFilesToCheck.Length) + "%";
+                    }, this);
 
-                    ScanProgressBar.SafeBeginInvokeAction(ScanProgressBar =>
-                    ScanProgressBar.Value = totalFilesScanned * 100 / getFilesToCheck.Length);
+                    ScanProgressBar.SafeInvoke(() =>
+                    {
+                        ScanProgressBar.Value = totalFilesScanned * 100 / getFilesToCheck.Length;
+                    }, this);
                 }
 
                 Log.Info("VERIFY HASH: Scan Completed");
 
                 if (!InvalidFileList.Any())
                 {
-                    ScanProgressBar.SafeBeginInvokeAction(ScanProgressBar =>
-                    ScanProgressBar.Value = totalFilesScanned * 100 / getFilesToCheck.Length);
+                    StartScanner.SafeInvoke(() =>
+                    {
+                        StartScanner.Visible = false;
+                    }, this);
 
-                    StartScanner.SafeBeginInvokeAction(StartScanner =>
-                    StartScanner.Visible = false);
+                    StopScanner.SafeInvoke(() =>
+                    {
+                        StopScanner.Visible = false;
+                    }, this);
 
-                    StopScanner.SafeBeginInvokeAction(StopScanner =>
-                    StopScanner.Visible = false);
+                    StartScanner.SafeInvoke(() =>
+                    {
+                        StartScanner.Visible = false;
+                    }, this);
 
-                    StartScanner.SafeBeginInvokeAction(StartScanner =>
-                    StartScanner.Visible = false);
-
-                    ScanProgressText.SafeBeginInvokeAction(ScanProgressText =>
-                    ScanProgressText.Text = "Scan Complete. No Files Missing or Invalid!");
+                    ScanProgressText.SafeInvoke(() =>
+                    {
+                        ScanProgressText.Text = "Scan Complete. No Files Missing or Invalid!";
+                    }, this);
 
                     /* Hide the DownloadProgressBar as un-needed */
-                    DownloadProgressBar.SafeBeginInvokeAction(DownloadProgressBar =>
-                    DownloadProgressBar.Visible = false);
+                    DownloadProgressBar.SafeInvoke(() =>
+                    {
+                        DownloadProgressBar.Visible = false;
+                    }, this);
 
-                    DownloadProgressText.SafeBeginInvokeAction(DownloadProgressText =>
-                    DownloadProgressText.Visible = false);
+                    DownloadProgressText.SafeInvoke(() =>
+                    {
+                        DownloadProgressText.Visible = false;
+                    }, this);
                     /* Update the player messaging that we're done */
-                    VerifyHashText.SafeBeginInvokeAction(VerifyHashText =>
+                    VerifyHashText.SafeInvoke(() =>
                     {
                         VerifyHashText.ForeColor = Theming.WinFormSuccessTextForeColor;
                         VerifyHashText.Text = "Excellent News! There are ZERO\nmissing or invalid Gamefiles!";
-                    });
+                    }, this);
 
                     Integrity();
                     GameScanner(false);
                 }
                 else
                 {
-                    ScanProgressText.SafeBeginInvokeAction(ScanProgressText =>
-                    ScanProgressText.Text = "Found Invalid or Missing Files");
+                    ScanProgressText.SafeInvoke(() =>
+                    {
+                        ScanProgressText.Text = "Found Invalid or Missing Files";
+                    }, this);
                     
                     File.WriteAllLines("invalidfiles.dat", InvalidFileList);
                     Log.Info("VERIFY HASH: Found Invalid or Missing Files and will Start File Downloader");
@@ -528,19 +545,27 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
         {
             DiscordLauncherPresence.Status("Verify Bad", null);
             /* START Show Redownloader Progress*/
-            StartScanner.SafeBeginInvokeAction(StartScanner =>
-            StartScanner.Visible = false);
+            StartScanner.SafeInvoke(() =>
+            {
+                StartScanner.Visible = false;
+            }, this);
 
-            StopScanner.SafeBeginInvokeAction(StopScanner =>
-            StopScanner.Visible = false);
+            StopScanner.SafeInvoke(() =>
+            {
+                StopScanner.Visible = false;
+            }, this);
 
-            VerifyHashText.SafeBeginInvokeAction(VerifyHashText =>
-            VerifyHashText.Text = "Currently (re)downloading files\nThis part may take awhile\ndepending on your connection.");
+            VerifyHashText.SafeInvoke(() =>
+            {
+                VerifyHashText.Text = "Currently (re)downloading files\nThis part may take awhile\ndepending on your connection.";
+            }, this);
 
             if (File.Exists("invalidfiles.dat") && File.ReadAllLines("invalidfiles.dat") != null)
             {
-                DownloadProgressText.SafeBeginInvokeAction(DownloadProgressText =>
-                DownloadProgressText.Text = "\nPreparing to Download Files");
+                DownloadProgressText.SafeInvoke(() =>
+                {
+                    DownloadProgressText.Text = "\nPreparing to Download Files";
+                }, this);
                 
                 string[] files = File.ReadAllLines("invalidfiles.dat");
 
@@ -650,12 +675,16 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + redownloadErrorCount + " out of " + currentCount);
                 LogVerify.Downloaded("File: " + CurrentDownloadingFile);
 
-                DownloadProgressText.SafeBeginInvokeAction(DownloadProgressText =>
-                DownloadProgressText.Text = "Failed To Download File [ " + redownloadedCount + redownloadErrorCount + " / " + currentCount + " ]:" +
-                "\n" + CurrentDownloadingFile);
+                DownloadProgressText.SafeInvoke(() =>
+                {
+                    DownloadProgressText.Text = "Failed To Download File [ " + redownloadedCount + redownloadErrorCount + " / " + currentCount + " ]:" +
+                    "\n" + CurrentDownloadingFile;
+                }, this);
 
-                DownloadProgressBar.SafeBeginInvokeAction(DownloadProgressBar =>
-                DownloadProgressBar.Value = redownloadedCount + redownloadErrorCount * 100 / currentCount);
+                DownloadProgressBar.SafeInvoke(() =>
+                {
+                    DownloadProgressBar.Value = redownloadedCount + redownloadErrorCount * 100 / currentCount;
+                }, this);
 
                 LogVerify.Error("Download for [" + CurrentDownloadingFile + "] - " +
                 (e.Cancelled ? "has been Cancelled" :
@@ -663,20 +692,26 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
 
                 if (redownloadedCount + redownloadErrorCount == currentCount)
                 {
-                    DownloadProgressText.SafeBeginInvokeAction(DownloadProgressText =>
-                    DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded");
+                    DownloadProgressText.SafeInvoke(() =>
+                    {
+                        DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
+                    }, this);
 
-                    VerifyHashText.SafeBeginInvokeAction(VerifyHashText =>
+                    VerifyHashText.SafeInvoke(() =>
                     {
                         VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
                         VerifyHashText.Text = redownloadErrorCount + " Files Failed to Download. Check Log for Details";
-                    });
+                    }, this);
 
-                    StartScanner.SafeBeginInvokeAction(StartScanner =>
-                    StartScanner.Visible = false);
+                    StartScanner.SafeInvoke(() =>
+                    {
+                        StartScanner.Visible = false;
+                    }, this);
 
-                    StopScanner.SafeBeginInvokeAction(StopScanner =>
-                    StopScanner.Visible = false);
+                    StopScanner.SafeInvoke(() =>
+                    {
+                        StopScanner.Visible = false;
+                    }, this);
 
                     DownloadErrorEncountered = true;
 
@@ -690,49 +725,65 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + " out of " + currentCount);
                 LogVerify.Downloaded("File: " + CurrentDownloadingFile);
 
-                DownloadProgressText.SafeBeginInvokeAction(DownloadProgressText =>
-                DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + CurrentDownloadingFile);
+                DownloadProgressText.SafeInvoke(() =>
+                {
+                    DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + CurrentDownloadingFile;
+                }, this);
 
-                DownloadProgressBar.SafeBeginInvokeAction(DownloadProgressBar =>
-                DownloadProgressBar.Value = redownloadedCount * 100 / currentCount);
+                DownloadProgressBar.SafeInvoke(() =>
+                {
+                    DownloadProgressBar.Value = redownloadedCount * 100 / currentCount;
+                }, this);
 
                 if (redownloadedCount == currentCount)
                 {
                     Integrity();
                     Log.Info("VERIFY HASH: Re-downloaded Count: " + redownloadedCount + " Current File Count: " + currentCount);
-                    DownloadProgressText.SafeBeginInvokeAction(DownloadProgressText =>
-                    DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were downloaded");
+                    DownloadProgressText.SafeInvoke(() =>
+                    {
+                        DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were downloaded";
+                    }, this);
 
-                    VerifyHashText.SafeBeginInvokeAction(VerifyHashText =>
+                    VerifyHashText.SafeInvoke(() =>
                     {
                         VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
                         VerifyHashText.Text = "Yay! Scanning and Downloading\n is now completed on Gamefiles";
-                    });
+                    }, this);
 
-                    StartScanner.SafeBeginInvokeAction(StartScanner =>
-                    StartScanner.Visible = false);
+                    StartScanner.SafeInvoke(() =>
+                    {
+                        StartScanner.Visible = false;
+                    }, this);
 
-                    StopScanner.SafeBeginInvokeAction(StopScanner =>
-                    StopScanner.Visible = false);
+                    StopScanner.SafeInvoke(() =>
+                    {
+                        StopScanner.Visible = false;
+                    }, this);
 
                     GameScanner(false);
                 }
                 else if (redownloadedCount + redownloadErrorCount == currentCount)
                 {
-                    DownloadProgressText.SafeBeginInvokeAction(DownloadProgressText =>
-                    DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were downloaded");
+                    DownloadProgressText.SafeInvoke(() =>
+                    {
+                        DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were downloaded";
+                    }, this);
 
-                    VerifyHashText.SafeBeginInvokeAction(VerifyHashText =>
+                    VerifyHashText.SafeInvoke(() =>
                     {
                         VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
                         VerifyHashText.Text = redownloadErrorCount + " Files Failed to Download. Check Log for Details";
-                    });
+                    }, this);
 
-                    StartScanner.SafeBeginInvokeAction(StartScanner =>
-                    StartScanner.Visible = false);
+                    StartScanner.SafeInvoke(() =>
+                    {
+                        StartScanner.Visible = false;
+                    }, this);
 
-                    StopScanner.SafeBeginInvokeAction(StopScanner =>
-                    StopScanner.Visible = false);
+                    StopScanner.SafeInvoke(() =>
+                    {
+                        StopScanner.Visible = false;
+                    }, this);
 
                     DownloadErrorEncountered = true;
 
@@ -745,33 +796,41 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
         {
             if (e.TotalBytesToReceive >= 1)
             {
-                DownloadProgressText.SafeBeginInvokeAction(DownloadProgressText =>
+                DownloadProgressText.SafeInvoke(() =>
                 {
                     DownloadProgressText.Text = "Downloading File [ " + redownloadedCount + " / "
                     + currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + TimeConversions.FormatFileSize(e.BytesReceived) + " of "
                     + TimeConversions.FormatFileSize(e.TotalBytesToReceive);
-                });
+                }, this);
             }
         }
 
         private void StartScanner_Click(object sender, EventArgs e)
         {
-            StartScanner.SafeBeginInvokeAction(StartScanner =>
-            StartScanner.Visible = false);
+            StartScanner.SafeInvoke(() =>
+            {
+                StartScanner.Visible = false;
+            }, this);
 
-            StopScanner.SafeBeginInvokeAction(StopScanner =>
-            StopScanner.Visible = false);
+            StopScanner.SafeInvoke(() =>
+            {
+                StopScanner.Visible = false;
+            }, this);
 
             GameScanner(true);
         }
 
         private void StopScanner_Click(object sender, EventArgs e)
         {
-            StartScanner.SafeBeginInvokeAction(StartScanner =>
-            StartScanner.Visible = true);
+            StartScanner.SafeInvoke(() =>
+            {
+                StartScanner.Visible = true;
+            }, this);
 
-            StopScanner.SafeBeginInvokeAction(StopScanner =>
-            StopScanner.Visible = false);
+            StopScanner.SafeInvoke(() =>
+            {
+                StopScanner.Visible = false;
+            }, this);
 
             GameScanner(false);
         }
