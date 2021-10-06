@@ -1409,6 +1409,11 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             LogoutButton.BackgroundImage = Theming.GrayButtonHover;
         }
 
+        private void ServerPick_MouseWheel(object sender, MouseEventArgs e)
+        {
+            ((HandledMouseEventArgs)e).Handled = true;
+        }
+
         /* SETTINGS PAGE LAYOUT */
         private void SettingsButton_Click(object sender, EventArgs e)
         {
@@ -3280,6 +3285,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
             ServerPick.SelectedIndexChanged += new EventHandler(ServerPick_SelectedIndexChanged);
             ServerPick.DrawItem += new DrawItemEventHandler(FunctionEvents.ServerList_Menu_DrawItem);
+            ServerPick.MouseWheel += new MouseEventHandler(ServerPick_MouseWheel);
 
             ForgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(FunctionEvents.ForgotPassword_LinkClicked);
 
