@@ -91,7 +91,6 @@
             this.StartScanner.TabIndex = 3;
             this.StartScanner.Text = "Start Scan";
             this.StartScanner.UseVisualStyleBackColor = true;
-            this.StartScanner.Click += new System.EventHandler(this.StartScanner_Click);
             // 
             // StopScanner
             // 
@@ -107,7 +106,6 @@
             this.StopScanner.Text = "Stop Scan";
             this.StopScanner.UseVisualStyleBackColor = true;
             this.StopScanner.Visible = false;
-            this.StopScanner.Click += new System.EventHandler(this.StopScanner_Click);
             // 
             // VersionLabel
             // 

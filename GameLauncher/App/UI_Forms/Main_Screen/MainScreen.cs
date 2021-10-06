@@ -286,12 +286,11 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     }
                 }
 
-                BeginInvoke((MethodInvoker)delegate
+                this.SafeEndInvokeAsyncCatch(this.SafeBeginInvokeActionAsync(Launcher_X_Form =>
                 {
                     Log.Core("CORE: 'GetServerInformation' from all Servers in Server List and Download Selected Server Banners");
                     LaunchNfsw();
-                });
-
+                }));
                 this.BringToFront();
 
                 try
@@ -681,7 +680,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
         private void ServerPick_SelectedIndexChanged(object sender, EventArgs e)
         {
-            try { GC.Collect(); } catch { }
+            GC.Collect();
             MainEmailBorder.Image = Theming.BorderEmail;
             MainPasswordBorder.Image = Theming.BorderPassword;
             /* Disable Certain Functions */
@@ -1025,7 +1024,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             LoginButton.Enabled = true;
                             RegisterText.Enabled = true;
                             InformationCache.SelectedServerCategory = ((ServerList)ServerPick.SelectedItem).Category;
-                            InformationCache.RestartTimer =
+                            InformationCache.RestartTimer = 
                             (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
 
                             if ((InformationCache.SelectedServerCategory ?? string.Empty).ToUpper() == "DEV" || 
@@ -1164,7 +1163,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                         {
                                             /* Load cached banner! */
                                             Banner.Image = Banners.Grayscale(BannerCache);
-                                            try { GC.Collect(); } catch { }
+                                            GC.Collect();
                                         }
 
                                         if (Client_A != null)
@@ -1219,16 +1218,16 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                     }
                                 };
                             }
-                            else if (File.Exists(BannerCache) && Application.OpenForms["MainScreen"] != null)
+                            else if (File.Exists(BannerCache) && !Application.OpenForms[this.Name].IsDisposed)
                             {
                                 /* Load cached banner! */
                                 Banner.Image = Banners.Grayscale(BannerCache);
-                                try { GC.Collect(); } catch { }
+                                GC.Collect();
                             }
-                            else if (Application.OpenForms["MainScreen"] != null)
+                            else if (!Application.OpenForms[this.Name].IsDisposed)
                             {
                                 Banner.BackColor = Theming.BannerBackColor;
-                                try { GC.Collect(); } catch { }
+                                GC.Collect();
                             }
                         }
                         catch (Exception Error)
@@ -1240,13 +1239,13 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     }
                 }
 
-                if (Application.OpenForms["MainScreen"] != null)
+                if (Application.OpenForms[this.Name] != null)
                 {
-                    try { GC.Collect(); } catch { }
+                    GC.Collect();
                 }
             };
 
-            try { GC.Collect(); } catch { }
+            GC.Collect();
         }
 
         /* Main Screen Elements */
@@ -1525,7 +1524,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             nfswProcess.ProcessorAffinity = (IntPtr)processorAffinity;
 
             AntiCheat.process_id = nfswProcess.Id;
-            CloseBTN.SafeInvoke(() =>
+            CloseBTN.SafeInvokeAction(() =>
             {
                 CloseBTN.Visible = false;
             }, this);
@@ -1535,14 +1534,14 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             System.Timers.Timer shutdowntimer = new System.Timers.Timer();
             shutdowntimer.Elapsed += (x2, y2) =>
             {
-                try { GC.Collect(); } catch { }
+                GC.Collect();
 
                 if (ProcessID == 0)
                 {
                     ProcessID++;
                     InformationCache.RestartTimer -= ServerProxy.Running() ? 120 : 60;
 
-                    x.SafeInvoke(() =>
+                    x.SafeInvokeAction(() =>
                     {
                         x.WindowState = FormWindowState.Minimized;
                         x.ShowInTaskbar = false;
@@ -1572,12 +1571,19 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                 if (InformationCache.RestartTimer == 300)
                 {
-                    Notification.Visible = true;
-                    Notification.BalloonTipIcon = ToolTipIcon.Info;
-                    Notification.BalloonTipTitle = "Force Restart - " + ServerListUpdater.ServerName("In-Game");
-                    Notification.BalloonTipText = "Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.";
-                    Notification.ShowBalloonTip(5000);
-                    Notification.Dispose();
+                    try
+                    {
+                        Notification.Visible = true;
+                        Notification.BalloonTipIcon = ToolTipIcon.Info;
+                        Notification.BalloonTipTitle = "Force Restart - " + ServerListUpdater.ServerName("In-Game");
+                        Notification.BalloonTipText = "Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.";
+                        Notification.ShowBalloonTip(5000);
+                        Notification.Dispose();
+                    }
+                    finally
+                    {
+                        GC.Collect();
+                    }
                 }                
                 else if (InformationCache.RestartTimer <= 0)
                 {
@@ -1672,103 +1678,21 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     }
                     else
                     {
-                        CloseBTN.SafeInvoke(() =>
-                        {
-                            CloseBTN.Visible = true;
-                        }, this);
-
                         if (AntiCheat.Secret != null)
                         {
                             AntiCheat.Secret.Abort();
                         }
 
-                        x.BeginInvoke(new Action(() =>
+                        x.SafeEndInvokeAsyncCatch(x.SafeBeginInvokeActionAsync(Launcher_X_Form =>
                         {
                             x.WindowState = FormWindowState.Normal;
                             x.ShowInTaskbar = true;
 
-                            String ErrorMsg = "Launcher Was Unable to Determine Error Code";
-                            switch (exitCode)
-                            {
-                                case -1073741819:
-                                    ErrorMsg = "Game Crash: Access Violation (0x" + exitCode.ToString("X") + ")";
-                                    break;
-                                case -1073740940:
-                                    ErrorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
-                                    break;
-                                case -1073740791:
-                                    ErrorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
-                                    break;
-                                case -805306369:
-                                    ErrorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
-                                    break;
-                                case -1073741515:
-                                    ErrorMsg = "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")";
-                                    break;
-                                case -1073740972:
-                                    ErrorMsg = "Game Crash: Debugger crash (0x" + exitCode.ToString("X") + ")";
-                                    break;
-                                case -1073741676:
-                                    ErrorMsg = "Game Crash: Division by Zero (0x" + exitCode.ToString("X") + ")";
-                                    break;
-                                case 1:
-                                    ErrorMsg = "The process nfsw.exe was killed via Task Manager";
-                                    break;
-                                case 69:
-                                    ErrorMsg = "AllocationAssistant encountered an 'Out of Memory' condition";
-                                    break;
-                                case 2137:
-                                    ErrorMsg = "Launcher Forced Closed your Game." +
-                                "\nYou are Required to Restart the Game After " + TimeConversions.RelativeTime(serverSecondsToShutDown);
-                                    break;
-                                case 2017:
-                                    ErrorMsg = "Server replied with Code: " + Tokens.UserId + " (0x" + exitCode.ToString("X") + ")";
-                                    break;
-                                case -1:
-                                    ErrorMsg = "No DirectX resources. Please check if GPU has enough VRAM before playing";
-                                    break;
-                                case -3:
-                                    ErrorMsg = "The Server was unable to resolve the request";
-                                    break;
-                                case -4:
-                                    ErrorMsg = "Another instance is already executed";
-                                    break;
-                                case -5:
-                                    ErrorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
-                                    break;
-                                case -6:
-                                    ErrorMsg = "Server was unable to resolve your request";
-                                    break;
-                                case -7:
-                                    /* Known Affected Programs: MSI Dragon Center, Windows 10 1909 (Fix: Update to Latest)*/
-                                    ErrorMsg = "Corrupted Memory. Please check for interrupting Programs or System Updates.";
-                                    break;
-                                /* ModLoader */
-                                case 1450:
-                                    ErrorMsg = "ModNet: Unable to load ModLoader. Please Exclude Game Files with your Antivirus Software";
-                                    break;
-                                case 193:
-                                    ErrorMsg = "ModNet: Unable to load ModLoader. Please Install Microsoft Visual C++ Runtimes 2015-2019";
-                                    break;
-                                case 2:
-                                    ErrorMsg = "ModNet: Game was launched with invalid command line parameters.";
-                                    break;
-                                case 3:
-                                    ErrorMsg = "ModNet: .links file should not exist upon startup!";
-                                    break;
-                                case 4:
-                                    ErrorMsg = "ModNet: An Unhandled Error Appeared";
-                                    break;
-                                /* Generic Error */
-                                default:
-                                    ErrorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (0x" + exitCode.ToString("X") + ")";
-                                    break;
-                            }
-
-                            Log.Error("GAME CRASH [EXIT CODE]: " + exitCode.ToString() + " HEX: (0x" + exitCode.ToString("X") + ")" + " REASON: " + ErrorMsg);
+                            String Error_Msg = NFSW.ErrorTranslation(exitCode);
+                            Log.Error("GAME CRASH [EXIT CODE]: " + exitCode.ToString() + " HEX: (0x" + exitCode.ToString("X") + ")" + " REASON: " + Error_Msg);
 
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                            PlayProgressText.Text = ErrorMsg.ToUpper();
+                            PlayProgressText.Text = Error_Msg.ToUpper();
                             PlayProgress.Value = 100;
                             PlayProgress.ForeColor = Theming.Error;
 
@@ -1782,7 +1706,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             }
 
                             _nfswstarted.Abort();
-                            DialogResult restartApp = MessageBox.Show(null, ErrorMsg + "\nWould you like to restart the GameLauncher?", 
+                            DialogResult restartApp = MessageBox.Show(null, Error_Msg + "\nWould you like to restart the GameLauncher?",
                                 "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                             if (restartApp == DialogResult.Yes)
                             {
@@ -1797,20 +1721,20 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
         private void Client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e)
         {
-            PlayProgressTextTimer.SafeInvoke(() =>
+            PlayProgressTextTimer.SafeInvokeAction(() =>
             {
                 PlayProgressTextTimer.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
             }, this);
 
             if (e.TotalBytesToReceive >= 1)
             {
-                PlayProgressText.SafeInvoke(() =>
+                PlayProgressText.SafeInvokeAction(() =>
                 {
                     PlayProgressText.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + TimeConversions.FormatFileSize(e.BytesReceived) +
                 " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper();
                 }, this);
 
-                ExtractingProgress.SafeInvoke(() =>
+                ExtractingProgress.SafeInvokeAction(() =>
                 {
                     ExtractingProgress.Value = Convert.ToInt32(decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
                     ExtractingProgress.Width = Convert.ToInt32(decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
@@ -2547,23 +2471,23 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
         private void LaunchNfsw()
         {
-            PlayButton.SafeInvoke(() => 
+            PlayButton.SafeInvokeAction(() => 
             {
                 PlayButton.BackgroundImage = Theming.PlayButton;
                 PlayButton.ForeColor = Theming.ThirdTextForeColor;  
             }, this);
 
-            PlayProgressText.SafeInvoke(() =>
+            PlayProgressText.SafeInvokeAction(() =>
             {
                 PlayProgressText.Text = "Checking up all files".ToUpper();
             }, this);
 
-            PlayProgress.SafeInvoke(() =>
+            PlayProgress.SafeInvokeAction(() =>
             {
                 PlayProgress.Width = 0;
             }, this);
 
-            ExtractingProgress.SafeInvoke(() =>
+            ExtractingProgress.SafeInvokeAction(() =>
             {
                 ExtractingProgress.Width = 0;
             }, this);
@@ -2574,7 +2498,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             {
                 try
                 {
-                    PlayProgressText.SafeInvoke(() =>
+                    PlayProgressText.SafeInvokeAction(() =>
                     {
                         PlayProgressText.Text = "Loading list of files to download...".ToUpper();
                     }, this);
@@ -2586,7 +2510,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         {
                             if (d.TotalFreeSpace < 8589934592)
                             {
-                                ExtractingProgress.SafeInvoke(() =>
+                                ExtractingProgress.SafeInvokeAction(() =>
                                 {
                                     ExtractingProgress.Value = 100;
                                     ExtractingProgress.Width = 519;
@@ -2594,7 +2518,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                     ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
                                 }, this);
 
-                                PlayProgressText.SafeInvoke(() =>
+                                PlayProgressText.SafeInvokeAction(() =>
                                 {
                                     PlayProgressText.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper();
                                 }, this);
@@ -2637,17 +2561,17 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
         public void DownloadCoreFiles()
         {
-            PlayProgressText.SafeInvoke(() =>
+            PlayProgressText.SafeInvokeAction(() =>
             {
                 PlayProgressText.Text = "Checking Core Files...".ToUpper();
             }, this);
 
-            PlayProgress.SafeInvoke(() =>
+            PlayProgress.SafeInvokeAction(() =>
             {
                 PlayProgress.Width = 0;
             }, this);
 
-            ExtractingProgress.SafeInvoke(() =>
+            ExtractingProgress.SafeInvokeAction(() =>
             {
                 ExtractingProgress.Width = 0;
             }, this);
@@ -2658,12 +2582,12 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             /* Use Local Packed Archive for Install Source - DavidCarbon */
             if (File.Exists(filename_pack) && !File.Exists(GameExePath))
             {
-                PlayProgressText.SafeInvoke(() =>
+                PlayProgressText.SafeInvokeAction(() =>
                 {
                     PlayProgressText.Text = "Local GameFiles sbrwpack Found In Launcher Folder".ToUpper();
                 }, this);
 
-                PlayProgressTextTimer.SafeInvoke(() =>
+                PlayProgressTextTimer.SafeInvokeAction(() =>
                 {
                     PlayProgressTextTimer.Text = "Loading".ToUpper();
                 }, this);
@@ -2675,7 +2599,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             {
                 if (FileSettingsSave.CDN.StartsWith("http://localhost") || FileSettingsSave.CDN.StartsWith("https://localhost"))
                 {
-                    ExtractingProgress.SafeInvoke(() =>
+                    ExtractingProgress.SafeInvokeAction(() =>
                     {
                         ExtractingProgress.Value = 100;
                         ExtractingProgress.Width = 519;
@@ -2683,15 +2607,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
                     }, this);
 
-                    PlayProgressTextTimer.SafeInvoke(() =>
-                    {
-                        PlayProgressTextTimer.Text = "Failsafe CDN Detected".ToUpper();
-                    }, this);
-
-                    PlayProgressText.SafeInvoke(() =>
-                    {
-                        PlayProgressText.Text = "Please Choose a CDN from Settings Screen".ToUpper();
-                    }, this);
+                    PlayProgressTextTimer.SafeInvokeAction(() => PlayProgressTextTimer.Text = "Failsafe CDN Detected".ToUpper(), this);
+                    PlayProgressText.SafeInvokeAction(() => PlayProgressText.Text = "Please Choose a CDN from Settings Screen".ToUpper(), this);
 
                     TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
                     TaskbarProgress.SetValue(Handle, 100, 100);
@@ -2699,10 +2616,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 else
                 {
                     _downloadStartTime = DateTime.Now;
-                    PlayProgressTextTimer.SafeInvoke(() =>
-                    {
-                        PlayProgressTextTimer.Text = "Downloading: Core GameFiles".ToUpper();
-                    }, this);
+                    PlayProgressTextTimer.SafeInvokeAction(() => PlayProgressTextTimer.Text = "Downloading: Core GameFiles".ToUpper(), this);
                     Log.Info("DOWNLOAD: Getting Core Game Files");
                     _downloader.StartDownload(FileSettingsSave.CDN, string.Empty, FileSettingsSave.GameInstallation, false, false, 1130632198);
                 }
@@ -2715,17 +2629,17 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
         public void DownloadTracksFiles()
         {
-            PlayProgressText.SafeInvoke(() =>
+            PlayProgressText.SafeInvokeAction(() =>
             {
                 PlayProgressText.Text = "Checking Tracks Files...".ToUpper();
             }, this);
 
-            PlayProgress.SafeInvoke(() =>
+            PlayProgress.SafeInvokeAction(() =>
             {
                 PlayProgress.Width = 0;
             }, this);
 
-            ExtractingProgress.SafeInvoke(() =>
+            ExtractingProgress.SafeInvokeAction(() =>
             {
                 ExtractingProgress.Width = 0;
             }, this);
@@ -2736,7 +2650,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             if (!File.Exists(SpecificTracksFilePath))
             {
                 _downloadStartTime = DateTime.Now;
-                PlayProgressTextTimer.SafeInvoke(() =>
+                PlayProgressTextTimer.SafeInvokeAction(() =>
                 {
                     PlayProgressTextTimer.Text = "Downloading: Tracks Data".ToUpper();
                 }, this);
@@ -2751,17 +2665,17 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
         public void DownloadSpeechFiles()
         {
-            PlayProgressText.SafeInvoke(() =>
+            PlayProgressText.SafeInvokeAction(() =>
             {
                 PlayProgressText.Text = "Looking for correct Speech Files...".ToUpper();
             }, this);
 
-            PlayProgress.SafeInvoke(() =>
+            PlayProgress.SafeInvokeAction(() =>
             {
                 PlayProgress.Width = 0;
             }, this);
 
-            ExtractingProgress.SafeInvoke(() =>
+            ExtractingProgress.SafeInvokeAction(() =>
             {
                 ExtractingProgress.Width = 0;
             }, this);
@@ -2821,7 +2735,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 speechSize = DownloaderAddons.SpeechFilesSize();
             }
 
-            PlayProgressText.SafeInvoke(() =>
+            PlayProgressText.SafeInvokeAction(() =>
             {
                 PlayProgressText.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
             }, this);
@@ -2830,7 +2744,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             if (!File.Exists(SoundSpeechPath))
             {
                 _downloadStartTime = DateTime.Now;
-                PlayProgressTextTimer.SafeInvoke(() =>
+                PlayProgressTextTimer.SafeInvokeAction(() =>
                 {
                     PlayProgressTextTimer.Text = "Downloading: Language Audio".ToUpper();
                 }, this);
@@ -2840,7 +2754,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             else
             {
                 OnDownloadFinished();
-                PlayProgressTextTimer.SafeInvoke(() =>
+                PlayProgressTextTimer.SafeInvokeAction(() =>
                 {
                     PlayProgressTextTimer.Text = string.Empty;
                 }, this);
@@ -2856,7 +2770,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             {
                 TaskbarProgress.SetValue(Handle, 100, 100);
 
-                PlayProgress.SafeInvoke(() =>
+                PlayProgress.SafeInvokeAction(() =>
                 {
                     PlayProgress.Value = 100;
                     PlayProgress.Width = 519;
@@ -2886,7 +2800,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 {
                                     string fullName = entry.FullName;
 
-                                    ExtractingProgress.SafeInvoke(() =>
+                                    ExtractingProgress.SafeInvokeAction(() =>
                                     {
                                         ExtractingProgress.Value = (int)((long)100 * current / numFiles);
                                         ExtractingProgress.Width = (int)((long)519 * current / numFiles);
@@ -2896,12 +2810,12 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                                     if (!File.Exists(Path.Combine(FileSettingsSave.GameInstallation, fullName.Replace(".sbrw", String.Empty))))
                                     {
-                                        PlayProgressText.SafeInvoke(() =>
+                                        PlayProgressText.SafeInvokeAction(() =>
                                         {
                                             PlayProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper();
                                         }, this);
 
-                                        PlayProgressTextTimer.SafeInvoke(() =>
+                                        PlayProgressTextTimer.SafeInvokeAction(() =>
                                         {
                                             PlayProgressTextTimer.Text = "[" + current + " / " + archive.Entries.Count + "]";
                                         }, this);
@@ -2970,7 +2884,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                     }
                                     else
                                     {
-                                        PlayProgressText.SafeInvoke(() =>
+                                        PlayProgressText.SafeInvokeAction(() =>
                                         {
                                             PlayProgressText.Text = ("Skipping " + fullName).ToUpper();
                                         }, this);
@@ -2983,7 +2897,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                                     if (numFiles == current)
                                     {
-                                        PlayProgressTextTimer.SafeInvoke(() =>
+                                        PlayProgressTextTimer.SafeInvokeAction(() =>
                                         {
                                             PlayProgressTextTimer.Visible = false;
                                             PlayProgressTextTimer.Text = string.Empty;
@@ -3017,7 +2931,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             {
                 if (downloadCurrent < compressedLength)
                 {
-                    PlayProgressText.SafeInvoke(() =>
+                    PlayProgressText.SafeInvokeAction(() =>
                     {
                         PlayProgressText.Text = String.Format("{0} of {1} ({3}%) — {2}", TimeConversions.FormatFileSize(downloadCurrent), TimeConversions.FormatFileSize(compressedLength),
                             TimeConversions.EstimateFinishTime(downloadCurrent, compressedLength, _downloadStartTime), (int)(100 * downloadCurrent / compressedLength)).ToUpper();
@@ -3028,7 +2942,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
             try
             {
-                PlayProgress.SafeInvoke(() =>
+                PlayProgress.SafeInvokeAction(() =>
                 {
                     PlayProgress.Value = (int)(100 * downloadCurrent / compressedLength);
                     PlayProgress.Width = (int)(519 * downloadCurrent / compressedLength);
@@ -3042,7 +2956,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             {
                 TaskbarProgress.SetValue(Handle, 0, 100);
 
-                PlayProgress.SafeInvoke(() =>
+                PlayProgress.SafeInvokeAction(() =>
                 {
                     PlayProgress.Value = 0;
                     PlayProgress.Width = 0;
@@ -3072,7 +2986,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             DiscordLauncherPresence.Download = false;
             DiscordLauncherPresence.Status("Idle Ready", null);
 
-            PlayProgressText.SafeInvoke(() =>
+            PlayProgressText.SafeInvokeAction(() =>
             {
                 PlayProgressText.Text = "Ready!".ToUpper();
             }, this);
@@ -3088,7 +3002,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             _isDownloading = false;
             _playenabled = true;
 
-            ExtractingProgress.SafeInvoke(() =>
+            ExtractingProgress.SafeInvokeAction(() =>
             {
                 ExtractingProgress.Value = 100;
                 ExtractingProgress.Width = 519;
@@ -3142,7 +3056,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             {
                 if (PlayProgress.Value == 100)
                 {
-                    PlayProgressText.SafeInvoke(() =>
+                    PlayProgressText.SafeInvokeAction(() =>
                     {
                         PlayProgressText.Text = String.Format("{0} of {1} : ({3}%) — {2}", TimeConversions.FormatFileSize(currentCount), TimeConversions.FormatFileSize(allFilesCount),
                         TimeConversions.EstimateFinishTime(currentCount, allFilesCount, _downloadStartTime), (int)(100 * currentCount / allFilesCount)).ToUpper();
@@ -3153,7 +3067,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
             try
             {
-                ExtractingProgress.SafeInvoke(() =>
+                ExtractingProgress.SafeInvokeAction(() =>
                 {
                     ExtractingProgress.Value = (int)(100 * currentCount / allFilesCount);
                     ExtractingProgress.Width = (int)(519 * currentCount / allFilesCount);
@@ -3168,7 +3082,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             if (!string.IsNullOrWhiteSpace(MainEmail.Text))
             {
                 TempEmailCache = MainEmail.Text;
-                MainEmail.SafeInvoke(() =>
+                MainEmail.SafeInvokeAction(() =>
                 {
                     MainEmail.Text = "EMAIL IS HIDDEN";
                 }, this);
@@ -3176,7 +3090,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             MessageBox.Show(message, header);
             if (!string.IsNullOrWhiteSpace(TempEmailCache))
             {
-                MainEmail.SafeInvoke(() =>
+                MainEmail.SafeInvokeAction(() =>
                 {
                     MainEmail.Text = TempEmailCache;
                 }, this);

@@ -218,16 +218,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             RegistryKey sk = null;
             try
             {
-                sk = Registry.LocalMachine.OpenSubKey(subKey, false);
+                sk = Registry.LocalMachine.OpenSubKey(subKey, false) ?? null;
                 if (sk == null)
-                    return null;
+                    return string.Empty;
                 else
                     return sk.GetValue(keyName).ToString();
             }
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("READ REGISTRYKEY", null, Error, null, true);
-                return null;
+                return string.Empty;
             }
             finally
             {

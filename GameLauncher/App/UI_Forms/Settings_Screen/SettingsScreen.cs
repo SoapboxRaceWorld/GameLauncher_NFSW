@@ -67,7 +67,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
         public SettingsScreen()
         {
-            IsSettingsScreenOpen = false;
+            IsSettingsScreenOpen = true;
             InitializeComponent();
             SetVisuals();
             this.Closing += (x, y) =>
@@ -111,58 +111,58 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             {
                 /* Checking Blue */
                 case 0:
-                    Elements.SafeInvoke(() =>
+                    Elements.SafeInvokeAction(() =>
                     {
                         Elements.ForeColor = Theming.BlueForeColorButton;
                         Elements.BackColor = Theming.BlueBackColorButton;
                         Elements.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
                         Elements.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
                         Elements.Enabled = EnabledORDisabled;
-                    }, this);
+                    });
                     break;
                 /* Success Green */
                 case 1:
-                    Elements.SafeInvoke(() =>
+                    Elements.SafeInvokeAction(() =>
                     {
                         Elements.ForeColor = Theming.GreenForeColorButton;
                         Elements.BackColor = Theming.GreenBackColorButton;
                         Elements.FlatAppearance.BorderColor = Theming.GreenBorderColorButton;
                         Elements.FlatAppearance.MouseOverBackColor = Theming.GreenMouseOverBackColorButton;
                         Elements.Enabled = EnabledORDisabled;
-                    }, this);
+                    });
                     break;
                 /* Warning Orange */
                 case 2:
-                    Elements.SafeInvoke(() =>
+                    Elements.SafeInvokeAction(() =>
                     {
                         Elements.ForeColor = Theming.YellowForeColorButton;
                         Elements.BackColor = Theming.YellowBackColorButton;
                         Elements.FlatAppearance.BorderColor = Theming.YellowBorderColorButton;
                         Elements.FlatAppearance.MouseOverBackColor = Theming.YellowMouseOverBackColorButton;
                         Elements.Enabled = EnabledORDisabled;
-                    }, this);
+                    });
                     break;
                 /* Error Red */
                 case 3:
-                    Elements.SafeInvoke(() =>
+                    Elements.SafeInvokeAction(() =>
                     {
                         Elements.ForeColor = Theming.RedForeColorButton;
                         Elements.BackColor = Theming.RedBackColorButton;
                         Elements.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
                         Elements.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
                         Elements.Enabled = EnabledORDisabled;
-                    }, this);
+                    });
                     break;
                 /* Unknown Gray */
                 default:
-                    Elements.SafeInvoke(() =>
+                    Elements.SafeInvokeAction(() =>
                     {
                         Elements.ForeColor = Theming.GrayForeColorButton;
                         Elements.BackColor = Theming.GrayBackColorButton;
                         Elements.FlatAppearance.BorderColor = Theming.GrayBorderColorButton;
                         Elements.FlatAppearance.MouseOverBackColor = Theming.GrayMouseOverBackColorButton;
                         Elements.Enabled = EnabledORDisabled;
-                    }, this);
+                    });
                     break;
             }
         }
@@ -1160,19 +1160,19 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                         switch (APIChecker.CheckStatus(((CDNList)SettingsCDNPick.SelectedItem).Url + "/index.xml", 10))
                         {
                             case APIStatus.Online:
-                                SettingsCDNText.SafeInvoke(() =>
+                                SettingsCDNText.SafeInvokeAction(() =>
                                 {
                                     SettingsCDNText.Text = "CDN: ONLINE";
                                     SettingsCDNText.ForeColor = Theming.Sucess;
-                                }, this);
+                                });
                                 Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNList)SettingsCDNPick.SelectedItem).Url + " Is Online!");
                                 break;
                             default:
-                                SettingsCDNText.SafeInvoke(() =>
+                                SettingsCDNText.SafeInvokeAction(() =>
                                 {
                                     SettingsCDNText.Text = "CDN: OFFLINE";
                                     SettingsCDNText.ForeColor = Theming.Error;
-                                }, this);
+                                });
                                 Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNList)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
                                 break;
                         }
@@ -1506,17 +1506,17 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                         switch (APIChecker.CheckStatus(FileSettingsSave.CDN + "/index.xml", 10))
                         {
                             case APIStatus.Online:
-                                SettingsCDNCurrent.SafeInvoke(() =>
+                                SettingsCDNCurrent.SafeInvokeAction(() =>
                                 {
                                     SettingsCDNCurrent.LinkColor = Theming.Sucess;
-                                }, this);
+                                });
                                 Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.CDN + " Is Online!");
                                 break;
                             default:
-                                SettingsCDNCurrent.SafeInvoke(() =>
+                                SettingsCDNCurrent.SafeInvokeAction(() =>
                                 {
                                     SettingsCDNCurrent.LinkColor = Theming.Error;
-                                }, this);
+                                });
                                 Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.CDN + " Is Offline!");
                                 break;
                         }
