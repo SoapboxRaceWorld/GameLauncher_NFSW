@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
@@ -51,28 +50,28 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                     }
                     else if (!UnixOS.Detected())
                     {
-                        if (string.IsNullOrWhiteSpace(FunctionStatus.RegistryRead("License_IB")))
+                        if (string.IsNullOrWhiteSpace(RegistryCore.Read("License_IB")))
                         {
-                            FunctionStatus.RegistryWrite("License_IB", Level_One_Value());
+                            RegistryCore.Write("License_IB", Level_One_Value());
 
-                            if (string.IsNullOrWhiteSpace(FunctionStatus.RegistryRead("License_IB")))
+                            if (string.IsNullOrWhiteSpace(RegistryCore.Read("License_IB")))
                             {
                                 License_IB = Level_One_Value();
                             }
                             else
                             {
-                                License_IB = FunctionStatus.RegistryRead("License_IB");
+                                License_IB = RegistryCore.Read("License_IB");
                             }
                         }
                         else
                         {
-                            if (FunctionStatus.RegistryRead("License_IB") == Level_One_Value())
+                            if (RegistryCore.Read("License_IB") == Level_One_Value())
                             {
                                 License_IB = Level_One_Value();
                             }
                             else
                             {
-                                License_IB = FunctionStatus.RegistryRead("License_IB");
+                                License_IB = RegistryCore.Read("License_IB");
                             }
                         }
                     }
@@ -91,28 +90,28 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                     }
                     else if (!UnixOS.Detected())
                     {
-                        if (string.IsNullOrWhiteSpace(FunctionStatus.RegistryRead("License_IA")))
+                        if (string.IsNullOrWhiteSpace(RegistryCore.Read("License_IA")))
                         {
-                            FunctionStatus.RegistryWrite("License_IA", Level_Two_Value());
+                            RegistryCore.Write("License_IA", Level_Two_Value());
 
-                            if (string.IsNullOrWhiteSpace(FunctionStatus.RegistryRead("License_IA")))
+                            if (string.IsNullOrWhiteSpace(RegistryCore.Read("License_IA")))
                             {
                                 License_IA = Level_Two_Value();
                             }
                             else
                             {
-                                License_IA = FunctionStatus.RegistryRead("License_IA");
+                                License_IA = RegistryCore.Read("License_IA");
                             }
                         }
                         else
                         {
-                            if (FunctionStatus.RegistryRead("License_IA") == Level_Two_Value())
+                            if (RegistryCore.Read("License_IA") == Level_Two_Value())
                             {
                                 License_IA = Level_Two_Value();
                             }
                             else
                             {
-                                License_IA = FunctionStatus.RegistryRead("License_IA");
+                                License_IA = RegistryCore.Read("License_IA");
                             }
                         }
                     }

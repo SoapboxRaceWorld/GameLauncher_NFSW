@@ -1,5 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
@@ -347,20 +348,17 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             {
                 DiscordLauncherPresence.Status("Start Up", "Launcher Encountered API Errors");
 
-                DialogResult restartAppNoApis = MessageBox.Show(null, "Unable to Connect to any Server List API. Please check your connection." +
-                "\n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect to any Server List API",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (restartAppNoApis == DialogResult.No)
-                {
-                    MessageBox.Show("Please keep in Mind Launcher might crash past this point. Make sure to resolve the issue next time",
-                        "GameLauncher will continue, despite failing To Connect To API");
-                    Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and will Continue");
-                }
-
-                if (restartAppNoApis == DialogResult.Yes)
+                if (MessageBox.Show(null, Translations.Database("VisualsAPIChecker_TextBox_No_API"),
+                    Translations.Database("VisualsAPIChecker_TextBox_No_API_P2"), 
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     FunctionStatus.LauncherForceClose = true;
+                }
+                else
+                {
+                    Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and will Continue");
+                    MessageBox.Show(Translations.Database("VisualsAPIChecker_TextBox_No_API_P3"),
+                        Translations.Database("VisualsAPIChecker_TextBox_No_API_P4"));
                 }
             }
             Log.Completed("API: Test #2 Done");

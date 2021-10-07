@@ -1,4 +1,5 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Logger;
+﻿using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using System;
 using System.Reflection;
 using System.Resources;
@@ -11,14 +12,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms
 
         public static bool ResetCache = false;
 
-        public static string Database(string Text_Request, string Which_Language)
+        public static string Application_Language = "en-US";
+
+        public static string Database(string Text_Request)
         {
-            Log.Debug("DATABASE: Requested: " + Text_Request + " Lang: " + Which_Language);
+            if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
+            {
+                Log.Function("DATABASE: Requested: " + Text_Request + " Lang: " + Application_Language);
+            }
+            
             try
             {
                 if (Lang_Launcher == null || ResetCache)
                 {
-                    switch (Which_Language.ToLower())
+                    switch (Application_Language)
                     {
                         default:
                             Lang_Launcher = new ResourceManager("GameLauncher.App.Languages.English_Texts", Assembly.GetExecutingAssembly());
@@ -30,7 +37,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms
 
                 try
                 {
-                    if (!string.IsNullOrWhiteSpace(Text_Request))
+                    if (!string.IsNullOrWhiteSpace(Text_Request) && Lang_Launcher != null)
                     {
                         return Lang_Launcher.GetString(Text_Request);
                     }

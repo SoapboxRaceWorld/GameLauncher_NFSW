@@ -7,7 +7,7 @@ namespace GameLauncher.App.Classes.InsiderKit
     class InsiderInfo
     {
         /* Current month, day, year (2 digits), and letter! Ex: 12-15-20-A */
-        public static string InsiderBuildNumber = "10-05-21-B";
+        public static string InsiderBuildNumber = "10-06-21-B";
 
         public static string BuildNumberOnly()
         {
@@ -18,14 +18,14 @@ namespace GameLauncher.App.Classes.InsiderKit
         {
             if (EnableInsiderDeveloper.Allowed())
             {
-                return Translations.Database("KitEnabler_Dev", InformationCache.Lang.Name) + ": " + InsiderBuildNumber;
+                return Translations.Database("KitEnabler_Dev") + ": " + InsiderBuildNumber;
             }
             else if (EnableInsiderBetaTester.Allowed())
             {
-                return Translations.Database("KitEnabler_Beta", InformationCache.Lang.Name) + ": " + InsiderBuildNumber;
+                return Translations.Database("KitEnabler_Beta") + ": " + InsiderBuildNumber;
             }
 
-            return Translations.Database("KitEnabler_Stable", InformationCache.Lang.Name) + ": " + InsiderBuildNumber;
+            return Translations.Database("KitEnabler_Stable") + ": " + InsiderBuildNumber;
         }
     }
 

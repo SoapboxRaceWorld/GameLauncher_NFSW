@@ -313,8 +313,8 @@ Registered: ###</value>
   <data name="MainScreen_Text_ServerStatus_Unstable" xml:space="preserve">
     <value>Server Connection:\n - Unstable</value>
   </data>
-  <data name="Program_TextBox_GameIsRunning" xml:space="preserve">
-    <value>An instance of Need for Speed: World is already running</value>
+  <data name="Program_TextBox_SBRWIsRunning" xml:space="preserve">
+    <value>An instance of SBRW Launcher is already running</value>
   </data>
   <data name="Application_Exception_Unhandled" xml:space="preserve">
     <value>SBRW Launcher will have to Close due to a Unhandled Exception</value>
@@ -330,5 +330,134 @@ Registered: ###</value>
   </data>
   <data name="KitEnabler_Public" xml:space="preserve">
     <value>Build Date</value>
+  </data>
+  <data name="Program_TextBox_SimplifiedIsRunning" xml:space="preserve">
+    <value>An instance of SBRW Simplified Launcher is already running</value>
+  </data>
+  <data name="Program_TextBox_NetFrame_P3" xml:space="preserve">
+    <value>This application could not be started.</value>
+  </data>
+  <data name="Program_TextBox_LZMA_Redownloaded" xml:space="preserve">
+    <value>Downloaded Missing LZMA.dll File.\nPlease Restart Launcher, Thanks!</value>
+  </data>
+  <data name="Program_TextBox_File_NotFound" xml:space="preserve">
+    <value>Not Found</value>
+  </data>
+  <data name="Program_TextBox_File_Invalid" xml:space="preserve">
+    <value>Invalid File</value>
+  </data>
+  <data name="Program_TextBox_File_Invalid_CPU" xml:space="preserve">
+    <value>Wrong Architecture</value>
+  </data>
+  <data name="Program_TextBox_File_Invalid_Version" xml:space="preserve">
+    <value>Invalid Version</value>
+  </data>
+  <data name="Program_TextBox_File_Invalid_Start" xml:space="preserve">
+    <value>Cannot Start GameLauncher. The following files are invalid:\n\n</value>
+  </data>
+  <data name="Program_TextBox_NetFrame_P2" xml:space="preserve">
+    <value>Do you want to install this .NET Framework version now?</value>
+  </data>
+  <data name="Program_TextBox_NetFrame_P1" xml:space="preserve">
+    <value>This application requires a minimum version of the .NET Framework:\n</value>
+  </data>
+  <data name="Program_TextBox_System_Detection" xml:space="preserve">
+    <value>Operating System Detection Check Encountered an Error.</value>
+  </data>
+  <data name="Redistributable_VC_P5" xml:space="preserve">
+    <value>Compatibility</value>
+  </data>
+  <data name="Program_TextBox_Folder_Check_Launcher" xml:space="preserve">
+    <value>Using this location for GameLauncher is not allowed.</value>
+  </data>
+  <data name="Program_TextBox_Folder_Check_Launcher_P2" xml:space="preserve">
+    <value>The following locations are also NOT allowed:</value>
+  </data>
+  <data name="Program_TextBox_Folder_Check_Launcher_P3" xml:space="preserve">
+    <value>(Root of Drive, such as C:\\ or D:\\, must be in a folder)</value>
+  </data>
+  <data name="Program_TextBox_Folder_Check_Launcher_P4" xml:space="preserve">
+    <value>(Includes 'Desktop', 'Documents', 'Downloads')</value>
+  </data>
+  <data name="Program_TextBox_Folder_Check_Launcher_P5" xml:space="preserve">
+    <value>Instead, move the Launcher folder to someplace like:</value>
+  </data>
+  <data name="Program_TextBox_Folder_Check_Launcher_P6" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="Program_TextBox_Folder_Check_Launcher_P7" xml:space="preserve">
+    <value>(Or any other NTFS 'Local Disk' location such as 'D:')</value>
+  </data>
+  <data name="Program_TextBox_Folder_Write_Test" xml:space="preserve">
+    <value>Unable to do a Test Write to Launcher Folder\nPermission Issue</value>
+  </data>
+  <data name="Program_TextBox_W7_TLS" xml:space="preserve">
+    <value>Hey Windows 7 User, we've detected a potential issue of some missing Updates that are required.</value>
+  </data>
+  <data name="Program_TextBox_W7_TLS_P2" xml:space="preserve">
+    <value>We found that these Windows Update packages are showing as not installed:</value>
+  </data>
+  <data name="Program_TextBox_W7_TLS_P3" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Program_TextBox_W7_TLS_P4" xml:space="preserve">
+    <value>Aditionally, we must add a value to the registry:</value>
+  </data>
+  <data name="Program_TextBox_W7_TLS_P5" xml:space="preserve">
+    <value>Would you like to add those values?</value>
+  </data>
+  <data name="Program_TextBox_W7_TLS_P6" xml:space="preserve">
+    <value>Registry option set, Remember that the changes may require a system reboot to take effect</value>
+  </data>
+  <data name="Program_TextBox_W7_TLS_P7" xml:space="preserve">
+    <value>Roger that, There may be some issues connecting to the servers.</value>
+  </data>
+  <data name="Redistributable_VC_32" xml:space="preserve">
+    <value>You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed.</value>
+  </data>
+  <data name="Redistributable_VC_P4" xml:space="preserve">
+    <value>Click OK to install it.</value>
+  </data>
+  <data name="Redistributable_VC_P3" xml:space="preserve">
+    <value>This may restart your computer.</value>
+  </data>
+  <data name="Redistributable_VC_P2" xml:space="preserve">
+    <value>This will install in the Background</value>
+  </data>
+  <data name="Program_TextBox_GameIsRunning" xml:space="preserve">
+    <value>An instance of Need for Speed: World is already running</value>
+  </data>
+  <data name="Redistributable_VC_64" xml:space="preserve">
+    <value>You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed.</value>
+  </data>
+  <data name="Redistributable_VC_P6" xml:space="preserve">
+    <value>Failed to run package installer. The game will not be started.</value>
+  </data>
+  <data name="Redistributable_VC_P7" xml:space="preserve">
+    <value>Failed to run package installer. Installer Exit Code</value>
+  </data>
+  <data name="Redistributable_VC_P8" xml:space="preserve">
+    <value>The game will not be started.</value>
+  </data>
+  <data name="Redistributable_VC_P9" xml:space="preserve">
+    <value>Failed to start package installer. The game will not be started.</value>
+  </data>
+  <data name="Redistributable_VC_P10" xml:space="preserve">
+    <value>Failed to download package installer. The game will not be started.</value>
+  </data>
+  <data name="VisualsAPIChecker_TextBox_No_API" xml:space="preserve">
+    <value>Unable to Connect to any Server List API. Please check your connection.\n\nClick Yes to Close Launcher \nor\nClick No Continue</value>
+  </data>
+  <data name="VisualsAPIChecker_TextBox_No_API_P2" xml:space="preserve">
+    <value>GameLauncher has Stopped, Failed To Connect to any Server List API</value>
+  </data>
+  <data name="VisualsAPIChecker_TextBox_No_API_P3" xml:space="preserve">
+    <value>Please keep in Mind Launcher might crash past this point. Make sure to resolve the issue next time</value>
+  </data>
+  <data name="VisualsAPIChecker_TextBox_No_API_P4" xml:space="preserve">
+    <value>GameLauncher will continue, despite failing To Connect To API</value>
+  </data>
+  <data name="APIChecker_CacheEntryNotFound" xml:space="preserve">
+    <value>Cache Entry Not Found</value>
   </data>
 </root>

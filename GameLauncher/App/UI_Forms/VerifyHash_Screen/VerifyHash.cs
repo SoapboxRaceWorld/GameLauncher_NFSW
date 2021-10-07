@@ -786,6 +786,16 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
             StartScanner.Click += new EventHandler(StartScanner_Click);
             StopScanner.Click += new EventHandler(StopScanner_Click);
 
+            /********************************/
+            /* Hardcoded Text [Linux Fix]    /
+            /********************************/
+
+            VerifyHashWelcome.Text = "Welcome!\n\nThe scanning process is pretty quick,\nbut may still take a while." +
+                "\nDepending on your connection,\nre-downloading will take the longest\nPlease allow it to complete fully!";
+            ScanProgressText.Text = "Scanning Progress:";
+            DownloadProgressText.Text = "Download Progress:";
+            VerifyHashText.Text = "Please select \"Start Scan\" \nTo begin Validating Gamefiles";
+
             Shown += (x, y) =>
             {
                 Application.OpenForms[this.Name].Activate();

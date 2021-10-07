@@ -317,7 +317,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
             SettingsCDNPick.DrawItem += new DrawItemEventHandler(SettingsCDNPick_DrawItem);
             SettingsCDNPick.SelectedIndexChanged += new EventHandler(SettingsCDNPick_SelectedIndexChanged);
+            SettingsCDNPick.MouseWheel += new MouseEventHandler(DropDownMenu_MouseWheel);
             SettingsLanguage.DrawItem += new DrawItemEventHandler(SettingsLanguage_DrawItem);
+            SettingsLanguage.MouseWheel += new MouseEventHandler(DropDownMenu_MouseWheel);
 
             SettingsSave.MouseEnter += new EventHandler(Greenbutton_hover_MouseEnter);
             SettingsSave.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
@@ -1612,6 +1614,11 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 ButtonsColorSet(SettingsVFilesButton, (FileSettingsSave.GameIntegrity != "Good" ? 2 : 0), true);
                 VerifyHash.OpenScreen();
             }
+        }
+
+        private void DropDownMenu_MouseWheel(object sender, MouseEventArgs e)
+        {
+            ((HandledMouseEventArgs)e).Handled = true;
         }
     }
 }

@@ -207,68 +207,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         }
 
         /// <summary>
-        /// Reads a key from the Windows Registry.
-        /// </summary>
-        /// <returns>Registry Key Value or if it Doesn't Exist it Returns a Null Value</returns>
-        /// <param name="keyName">Registry Key Entry</param>
-        public static string RegistryRead(string keyName)
-        {
-            string subKey = Path.Combine("SOFTWARE", "Soapbox Race World", "Launcher");
-
-            RegistryKey sk = null;
-            try
-            {
-                sk = Registry.LocalMachine.OpenSubKey(subKey, false) ?? null;
-                if (sk == null)
-                    return string.Empty;
-                else
-                    return sk.GetValue(keyName).ToString();
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("READ REGISTRYKEY", null, Error, null, true);
-                return string.Empty;
-            }
-            finally
-            {
-                if (sk != null)
-                {
-                    sk.Close();
-                    sk.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Writes a key to the Windows Registry.
-        /// </summary>
-        /// <param name="keyName">Registry Key Entry</param>
-        /// <param name="value">Inner Value to write to for Key Entry</param>
-        public static void RegistryWrite(string keyName, string value)
-        {
-            string subKey = Path.Combine("SOFTWARE", "Soapbox Race World", "Launcher");
-            RegistryKey sk = null;
-
-            try
-            {
-                sk = Registry.LocalMachine.CreateSubKey(subKey, true);
-                sk.SetValue(keyName, value);
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("WRITE REGISTRYKEY", null, Error, null, true);
-            }
-            finally
-            {
-                if (sk != null)
-                {
-                    sk.Close();
-                    sk.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
         /// Used to Force Close Launcher when Launcher encounters an error during Startup
         /// </summary>
         /// <param name="Notes">Required: Where the Launcher is Closing From</param>
