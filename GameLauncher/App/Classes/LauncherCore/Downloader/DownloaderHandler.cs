@@ -207,7 +207,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
+                LogToFileAddons.OpenLog("CDN DOWNLOADER [Background Work DH]", null, Error, null, true);
                 Exception exception = Error;
                 lock (this._workers)
                 {

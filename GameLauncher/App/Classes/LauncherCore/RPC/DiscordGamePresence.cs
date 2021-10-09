@@ -271,8 +271,6 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     };
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
-
                     if (uri == "/matchmaking/leavelobby")
                     {
                         AntiCheat.DisableChecks(false);
@@ -280,6 +278,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                     eventTerminatedManually = true;
                     FunctionStatus.CanCloseGame = true;
+
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
                 /* IN LOBBY */
                 else if (uri == "/matchmaking/acceptinvite")
@@ -305,9 +305,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         };
                         _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                        if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
-
                         eventTerminatedManually = false;
+                        if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                     }
                 }
                 else if (uri == "/matchmaking/joinqueueracenow")
@@ -324,9 +323,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     };
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
-
                     eventTerminatedManually = true;
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
 
                 /* IN EVENT */
@@ -348,9 +346,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     };
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
-
                     eventTerminatedManually = false;
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
                 else if (uri == "/event/launched" && !eventTerminatedManually)
                 {
@@ -386,9 +383,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
                     AntiCheat.DisableChecks(true);
-                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
-
                     eventTerminatedManually = false;
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
 
                 /* CARS RELATED */

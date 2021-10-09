@@ -74,7 +74,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         }
                         catch (Exception Error)
                         {
-                            LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
+                            LogToFileAddons.OpenLog("CDN DOWNLOADER [Background]", null, Error, null, true);
                         }
                     }
                     else
@@ -289,7 +289,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                     catch (Exception Error)
                     {
-                        LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
+                        LogToFileAddons.OpenLog("CDN DOWNLOADER [Write Hash Cache]", null, Error, null, true);
                         Exception exception = Error;
                     }
                 }

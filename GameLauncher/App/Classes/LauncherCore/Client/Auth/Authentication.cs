@@ -30,13 +30,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
         /// </summary>
         /// <remarks>Non Secure: Uses regualar URL Request. Secure: Uses Post Request</remarks>
         /// <returns>Receives UserId and Auth Key for Login. Sends Email and Password to Server</returns>
-        /// <param name="Connection">Connection Type: "Non Secure" or "Secure"</param>
+        /// <param name="ConnectionProtocol">Connection Protocol: Check AuthProtocol</param>
         /// <param name="Method">Form Type: "Login" or "Register"</param>
-        public static void Client(string Method, string Connection, String Email, String Password, String Token)
+        public static void Client(string Method, string Modern_Auth_String, String Email, String Password, String Token)
         {
+            bool.TryParse(Modern_Auth_String, out bool Modern_Auth);
+
             try
             {
-                if (Connection == "Non Secure")
+                if (!Modern_Auth)
                 {
                     FunctionStatus.TLS();
                     Uri URLCall = 
@@ -86,7 +88,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         }
                     }
                 }
-                else if (Connection == "Secure")
+                else
                 {
                     FunctionStatus.TLS();
                     string ServerUrl = Tokens.IPAddress + "/User/modernAuth";
@@ -126,42 +128,31 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         LoginResponse = sr.ReadToEnd();
                     }
                 }
-                else
-                {
-                    Log.Error("Authentication: [Login] Can not Determine Function with Specified Connection -> " + Connection);
-                }
             }
             catch (WebException Error)
             {
                 LogToFileAddons.OpenLog("CLIENT [LOGIN/REGISTER]", null, Error, null, true);
 
-                if (Connection == "Non Secure" || Connection == "Secure")
-                {
-                    ServerResponse = (HttpWebResponse)Error.Response;
+                ServerResponse = (HttpWebResponse)Error.Response;
 
-                    if (ServerResponse == null)
-                    {
-                        ServerErrorCode = 500;
-                        LoginResponse = (Connection == "Secure") ? "{\"error\":\"Failed to get reply from server. Please retry.\"}" :
-                        "<LoginStatusVO><UserId>0</UserId><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
-                    }
-                    else
-                    {
-                        using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
-                        {
-                            ServerErrorCode = (int)ServerResponse.StatusCode;
-                            ServerErrorResponse = (Connection == "Secure") ? "{\"error\":\"" + ServerResponse.StatusDescription + "\"}" : null;
-                            LoginResponse = sr.ReadToEnd();
-                        }
-                    }
+                if (ServerResponse == null)
+                {
+                    ServerErrorCode = 500;
+                    LoginResponse = Modern_Auth ? "{\"error\":\"Failed to get reply from server. Please retry.\"}" :
+                    "<LoginStatusVO><UserId>0</UserId><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
                 }
                 else
                 {
-                    Log.Error("Authentication: [WebException] Can not Determine Function with Specified Type -> " + Connection);
+                    using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
+                    {
+                        ServerErrorCode = (int)ServerResponse.StatusCode;
+                        ServerErrorResponse = Modern_Auth ? "{\"error\":\"" + ServerResponse.StatusDescription + "\"}" : null;
+                        LoginResponse = sr.ReadToEnd();
+                    }
                 }
             }
 
-            if (Connection == "Non Secure")
+            if (!Modern_Auth)
             {
                 if (string.IsNullOrWhiteSpace(LoginResponse))
                 {
@@ -194,8 +185,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     {
                         if (XMLServerCore.NodeReader(sbrwXml, "NodeOnly", "LoginStatusVO", "NodeOnly") == "VAILD NODE - LAUNCHER")
                         {
-                            if (XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/Ban", "InnerText") != "INVALID VALUE - LAUNCHER" &&
-                                XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/Ban", "InnerText") != "ERROR VALUE - LAUNCHER")
+                            if (XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/Ban", "InnerText") != "EMPTY VALUE - LAUNCHER")
                             {
                                 if (XMLServerCore.NodeReader(sbrwXml, "NodeOnly", "LoginStatusVO/Description", "NodeOnly") == "VAILD NODE - LAUNCHER")
                                 {
@@ -308,7 +298,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     }
                 }
             }
-            else if (Connection == "Secure")
+            else
             {
                 if (String.IsNullOrWhiteSpace(LoginResponse))
                 {
@@ -375,21 +365,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     }
                 }
             }
-            else
-            {
-                Log.Error("Authentication: [Tokens] Can not Determine Function with Specified Type -> " + Connection);
-            }
         }
 
         /// <summary>
         /// Hash Method (Used how to Authenticate Logins)
         /// </summary>
         /// <returns>A hash type standard that is used on the server</returns>
-        public static AuthHash HashType(string Type)
+        public static AuthHash HashType(string HType)
         {
-            if (!string.IsNullOrWhiteSpace(Type))
+            if (!string.IsNullOrWhiteSpace(HType))
             {
-                switch (Type)
+                switch (HType)
                 {
                     case "1.0":
                     case "true":
@@ -413,7 +399,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
             else
             {
-                return AuthHash.H12;
+                return (bool.TryParse(InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", out bool Final_Result) && Final_Result) ? AuthHash.H10 : AuthHash.H12;
             }
         }
     }
@@ -430,7 +416,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 }
                 if (Type == "InnerText")
                 {
-                    if (string.IsNullOrWhiteSpace(LocationData.SelectSingleNode(FullNodePath).InnerText))
+                    if (string.IsNullOrWhiteSpace(LocationData.SelectSingleNode(FullNodePath) != null ? 
+                        LocationData.SelectSingleNode(FullNodePath).InnerText : string.Empty))
                     {
                         if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                         {
@@ -443,7 +430,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 }
                 else if (Type == "NodeOnly")
                 {
-                    if (LocationData.SelectSingleNode(FullNodePath) == null)
+                    if ((LocationData.SelectSingleNode(FullNodePath) ?? null) == null)
                     {
                         if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                         {

@@ -147,10 +147,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App\AddServer.cs">
+    <Compile Include="App\Classes\LauncherCore\Support\FormsControls.cs" />
+    <Compile Include="App\Classes\LauncherCore\Support\RegistryCore.cs" />
+    <Compile Include="App\UI_Forms\AddServer_Screen\AddServer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\AddServer.Designer.cs">
+    <Compile Include="App\UI_Forms\AddServer_Screen\AddServer.Designer.cs">
       <DependentUpon>AddServer.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\LauncherCore\Client\AntiCheat.cs" />
@@ -168,6 +170,7 @@
     <Compile Include="App\Classes\LauncherCore\Global\FunctionStatus.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\URLs.cs" />
     <Compile Include="App\Classes\LauncherCore\Hash\SHATwoFiveSix.cs" />
+    <Compile Include="App\Classes\LauncherCore\Languages\Visual_Forms\Translations.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterExecutable.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonCDNList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonLanguage.cs" />
@@ -224,28 +227,33 @@
     <Compile Include="App\Classes\LauncherCore\RPC\EventList.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\CertificateStore.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\ScreenResolutions.cs" />
-    <Compile Include="App\RegisterScreen.cs">
+    <Compile Include="App\Languages\English_Texts.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>English_Texts.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App\UI_Forms\Register_Screen\RegisterScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\RegisterScreen.Designer.cs">
+    <Compile Include="App\UI_Forms\Register_Screen\RegisterScreen.Designer.cs">
       <DependentUpon>RegisterScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\SecurityCenterScreen.cs">
+    <Compile Include="App\UI_Forms\SecurityCenter_Screen\SecurityCenterScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\SecurityCenterScreen.Designer.cs">
+    <Compile Include="App\UI_Forms\SecurityCenter_Screen\SecurityCenterScreen.Designer.cs">
       <DependentUpon>SecurityCenterScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\SettingsScreen.cs">
+    <Compile Include="App\UI_Forms\Settings_Screen\SettingsScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\SettingsScreen.Designer.cs">
+    <Compile Include="App\UI_Forms\Settings_Screen\SettingsScreen.Designer.cs">
       <DependentUpon>SettingsScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\SplashScreen.cs">
+    <Compile Include="App\UI_Forms\Splash_Screen\SplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\SplashScreen.Designer.cs">
+    <Compile Include="App\UI_Forms\Splash_Screen\SplashScreen.Designer.cs">
       <DependentUpon>SplashScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\LauncherCore\Lists\CDNListUpdater.cs" />
@@ -254,52 +262,52 @@
     <Compile Include="App\Classes\LauncherCore\Proxy\Singleton.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\WindowsProductVersion.cs" />
     <Compile Include="App\Classes\SystemPlatform\TaskBar.cs" />
-    <Compile Include="App\DebugScreen.cs">
+    <Compile Include="App\UI_Forms\Debug_Screen\DebugScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\DebugScreen.Designer.cs">
+    <Compile Include="App\UI_Forms\Debug_Screen\DebugScreen.Designer.cs">
       <DependentUpon>DebugScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\MainScreen.cs">
+    <Compile Include="App\UI_Forms\Main_Screen\MainScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\MainScreen.Designer.cs">
+    <Compile Include="App\UI_Forms\Main_Screen\MainScreen.Designer.cs">
       <DependentUpon>MainScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\About.cs">
+    <Compile Include="App\UI_Forms\About_Screen\About.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\About.Designer.cs">
+    <Compile Include="App\UI_Forms\About_Screen\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\SelectServer.cs">
+    <Compile Include="App\UI_Forms\SelectServer_Screen\SelectServer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\SelectServer.Designer.cs">
+    <Compile Include="App\UI_Forms\SelectServer_Screen\SelectServer.Designer.cs">
       <DependentUpon>SelectServer.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\UpdatePopup.cs">
+    <Compile Include="App\UI_Forms\UpdatePopup_Screen\UpdatePopup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\UpdatePopup.Designer.cs">
+    <Compile Include="App\UI_Forms\UpdatePopup_Screen\UpdatePopup.Designer.cs">
       <DependentUpon>UpdatePopup.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\USXEditor.cs">
+    <Compile Include="App\UI_Forms\USXEditor_Screen\USXEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\USXEditor.Designer.cs">
+    <Compile Include="App\UI_Forms\USXEditor_Screen\USXEditor.Designer.cs">
       <DependentUpon>USXEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\VerifyHash.cs">
+    <Compile Include="App\UI_Forms\VerifyHash_Screen\VerifyHash.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\VerifyHash.Designer.cs">
+    <Compile Include="App\UI_Forms\VerifyHash_Screen\VerifyHash.Designer.cs">
       <DependentUpon>VerifyHash.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\WelcomeScreen.cs">
+    <Compile Include="App\UI_Forms\Welcome_Screen\WelcomeScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\WelcomeScreen.Designer.cs">
+    <Compile Include="App\UI_Forms\Welcome_Screen\WelcomeScreen.Designer.cs">
       <DependentUpon>WelcomeScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
@@ -311,55 +319,65 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="App\AddServer.resx">
+    <EmbeddedResource Include="App\UI_Forms\AddServer_Screen\AddServer.resx">
       <DependentUpon>AddServer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="App\Classes\LauncherCore\Client\Web\WebRequest.resx">
       <DependentUpon>WebRequest.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\DebugScreen.resx">
+    <EmbeddedResource Include="App\UI_Forms\Debug_Screen\DebugScreen.resx">
       <DependentUpon>DebugScreen.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\MainScreen.resx">
+    <EmbeddedResource Include="App\Languages\English_Texts.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>English_Texts.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\UI_Forms\Main_Screen\MainScreen.en.resx">
+      <DependentUpon>MainScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\UI_Forms\Main_Screen\MainScreen.fr.resx">
+      <DependentUpon>MainScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\UI_Forms\Main_Screen\MainScreen.resx">
       <DependentUpon>MainScreen.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\About.resx">
+    <EmbeddedResource Include="App\UI_Forms\About_Screen\About.resx">
       <DependentUpon>About.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\RegisterScreen.resx">
+    <EmbeddedResource Include="App\UI_Forms\Register_Screen\RegisterScreen.resx">
       <DependentUpon>RegisterScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\SecurityCenterScreen.resx">
+    <EmbeddedResource Include="App\UI_Forms\SecurityCenter_Screen\SecurityCenterScreen.resx">
       <DependentUpon>SecurityCenterScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\SettingsScreen.resx">
+    <EmbeddedResource Include="App\UI_Forms\Settings_Screen\SettingsScreen.resx">
       <DependentUpon>SettingsScreen.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\SplashScreen.resx">
+    <EmbeddedResource Include="App\UI_Forms\Splash_Screen\SplashScreen.resx">
       <DependentUpon>SplashScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\SelectServer.resx">
+    <EmbeddedResource Include="App\UI_Forms\SelectServer_Screen\SelectServer.resx">
       <DependentUpon>SelectServer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\UpdatePopup.resx">
+    <EmbeddedResource Include="App\UI_Forms\UpdatePopup_Screen\UpdatePopup.resx">
       <DependentUpon>UpdatePopup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\USXEditor.resx">
+    <EmbeddedResource Include="App\UI_Forms\USXEditor_Screen\USXEditor.resx">
       <DependentUpon>USXEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\VerifyHash.resx">
+    <EmbeddedResource Include="App\UI_Forms\VerifyHash_Screen\VerifyHash.resx">
       <DependentUpon>VerifyHash.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\WelcomeScreen.resx">
+    <EmbeddedResource Include="App\UI_Forms\Welcome_Screen\WelcomeScreen.resx">
       <DependentUpon>WelcomeScreen.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

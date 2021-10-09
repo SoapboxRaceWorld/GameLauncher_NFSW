@@ -1,10 +1,13 @@
-﻿namespace GameLauncher.App.Classes.InsiderKit
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
+
+namespace GameLauncher.App.Classes.InsiderKit
 {
     /* This sets Build Number Information */
     class InsiderInfo
     {
         /* Current month, day, year (2 digits), and letter! Ex: 12-15-20-A */
-        public static string InsiderBuildNumber = "09-10-21-R";
+        public static string InsiderBuildNumber = "10-09-21-R";
 
         public static string BuildNumberOnly()
         {
@@ -15,14 +18,14 @@
         {
             if (EnableInsiderDeveloper.Allowed())
             {
-                return "DEV Build Date: " + InsiderBuildNumber;
+                return Translations.Database("KitEnabler_Dev") + ": " + InsiderBuildNumber;
             }
             else if (EnableInsiderBetaTester.Allowed())
             {
-                return  "BETA Build Date: " + InsiderBuildNumber;
+                return Translations.Database("KitEnabler_Beta") + ": " + InsiderBuildNumber;
             }
 
-            return "Build Date: " + InsiderBuildNumber;
+            return Translations.Database("KitEnabler_Stable") + ": " + InsiderBuildNumber;
         }
     }
 

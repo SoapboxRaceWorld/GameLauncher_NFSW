@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.UI_Forms.Splash_Screen;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {

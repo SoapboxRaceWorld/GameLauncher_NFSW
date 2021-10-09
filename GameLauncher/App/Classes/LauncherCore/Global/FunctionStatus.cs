@@ -9,6 +9,9 @@ using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.UI_Forms.Main_Screen;
+using GameLauncher.App.UI_Forms.Splash_Screen;
+using GameLauncher.App.UI_Forms.Welcome_Screen;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
@@ -22,6 +25,7 @@ using System.Net.Security;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Global
@@ -30,22 +34,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
     class InformationCache
     {
         /* Detect and Set System Language */
-        public static CultureInfo Lang = CultureInfo.CurrentUICulture;
+        public static CultureInfo Lang = Thread.CurrentThread.CurrentUICulture;
 
         /* Parent Screen Cords */
         public static Point ParentScreenLocation;
 
-        /* System Language */
-        public static string CurrentLanguage = "EN";
-
         /* System OS Name */
         public static string OSName;
 
-        /* Selected Server Requires Proxy (Due to being https Only) */
-        public static bool ModernAuthSecureChannel = false;
-
-        /* Selected Server ModernAuth Hash Type (Used for Login) */
-        public static string ModernAuthHashType = string.Empty;
+        /* Selected Server Is Enforcing Proxy */
+        public static bool SelectedServerEnforceProxy = false;
 
         /* Selected Server Category */
         public static string SelectedServerCategory;
@@ -165,7 +163,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             try
             {
                 /* TLS 1.3 */
-                ServicePointManager.SecurityProtocol |= (SecurityProtocolType)12288 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                ServicePointManager.SecurityProtocol |= (SecurityProtocolType)12288 | SecurityProtocolType.Tls12;
             }
             catch (NotSupportedException Error)
             {
@@ -174,31 +172,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 try
                 {
                     /* TLS 1.2 */
-                    ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                    ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
                 }
                 catch (NotSupportedException ErrorTls12)
                 {
                     Log.Error("SecurityProtocol: Tls12 -> " + ErrorTls12.Message);
-
-                    try
-                    {
-                        /* TLS 1.1 */
-                        ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-                    }
-                    catch (NotSupportedException ErrorTls11)
-                    {
-                        Log.Error("SecurityProtocol: Tls11 -> " + ErrorTls11.Message);
-
-                        try
-                        {
-                            /* TLS 1.0 */
-                            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls;
-                        }
-                        catch (NotSupportedException ErrorTls)
-                        {
-                            Log.Error("SecurityProtocol: Tls -> " + ErrorTls.Message);
-                        }
-                    }
                 }
             }
             ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) =>
@@ -226,68 +204,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
                 return isOk;
             };
-        }
-
-        /// <summary>
-        /// Reads a key from the Windows Registry.
-        /// </summary>
-        /// <returns>Registry Key Value or if it Doesn't Exist it Returns a Null Value</returns>
-        /// <param name="keyName">Registry Key Entry</param>
-        public static string RegistryRead(string keyName)
-        {
-            string subKey = Path.Combine("SOFTWARE", "Soapbox Race World", "Launcher");
-
-            RegistryKey sk = null;
-            try
-            {
-                sk = Registry.LocalMachine.OpenSubKey(subKey, false);
-                if (sk == null)
-                    return null;
-                else
-                    return sk.GetValue(keyName).ToString();
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("READ REGISTRYKEY", null, Error, null, true);
-                return null;
-            }
-            finally
-            {
-                if (sk != null)
-                {
-                    sk.Close();
-                    sk.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Writes a key to the Windows Registry.
-        /// </summary>
-        /// <param name="keyName">Registry Key Entry</param>
-        /// <param name="value">Inner Value to write to for Key Entry</param>
-        public static void RegistryWrite(string keyName, string value)
-        {
-            string subKey = Path.Combine("SOFTWARE", "Soapbox Race World", "Launcher");
-            RegistryKey sk = null;
-
-            try
-            {
-                sk = Registry.LocalMachine.CreateSubKey(subKey, true);
-                sk.SetValue(keyName, value);
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("WRITE REGISTRYKEY", null, Error, null, true);
-            }
-            finally
-            {
-                if (sk != null)
-                {
-                    sk.Close();
-                    sk.Dispose();
-                }
-            }
         }
 
         /// <summary>
@@ -565,7 +481,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
 
                 /* Check If Launcher Failed to Connect to any APIs */
-                if (!VisualsAPIChecker.WOPLAPI())
+                if (!VisualsAPIChecker.CarbonAPITwo())
                 {
                     DiscordLauncherPresence.Status("Start Up", "Launcher Encountered API Errors");
 
@@ -614,6 +530,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         public static readonly string NameUpdater = "GameLauncherUpdater.exe";
         public static readonly string NameNewServersJSON = "Servers-Custom.json";
         public static readonly string NameOldServersJSON = "servers.json";
+        public static readonly string NameLZMA = "LZMA.dll";
 
         public static readonly string LauncherFolder = Strings.Encode(AppDomain.CurrentDomain.BaseDirectory);
 

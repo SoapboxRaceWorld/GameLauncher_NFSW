@@ -95,6 +95,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
         /// <remarks><c>Can be used as a General Log</c></remarks>
         /// <param name="text">Log Message</param>
         public static void Core(string text) => ToFile(text, "       CORE");
+        /// <summary>
+        /// Used for Logging Launcher Function Details
+        /// </summary>
+        /// <remarks><c>Can be used as a Function General Log</c></remarks>
+        /// <param name="text">Log Message</param>
+        public static void Function(string text) => ToFile(text, "   FUNCTION");
         //"      "
         private static async void TaskKernel()
         {

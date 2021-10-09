@@ -10,8 +10,6 @@
 
         public static string Static_Alt = "http://api2-sbrw.davidcarbon.download";
 
-        public static string WOPL = "http://worldonline.pl";
-
         public static string ModNet = "https://cdn.soapboxrace.world";
 
         public static string GitHub_Launcher = "https://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest";
@@ -21,7 +19,6 @@
         public static string[] AntiCheatFD = new string[]
         {
             Main + "/report",
-            "http://anticheat.worldonline.pl/report",
             "https://la-sbrw.davidcarbon.download/report?",
             "https://la2-sbrw.davidcarbon.download/report?"
         };
