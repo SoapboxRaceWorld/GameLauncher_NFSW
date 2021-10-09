@@ -1439,8 +1439,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         {
             /* Last Selected CDN */
             Log.Core("SETTINGS LANGLIST: Checking...");
-            Log.Core("SETTINGS LANGLIST: Setting first server in list");
-            Log.Core("SETTINGS LANGLIST: Checking if server is set on INI File");
+            Log.Core("SETTINGS LANGLIST: Setting first Language in list");
+            Log.Core("SETTINGS LANGLIST: Checking if Language is set on INI File");
 
             try
             {
@@ -1449,7 +1449,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                     string SavedLang = FileSettingsSave.Lang.Trim();
 
                     Log.Core("SETTINGS LANGLIST: Found something!");
-                    Log.Core("SETTINGS LANGLIST: Checking if language exists on our database");
+                    Log.Core("SETTINGS LANGLIST: Checking if Language exists on our database");
 
                     if (LanguageListUpdater.CleanList.FindIndex(i => string.Equals(i.INI_Value, SavedLang)) != 0)
                     {
