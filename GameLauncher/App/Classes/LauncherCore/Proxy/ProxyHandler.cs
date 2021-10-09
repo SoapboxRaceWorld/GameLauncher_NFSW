@@ -127,7 +127,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
                 if (path == "/User/GetPermanentSession")
                 {
-                    responseBody = CleanFromUnknownChars(responseBody);
+                    //Replace only SB and Star icon, no need to clean whole XML Output.
+                    responseBody = responseBody
+                        .Replace("¤", String.Empty)  //SpeedBoost icon
+                        .Replace("†", String.Empty); //Star icon
                 }
 
                 int statusCode = responseMessage.StatusCode;
@@ -145,30 +148,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
                 return Response;
             }
-        }
-
-        private static string CleanFromUnknownChars(string s)
-        {
-            if (string.IsNullOrWhiteSpace(s)) { return null;  }
-
-            StringBuilder sb = new StringBuilder(s.Length);
-            foreach (char c in s)
-            {
-                if
-                 (
-                  (int)c >= 48 && (int)c <= 57 ||
-                  (int)c == 60 || (int)c == 62 ||
-                  (int)c >= 65 && (int)c <= 90 ||
-                  (int)c >= 97 && (int)c <= 122 ||
-                  (int)c == 47 || (int)c == 45 ||
-                  (int)c == 46
-                 )
-                {
-                    sb.Append(c);
-                }
-            }
-
-            return Strings.Encode(sb.ToString(0, sb.Length));
         }
     }
 }
