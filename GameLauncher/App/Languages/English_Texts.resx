@@ -460,4 +460,139 @@ Registered: ###</value>
   <data name="APIChecker_CacheEntryNotFound" xml:space="preserve">
     <value>Cache Entry Not Found</value>
   </data>
+  <data name="APIChecker_ConnectFailure" xml:space="preserve">
+    <value>Connect Failure</value>
+  </data>
+  <data name="APIChecker_ConnectionClosed" xml:space="preserve">
+    <value>Connection Closed</value>
+  </data>
+  <data name="APIChecker_KeepAliveFailure" xml:space="preserve">
+    <value>Keep Alive Failure</value>
+  </data>
+  <data name="APIChecker_MessageLengthLimitExceeded" xml:space="preserve">
+    <value>Message Length Limit Exceeded</value>
+  </data>
+  <data name="APIChecker_NameResolutionFailure" xml:space="preserve">
+    <value>Name Resolution Failure</value>
+  </data>
+  <data name="APIChecker_Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="APIChecker_PipelineFailure" xml:space="preserve">
+    <value>Pipeline Failure</value>
+  </data>
+  <data name="APIChecker_NotFound" xml:space="preserve">
+    <value>Not Found</value>
+  </data>
+  <data name="APIChecker_ServerError" xml:space="preserve">
+    <value>Server Error</value>
+  </data>
+  <data name="APIChecker_ServerOverloaded" xml:space="preserve">
+    <value>Server Overloaded</value>
+  </data>
+  <data name="APIChecker_ServerUnavailable" xml:space="preserve">
+    <value>Server Unavailable</value>
+  </data>
+  <data name="APIChecker_GetWayTimeOut" xml:space="preserve">
+    <value>GetWay Time Out</value>
+  </data>
+  <data name="APIChecker_ConnectionTimeOut" xml:space="preserve">
+    <value>Connection Timed Out</value>
+  </data>
+  <data name="APIChecker_OriginUnreachable" xml:space="preserve">
+    <value>Origin Unreachable</value>
+  </data>
+  <data name="APIChecker_Timeout" xml:space="preserve">
+    <value>Timed Out</value>
+  </data>
+  <data name="APIChecker_SSLFailed" xml:space="preserve">
+    <value>SSL Failed</value>
+  </data>
+  <data name="APIChecker_InvaildSSL" xml:space="preserve">
+    <value>Invalid SSL</value>
+  </data>
+  <data name="APIChecker_UnknownStatusCode" xml:space="preserve">
+    <value>Unknown Status Code</value>
+  </data>
+  <data name="APIChecker_ProxyNameResolutionFailure" xml:space="preserve">
+    <value>Proxy Name Resolution Failure</value>
+  </data>
+  <data name="APIChecker_ReceiveFailure" xml:space="preserve">
+    <value>Receive Failure</value>
+  </data>
+  <data name="APIChecker_RequestCanceled" xml:space="preserve">
+    <value>Request Canceled</value>
+  </data>
+  <data name="APIChecker_RequestProhibitedByCachePolicy" xml:space="preserve">
+    <value>Request Prohibited By Cache Policy</value>
+  </data>
+  <data name="APIChecker_SecureChannelFailure" xml:space="preserve">
+    <value>Secure Channel Failure</value>
+  </data>
+  <data name="APIChecker_SendFailure" xml:space="preserve">
+    <value>Send Failure</value>
+  </data>
+  <data name="APIChecker_ServerProtocolViolation" xml:space="preserve">
+    <value>Server Protocol Violation</value>
+  </data>
+  <data name="APIChecker_Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="APIChecker_TrustFailure" xml:space="preserve">
+    <value>Trust Failure</value>
+  </data>
+  <data name="APIChecker_Unknown" xml:space="preserve">
+    <value>Unknown Error</value>
+  </data>
+  <data name="APIChecker_Null" xml:space="preserve">
+    <value>URL was Null</value>
+  </data>
+  <data name="APIChecker_Online" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="APIChecker_Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="LauncherUpdateCheck_FS" xml:space="preserve">
+    <value>A Web Browser has been opened to the Game Launcher's GitHub Latest Release Page to Download the New Version</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Insider" xml:space="preserve">
+    <value>Launcher Status:</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Insider_Dev" xml:space="preserve">
+    <value>Developer</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Insider_Beta" xml:space="preserve">
+    <value>Beta</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Insider_Unofficial" xml:space="preserve">
+    <value>Unofficial</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Insider_Text_Build" xml:space="preserve">
+    <value>Build</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Insider_Text_Stable" xml:space="preserve">
+    <value>Stable:</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Insider_Text_Current" xml:space="preserve">
+    <value>Current:</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Text_No_Update" xml:space="preserve">
+    <value>Launcher Status:\n - Current Version</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Text_Version" xml:space="preserve">
+    <value>Version:</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Text_Update" xml:space="preserve">
+    <value>Launcher Status:\n - Update Available</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Text_Update_New" xml:space="preserve">
+    <value>New:</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Text_Invalid_JSON" xml:space="preserve">
+    <value>Launcher Status:\n - Invalid JSON</value>
+  </data>
+  <data name="LauncherUpdateCheck_VS_Text_Invalid_Error" xml:space="preserve">
+    <value>Launcher Status:\n - API Version Error</value>
+  </data>
 </root>

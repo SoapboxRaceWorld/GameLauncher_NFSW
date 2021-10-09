@@ -25,7 +25,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms
             {
                 if (Lang_Launcher == null || ResetCache)
                 {
-                    switch (Application_Language)
+                    switch (UI(Application_Language))
                     {
                         default:
                             Lang_Launcher = new ResourceManager("GameLauncher.App.Languages.English_Texts", Assembly.GetExecutingAssembly());
@@ -57,6 +57,35 @@ namespace GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms
                 LogToFileAddons.OpenLog("Translations Database", null, Error, null, true);
                 return "Languages ERROR";
             }
+        }
+
+        public static string UI(string Chosen_Lang)
+        {
+            if (!string.IsNullOrWhiteSpace(Chosen_Lang))
+            {
+                if (Chosen_Lang.Contains("fr"))
+                {
+                    return "fr";
+                }
+                else if (Chosen_Lang.Contains("en"))
+                {
+                    return "en";
+                }
+                else
+                {
+                    return Chosen_Lang;
+                }
+            }
+            else
+            {
+                return "en-US";
+            }
+        }
+
+        public static string UI(string Chosen_Lang, bool Force_Reset_Cache)
+        {
+            ResetCache = Force_Reset_Cache;
+            return UI(Chosen_Lang);
         }
     }
 }

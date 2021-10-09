@@ -125,7 +125,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 }
                 else
                 {
-                    InsiderBuildNumberText.Visible = false;
+                    InsiderBuildNumberText.Visible = translatedBy.Visible = false;
                 }
             }
 

@@ -191,70 +191,70 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             switch (Error)
             {
                 case APIStatus.CacheEntryNotFound:
-                    return "Cache Entry Not Found";
+                    return Translations.Database("APIChecker_CacheEntryNotFound");
                 case APIStatus.ConnectFailure:
-                    return "Connect Failure";
+                    return Translations.Database("APIChecker_ConnectFailure");
                 case APIStatus.ConnectionClosed:
-                    return "Connection Closed";
+                    return Translations.Database("APIChecker_ConnectionClosed");
                 case APIStatus.KeepAliveFailure:
-                    return "Keep Alive Failure";
+                    return Translations.Database("APIChecker_KeepAliveFailure");
                 case APIStatus.MessageLengthLimitExceeded:
-                    return "Message Length Limit Exceeded";
+                    return Translations.Database("APIChecker_MessageLengthLimitExceeded");
                 case APIStatus.NameResolutionFailure:
-                    return "Name Resolution Failure";
+                    return Translations.Database("APIChecker_NameResolutionFailure");
                 case APIStatus.Pending:
-                    return "Pending";
+                    return Translations.Database("APIChecker_Pending");
                 case APIStatus.PipelineFailure:
-                    return "Pipeline Failure";
+                    return Translations.Database("APIChecker_PipelineFailure");
                 case APIStatus.NotFound:
-                    return "Not Found";
+                    return Translations.Database("APIChecker_NotFound");
                 case APIStatus.ServerError:
-                    return "Server Error";
+                    return Translations.Database("APIChecker_ServerError");
                 case APIStatus.ServerOverloaded:
-                    return "Server Overloaded";
+                    return Translations.Database("APIChecker_ServerOverloaded");
                 case APIStatus.ServerUnavailable:
-                    return "Server Unavailable";
+                    return Translations.Database("APIChecker_ServerUnavailable");
                 case APIStatus.GetWayTimeOut:
-                    return "GetWay Time Out";
+                    return Translations.Database("APIChecker_GetWayTimeOut");
                 case APIStatus.ConnectionTimeOut:
-                    return "Connection Timed Out";
+                    return Translations.Database("APIChecker_ConnectionTimeOut");
                 case APIStatus.OriginUnreachable:
-                    return "Origin Unreachable";
+                    return Translations.Database("APIChecker_OriginUnreachable");
                 case APIStatus.Timeout:
-                    return "Timed Out";
+                    return Translations.Database("APIChecker_Timeout");
                 case APIStatus.SSLFailed:
-                    return "SSL Failed";
+                    return Translations.Database("APIChecker_SSLFailed");
                 case APIStatus.InvaildSSL:
-                    return "Invalid SSL";
+                    return Translations.Database("APIChecker_InvaildSSL");
                 case APIStatus.UnknownStatusCode:
-                    return "Unknown Status Code";
+                    return Translations.Database("APIChecker_UnknownStatusCode");
                 case APIStatus.ProxyNameResolutionFailure:
-                    return "Proxy Name Resolution Failure";
+                    return Translations.Database("APIChecker_ProxyNameResolutionFailure");
                 case APIStatus.ReceiveFailure:
-                    return "Receive Failure";
+                    return Translations.Database("APIChecker_ReceiveFailure");
                 case APIStatus.RequestCanceled:
-                    return "Request Canceled";
+                    return Translations.Database("APIChecker_RequestCanceled");
                 case APIStatus.RequestProhibitedByCachePolicy:
-                    return "Request Prohibited By Cache Policy";
+                    return Translations.Database("APIChecker_RequestProhibitedByCachePolicy");
                 case APIStatus.SecureChannelFailure:
-                    return "Secure Channel Failure";
+                    return Translations.Database("APIChecker_SecureChannelFailure");
                 case APIStatus.SendFailure:
-                    return "Send Failure";
+                    return Translations.Database("APIChecker_SendFailure");
                 case APIStatus.ServerProtocolViolation:
-                    return "Server Protocol Violation";
+                    return Translations.Database("APIChecker_ServerProtocolViolation");
                 case APIStatus.Success:
-                    return "Success";
+                    return Translations.Database("APIChecker_Success");
                 case APIStatus.TrustFailure:
-                    return "Trust Failure";
+                    return Translations.Database("APIChecker_TrustFailure");
                 case APIStatus.Unknown:
                 case APIStatus.UnknownError:
-                    return "Unknown Error";
+                    return Translations.Database("APIChecker_Unknown");
                 case APIStatus.Null:
-                    return "URL was Null";
+                    return Translations.Database("APIChecker_Null");
                 case APIStatus.Online:
-                    return "Online";
+                    return Translations.Database("APIChecker_Online");
                 default:
-                    return "Offline";
+                    return Translations.Database("APIChecker_Offline");
             }
         }
     }

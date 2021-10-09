@@ -125,7 +125,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
                 string responseBody = Strings.Encode(await responseMessage.GetStringAsync());
 
-                if (path == "/User/GetPermanentSession")
+                if (path == "/User/GetPermanentSession" && !string.IsNullOrWhiteSpace(responseBody))
                 {
                     //Replace only SB and Star icon, no need to clean whole XML Output.
                     responseBody = responseBody

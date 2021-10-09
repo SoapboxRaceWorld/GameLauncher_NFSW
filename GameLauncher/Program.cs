@@ -86,9 +86,8 @@ namespace GameLauncher
         [STAThread]
         static void Main()
         {
-            Translations.Application_Language = InformationCache.Lang.Name.Split('-')[0];
-            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo(Translations.Application_Language);
-            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Translations.Application_Language);
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo(InformationCache.Lang.Name);
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Translations.UI(Translations.Application_Language = InformationCache.Lang.Name));
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.ThreadException += Application_ThreadException;
@@ -546,9 +545,8 @@ namespace GameLauncher
                         Log.Completed("INI FILES: Done");
 
                         Log.Function("APPLICATION: Setting Language");
-                        Translations.ResetCache = true;
-                        Translations.Application_Language = FileSettingsSave.Lang.ToLower();
-                        Log.Completed("APPLICATION: Done Setting Language");
+                        CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Translations.UI(Translations.Application_Language = FileSettingsSave.Lang.ToLower(), true));
+                        Log.Completed("APPLICATION: Done Setting Language '" + Translations.UI(Translations.Application_Language) + "'");
 
                         /* Windows 7 Fix */
                         if (WindowsProductVersion.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))

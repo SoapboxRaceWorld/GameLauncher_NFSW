@@ -18,6 +18,7 @@ using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.UI_Forms.UpdatePopup_Screen;
 using GameLauncher.App.UI_Forms.Splash_Screen;
+using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -253,8 +254,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                             else
                             {
                                 Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
-                                MessageBox.Show(null, "A Web Browser has been opened to the Game Launcher's GitHub Latest Release Page " +
-                                    "to Download the New Version", "GameLauncher", MessageBoxButtons.OK);
+                                MessageBox.Show(null, Translations.Database("LauncherUpdateCheck_FS"), "GameLauncher", MessageBoxButtons.OK);
                             }
                         }
                         else if (UserResult == DialogResult.Ignore)
@@ -290,21 +290,23 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     string WhatBuildAmI;
                     if (EnableInsiderDeveloper.Allowed())
                     {
-                        WhatBuildAmI = "Developer";
+                        WhatBuildAmI = Translations.Database("LauncherUpdateCheck_VS_Insider_Dev");
                     }
                     else if (EnableInsiderBetaTester.Allowed())
                     {
-                        WhatBuildAmI = "Beta";
+                        WhatBuildAmI = Translations.Database("LauncherUpdateCheck_VS_Insider_Beta");
                     }
                     else
                     {
-                        WhatBuildAmI = "Unofficial";
+                        WhatBuildAmI = Translations.Database("LauncherUpdateCheck_VS_Insider_Unofficial");
                     }
 
-                    text.Text = "Launcher Status:\n - " + WhatBuildAmI + " Build";
+                    text.Text = Translations.Database("LauncherUpdateCheck_VS_Insider") + "\n - " + WhatBuildAmI + 
+                        " " + Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Build");
                     status.BackgroundImage = Theming.UpdateIconWarning;
                     text.ForeColor = Theming.Warning;
-                    description.Text = "Stable: v" + LatestLauncherBuild + "\nCurrent: v" + Application.ProductVersion;
+                    description.Text = Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Stable") + " " +   LatestLauncherBuild + 
+                        "\n" + Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Current") + " " + Application.ProductVersion;
 
                     if (!string.IsNullOrWhiteSpace(FileSettingsSave.IgnoreVersion))
                     {
@@ -316,10 +318,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 else if (Revisions == 0)
                 {
-                    text.Text = "Launcher Status:\n - Current Version";
+                    text.Text = Translations.Database("LauncherUpdateCheck_VS_Text_No_Update");
                     status.BackgroundImage = Theming.UpdateIconSuccess;
                     text.ForeColor = Theming.Sucess;
-                    description.Text = "Version: " + Application.ProductVersion;
+                    description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Version") + " " + Application.ProductVersion;
 
                     if (FileSettingsSave.IgnoreVersion == Application.ProductVersion)
                     {
@@ -330,10 +332,11 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 else
                 {
-                    text.Text = "Launcher Status:\n - Update Available";
+                    text.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Update");
                     status.BackgroundImage = Theming.UpdateIconWarning;
                     text.ForeColor = Theming.Warning;
-                    description.Text = "New: v" + LatestLauncherBuild + "\nCurrent: v" + Application.ProductVersion;
+                    description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Update_New") + " " + LatestLauncherBuild + "\n" + 
+                        Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Current") + " " + Application.ProductVersion;
                     UpgradeAvailable = true;
                     if (SkipAvailableUpgrade)
                     {
@@ -345,17 +348,17 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             }
             else if (VisualsAPIChecker.GitHubAPI && !ValidJSONDownload)
             {
-                text.Text = "Launcher Status:\n - Invalid JSON";
+                text.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Invalid_JSON");
                 status.BackgroundImage = Theming.UpdateIconError;
                 text.ForeColor = Theming.Error;
-                description.Text = "Version: v" + Application.ProductVersion;
+                description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Version") + " " + Application.ProductVersion;
             }
             else
             {
-                text.Text = "Launcher Status:\n - API Version Error";
+                text.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Invalid_Error");
                 status.BackgroundImage = Theming.UpdateIconUnknown;
                 text.ForeColor = Theming.ThirdTextForeColor;
-                description.Text = "Version: v" + Application.ProductVersion;
+                description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Version") + " " + Application.ProductVersion;
             }
         }
     }
