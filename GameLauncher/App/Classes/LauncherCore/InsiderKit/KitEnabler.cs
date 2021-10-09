@@ -7,7 +7,7 @@ namespace GameLauncher.App.Classes.InsiderKit
     class InsiderInfo
     {
         /* Current month, day, year (2 digits), and letter! Ex: 12-15-20-A */
-        public static string InsiderBuildNumber = "10-06-21-B";
+        public static string InsiderBuildNumber = "10-09-21-R";
 
         public static string BuildNumberOnly()
         {
@@ -43,7 +43,7 @@ namespace GameLauncher.App.Classes.InsiderKit
     /* This is only used for Beta Testers (Treated like a Public Release) */
     class EnableInsiderBetaTester
     {
-        public static bool Enabled = true;
+        public static bool Enabled = false;
 
         public static bool Allowed()
         {
