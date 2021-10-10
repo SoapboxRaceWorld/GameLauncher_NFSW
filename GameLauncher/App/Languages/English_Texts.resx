@@ -150,7 +150,8 @@
     <value>Close Launcher</value>
   </data>
   <data name="MainScreen_Notification_Text_Alert" xml:space="preserve">
-    <value>Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.</value>
+    <value>Game is going to shut down in 5 minutes.
+ Please restart it manually before the launcher does it.</value>
   </data>
   <data name="MainScreen_Notification_Text_Restart" xml:space="preserve">
     <value>Force Restart -</value>
@@ -159,7 +160,8 @@
     <value>Please wait while the GameLauncher is still downloading the game files.</value>
   </data>
   <data name="MainScreen_TextBox_GameFiles_Invalid_Location" xml:space="preserve">
-    <value>Drive {0} was not found. Your actual installation directory is set to {1} now.</value>
+    <value>Drive {0} was not found.
+ Your actual installation directory is set to {1} now.</value>
   </data>
   <data name="MainScreen_TextBox_SettingsScreen_Error" xml:space="preserve">
     <value>Settings Screen Encountered an Error</value>
@@ -182,8 +184,7 @@
   </data>
   <data name="MainScreen_Text_API_Launcher" xml:space="preserve">
     <value>Main API
-
-- Pinging</value>
+ - Pinging</value>
     <comment>Used to Display API Status [Default Text]</comment>
   </data>
   <data name="MainScreen_Text_API_Launcher_Description_Offline" xml:space="preserve">
@@ -207,7 +208,7 @@ Registered: ###</value>
   </data>
   <data name="MainScreen_Text_Launcher_Status" xml:space="preserve">
     <value>Launcher
-- Checking</value>
+ - Checking</value>
   </data>
   <data name="MainScreen_Text_Launcher_Version" xml:space="preserve">
     <value>Version: v</value>
@@ -296,14 +297,15 @@ Registered: ###</value>
     <value>Server Seems to be Offline</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Description_Online" xml:space="preserve">
-    <value>Online: {0}\nRegistered: {1}</value>
+    <value>Online: {0}
+ Registered: {1}</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Description_Unstable" xml:space="preserve">
     <value>Recevied Invalid JSON Game Server Info.</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Offline" xml:space="preserve">
     <value>Server Status:
-  - Offline ( OFF )</value>
+ - Offline ( OFF )</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Online" xml:space="preserve">
     <value>Server Status:
@@ -358,7 +360,8 @@ Registered: ###</value>
     <value>Invalid Version</value>
   </data>
   <data name="Program_TextBox_File_Invalid_Start" xml:space="preserve">
-    <value>Cannot Start GameLauncher. The following files are invalid:\n\n</value>
+    <value>Cannot Start GameLauncher.
+ The following files are invalid:\n\n</value>
   </data>
   <data name="Program_TextBox_NetFrame_P2" xml:space="preserve">
     <value>Do you want to install this .NET Framework version now?</value>
@@ -457,11 +460,13 @@ Registered: ###</value>
   </data>
   <data name="VisualsAPIChecker_TextBox_No_API" xml:space="preserve">
     <value>Unable to Connect to any Server List API.
- Please check your connection.
- 
- Click Yes to Close Launcher
- or
- Click No Continue</value>
+Please check your connection.
+
+Click Yes to Close Launcher
+
+or
+
+Click No Continue</value>
   </data>
   <data name="VisualsAPIChecker_TextBox_No_API_P2" xml:space="preserve">
     <value>GameLauncher has Stopped, Failed To Connect to any Server List API</value>
