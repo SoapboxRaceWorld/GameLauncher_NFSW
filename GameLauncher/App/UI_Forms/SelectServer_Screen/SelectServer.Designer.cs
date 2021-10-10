@@ -62,7 +62,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             this.Loading.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.Loading.Location = new System.Drawing.Point(220, 242);
             this.Loading.Name = "Loading";
-            this.Loading.Size = new System.Drawing.Size(120, 13);
+            this.Loading.Size = new System.Drawing.Size(120, 14);
             this.Loading.TabIndex = 4;
             this.Loading.Text = "Loading servers...";
             // 
@@ -120,11 +120,11 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             this.Version.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Version.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Version.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.Version.Location = new System.Drawing.Point(220, 260);
+            this.Version.Location = new System.Drawing.Point(215, 260);
             this.Version.Name = "Version";
-            this.Version.Size = new System.Drawing.Size(120, 13);
+            this.Version.Size = new System.Drawing.Size(128, 14);
             this.Version.TabIndex = 9;
-            this.Version.Text = "Version : vX.X.X.X";
+            this.Version.Text = "Version : vX.X.X.XX";
             this.Version.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // SelectServer

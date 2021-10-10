@@ -332,7 +332,7 @@
     <value>5</value>
   </data>
   <data name="LauncherStatusDesc.Text" xml:space="preserve">
-    <value>Version: vX.X.X.X</value>
+    <value>Version: vX.X.X.XX</value>
   </data>
   <data name="&gt;&gt;LauncherStatusDesc.Name" xml:space="preserve">
     <value>LauncherStatusDesc</value>
@@ -1659,7 +1659,7 @@ Registered: ###</value>
     <value>ExtractingProgress</value>
   </data>
   <data name="&gt;&gt;ExtractingProgress.Type" xml:space="preserve">
-    <value>GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx, GameLauncher, Version=2.1.8.9, Culture=neutral, PublicKeyToken=null</value>
+    <value>GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx, GameLauncher, Version=2.1.9.1, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;ExtractingProgress.Parent" xml:space="preserve">
     <value>$this</value>
@@ -1683,7 +1683,7 @@ Registered: ###</value>
     <value>PlayProgress</value>
   </data>
   <data name="&gt;&gt;PlayProgress.Type" xml:space="preserve">
-    <value>GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx, GameLauncher, Version=2.1.8.9, Culture=neutral, PublicKeyToken=null</value>
+    <value>GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx, GameLauncher, Version=2.1.9.1, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;PlayProgress.Parent" xml:space="preserve">
     <value>$this</value>
@@ -3718,9 +3718,6 @@ Registered: ###</value>
         IkWKFClSpEiRIkWKFClSpEiRIkWKFClSpEiRIkWKFClSpEiRIkWKFClSpEiRIkWKFClSpEiRIkWKFClS
         pEiRIsVG8P8DuG4mmZKJBOgAAAAASUVORK5CYII=
 </value>
-  </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>

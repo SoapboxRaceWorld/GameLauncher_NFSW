@@ -59,7 +59,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             this.DownloadSourceText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.DownloadSourceText.Location = new System.Drawing.Point(111, 177);
             this.DownloadSourceText.Name = "DownloadSourceText";
-            this.DownloadSourceText.Size = new System.Drawing.Size(180, 14);
+            this.DownloadSourceText.Size = new System.Drawing.Size(177, 14);
             this.DownloadSourceText.TabIndex = 2;
             this.DownloadSourceText.Text = "CDN / Download Source:";
             this.DownloadSourceText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -129,13 +129,12 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             // 
             // VersionLabel
             // 
-            this.VersionLabel.AutoSize = true;
             this.VersionLabel.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VersionLabel.Location = new System.Drawing.Point(157, 338);
+            this.VersionLabel.Location = new System.Drawing.Point(152, 338);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(103, 13);
+            this.VersionLabel.Size = new System.Drawing.Size(128, 14);
             this.VersionLabel.TabIndex = 9;
-            this.VersionLabel.Text = "Version: vX.X.X.X";
+            this.VersionLabel.Text = "Version: vX.X.X.XX";
             this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // GameLangSource
@@ -161,7 +160,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             this.GameLangText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GameLangText.Location = new System.Drawing.Point(111, 112);
             this.GameLangText.Name = "GameLangText";
-            this.GameLangText.Size = new System.Drawing.Size(177, 14);
+            this.GameLangText.Size = new System.Drawing.Size(175, 14);
             this.GameLangText.TabIndex = 10;
             this.GameLangText.Text = "Select Game Language:";
             this.GameLangText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

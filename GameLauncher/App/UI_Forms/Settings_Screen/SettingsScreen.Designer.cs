@@ -89,9 +89,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsLauncherVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsLauncherVersion.Location = new System.Drawing.Point(36, 480);
             this.SettingsLauncherVersion.Name = "SettingsLauncherVersion";
-            this.SettingsLauncherVersion.Size = new System.Drawing.Size(114, 14);
+            this.SettingsLauncherVersion.Size = new System.Drawing.Size(128, 14);
             this.SettingsLauncherVersion.TabIndex = 118;
-            this.SettingsLauncherVersion.Text = "Version: vX.X.X.X";
+            this.SettingsLauncherVersion.Text = "Version: vX.X.X.XX";
             this.SettingsLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SettingsAboutButton

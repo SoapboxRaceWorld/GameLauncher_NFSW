@@ -384,14 +384,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
             // 
             // VersionLabel
             // 
-            this.VersionLabel.AutoSize = true;
             this.VersionLabel.BackColor = System.Drawing.Color.Transparent;
             this.VersionLabel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VersionLabel.Location = new System.Drawing.Point(36, 480);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(107, 14);
+            this.VersionLabel.Size = new System.Drawing.Size(128, 14);
             this.VersionLabel.TabIndex = 214;
-            this.VersionLabel.Text = "Version: vX.X.X.X";
+            this.VersionLabel.Text = "Version: vX.X.X.XX";
             this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SecurityCenterScreen
@@ -434,7 +433,6 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             ((System.ComponentModel.ISupportInitialize)(this.ButtonClose)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
