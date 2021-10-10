@@ -25,6 +25,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         private static int EventID;
         private static string carslotsXML = String.Empty;
         private static bool inSafeHouse = false;
+        public static bool T1000() => eventTerminatedManually && (InformationCache.RestartTimer <= 0);
 
         /* Some data related, can be touched. */
         public static string PersonaId = String.Empty;
@@ -166,7 +167,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
 
                 /* DRIVING CARNAME */
-                if (uri == "/DriverPersona/GetPersonaInfo" && canUpdateProfileField == true)
+                if (uri == "/DriverPersona/GetPersonaInfo" && canUpdateProfileField)
                 {
                     if (LoggedPersonaId == GETContent.Split(';').Last().Split('=').Last())
                     {
@@ -201,6 +202,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                 if (uri == "/events/notifycoincollected")
                 {
+                    eventTerminatedManually = FunctionStatus.CanCloseGame = true;
+
                     /* Actively Collection Treasure Hunt Gems */
                     PersonaTreasure++;
 
@@ -237,7 +240,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         _presence.Assets.SmallImageText = "In-Freeroam";
                         _presence.Assets.SmallImageKey = "gamemode_freeroam";
                         _presence.State = LauncherRPC;
-                        FunctionStatus.CanCloseGame = true;
+                        eventTerminatedManually = FunctionStatus.CanCloseGame = true;
                         inSafeHouse = false;
                     }
                     else
@@ -246,7 +249,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         _presence.Assets.SmallImageText = "In-Safehouse";
                         _presence.Assets.SmallImageKey = "gamemode_safehouse";
                         _presence.State = serverName;
-                        FunctionStatus.CanCloseGame = false;
+                        eventTerminatedManually = FunctionStatus.CanCloseGame = false;
                         inSafeHouse = true;
                     }
 
@@ -276,8 +279,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         AntiCheat.DisableChecks(false);
                     }
 
-                    eventTerminatedManually = true;
-                    FunctionStatus.CanCloseGame = true;
+                    eventTerminatedManually = FunctionStatus.CanCloseGame = true;
 
                     if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
@@ -285,10 +287,10 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 else if (uri == "/matchmaking/acceptinvite")
                 {
                     /* Accept (Group/Search) Event Invite */
-                    FunctionStatus.CanCloseGame = false;
+                    eventTerminatedManually = FunctionStatus.CanCloseGame = false;
 
                     SBRW_XML.LoadXml(serverreply);
-                    var eventIdNode = SBRW_XML.SelectSingleNode("LobbyInfo/EventId");
+                    XmlNode eventIdNode = SBRW_XML.SelectSingleNode("LobbyInfo/EventId");
 
                     if (eventIdNode != null)
                     {
@@ -305,12 +307,13 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         };
                         _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                        eventTerminatedManually = false;
                         if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                     }
                 }
                 else if (uri == "/matchmaking/joinqueueracenow")
                 {
+                    eventTerminatedManually = FunctionStatus.CanCloseGame = true;
+
                     /* Searching for Events */
                     _presence.Details = "Searching for Event";
                     _presence.State = LauncherRPC;
@@ -323,7 +326,6 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     };
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    eventTerminatedManually = true;
                     if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
 
@@ -331,7 +333,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 if (Regex.Match(uri, "/matchmaking/launchevent").Success)
                 {
                     /* Singleplayer Event (Launch) */
-                    FunctionStatus.CanCloseGame = false;
+                    eventTerminatedManually = FunctionStatus.CanCloseGame = false;
 
                     EventID = Convert.ToInt32(splitted_uri[3]);
 
@@ -346,7 +348,6 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     };
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    eventTerminatedManually = false;
                     if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
                 else if (uri == "/event/launched" && !eventTerminatedManually)
@@ -370,6 +371,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
                 else if (uri == "/event/arbitration")
                 {
+                    eventTerminatedManually = FunctionStatus.CanCloseGame = false;
+
                     /* Once the Race Finishes */
                     _presence.Details = "Finished Event: " + EventsList.GetEventName(EventID);
                     _presence.State = serverName;
@@ -383,7 +386,30 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
                     AntiCheat.DisableChecks(true);
-                    eventTerminatedManually = false;
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
+                }
+
+                /* Extending Safehouse */
+                if (uri.Contains("catalog") && inSafeHouse)
+                {
+                    if (GETContent.Contains("categoryName=NFSW_NA_EP_VINYLS_Category")) _presence.Details = "In Safehouse - Applying Vinyls";
+                    if (GETContent.Contains("clientProductType=PAINTS_BODY")) _presence.Details = "In Safehouse - Applying Colors";
+                    if (GETContent.Contains("clientProductType=PERFORMANCEPART")) _presence.Details = "In Safehouse - Applying Performance Parts";
+                    if (GETContent.Contains("clientProductType=VISUALPART")) _presence.Details = "In Safehouse - Applying Visual Parts";
+                    if (GETContent.Contains("clientProductType=SKILLMODPART")) _presence.Details = "In Safehouse - Applying Skillmods";
+                    if (GETContent.Contains("clientProductType=PRESETCAR")) _presence.Details = "In Safehouse - Purchasing Car";
+                    if (GETContent.Contains("categoryName=BoosterPacks")) _presence.Details = "In Safehouse - Opening Cardpacks";
+
+                    _presence.Assets = new Assets
+                    {
+                        SmallImageText = "In-Safehouse",
+                        SmallImageKey = "gamemode_safehouse"
+                    };
+                    _presence.State = serverName;
+                    _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
+                    _presence.Assets.LargeImageKey = PersonaAvatarId;
+                    _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
+
                     if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
 
@@ -432,30 +458,6 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                             }
                         }
                     }
-                }
-
-                /* Extending Safehouse */
-                if (uri.Contains("catalog") && inSafeHouse)
-                {
-                    if (GETContent.Contains("categoryName=NFSW_NA_EP_VINYLS_Category")) _presence.Details = "In Safehouse - Applying Vinyls";
-                    if (GETContent.Contains("clientProductType=PAINTS_BODY")) _presence.Details = "In Safehouse - Applying Colors";
-                    if (GETContent.Contains("clientProductType=PERFORMANCEPART")) _presence.Details = "In Safehouse - Applying Performance Parts";
-                    if (GETContent.Contains("clientProductType=VISUALPART")) _presence.Details = "In Safehouse - Applying Visual Parts";
-                    if (GETContent.Contains("clientProductType=SKILLMODPART")) _presence.Details = "In Safehouse - Applying Skillmods";
-                    if (GETContent.Contains("clientProductType=PRESETCAR")) _presence.Details = "In Safehouse - Purchasing Car";
-                    if (GETContent.Contains("categoryName=BoosterPacks")) _presence.Details = "In Safehouse - Opening Cardpacks";
-
-                    _presence.Assets = new Assets
-                    {
-                        SmallImageText = "In-Safehouse",
-                        SmallImageKey = "gamemode_safehouse"
-                    };
-                    _presence.State = serverName;
-                    _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
-                    _presence.Assets.LargeImageKey = PersonaAvatarId;
-                    _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
-
-                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
             }
             catch (Exception Error)

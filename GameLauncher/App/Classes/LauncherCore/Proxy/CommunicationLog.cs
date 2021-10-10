@@ -16,6 +16,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         Error,
         Rejected,
         Warning,
+        Timer,
         Unknown
     }
 
@@ -127,6 +128,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     return "REJECTED";
                 case CommunicationLogEntryType.Warning:
                     return "WARNING";
+                case CommunicationLogEntryType.Timer:
+                    return "TIMER";
                 default:
                     return "UNKNOWN";
             }

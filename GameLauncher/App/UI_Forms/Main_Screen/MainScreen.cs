@@ -974,6 +974,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                             try
                             {
+                                Log.Debug(InformationCache.SelectedServerJSON.enforceLauncherProxy.ToString());
                                 bool.TryParse(InformationCache.SelectedServerJSON.enforceLauncherProxy.ToString() ?? InformationCache.SelectedServerJSON.modernAuthSupport ??
                                     InformationCache.SelectedServerData.IPAddress.StartsWith("https").ToString(), out bool Final_Result);
                                 InformationCache.SelectedServerEnforceProxy = Final_Result;
@@ -1024,8 +1025,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             LoginButton.Enabled = true;
                             RegisterText.Enabled = true;
                             InformationCache.SelectedServerCategory = ((ServerList)ServerPick.SelectedItem).Category;
-                            InformationCache.RestartTimer = 
-                            (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
+                            InformationCache.RestartTimer = 320;
 
                             if ((InformationCache.SelectedServerCategory ?? string.Empty).ToUpper() == "DEV" || 
                             (InformationCache.SelectedServerCategory ?? string.Empty).ToUpper() == "OFFLINE")
@@ -1670,7 +1670,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         else exitCode = 2137;
                     }
                     
-                    if (exitCode == 0)
+                    if (exitCode == 0 && !FunctionStatus.GameKilledBySpeedBugCheck)
                     {
                         if (AntiCheat.Secret != null)
                         {

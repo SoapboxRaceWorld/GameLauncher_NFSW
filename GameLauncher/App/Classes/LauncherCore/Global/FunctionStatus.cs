@@ -92,7 +92,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         public static bool IsVisualAPIsChecked = false;
 
         /* Sets Conditional to If its Possible to Close Game */
-        public static Boolean CanCloseGame = true;
+        public static bool CanCloseGame = true;
 
         /* If In-Game OverLays was Used */
         public static bool ExternalToolsWasUsed = false;
