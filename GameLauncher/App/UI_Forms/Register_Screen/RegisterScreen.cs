@@ -234,7 +234,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                             return;
                     }
 
-                    Authentication.Client("Login", InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", Email, Password, null);
+                    Authentication.Client("Register", InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", Email, Password, null);
 
                     if (!String.IsNullOrWhiteSpace(Tokens.Success))
                     {

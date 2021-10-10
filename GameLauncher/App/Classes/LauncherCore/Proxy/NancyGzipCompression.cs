@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Nancy;
 using Nancy.Bootstrapper;
@@ -50,6 +53,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 case "ContentLengthIsTooSmall":
                     ErrorReason += "Content-Length Is Too Small";
                     break;
+                case "GameTimer":
+                    ErrorReason += "Game Requires Termination";
+                    break;
                 default:
                     ErrorReason += "Unknown Reason";
                     break;
@@ -76,6 +82,23 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             else if (ContentLengthIsTooSmall(Context))
             {
                 WebCallRejected("ContentLengthIsTooSmall", Context);
+            }
+            else if (DiscordGamePresence.T1000())
+            {
+                try
+                {
+                    FunctionStatus.GameKilledBySpeedBugCheck = true;
+                    Process[] allOfThem = Process.GetProcessesByName("nfsw");
+
+                    if (allOfThem != null && allOfThem.Any())
+                    {
+                        foreach (var oneProcess in allOfThem)
+                        {
+                            Process.GetProcessById(oneProcess.Id).Kill();
+                        }
+                    }
+                }
+                catch { }
             }
             else
             {

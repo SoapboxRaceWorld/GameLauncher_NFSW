@@ -150,7 +150,8 @@
     <value>Close Launcher</value>
   </data>
   <data name="MainScreen_Notification_Text_Alert" xml:space="preserve">
-    <value>Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.</value>
+    <value>Game is going to shut down in 5 minutes.
+ Please restart it manually before the launcher does it.</value>
   </data>
   <data name="MainScreen_Notification_Text_Restart" xml:space="preserve">
     <value>Force Restart -</value>
@@ -159,7 +160,8 @@
     <value>Please wait while the GameLauncher is still downloading the game files.</value>
   </data>
   <data name="MainScreen_TextBox_GameFiles_Invalid_Location" xml:space="preserve">
-    <value>Drive {0} was not found. Your actual installation directory is set to {1} now.</value>
+    <value>Drive {0} was not found.
+ Your actual installation directory is set to {1} now.</value>
   </data>
   <data name="MainScreen_TextBox_SettingsScreen_Error" xml:space="preserve">
     <value>Settings Screen Encountered an Error</value>
@@ -182,8 +184,7 @@
   </data>
   <data name="MainScreen_Text_API_Launcher" xml:space="preserve">
     <value>Main API
-
-- Pinging</value>
+ - Pinging</value>
     <comment>Used to Display API Status [Default Text]</comment>
   </data>
   <data name="MainScreen_Text_API_Launcher_Description_Offline" xml:space="preserve">
@@ -198,7 +199,8 @@ Registered: ###</value>
     <comment>Used to Display Server Player Data [Place Holder Text]</comment>
   </data>
   <data name="MainScreen_Text_FS_Launcher_Status_Linux" xml:space="preserve">
-    <value>Launcher Status:\n - Linux Build</value>
+    <value>Launcher Status:
+ - Linux Build</value>
     <comment>[FS -&gt; Failsafe]</comment>
   </data>
   <data name="MainScreen_Text_FS_Login_Greeting" xml:space="preserve">
@@ -206,8 +208,7 @@ Registered: ###</value>
   </data>
   <data name="MainScreen_Text_Launcher_Status" xml:space="preserve">
     <value>Launcher
- 
-- Checking</value>
+ - Checking</value>
   </data>
   <data name="MainScreen_Text_Launcher_Version" xml:space="preserve">
     <value>Version: v</value>
@@ -286,7 +287,8 @@ Registered: ###</value>
     <value>Game Launcher!</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Checking" xml:space="preserve">
-    <value>Server Status:\n - Pinging</value>
+    <value>Server Status:
+ - Pinging</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Description_Cancelled" xml:space="preserve">
     <value>Failed to Connect to Server</value>
@@ -295,23 +297,27 @@ Registered: ###</value>
     <value>Server Seems to be Offline</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Description_Online" xml:space="preserve">
-    <value>Online: {0}\nRegistered: {1}</value>
+    <value>Online: {0}
+ Registered: {1}</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Description_Unstable" xml:space="preserve">
     <value>Recevied Invalid JSON Game Server Info.</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Offline" xml:space="preserve">
-    <value>Server Status:\n - Offline ( OFF )</value>
-    <comment>"\n" is used to display text in a new line</comment>
+    <value>Server Status:
+ - Offline ( OFF )</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Online" xml:space="preserve">
-    <value>Server Status:\n - Online ( ON )</value>
+    <value>Server Status:
+ - Online ( ON )</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Unknown" xml:space="preserve">
-    <value>Launcher Offline:\n - Unknown</value>
+    <value>Launcher Offline:
+ - Unknown</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Unstable" xml:space="preserve">
-    <value>Server Connection:\n - Unstable</value>
+    <value>Server Connection:
+ - Unstable</value>
   </data>
   <data name="Program_TextBox_SBRWIsRunning" xml:space="preserve">
     <value>An instance of SBRW Launcher is already running</value>
@@ -338,7 +344,8 @@ Registered: ###</value>
     <value>This application could not be started.</value>
   </data>
   <data name="Program_TextBox_LZMA_Redownloaded" xml:space="preserve">
-    <value>Downloaded Missing LZMA.dll File.\nPlease Restart Launcher, Thanks!</value>
+    <value>Downloaded Missing LZMA.dll File.
+ Please Restart Launcher, Thanks!</value>
   </data>
   <data name="Program_TextBox_File_NotFound" xml:space="preserve">
     <value>Not Found</value>
@@ -353,7 +360,8 @@ Registered: ###</value>
     <value>Invalid Version</value>
   </data>
   <data name="Program_TextBox_File_Invalid_Start" xml:space="preserve">
-    <value>Cannot Start GameLauncher. The following files are invalid:\n\n</value>
+    <value>Cannot Start GameLauncher.
+ The following files are invalid:\n\n</value>
   </data>
   <data name="Program_TextBox_NetFrame_P2" xml:space="preserve">
     <value>Do you want to install this .NET Framework version now?</value>
@@ -389,7 +397,8 @@ Registered: ###</value>
     <value>(Or any other NTFS 'Local Disk' location such as 'D:')</value>
   </data>
   <data name="Program_TextBox_Folder_Write_Test" xml:space="preserve">
-    <value>Unable to do a Test Write to Launcher Folder\nPermission Issue</value>
+    <value>Unable to do a Test Write to Launcher Folder
+ Permission Issue</value>
   </data>
   <data name="Program_TextBox_W7_TLS" xml:space="preserve">
     <value>Hey Windows 7 User, we've detected a potential issue of some missing Updates that are required.</value>
@@ -431,28 +440,40 @@ Registered: ###</value>
     <value>You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed.</value>
   </data>
   <data name="Redistributable_VC_P6" xml:space="preserve">
-    <value>Failed to run package installer. The game will not be started.</value>
+    <value>Failed to run package installer.
+ The game will not be started.</value>
   </data>
   <data name="Redistributable_VC_P7" xml:space="preserve">
-    <value>Failed to run package installer. Installer Exit Code</value>
+    <value>Failed to run package installer.
+ Installer Exit Code</value>
   </data>
   <data name="Redistributable_VC_P8" xml:space="preserve">
     <value>The game will not be started.</value>
   </data>
   <data name="Redistributable_VC_P9" xml:space="preserve">
-    <value>Failed to start package installer. The game will not be started.</value>
+    <value>Failed to start package installer.
+ The game will not be started.</value>
   </data>
   <data name="Redistributable_VC_P10" xml:space="preserve">
-    <value>Failed to download package installer. The game will not be started.</value>
+    <value>Failed to download package installer.
+ The game will not be started.</value>
   </data>
   <data name="VisualsAPIChecker_TextBox_No_API" xml:space="preserve">
-    <value>Unable to Connect to any Server List API. Please check your connection.\n\nClick Yes to Close Launcher \nor\nClick No Continue</value>
+    <value>Unable to Connect to any Server List API.
+Please check your connection.
+
+Click Yes to Close Launcher
+
+or
+
+Click No Continue</value>
   </data>
   <data name="VisualsAPIChecker_TextBox_No_API_P2" xml:space="preserve">
     <value>GameLauncher has Stopped, Failed To Connect to any Server List API</value>
   </data>
   <data name="VisualsAPIChecker_TextBox_No_API_P3" xml:space="preserve">
-    <value>Please keep in Mind Launcher might crash past this point. Make sure to resolve the issue next time</value>
+    <value>Please keep in Mind Launcher might crash past this point.
+ Make sure to resolve the issue next time</value>
   </data>
   <data name="VisualsAPIChecker_TextBox_No_API_P4" xml:space="preserve">
     <value>GameLauncher will continue, despite failing To Connect To API</value>
@@ -578,21 +599,25 @@ Registered: ###</value>
     <value>Current:</value>
   </data>
   <data name="LauncherUpdateCheck_VS_Text_No_Update" xml:space="preserve">
-    <value>Launcher Status:\n - Current Version</value>
+    <value>Launcher Status:
+ - Current Version</value>
   </data>
   <data name="LauncherUpdateCheck_VS_Text_Version" xml:space="preserve">
     <value>Version:</value>
   </data>
   <data name="LauncherUpdateCheck_VS_Text_Update" xml:space="preserve">
-    <value>Launcher Status:\n - Update Available</value>
+    <value>Launcher Status:
+ - Update Available</value>
   </data>
   <data name="LauncherUpdateCheck_VS_Text_Update_New" xml:space="preserve">
     <value>New:</value>
   </data>
   <data name="LauncherUpdateCheck_VS_Text_Invalid_JSON" xml:space="preserve">
-    <value>Launcher Status:\n - Invalid JSON</value>
+    <value>Launcher Status:
+ - Invalid JSON</value>
   </data>
   <data name="LauncherUpdateCheck_VS_Text_Invalid_Error" xml:space="preserve">
-    <value>Launcher Status:\n - API Version Error</value>
+    <value>Launcher Status:
+ - API Version Error</value>
   </data>
 </root>
