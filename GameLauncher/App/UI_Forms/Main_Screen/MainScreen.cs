@@ -975,9 +975,9 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             try
                             {
                                 Log.Debug(InformationCache.SelectedServerJSON.enforceLauncherProxy.ToString());
-                                bool.TryParse(InformationCache.SelectedServerJSON.enforceLauncherProxy.ToString() ?? InformationCache.SelectedServerJSON.modernAuthSupport ??
-                                    InformationCache.SelectedServerData.IPAddress.StartsWith("https").ToString(), out bool Final_Result);
-                                InformationCache.SelectedServerEnforceProxy = Final_Result;
+                                bool.TryParse((InformationCache.SelectedServerJSON.enforceLauncherProxy != null) ? InformationCache.SelectedServerJSON.enforceLauncherProxy.ToString() : 
+                                    InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", out bool Final_Result);
+                                    InformationCache.SelectedServerEnforceProxy = !InformationCache.SelectedServerData.IPAddress.StartsWith("https") ? Final_Result : true;
                             }
                             catch { }
 
