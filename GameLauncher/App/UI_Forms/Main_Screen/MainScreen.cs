@@ -974,7 +974,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                             try
                             {
-                                Log.Debug(InformationCache.SelectedServerJSON.enforceLauncherProxy.ToString());
                                 bool.TryParse((InformationCache.SelectedServerJSON.enforceLauncherProxy != null) ? InformationCache.SelectedServerJSON.enforceLauncherProxy.ToString() : 
                                     InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", out bool Final_Result);
                                     InformationCache.SelectedServerEnforceProxy = !InformationCache.SelectedServerData.IPAddress.StartsWith("https") ? Final_Result : true;
@@ -1025,7 +1024,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             LoginButton.Enabled = true;
                             RegisterText.Enabled = true;
                             InformationCache.SelectedServerCategory = ((ServerList)ServerPick.SelectedItem).Category;
-                            InformationCache.RestartTimer = 320;
+                            InformationCache.RestartTimer = (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
 
                             if ((InformationCache.SelectedServerCategory ?? string.Empty).ToUpper() == "DEV" || 
                             (InformationCache.SelectedServerCategory ?? string.Empty).ToUpper() == "OFFLINE")

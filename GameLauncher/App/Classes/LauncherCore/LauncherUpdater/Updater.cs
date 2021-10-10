@@ -249,7 +249,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                             string UpdaterPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater));
                             if (File.Exists(UpdaterPath))
                             {
-                                Process.Start(UpdaterPath);
+                                Process.Start(UpdaterPath, Process.GetCurrentProcess().Id.ToString());
                             }
                             else
                             {
