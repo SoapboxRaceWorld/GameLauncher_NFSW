@@ -1,4 +1,5 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Lists;
+﻿using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
@@ -189,6 +190,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             try
             {
                 string serverListText = string.Empty;
+                string newIdToAvoidFunnyBug = string.Empty; //Zacam i know you gonna name it better than i do (Part 1/2) <3
                 /* 0 = Offline | 1 = Online | 2 = Checking | 3 = GSI Error */
                 int onlineStatus = 2;
 
@@ -199,7 +201,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         if (cb.Items[e.Index] is ServerList si)
                         {
                             serverListText = si.Name;
-                            onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.ID) ? InformationCache.ServerStatusBook[si.ID] : 2;
+                            newIdToAvoidFunnyBug = si.ID + "_" + MDFive.Hashes(si.IPAddress);
+                            onlineStatus = InformationCache.ServerStatusBook.ContainsKey(newIdToAvoidFunnyBug) ? InformationCache.ServerStatusBook[newIdToAvoidFunnyBug] : 2;
                         }
                     }
                 }
