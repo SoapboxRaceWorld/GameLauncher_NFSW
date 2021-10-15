@@ -135,7 +135,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                     }
                     catch (WebException Error)
                     {
-                        APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped), 
+                        APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
                             Error, (HttpWebResponse)Error.Response);
                     }
                     catch (Exception Error)

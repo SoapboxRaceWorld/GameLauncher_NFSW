@@ -1,11 +1,11 @@
-﻿using System;
-using System.IO;
-using GameLauncher.App.Classes.InsiderKit;
+﻿using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
+using System;
+using System.IO;
 
 namespace GameLauncher.App.Classes.LauncherCore.ModNet
 {
@@ -25,7 +25,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                 "scripts"
             };
 
-            String[] FilesToRemove = new string[] 
+            String[] FilesToRemove = new string[]
             {
                 /* Legacy Files */
                 "modules/udpcrc.soapbox.module",
@@ -169,7 +169,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                                 {
                                     File.Delete(realLoc);
                                 }
-                                
+
                                 File.Move(origPath, realLoc);
                             }
                             catch (Exception Error)

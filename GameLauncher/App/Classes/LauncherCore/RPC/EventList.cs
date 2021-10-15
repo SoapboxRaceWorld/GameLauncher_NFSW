@@ -9,7 +9,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
     {
         public static String remoteEventsList = String.Empty;
 
-        public static string GetEventName(int id) 
+        public static string GetEventName(int id)
         {
             /* Let's load the "From Server" version first */
             if (remoteEventsList != String.Empty)
@@ -41,7 +41,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             }
 
             /* And if it's not found, do this instead */
-            return "EVENT:"+id;
+            return "EVENT:" + id;
         }
 
         public static string GetEventType(int id)

@@ -1,24 +1,24 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.UI_Forms.Splash_Screen;
+using GameLauncher.App.UI_Forms.UpdatePopup_Screen;
+using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
-using Newtonsoft.Json;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.LauncherCore.Global;
 using System.Net;
-using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using System.Text;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.UI_Forms.UpdatePopup_Screen;
-using GameLauncher.App.UI_Forms.Splash_Screen;
-using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -301,11 +301,11 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         WhatBuildAmI = Translations.Database("LauncherUpdateCheck_VS_Insider_Unofficial");
                     }
 
-                    text.Text = Translations.Database("LauncherUpdateCheck_VS_Insider") + "\n - " + WhatBuildAmI + 
+                    text.Text = Translations.Database("LauncherUpdateCheck_VS_Insider") + "\n - " + WhatBuildAmI +
                         " " + Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Build");
                     status.BackgroundImage = Theming.UpdateIconWarning;
                     text.ForeColor = Theming.Warning;
-                    description.Text = Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Stable") + " " +   LatestLauncherBuild + 
+                    description.Text = Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Stable") + " " + LatestLauncherBuild +
                         "\n" + Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Current") + " " + Application.ProductVersion;
 
                     if (!string.IsNullOrWhiteSpace(FileSettingsSave.IgnoreVersion))
@@ -335,7 +335,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     text.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Update");
                     status.BackgroundImage = Theming.UpdateIconWarning;
                     text.ForeColor = Theming.Warning;
-                    description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Update_New") + " " + LatestLauncherBuild + "\n" + 
+                    description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Update_New") + " " + LatestLauncherBuild + "\n" +
                         Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Current") + " " + Application.ProductVersion;
                     UpgradeAvailable = true;
                     if (SkipAvailableUpgrade)

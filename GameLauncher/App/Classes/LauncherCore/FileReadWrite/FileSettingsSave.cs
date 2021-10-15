@@ -1,11 +1,8 @@
-﻿using System;
-using System.Drawing;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Logger;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using System;
 
 namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 {
@@ -13,52 +10,52 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
     {
         public static IniFile settingFile = new IniFile("Settings.ini");
         ///<summary>Game Files Path</summary>
-        public static string GameInstallation = !string.IsNullOrWhiteSpace(settingFile.Read("InstallationDirectory")) ? 
+        public static string GameInstallation = !string.IsNullOrWhiteSpace(settingFile.Read("InstallationDirectory")) ?
             settingFile.Read("InstallationDirectory") : string.Empty;
         ///<summary>Cache Old Game Files Path</summary>
         ///<remarks>Used for Firewall and Defender Checks</remarks>
-        public static string GameInstallationOld = !string.IsNullOrWhiteSpace(settingFile.Read("OldInstallationDirectory")) ? 
+        public static string GameInstallationOld = !string.IsNullOrWhiteSpace(settingFile.Read("OldInstallationDirectory")) ?
             settingFile.Read("OldInstallationDirectory") : string.Empty;
         ///<summary>CDN URL [Saved/Choosen]</summary>
         public static string CDN = !string.IsNullOrWhiteSpace(settingFile.Read("CDN")) ? settingFile.Read("CDN") : "http://localhost/";
         ///<summary>Language [Saved/Choosen]</summary>
         public static string Lang = !string.IsNullOrWhiteSpace(settingFile.Read("Language")) ? settingFile.Read("Language") : "EN";
         ///<summary>Launcher Proxy [Saved/Ticked]</summary>
-        public static string Proxy = (!string.IsNullOrWhiteSpace(settingFile.Read("DisableProxy")) 
-                                      && (settingFile.Read("DisableProxy") == "1" || settingFile.Read("DisableProxy") == "0")) ? 
+        public static string Proxy = (!string.IsNullOrWhiteSpace(settingFile.Read("DisableProxy"))
+                                      && (settingFile.Read("DisableProxy") == "1" || settingFile.Read("DisableProxy") == "0")) ?
             settingFile.Read("DisableProxy") : "0";
         ///<summary>Launcher Discord RPC [Saved/Ticked]</summary>
-        public static string RPC = (!string.IsNullOrWhiteSpace(settingFile.Read("DisableRPC")) 
-                                    && (settingFile.Read("DisableRPC") == "1" || settingFile.Read("DisableRPC") == "0")) ? 
+        public static string RPC = (!string.IsNullOrWhiteSpace(settingFile.Read("DisableRPC"))
+                                    && (settingFile.Read("DisableRPC") == "1" || settingFile.Read("DisableRPC") == "0")) ?
             settingFile.Read("DisableRPC") : "0";
         ///<summary>Launcher Version to Ignore [Saved/Clicked]</summary>
-        public static string IgnoreVersion = !string.IsNullOrWhiteSpace(settingFile.Read("IgnoreUpdateVersion")) ? 
+        public static string IgnoreVersion = !string.IsNullOrWhiteSpace(settingFile.Read("IgnoreUpdateVersion")) ?
             settingFile.Read("IgnoreUpdateVersion") : string.Empty;
         ///<summary>Firewall Status: Launcher [Saved/Ran]</summary>
-        public static string FirewallLauncherStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FirewallLauncher")) ? 
+        public static string FirewallLauncherStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FirewallLauncher")) ?
             settingFile.Read("FirewallLauncher") : "Unknown";
         ///<summary>Firewall Status: Game [Saved/Ran]</summary>
-        public static string FirewallGameStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FirewallGame")) ? 
+        public static string FirewallGameStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FirewallGame")) ?
             settingFile.Read("FirewallGame") : "Unknown";
         ///<summary>Defender Status: Launcher [Saved/Ran]</summary>
-        public static string DefenderLauncherStatus = !string.IsNullOrWhiteSpace(settingFile.Read("DefenderLauncher")) ? 
+        public static string DefenderLauncherStatus = !string.IsNullOrWhiteSpace(settingFile.Read("DefenderLauncher")) ?
             settingFile.Read("DefenderLauncher") : "Unknown";
         ///<summary>Defender Status: Game [Saved/Ran]</summary>
-        public static string DefenderGameStatus = !string.IsNullOrWhiteSpace(settingFile.Read("DefenderGame")) ? 
+        public static string DefenderGameStatus = !string.IsNullOrWhiteSpace(settingFile.Read("DefenderGame")) ?
             settingFile.Read("DefenderGame") : "Unknown";
         ///<summary>Windows 7: Specific KB Updates MessageBox [Saved/Clicked]</summary>
-        public static string Win7UpdatePatches = !string.IsNullOrWhiteSpace(settingFile.Read("PatchesApplied")) ? 
+        public static string Win7UpdatePatches = !string.IsNullOrWhiteSpace(settingFile.Read("PatchesApplied")) ?
             settingFile.Read("PatchesApplied") : string.Empty;
         ///<summary>Windows: Folder or File Permission Status [Saved/Ran]</summary>
-        public static string FilePermissionStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FilePermission")) ? 
+        public static string FilePermissionStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FilePermission")) ?
             settingFile.Read("FilePermission") : "Not Set";
         ///<summary>Game Files are Corrupt in someway and will need to be Verified [Saved]</summary>
-        public static string GameIntegrity = !string.IsNullOrWhiteSpace(settingFile.Read("GameIntegrity")) ? 
+        public static string GameIntegrity = !string.IsNullOrWhiteSpace(settingFile.Read("GameIntegrity")) ?
             settingFile.Read("GameIntegrity") : "Unknown";
         ///<summary>Launcher WebCalls [Saved/Ticked]</summary>
         ///<remarks>Does not affect Launcher Proxy</remarks>
-        public static string WebCallMethod = (!string.IsNullOrWhiteSpace(settingFile.Read("WebCallMethod")) && 
-            (settingFile.Read("WebCallMethod") == "WebClient" || settingFile.Read("WebCallMethod") == "WebClientWithTimeout")) ? 
+        public static string WebCallMethod = (!string.IsNullOrWhiteSpace(settingFile.Read("WebCallMethod")) &&
+            (settingFile.Read("WebCallMethod") == "WebClient" || settingFile.Read("WebCallMethod") == "WebClientWithTimeout")) ?
             settingFile.Read("WebCallMethod") : "WebClient";
         /// <summary>Creates all the NullSafe Values for Settings.ini</summary>
         public static void NullSafeSettings()

@@ -79,7 +79,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
             else
             {
                 RPCStateCache = RPCState;
-                try { new SecurityCenterScreen().ShowDialog();  }
+                try { new SecurityCenterScreen().ShowDialog(); }
                 catch (Exception Error)
                 {
                     string ErrorMessage = "Security Center Screen Encountered an Error";
@@ -213,8 +213,8 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
         {
             if (!UnixOS.Detected())
             {
-                return GetDefenderStatus("AntivirusEnabled") && 
-                    GetDefenderStatus("AntispywareEnabled") && 
+                return GetDefenderStatus("AntivirusEnabled") &&
+                    GetDefenderStatus("AntispywareEnabled") &&
                     GetDefenderStatus("RealTimeProtectionEnabled");
             }
 
@@ -277,7 +277,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
             }
             else
             {
-                if (ExclusionCheck() != null) 
+                if (ExclusionCheck() != null)
                 {
                     return ExclusionCheck().Any(FilePath.Contains);
                     /*
@@ -444,12 +444,12 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     {
                         if (Mode == "Name")
                         {
-                            return FirewallManager.Instance.Rules.Where(r => 
+                            return FirewallManager.Instance.Rules.Where(r =>
                             string.Equals(r.Name, AppName, StringComparison.OrdinalIgnoreCase)).ToArray();
                         }
                         else if (Mode == "Path")
                         {
-                            return FirewallManager.Instance.Rules.Where(r => 
+                            return FirewallManager.Instance.Rules.Where(r =>
                             string.Equals(r.ApplicationName, AppPath, StringComparison.OrdinalIgnoreCase)).ToArray();
                         }
                     }
@@ -887,7 +887,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     case 5:
                         return ExclusionExist(AppPath);
                     case 6:
-                        return GiveEveryoneReadWriteAccess(1, Locations.LauncherFolder) && 
+                        return GiveEveryoneReadWriteAccess(1, Locations.LauncherFolder) &&
                             GiveEveryoneReadWriteAccess(1, FileSettingsSave.GameInstallation);
                     default:
                         return false;
@@ -982,9 +982,9 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonFirewallRulesAddAll, 2, true);
                         DisableButtonFRAA = false;
                     }
-                    else 
-                    { 
-                        ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false); 
+                    else
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false);
                         DisableButtonFRAA = DisableButtonFRRA = true;
                         ButtonsColorSet(ButtonFirewallRulesRemoveAll, 3, false);
                     }
@@ -1053,9 +1053,9 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         FileSettingsSave.FirewallLauncherStatus = "Excluded";
                     }
                     else
-                    { 
-                        ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false); 
-                        FileSettingsSave.FirewallLauncherStatus = "Error"; 
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
+                        FileSettingsSave.FirewallLauncherStatus = "Error";
                     }
                     /* Game */
                     if (ButtonEnabler(2, 0))
@@ -1066,19 +1066,19 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         FileSettingsSave.FirewallGameStatus = "Excluded";
                     }
                     else
-                    { 
+                    {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
-                        FileSettingsSave.FirewallGameStatus = "Error"; 
+                        FileSettingsSave.FirewallGameStatus = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
-                    
+
                     if (Firewall())
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddAll, 1, true);
                         DisableButtonFRRA = !(ButtonFirewallRulesRemoveLauncher.Enabled && ButtonFirewallRulesRemoveGame.Enabled);
-                        ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2, 
+                        ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2,
                             ButtonFirewallRulesRemoveLauncher.Enabled && ButtonFirewallRulesRemoveGame.Enabled);
                     }
                     else
@@ -1116,7 +1116,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
-                        FileSettingsSave.FirewallLauncherStatus = "Error"; 
+                        FileSettingsSave.FirewallLauncherStatus = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1194,10 +1194,10 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         FileSettingsSave.FirewallLauncherStatus = "Removed";
                     }
                     else
-                    { 
+                    {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
-                        FileSettingsSave.FirewallLauncherStatus = "Error"; 
+                        FileSettingsSave.FirewallLauncherStatus = "Error";
                     }
                     /* Game */
                     if (ButtonEnabler(2, 1))
@@ -1208,10 +1208,10 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         FileSettingsSave.FirewallGameStatus = "Removed";
                     }
                     else
-                    { 
-                        ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false); 
-                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false); 
-                        FileSettingsSave.FirewallGameStatus = "Error"; 
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
+                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
+                        FileSettingsSave.FirewallGameStatus = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1325,7 +1325,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     "\n\nIf this Window Closes or the Launcher Crashes with an Error Message" +
                     "\n\nDo not run this Check, just simply ignore this section." +
                     "\n\n\nClick Yes to Agree to a potential Launcher Crash" +
-                    "\nClick No to avoid a potential Launcher Crash", 
+                    "\nClick No to avoid a potential Launcher Crash",
                     "Windows Defender API Check - SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)))
                 {
                     DisableButtonDRAPI = true;
@@ -1384,7 +1384,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddGame,
-                            (!string.IsNullOrWhiteSpace(CacheOldGameLocation) && 
+                            (!string.IsNullOrWhiteSpace(CacheOldGameLocation) &&
                             (CacheOldGameLocation != FileSettingsSave.GameInstallation) ? 4 : 2), true);
                         DisableButtonDRAG = false;
                         ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
@@ -1445,7 +1445,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddAll, 1, true);
                         DisableButtonDRRA = !(ButtonDefenderExclusionRemoveLauncher.Enabled && ButtonDefenderExclusionRemoveGame.Enabled);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 2, 
+                        ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 2,
                             ButtonDefenderExclusionRemoveLauncher.Enabled && ButtonDefenderExclusionRemoveGame.Enabled);
                     }
                     else
@@ -1582,7 +1582,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     {
                         ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 1, true);
                         DisableButtonDRAA = !(ButtonDefenderExclusionAddLauncher.Enabled && ButtonDefenderExclusionAddGame.Enabled);
-                        ButtonsColorSet(ButtonDefenderExclusionAddAll, 2, 
+                        ButtonsColorSet(ButtonDefenderExclusionAddAll, 2,
                             ButtonDefenderExclusionAddLauncher.Enabled && ButtonDefenderExclusionAddGame.Enabled);
                     }
                     else

@@ -1,14 +1,14 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
+using System;
 using System.IO;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Components
 {
@@ -272,7 +272,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                    Identifier("Win32_BIOS", "Name") + " " +
                    Identifier("Win32_BIOS", "ReleaseDate") + " " +
                    Identifier("Win32_BIOS", "SMBIOSBIOSVersion") + " " +
-                   Identifier("Win32_BIOS", "SerialNumber") + " " + 
+                   Identifier("Win32_BIOS", "SerialNumber") + " " +
                    Identifier("Win32_BIOS", "Version");
             }
 
@@ -287,7 +287,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
             private static string BaseId()
             {
                 return Identifier("Win32_BaseBoard", "Manufacturer") + " " + Identifier("Win32_BaseBoard", "Model") + " " +
-                    Identifier("Win32_BaseBoard", "Name") + " " + Identifier("Win32_BaseBoard", "Product") + " " + 
+                    Identifier("Win32_BaseBoard", "Name") + " " + Identifier("Win32_BaseBoard", "Product") + " " +
                     Identifier("Win32_BaseBoard", "SerialNumber");
             }
 

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Windows.Forms;
-using GameLauncher.App.Classes.InsiderKit;
+﻿using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
@@ -15,6 +7,14 @@ using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client
 {
@@ -33,16 +33,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
         public static int SpeedTicket = 0;
 
         /* INTERNAL */
-        public static bool detect_MULTIHACK     = false;
+        public static bool detect_MULTIHACK = false;
         public static bool detect_FAST_POWERUPS = false;
-        public static bool detect_SPEEDHACK     = false;
-        public static bool detect_SMOOTH_WALLS  = false;
-        public static bool detect_TANK_MODE     = false;
-        public static bool detect_WALLHACK      = false;
-        public static bool detect_DRIFTMOD      = false;
-        public static bool detect_PURSUITBOT    = false;
-        public static bool detect_PMASKER       = false;
-        public static bool detect_GHOSTING      = false;
+        public static bool detect_SPEEDHACK = false;
+        public static bool detect_SMOOTH_WALLS = false;
+        public static bool detect_TANK_MODE = false;
+        public static bool detect_WALLHACK = false;
+        public static bool detect_DRIFTMOD = false;
+        public static bool detect_PURSUITBOT = false;
+        public static bool detect_PMASKER = false;
+        public static bool detect_GHOSTING = false;
 
         public static List<int> addresses = new List<int>
         {
@@ -96,7 +96,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                             if (
                             detect_MULTIHACK == true || detect_FAST_POWERUPS == true || detect_SPEEDHACK == true ||
                             detect_SMOOTH_WALLS == true || detect_TANK_MODE == true || detect_WALLHACK == true ||
-                            detect_DRIFTMOD == true || detect_PURSUITBOT == true || detect_PMASKER == true || 
+                            detect_DRIFTMOD == true || detect_PURSUITBOT == true || detect_PMASKER == true ||
                             detect_GHOSTING == true)
                             {
                                 FunctionStatus.ExternalToolsWasUsed = true;
@@ -128,21 +128,21 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
 
         public static void DisableChecks(bool CompletedEvent)
         {
-            if (detect_MULTIHACK == true)       cheats_detected |= 1;
-            if (detect_FAST_POWERUPS == true)   cheats_detected |= 2;
-            if (detect_SPEEDHACK == true)       cheats_detected |= 4;
-            if (detect_SMOOTH_WALLS == true)    cheats_detected |= 8;
-            if (detect_TANK_MODE == true)       cheats_detected |= 16;
-            if (detect_WALLHACK == true)        cheats_detected |= 32;
-            if (detect_DRIFTMOD == true)        cheats_detected |= 64;
-            if (detect_PURSUITBOT == true)      cheats_detected |= 128;
-            if (detect_PMASKER == true)         cheats_detected |= 256;
-            if (detect_GHOSTING == true)        cheats_detected |= 512;
+            if (detect_MULTIHACK == true) cheats_detected |= 1;
+            if (detect_FAST_POWERUPS == true) cheats_detected |= 2;
+            if (detect_SPEEDHACK == true) cheats_detected |= 4;
+            if (detect_SMOOTH_WALLS == true) cheats_detected |= 8;
+            if (detect_TANK_MODE == true) cheats_detected |= 16;
+            if (detect_WALLHACK == true) cheats_detected |= 32;
+            if (detect_DRIFTMOD == true) cheats_detected |= 64;
+            if (detect_PURSUITBOT == true) cheats_detected |= 128;
+            if (detect_PMASKER == true) cheats_detected |= 256;
+            if (detect_GHOSTING == true) cheats_detected |= 512;
 
             if (cheats_detected != 0)
             {
-                if (cheats_detected == 64 && !CompletedEvent) 
-                { 
+                if (cheats_detected == 64 && !CompletedEvent)
+                {
                     /* You Know the Rules and So Do I */
                 }
                 else

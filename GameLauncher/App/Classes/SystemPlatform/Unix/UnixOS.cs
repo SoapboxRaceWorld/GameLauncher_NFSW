@@ -1,6 +1,6 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Logger;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using System;
-using GameLauncher.App.Classes.LauncherCore.Global;
 using System.IO;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Unix

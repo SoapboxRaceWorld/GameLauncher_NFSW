@@ -1,7 +1,7 @@
 ﻿using Nancy;
+using Nancy.Configuration;
 using System;
 using System.Collections.Generic;
-using Nancy.Configuration;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {

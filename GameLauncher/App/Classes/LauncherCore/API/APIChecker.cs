@@ -77,7 +77,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
         public static APIStatus StatusCodes(string URI, WebException Error, HttpWebResponse Response)
         {
-            if (!string.IsNullOrWhiteSpace(Error.GetBaseException().Message)) 
+            if (!string.IsNullOrWhiteSpace(Error.GetBaseException().Message))
             { Log.Error("CORE: " + URI + " Additional Details -> " + Error.GetBaseException().Message); }
 
             if (!string.IsNullOrWhiteSpace(URI))
@@ -349,7 +349,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 DiscordLauncherPresence.Status("Start Up", "Launcher Encountered API Errors");
 
                 if (MessageBox.Show(null, Translations.Database("VisualsAPIChecker_TextBox_No_API"),
-                    Translations.Database("VisualsAPIChecker_TextBox_No_API_P2"), 
+                    Translations.Database("VisualsAPIChecker_TextBox_No_API_P2"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     FunctionStatus.LauncherForceClose = true;
@@ -384,7 +384,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             Log.Checking("JSON LIST: Retriving " + JSONUrl);
             try
             {
-                
+
 
                 FunctionStatus.TLS();
                 Uri URLCall = new Uri(JSONUrl);
@@ -400,7 +400,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     Client.Headers.Add("user-agent", "SBRW Launcher " +
                     Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                 }
-                
+
                 try
                 {
                     OnlineListJson = Client.DownloadString(URLCall);
@@ -424,7 +424,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     { CarbonSC = API_Status; }
                     else if (URLCall.OriginalString.Contains(URLs.Static_Alt))
                     { CarbonTwoSC = API_Status; }
-                    
+
                     return false;
                 }
                 catch (Exception Error)

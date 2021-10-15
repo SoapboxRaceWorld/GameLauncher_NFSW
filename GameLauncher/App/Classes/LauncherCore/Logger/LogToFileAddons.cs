@@ -83,7 +83,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
 
                 string FormattedMessage = string.IsNullOrWhiteSpace(MessageDetails) ? string.Empty : MessageDetails + "\n" + ((Error != null) ? Error.Message : "Unknown Error [Null Exception]") + "\n\n";
 
-                DialogResult OpenLogFile = MessageBox.Show(null, FormattedMessage + OpenLogMessage, "GameLauncher Error Log", 
+                DialogResult OpenLogFile = MessageBox.Show(null, FormattedMessage + OpenLogMessage, "GameLauncher Error Log",
                     MessageBoxButtons.YesNo, IconBox);
 
                 if (OpenLogFile == DialogResult.Yes)
@@ -95,7 +95,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
                             Process.Start(Locations.LogLauncher);
                         }
                     }
-                    catch 
+                    catch
                     {
                         if (Directory.Exists(Locations.LogCurrentFolder))
                         {

@@ -1,24 +1,24 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.ModNet;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.Hash;
-using GameLauncher.App.Classes.LauncherCore.RPC;
-using System.ComponentModel;
-using GameLauncher.App.Classes.LauncherCore.ModNet;
-using GameLauncher.App.Classes.LauncherCore.Support;
-using System.Diagnostics;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using System.Text;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
 {
@@ -105,7 +105,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 string[] filestocheck = new string[] { "checksums.dat", "validfiles.dat", "invalidfiles.dat", "Verify.log" };
                 foreach (String file in filestocheck)
                 {
-                    if (File.Exists(file)) 
+                    if (File.Exists(file))
                     {
                         try { File.Delete(file); }
                         catch (Exception Error)
@@ -305,7 +305,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
 
                     if (ScriptsFolder.EnumerateFiles().Count() > 1)
                     {
-                        if (MessageBox.Show("Verify Hash has found files in the Scripts folder.\n" + 
+                        if (MessageBox.Show("Verify Hash has found files in the Scripts folder.\n" +
                             "If you have installed custom Scripts or have not installed any Scripts" +
                             "\n\nClick Yes, to Allow Deletion of Files" +
                             "\nClick No, to Skip Deletion of Files", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -374,7 +374,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 {
                     /* Fetch and Read Remote checksums.dat */
                     ScanProgressText.SafeInvokeAction(() => ScanProgressText.Text = "Downloading Checksums File");
-                    
+
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri(FinalCDNURL + "/unpacked/checksums.dat");
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
@@ -487,7 +487,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 else
                 {
                     ScanProgressText.SafeInvokeAction(() => ScanProgressText.Text = "Found Invalid or Missing Files");
-                    
+
                     File.WriteAllLines("invalidfiles.dat", InvalidFileList);
                     Log.Info("VERIFY HASH: Found Invalid or Missing Files and will Start File Downloader");
                     CorruptedFilesFound();
@@ -518,12 +518,12 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
             if (File.Exists("invalidfiles.dat") && File.ReadAllLines("invalidfiles.dat") != null)
             {
                 DownloadProgressText.SafeInvokeAction(() => DownloadProgressText.Text = "\nPreparing to Download Files");
-                
+
                 string[] files = File.ReadAllLines("invalidfiles.dat");
 
                 foreach (string text in files)
                 {
-                    try 
+                    try
                     {
                         while (StillDownloading) { }
 
@@ -630,7 +630,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + redownloadErrorCount + " out of " + currentCount);
                 LogVerify.Downloaded("File: " + CurrentDownloadingFile);
 
-                DownloadProgressText.SafeInvokeAction(() => 
+                DownloadProgressText.SafeInvokeAction(() =>
                 DownloadProgressText.Text = "Failed To Download File [ " + redownloadedCount + redownloadErrorCount + " / " + currentCount + " ]:" + "\n" + CurrentDownloadingFile);
 
                 DownloadProgressBar.SafeInvokeAction(() => DownloadProgressBar.Value = redownloadedCount + redownloadErrorCount * 100 / currentCount);
@@ -641,7 +641,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
 
                 if (redownloadedCount + redownloadErrorCount == currentCount)
                 {
-                    DownloadProgressText.SafeInvokeAction(() => 
+                    DownloadProgressText.SafeInvokeAction(() =>
                     DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded");
 
                     VerifyHashText.SafeInvokeAction(() =>
@@ -666,7 +666,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + " out of " + currentCount);
                 LogVerify.Downloaded("File: " + CurrentDownloadingFile);
 
-                DownloadProgressText.SafeInvokeAction(() => 
+                DownloadProgressText.SafeInvokeAction(() =>
                 DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + CurrentDownloadingFile);
                 DownloadProgressBar.SafeInvokeAction(() => DownloadProgressBar.Value = redownloadedCount * 100 / currentCount);
 
@@ -711,9 +711,9 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
         {
             if (e.TotalBytesToReceive >= 1)
             {
-                DownloadProgressText.SafeInvokeAction(() => 
-                DownloadProgressText.Text = "Downloading File [ " + redownloadedCount + " / " + 
-                currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + TimeConversions.FormatFileSize(e.BytesReceived) + 
+                DownloadProgressText.SafeInvokeAction(() =>
+                DownloadProgressText.Text = "Downloading File [ " + redownloadedCount + " / " +
+                currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + TimeConversions.FormatFileSize(e.BytesReceived) +
                 " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive));
             }
         }
@@ -734,7 +734,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
             GameScanner(false);
         }
 
-        private void SetVisuals() 
+        private void SetVisuals()
         {
             /*******************************/
             /* Set Font                     /

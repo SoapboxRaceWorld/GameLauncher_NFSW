@@ -126,7 +126,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 try
                 {
                     FunctionStatus.TLS();
-                    Uri URLCall = 
+                    Uri URLCall =
                         new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
@@ -207,7 +207,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         File.Delete(Locations.NameUpdater);
 
                         FunctionStatus.TLS();
-                        Uri URLCall = 
+                        Uri URLCall =
                             new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var Client = new WebClient

@@ -41,9 +41,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 if (!Modern_Auth)
                 {
                     FunctionStatus.TLS();
-                    Uri URLCall = 
-                        new Uri((Method == "Login")? Tokens.IPAddress + "/User/authenticateUser?email=" + Email + "&password=" + Password : 
-                        Tokens.IPAddress + "/User/createUser?email=" + Email + "&password=" + Password + 
+                    Uri URLCall =
+                        new Uri((Method == "Login") ? Tokens.IPAddress + "/User/authenticateUser?email=" + Email + "&password=" + Password :
+                        Tokens.IPAddress + "/User/createUser?email=" + Email + "&password=" + Password +
                         (!String.IsNullOrWhiteSpace(Token) ? "&inviteTicket=" + Token : ""));
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
@@ -58,7 +58,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                         Client.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
                         Client.Headers["X-HiddenHWID"] = HardwareID.FingerPrint.ValueAlt();
-                        Client.Headers["X-UserAgent"] = "GameLauncherReborn " + 
+                        Client.Headers["X-UserAgent"] = "GameLauncherReborn " +
                             Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
                         Client.Headers["X-GameLauncherHash"] = WebHelpers.Value();
                         Client.Headers["X-GameLauncherCertificate"] = CertificateStore.LauncherSerial;
@@ -416,7 +416,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 }
                 if (Type == "InnerText")
                 {
-                    if (string.IsNullOrWhiteSpace(LocationData.SelectSingleNode(FullNodePath) != null ? 
+                    if (string.IsNullOrWhiteSpace(LocationData.SelectSingleNode(FullNodePath) != null ?
                         LocationData.SelectSingleNode(FullNodePath).InnerText : string.Empty))
                     {
                         if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using GameLauncher.App.Classes.InsiderKit;
+﻿using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
@@ -12,6 +6,12 @@ using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Responses;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {

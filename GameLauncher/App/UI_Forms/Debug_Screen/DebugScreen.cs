@@ -1,19 +1,19 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.SystemPlatform;
+using GameLauncher.App.Classes.SystemPlatform.Components;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Management;
 using System.Windows.Forms;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.SystemPlatform.Components;
-using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.SystemPlatform;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.SystemPlatform.Unix;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 
 namespace GameLauncher.App.UI_Forms.Debug_Screen
 {
@@ -115,7 +115,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
 
             if (FileSettingsSave.IgnoreVersion == Application.ProductVersion || FileSettingsSave.IgnoreVersion == String.Empty)
             {
-                    UpdateSkip = "False";
+                UpdateSkip = "False";
             }
             else
             {
@@ -145,7 +145,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
                     Win32_Processor = (from x in new ManagementObjectSearcher("SELECT Name FROM Win32_Processor").Get().Cast<ManagementObject>()
                                        select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
 
-                    Kernel32.GetDiskFreeSpaceEx(FileSettingsSave.GameInstallation, 
+                    Kernel32.GetDiskFreeSpaceEx(FileSettingsSave.GameInstallation,
                         out lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
                 }
                 catch (Exception Error)
@@ -200,7 +200,8 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
 
             data.DataSource = settings;
 
-            DataGridViewCellStyle style = new DataGridViewCellStyle {
+            DataGridViewCellStyle style = new DataGridViewCellStyle
+            {
                 Font = new Font(data.Font, FontStyle.Regular)
             };
             data.Columns[0].DefaultCellStyle = style;

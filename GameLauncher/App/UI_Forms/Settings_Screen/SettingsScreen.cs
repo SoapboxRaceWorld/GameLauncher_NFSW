@@ -1,29 +1,29 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.ModNet;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
+using GameLauncher.App.UI_Forms.About_Screen;
+using GameLauncher.App.UI_Forms.Debug_Screen;
+using GameLauncher.App.UI_Forms.SecurityCenter_Screen;
+using GameLauncher.App.UI_Forms.USXEditor_Screen;
+using GameLauncher.App.UI_Forms.VerifyHash_Screen;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
-using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.ModNet;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.APICheckers;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.SystemPlatform.Unix;
 using System.Threading;
-using GameLauncher.App.UI_Forms.USXEditor_Screen;
-using GameLauncher.App.UI_Forms.VerifyHash_Screen;
-using GameLauncher.App.UI_Forms.Debug_Screen;
-using GameLauncher.App.UI_Forms.SecurityCenter_Screen;
-using GameLauncher.App.UI_Forms.About_Screen;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.UI_Forms.Settings_Screen
 {
@@ -207,8 +207,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            float MainFontSize = UnixOS.Detected()? 9f : 9f * 100f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected()? 8f : 8f * 100f / CreateGraphics().DpiY;
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
 
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
             ButtonSecurityPanel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -390,7 +390,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                         {
                             cdnListText = si.Name;
                         }
-                    } 
+                    }
                 }
 
                 if (!string.IsNullOrWhiteSpace(cdnListText))
@@ -809,7 +809,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                     if (InformationCache.SelectedServerEnforceProxy)
                     {
                         MessageBox.Show(null, ServerListUpdater.ServerName("Settings") + " requires Proxy to be Enabled." +
-                            "\nThe launcher will turn on Proxy, even if you have chosen to Disable it", 
+                            "\nThe launcher will turn on Proxy, even if you have chosen to Disable it",
                             "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
@@ -883,7 +883,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
             if (_restartRequired)
             {
-                MessageBox.Show(null, "In order to see settings changes, you need to restart the Launcher manually.", "GameLauncher", 
+                MessageBox.Show(null, "In order to see settings changes, you need to restart the Launcher manually.", "GameLauncher",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -1025,7 +1025,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                     Title = "Select the location to Find or Download nfsw.exe",
                     FileName = "Select Game Files Folder"
                 };
-                
+
                 if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
                 {
                     _newGameFilesPath = Strings.Encode(Path.GetDirectoryName(Strings.Encode(changeGameFilesPath.FileName)));
@@ -1228,7 +1228,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                         FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
                         Log.Error("LAUNCHER: Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
                         MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed." +
-                            "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher", 
+                            "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                     case FolderType.IsTempFolder:
@@ -1236,7 +1236,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                         FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
                         Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is NOT allowed!");
                         MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is NOT allowed!" +
-                            "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", 
+                            "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                     case FolderType.IsProgramFilesFolder:
@@ -1246,7 +1246,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                         FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
                         Log.Error("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is not recommended or allowed." +
-                            "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher", 
+                            "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                 }
@@ -1282,11 +1282,11 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 SettingsMainSrvText.ForeColor = Theming.Warning;
                 if (VisualsAPIChecker.UnitedSL && !VisualsAPIChecker.UnitedCDNL) { SettingsMainSrvText.Text = "[API] United: Server List Only"; }
                 else if (!VisualsAPIChecker.UnitedSL && VisualsAPIChecker.UnitedCDNL) { SettingsMainSrvText.Text = "[API] United: CDN List Only"; }
-                else 
+                else
                 {
                     SettingsMainSrvText.Text = "[API] United: " + Strings.Truncate(APIChecker.StatusStrings(VisualsAPIChecker.UnitedSC), 32);
-                    SettingsMainSrvText.ForeColor = Theming.Error; 
-                }                
+                    SettingsMainSrvText.ForeColor = Theming.Error;
+                }
                 SettingsMainCDNText.Visible = true;
             }
 
@@ -1300,10 +1300,10 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 SettingsMainCDNText.ForeColor = Theming.Warning;
                 if (VisualsAPIChecker.CarbonSL && !VisualsAPIChecker.CarbonCDNL) { SettingsMainCDNText.Text = "[API] Carbon: Server List Only"; }
                 else if (!VisualsAPIChecker.CarbonSL && VisualsAPIChecker.CarbonCDNL) { SettingsMainCDNText.Text = "[API] Carbon: CDN List Only"; }
-                else 
-                { 
+                else
+                {
                     SettingsMainCDNText.Text = "[API] Carbon: " + Strings.Truncate(APIChecker.StatusStrings(VisualsAPIChecker.CarbonSC), 32);
-                    SettingsMainCDNText.ForeColor = Theming.Error; 
+                    SettingsMainCDNText.ForeColor = Theming.Error;
                 }
                 SettingsBkupSrvText.Visible = true;
             }
@@ -1318,10 +1318,10 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 SettingsBkupSrvText.ForeColor = Theming.Warning;
                 if (VisualsAPIChecker.CarbonTwoSL && !VisualsAPIChecker.CarbonTwoCDNL) { SettingsBkupSrvText.Text = "[API] Carbon (2nd): Server List Only"; }
                 else if (!VisualsAPIChecker.CarbonTwoSL && VisualsAPIChecker.CarbonTwoCDNL) { SettingsBkupSrvText.Text = "[API] Carbon (2nd): CDN List Only"; }
-                else 
-                { 
+                else
+                {
                     SettingsBkupSrvText.Text = "[API] Carbon (2nd): " + Strings.Truncate(APIChecker.StatusStrings(VisualsAPIChecker.CarbonTwoSC), 32);
-                    SettingsBkupSrvText.ForeColor = Theming.Error; 
+                    SettingsBkupSrvText.ForeColor = Theming.Error;
                 }
             }
         }
@@ -1594,7 +1594,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 ButtonsColorSet(SettingsVFilesButton, 3, true);
                 if (!File.Exists(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe")))
                 {
-                    MessageBox.Show(null, "You need to Download the Game Files first before you can have access to run Verify Hash", 
+                    MessageBox.Show(null, "You need to Download the Game Files first before you can have access to run Verify Hash",
                         "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else

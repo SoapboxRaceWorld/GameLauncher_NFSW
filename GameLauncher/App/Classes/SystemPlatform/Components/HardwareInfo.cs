@@ -23,7 +23,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 {
                     LogToFileAddons.OpenLog("Hardware Info", null, Error, null, true);
                 }
-                
+
                 return _cardName;
             }
 

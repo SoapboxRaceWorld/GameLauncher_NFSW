@@ -19,7 +19,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
         [JsonProperty("update_exists")]
         public bool UpdateExists { get; set; }
-        
+
         [JsonProperty("update")]
         public Update Update { get; set; }
     }

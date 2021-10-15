@@ -21,7 +21,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms
             {
                 Log.Function("DATABASE: Requested: " + Text_Request + " Lang: " + Application_Language);
             }
-            
+
             try
             {
                 if (Lang_Launcher == null || ResetCache)

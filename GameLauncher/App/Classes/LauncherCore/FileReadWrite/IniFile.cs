@@ -1,8 +1,8 @@
-﻿using System.IO;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using IniParser;
 using IniParser.Model;
+using System.IO;
 using System.Text;
-using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 {
@@ -64,7 +64,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             {
                 Data[EXE].RemoveKey(Key);
                 Parser.WriteFile(Path, Data, UTF8);
-            } catch { }
+            }
+            catch { }
         }
 
         public bool KeyExists(string Key)

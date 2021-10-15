@@ -18,7 +18,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(Window_Name.Name)) 
+                if (!string.IsNullOrWhiteSpace(Window_Name.Name))
                 {
                     if (!(Application.OpenForms[Window_Name.Name] != null ? Application.OpenForms[Window_Name.Name].Disposing : true) && !Application.OpenForms[Window_Name.Name].IsDisposed)
                     {
@@ -78,7 +78,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                             Action_Refresh();
                         }
                     }
-                    else if(!Control_Form.FindForm().IsDisposed)
+                    else if (!Control_Form.FindForm().IsDisposed)
                     {
                         Control_Form.FindForm().Controls.Add(Control_Form);
                         SafeInvokeAction(Control_Form, Action_Refresh);

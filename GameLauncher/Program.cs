@@ -1,29 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using System.Windows.Forms;
-using Microsoft.Win32;
-using System.Globalization;
-using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.ModNet;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
+﻿using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.SystemPlatform.Components;
-using GameLauncher.App.Classes.LauncherCore.Client;
+using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
-using System.Text;
-using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
-using System.ComponentModel;
-using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace GameLauncher
 {
@@ -35,7 +34,7 @@ namespace GameLauncher
         {
             try
             {
-                LogToFileAddons.OpenLog("Thread Exception", Translations.Database("Application_Exception_Thread") + ": ", 
+                LogToFileAddons.OpenLog("Thread Exception", Translations.Database("Application_Exception_Thread") + ": ",
                     Error.Exception, "Error", false);
 
                 try
@@ -61,7 +60,7 @@ namespace GameLauncher
         {
             try
             {
-                LogToFileAddons.OpenLog("Unhandled Exception", Translations.Database("Application_Exception_Unhandled") + ": ", 
+                LogToFileAddons.OpenLog("Unhandled Exception", Translations.Database("Application_Exception_Unhandled") + ": ",
                     (Exception)Error.ExceptionObject, "Error", false);
 
                 try
@@ -163,7 +162,7 @@ namespace GameLauncher
                                         {
                                             File.Delete(LZMAPath);
                                         }
-                                    } 
+                                    }
                                     catch { }
                                 }
                             };
@@ -174,8 +173,8 @@ namespace GameLauncher
                             {
                                 Client.DownloadFile(URLCall, LZMAPath);
 
-                                if (MessageBox.Show(null, Translations.Database("Program_TextBox_LZMA_Redownloaded"), 
-                                    "GameLauncher Restart Required", 
+                                if (MessageBox.Show(null, Translations.Database("Program_TextBox_LZMA_Redownloaded"),
+                                    "GameLauncher Restart Required",
                                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                                 {
                                     LauncherMustRestart = true;
@@ -301,7 +300,7 @@ namespace GameLauncher
                             }
                             else
                             {
-                                MessageBox.Show(null, Translations.Database("Program_TextBox_SBRWIsRunning"), 
+                                MessageBox.Show(null, Translations.Database("Program_TextBox_SBRWIsRunning"),
                                     "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
@@ -579,10 +578,10 @@ namespace GameLauncher
 
                                     MessageBoxPopupKB += Translations.Database("Program_TextBox_W7_TLS_P5");
 
-                                    if (MessageBox.Show(null, MessageBoxPopupKB, "SBRW Launcher", 
+                                    if (MessageBox.Show(null, MessageBoxPopupKB, "SBRW Launcher",
                                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                                     {
-                                        RegistryCore.Write("DisabledByDefault", 0x0, 
+                                        RegistryCore.Write("DisabledByDefault", 0x0,
                                             @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
                                         MessageBox.Show(null, Translations.Database("Program_TextBox_W7_TLS_P6"),
                                             "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -653,7 +652,7 @@ namespace GameLauncher
                         else
                         {
                             Log.Completed("CLEANLINKS: Not Present");
-                        }                        
+                        }
                     }
 
                     Log.Checking("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + FileSettingsSave.Proxy);
@@ -673,6 +672,6 @@ namespace GameLauncher
                     Redistributable.Check();
                 }
             }
-        }            
+        }
     }
 }

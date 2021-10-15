@@ -40,7 +40,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             }
 
             /* And if it's not found, do this instead */
-            return "Traffic Car ("+id+")";
+            return "Traffic Car (" + id + ")";
         }
     }
 }

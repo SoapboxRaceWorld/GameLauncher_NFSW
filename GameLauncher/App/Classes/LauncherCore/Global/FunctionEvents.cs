@@ -1,5 +1,4 @@
-﻿using GameLauncher.App.Classes.Hash;
-using GameLauncher.App.Classes.LauncherCore.Lists;
+﻿using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
@@ -39,14 +38,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webSignupUrl))
                 {
                     Process.Start(InformationCache.SelectedServerJSON.webSignupUrl);
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + 
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on " +
                         ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if (InformationCache.SelectedServerData.Name.ToUpper() == "WORLDUNITED OFFICIAL")
                 {
                     Process.Start("https://signup.worldunited.gg/" + ((!string.IsNullOrWhiteSpace(DiscordLauncherPresence.UserID) &&
                         DiscordLauncherPresence.UserID != "0") ? "?discordid=" + DiscordLauncherPresence.UserID : string.Empty));
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + 
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on " +
                         InformationCache.SelectedServerData.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
