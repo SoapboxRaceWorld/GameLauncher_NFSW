@@ -190,7 +190,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             try
             {
                 string serverListText = string.Empty;
-                string newIdToAvoidFunnyBug = string.Empty; //Zacam i know you gonna name it better than i do (Part 1/2) <3
                 /* 0 = Offline | 1 = Online | 2 = Checking | 3 = GSI Error */
                 int onlineStatus = 2;
 
@@ -201,8 +200,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         if (cb.Items[e.Index] is ServerList si)
                         {
                             serverListText = si.Name;
-                            newIdToAvoidFunnyBug = si.ID + "_" + MDFive.Hashes(si.IPAddress);
-                            onlineStatus = InformationCache.ServerStatusBook.ContainsKey(newIdToAvoidFunnyBug) ? InformationCache.ServerStatusBook[newIdToAvoidFunnyBug] : 2;
+                            onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.ID) ? InformationCache.ServerStatusBook[si.ID] : 2;
                         }
                     }
                 }

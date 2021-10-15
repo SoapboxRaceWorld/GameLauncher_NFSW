@@ -776,8 +776,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 try { aTimer.Dispose(); } catch { }
 
                 bool GSIErrorFree = true;
-                string newIdToAvoidFunnyBug = InformationCache.SelectedServerData.ID + "_" + MDFive.Hashes(InformationCache.SelectedServerData.IPAddress); //Zacam i know you gonna name it better than i do (Part 2/2) <3
-
 
                 if (e2.Cancelled || e2.Error != null)
                 {
@@ -788,13 +786,13 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     ServerStatusDesc.Text = (e2.Error != null) ? 
                     Strings.Truncate(e2.Error.Message??"Server Seems to be Offline", 36) : "Failed to Connect to Server";
 
-                    if (!InformationCache.ServerStatusBook.ContainsKey(newIdToAvoidFunnyBug))
+                    if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.ID))
                     {
-                        InformationCache.ServerStatusBook.Add(newIdToAvoidFunnyBug, (e2.Error != null) ? 0 : 3);
+                        InformationCache.ServerStatusBook.Add(InformationCache.SelectedServerData.ID, (e2.Error != null) ? 0 : 3);
                     }
                     else
                     {
-                        InformationCache.ServerStatusBook[newIdToAvoidFunnyBug] = (e2.Error != null) ? 0 : 3;
+                        InformationCache.ServerStatusBook[InformationCache.SelectedServerData.ID] = (e2.Error != null) ? 0 : 3;
                     }
 
                     if (e2.Error != null)
@@ -837,13 +835,13 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             InformationCache.SelectedServerJSON = null;
                         }
 
-                        if (!InformationCache.ServerStatusBook.ContainsKey(newIdToAvoidFunnyBug))
+                        if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.ID))
                         {
-                            InformationCache.ServerStatusBook.Add(newIdToAvoidFunnyBug, (!GSIErrorFree) ? 3 : 1);
+                            InformationCache.ServerStatusBook.Add(InformationCache.SelectedServerData.ID, (!GSIErrorFree) ? 3 : 1);
                         }
                         else
                         {
-                            InformationCache.ServerStatusBook[newIdToAvoidFunnyBug] = (!GSIErrorFree) ? 3 : 1;
+                            InformationCache.ServerStatusBook[InformationCache.SelectedServerData.ID] = (!GSIErrorFree) ? 3 : 1;
                         }
 
                         if (GSIErrorFree)
