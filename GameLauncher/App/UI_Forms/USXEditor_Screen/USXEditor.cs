@@ -280,11 +280,11 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
                 {
                     if (WindowsProductVersion.GetWindowsNumber() >= 10)
                     {
-                        Size = new Size(564, 726);
+                        Size = new Size(562, 726);
                     }
                     else
                     {
-                        Size = new Size(554, 712);
+                        Size = new Size(552, 712);
                     }
                     comboResolutions.Visible = false;
 
@@ -801,8 +801,8 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Bold);
 
             labelVideoOptions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
