@@ -89,10 +89,10 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-            var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
-            var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
+            var MainFontSize = 9f * 96f / CreateGraphics().DpiY;
+            var SecondaryFontSize = 8f * 96f / CreateGraphics().DpiY;
+            var ThirdFontSize = 10f * 96f / CreateGraphics().DpiY;
+            var FourthFontSize = 14f * 96f / CreateGraphics().DpiY;
 
             if (UnixOS.Detected())
             {

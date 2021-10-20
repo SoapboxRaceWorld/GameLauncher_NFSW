@@ -163,13 +163,16 @@
     <value>355, 15</value>
   </data>
   <data name="translatedBy.Size" type="System.Drawing.Size, System.Drawing">
-    <value>196, 25</value>
+    <value>196, 14</value>
   </data>
   <data name="translatedBy.TabIndex" type="System.Int32, mscorlib">
     <value>55</value>
   </data>
   <data name="translatedBy.Text" xml:space="preserve">
     <value>Language: Neutral</value>
+  </data>
+  <data name="translatedBy.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;translatedBy.Name" xml:space="preserve">
     <value>translatedBy</value>
@@ -1022,6 +1025,150 @@ Registered: ###</value>
   <data name="ServerInfoPanel.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Stretch</value>
   </data>
+  <data name="&gt;&gt;HomePageIcon.Name" xml:space="preserve">
+    <value>HomePageIcon</value>
+  </data>
+  <data name="&gt;&gt;HomePageIcon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;HomePageIcon.Parent" xml:space="preserve">
+    <value>ServerInfoPanel</value>
+  </data>
+  <data name="&gt;&gt;HomePageIcon.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;DiscordIcon.Name" xml:space="preserve">
+    <value>DiscordIcon</value>
+  </data>
+  <data name="&gt;&gt;DiscordIcon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;DiscordIcon.Parent" xml:space="preserve">
+    <value>ServerInfoPanel</value>
+  </data>
+  <data name="&gt;&gt;DiscordIcon.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;FacebookIcon.Name" xml:space="preserve">
+    <value>FacebookIcon</value>
+  </data>
+  <data name="&gt;&gt;FacebookIcon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;FacebookIcon.Parent" xml:space="preserve">
+    <value>ServerInfoPanel</value>
+  </data>
+  <data name="&gt;&gt;FacebookIcon.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;TwitterAccountLink.Name" xml:space="preserve">
+    <value>TwitterAccountLink</value>
+  </data>
+  <data name="&gt;&gt;TwitterAccountLink.Type" xml:space="preserve">
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TwitterAccountLink.Parent" xml:space="preserve">
+    <value>ServerInfoPanel</value>
+  </data>
+  <data name="&gt;&gt;TwitterAccountLink.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;TwitterIcon.Name" xml:space="preserve">
+    <value>TwitterIcon</value>
+  </data>
+  <data name="&gt;&gt;TwitterIcon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TwitterIcon.Parent" xml:space="preserve">
+    <value>ServerInfoPanel</value>
+  </data>
+  <data name="&gt;&gt;TwitterIcon.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;FacebookGroupLink.Name" xml:space="preserve">
+    <value>FacebookGroupLink</value>
+  </data>
+  <data name="&gt;&gt;FacebookGroupLink.Type" xml:space="preserve">
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;FacebookGroupLink.Parent" xml:space="preserve">
+    <value>ServerInfoPanel</value>
+  </data>
+  <data name="&gt;&gt;FacebookGroupLink.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;HomePageLink.Name" xml:space="preserve">
+    <value>HomePageLink</value>
+  </data>
+  <data name="&gt;&gt;HomePageLink.Type" xml:space="preserve">
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;HomePageLink.Parent" xml:space="preserve">
+    <value>ServerInfoPanel</value>
+  </data>
+  <data name="&gt;&gt;HomePageLink.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;DiscordInviteLink.Name" xml:space="preserve">
+    <value>DiscordInviteLink</value>
+  </data>
+  <data name="&gt;&gt;DiscordInviteLink.Type" xml:space="preserve">
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;DiscordInviteLink.Parent" xml:space="preserve">
+    <value>ServerInfoPanel</value>
+  </data>
+  <data name="&gt;&gt;DiscordInviteLink.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;ServerShutDown.Name" xml:space="preserve">
+    <value>ServerShutDown</value>
+  </data>
+  <data name="&gt;&gt;ServerShutDown.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ServerShutDown.Parent" xml:space="preserve">
+    <value>ServerInfoPanel</value>
+  </data>
+  <data name="&gt;&gt;ServerShutDown.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;SceneryGroupText.Name" xml:space="preserve">
+    <value>SceneryGroupText</value>
+  </data>
+  <data name="&gt;&gt;SceneryGroupText.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SceneryGroupText.Parent" xml:space="preserve">
+    <value>ServerInfoPanel</value>
+  </data>
+  <data name="&gt;&gt;SceneryGroupText.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="ServerInfoPanel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>DejaVu Sans, 8pt</value>
+  </data>
+  <data name="ServerInfoPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 305</value>
+  </data>
+  <data name="ServerInfoPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>525, 68</value>
+  </data>
+  <data name="ServerInfoPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>172</value>
+  </data>
+  <data name="&gt;&gt;ServerInfoPanel.Name" xml:space="preserve">
+    <value>ServerInfoPanel</value>
+  </data>
+  <data name="&gt;&gt;ServerInfoPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ServerInfoPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;ServerInfoPanel.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
   <data name="HomePageIcon.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>
   </data>
@@ -1357,30 +1504,6 @@ Registered: ###</value>
   </data>
   <data name="&gt;&gt;SceneryGroupText.ZOrder" xml:space="preserve">
     <value>9</value>
-  </data>
-  <data name="ServerInfoPanel.Font" type="System.Drawing.Font, System.Drawing">
-    <value>DejaVu Sans, 8pt</value>
-  </data>
-  <data name="ServerInfoPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 305</value>
-  </data>
-  <data name="ServerInfoPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>525, 68</value>
-  </data>
-  <data name="ServerInfoPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>172</value>
-  </data>
-  <data name="&gt;&gt;ServerInfoPanel.Name" xml:space="preserve">
-    <value>ServerInfoPanel</value>
-  </data>
-  <data name="&gt;&gt;ServerInfoPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ServerInfoPanel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;ServerInfoPanel.ZOrder" xml:space="preserve">
-    <value>8</value>
   </data>
   <data name="LauncherIconStatus.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>

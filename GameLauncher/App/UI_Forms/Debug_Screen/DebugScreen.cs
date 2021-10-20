@@ -38,7 +38,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
             /*******************************/
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            float MainFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
+            float MainFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             /********************************/
