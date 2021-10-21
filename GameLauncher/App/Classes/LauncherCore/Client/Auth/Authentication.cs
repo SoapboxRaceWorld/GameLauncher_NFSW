@@ -166,6 +166,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
 
                     try
                     {
+                        if (EnableInsiderDeveloper.Allowed())
+                        {
+                            Log.Info("Authentication: Received XML -> " + LoginResponse);
+                        }
+
                         sbrwXml.LoadXml(LoginResponse);
 
                         if (EnableInsiderDeveloper.Allowed())
