@@ -535,7 +535,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             }
             else
             {
-                ButtonsColorSet(SettingsClearCommunicationLogButton, 1, false);
+                ButtonsColorSet(SettingsClearCommunicationLogButton, 4, false);
             }
 
             if (Directory.Exists(FileSettingsSave.GameInstallation + "/.data"))
@@ -544,7 +544,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             }
             else
             {
-                ButtonsColorSet(SettingsClearServerModCacheButton, 1, false);
+                ButtonsColorSet(SettingsClearServerModCacheButton, 4, false);
             }
 
             try
@@ -554,6 +554,10 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 if (CrashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp", SearchOption.TopDirectoryOnly).Count() != 0)
                 {
                     ButtonsColorSet(SettingsClearCrashLogsButton, 2, true);
+                }
+                else if (CrashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp", SearchOption.TopDirectoryOnly).Count() == 0)
+                {
+                    ButtonsColorSet(SettingsClearCrashLogsButton, 4, false);
                 }
                 else
                 {
