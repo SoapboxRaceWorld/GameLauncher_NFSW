@@ -1,15 +1,14 @@
-﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.LauncherCore.Global;
+﻿using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Net;
-using System.Text;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.UI_Forms.UpdatePopup_Screen
@@ -22,42 +21,13 @@ namespace GameLauncher.App.UI_Forms.UpdatePopup_Screen
             InitializeComponent();
             SetVisuals();
 
-            if (VisualsAPIChecker.UnitedAPI())
+            if (VisualsAPIChecker.GitHubAPI)
             {
                 try
                 {
-                    FunctionStatus.TLS();
-                    Uri URLCall = new Uri(URLs.Main + "/launcher/changelog");
-                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    var Client = new WebClient
-                    {
-                        Encoding = Encoding.UTF8
-                    };
-                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
-                    else
-                    {
-                        Client.Headers.Add("user-agent", "SBRW Launcher " +
-                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    }
-
-                    try
-                    {
-                        /* Download Up to Date Certificate Status */
-                        ChangelogText.Text = Client.DownloadString(URLCall);
-                    }
-                    catch (Exception Error)
-                    {
-                        LogToFileAddons.OpenLog("Update Popup", null, Error, null, true);
-                        ChangelogText.Text = "\n" + Error.Message;
-                        ChangelogBox.Text = "Changelog Error:";
-                    }
-                    finally
-                    {
-                        if (Client != null)
-                        {
-                            Client.Dispose();
-                        }
-                    }
+                    ChangelogText.Text = (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed()) ?
+                    JsonConvert.DeserializeObject<List<GitHubRelease>>(LauncherUpdateCheck.VersionJSON)[0].Body.Replace("\r", Environment.NewLine) :
+                    JsonConvert.DeserializeObject<GitHubRelease>(LauncherUpdateCheck.VersionJSON).Body.Replace("\r", Environment.NewLine);
                 }
                 catch (Exception Error)
                 {
@@ -68,7 +38,7 @@ namespace GameLauncher.App.UI_Forms.UpdatePopup_Screen
             }
             else
             {
-                ChangelogText.Text = "\nUnited API Is Currently Down. Unable to Retrieve Changelog";
+                ChangelogText.Text = "\nUnable to Retrieve Changelog";
                 ChangelogBox.Text = "Changelog Error:";
             }
 

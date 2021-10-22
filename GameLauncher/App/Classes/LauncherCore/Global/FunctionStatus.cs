@@ -157,52 +157,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void TLS()
         {
-            ServicePointManager.DnsRefreshTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-            ServicePointManager.Expect100Continue = true;
-            try
-            {
-                /* TLS 1.3 */
-                ServicePointManager.SecurityProtocol |= (SecurityProtocolType)12288 | SecurityProtocolType.Tls12;
-            }
-            catch (NotSupportedException Error)
-            {
-                Log.Error("SecurityProtocol: Tls13 -> " + Error.Message);
 
-                try
-                {
-                    /* TLS 1.2 */
-                    ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
-                }
-                catch (NotSupportedException ErrorTls12)
-                {
-                    Log.Error("SecurityProtocol: Tls12 -> " + ErrorTls12.Message);
-                }
-            }
-            ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) =>
-            {
-                bool isOk = true;
-                if (sslPolicyErrors != SslPolicyErrors.None)
-                {
-                    for (int i = 0; i < chain.ChainStatus.Length; i++)
-                    {
-                        if (chain.ChainStatus[i].Status == X509ChainStatusFlags.RevocationStatusUnknown)
-                        {
-                            continue;
-                        }
-                        chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
-                        chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
-                        chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 0, 15);
-                        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
-                        bool chainIsValid = chain.Build((X509Certificate2)certificate);
-                        if (!chainIsValid)
-                        {
-                            isOk = false;
-                            break;
-                        }
-                    }
-                }
-                return isOk;
-            };
         }
 
         /// <summary>

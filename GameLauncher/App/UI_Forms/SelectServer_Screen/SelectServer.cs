@@ -208,7 +208,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                             try
                             {
                                 FunctionStatus.TLS();
-                                Uri URLCall = new Uri(URLs.GitHub_Launcher);
+                                Uri URLCall = new Uri(serverurl);
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 var Client = new WebClient
                                 {
@@ -224,7 +224,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
 
                                 try
                                 {
-                                    ServerJson = Client.DownloadString(serverurl);
+                                    ServerJson = Client.DownloadString(URLCall);
                                 }
                                 catch { }
                                 finally
