@@ -41,7 +41,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
         public static bool detect_WALLHACK = false;
         public static bool detect_DRIFTMOD = false;
         public static bool detect_PURSUITBOT = false;
-        public static bool detect_PMASKER = false;
         public static bool detect_GHOSTING = false;
 
         public static List<int> addresses = new List<int>
@@ -96,26 +95,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                             if (
                             detect_MULTIHACK == true || detect_FAST_POWERUPS == true || detect_SPEEDHACK == true ||
                             detect_SMOOTH_WALLS == true || detect_TANK_MODE == true || detect_WALLHACK == true ||
-                            detect_DRIFTMOD == true || detect_PURSUITBOT == true || detect_PMASKER == true ||
-                            detect_GHOSTING == true)
+                            detect_DRIFTMOD == true || detect_PURSUITBOT == true || detect_GHOSTING == true)
                             {
                                 FunctionStatus.ExternalToolsWasUsed = true;
-                            }
-                        }
-                        else if (ServerProxy.Running())
-                        {
-                            /* ProfileMasker */
-                            if (oneAddress == 8972152)
-                            {
-                                byte[] buffer16 = new byte[16];
-
-                                Kernel32.ReadProcessMemory((int)processHandle, (int)(BitConverter.ToUInt32(buffer, 0) + 0x89), buffer16, buffer16.Length, ref bytesRead);
-                                String MemoryUsername = Encoding.UTF8.GetString(buffer16, 0, buffer16.Length);
-
-                                if (MemoryUsername.Substring(0, DiscordGamePresence.PersonaName.Length).ToLower() != DiscordGamePresence.PersonaName.ToLower() && detect_PMASKER == false)
-                                {
-                                    detect_PMASKER = true;
-                                }
                             }
                         }
                     }
@@ -136,7 +118,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
             if (detect_WALLHACK == true) cheats_detected |= 32;
             if (detect_DRIFTMOD == true) cheats_detected |= 64;
             if (detect_PURSUITBOT == true) cheats_detected |= 128;
-            if (detect_PMASKER == true) cheats_detected |= 256;
             if (detect_GHOSTING == true) cheats_detected |= 512;
 
             if (cheats_detected != 0)
@@ -261,7 +242,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                 }
             }
 
-            detect_MULTIHACK = detect_FAST_POWERUPS = detect_SPEEDHACK = detect_SMOOTH_WALLS = detect_TANK_MODE = detect_WALLHACK = detect_DRIFTMOD = detect_PURSUITBOT = detect_PMASKER = false;
+            detect_MULTIHACK = detect_FAST_POWERUPS = detect_SPEEDHACK = detect_SMOOTH_WALLS = detect_TANK_MODE = detect_WALLHACK = detect_DRIFTMOD = detect_PURSUITBOT = false;
             cheats_detected = 0;
             Secret.Abort();
         }
