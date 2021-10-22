@@ -388,9 +388,9 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
             this.VersionLabel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VersionLabel.Location = new System.Drawing.Point(36, 480);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(128, 14);
+            this.VersionLabel.Size = new System.Drawing.Size(164, 14);
             this.VersionLabel.TabIndex = 214;
-            this.VersionLabel.Text = "Version: vX.X.X.XX";
+            this.VersionLabel.Text = "Version: vXX.XX.XX.XXXX";
             this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SecurityCenterScreen

@@ -113,9 +113,9 @@
             this.VersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.VersionLabel.Location = new System.Drawing.Point(13, 375);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(128, 14);
+            this.VersionLabel.Size = new System.Drawing.Size(164, 14);
             this.VersionLabel.TabIndex = 5;
-            this.VersionLabel.Text = "Version: vX.X.X.XX";
+            this.VersionLabel.Text = "Version: vXX.XX.XX.XXXX";
             this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // VerifyHashWelcome

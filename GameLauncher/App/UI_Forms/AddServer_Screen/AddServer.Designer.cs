@@ -136,9 +136,9 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
             this.Version.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Version.Location = new System.Drawing.Point(14, 177);
             this.Version.Name = "Version";
-            this.Version.Size = new System.Drawing.Size(128, 14);
+            this.Version.Size = new System.Drawing.Size(164, 14);
             this.Version.TabIndex = 7;
-            this.Version.Text = "Version : vX.X.X.XX";
+            this.Version.Text = "Version : vXX.XX.XX.XXXX";
             // 
             // ServerCategory
             // 

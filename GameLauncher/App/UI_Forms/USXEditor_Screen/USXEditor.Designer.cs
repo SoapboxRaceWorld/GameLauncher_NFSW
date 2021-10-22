@@ -674,11 +674,12 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             // 
             this.labelLauncherVersion.BackColor = System.Drawing.Color.Transparent;
             this.labelLauncherVersion.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLauncherVersion.Location = new System.Drawing.Point(74, 619);
+            this.labelLauncherVersion.Location = new System.Drawing.Point(56, 619);
             this.labelLauncherVersion.Name = "labelLauncherVersion";
-            this.labelLauncherVersion.Size = new System.Drawing.Size(128, 14);
+            this.labelLauncherVersion.Size = new System.Drawing.Size(164, 14);
             this.labelLauncherVersion.TabIndex = 49;
-            this.labelLauncherVersion.Text = "Version: vX.X.X.XX";
+            this.labelLauncherVersion.Text = "Version: vXX.XX.XX.XXXX";
+            this.labelLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.labelLauncherVersion.Click += new System.EventHandler(this.labelLauncherVersion_Click);
             // 
             // labelVideoOptions

@@ -61,6 +61,312 @@ namespace GameLauncher.App.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cache Entry Not Found.
+        /// </summary>
+        internal static string APIChecker_CacheEntryNotFound {
+            get {
+                return ResourceManager.GetString("APIChecker_CacheEntryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect Failure.
+        /// </summary>
+        internal static string APIChecker_ConnectFailure {
+            get {
+                return ResourceManager.GetString("APIChecker_ConnectFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection Closed.
+        /// </summary>
+        internal static string APIChecker_ConnectionClosed {
+            get {
+                return ResourceManager.GetString("APIChecker_ConnectionClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection Timed Out.
+        /// </summary>
+        internal static string APIChecker_ConnectionTimeOut {
+            get {
+                return ResourceManager.GetString("APIChecker_ConnectionTimeOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GetWay Time Out.
+        /// </summary>
+        internal static string APIChecker_GetWayTimeOut {
+            get {
+                return ResourceManager.GetString("APIChecker_GetWayTimeOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid SSL.
+        /// </summary>
+        internal static string APIChecker_InvaildSSL {
+            get {
+                return ResourceManager.GetString("APIChecker_InvaildSSL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep Alive Failure.
+        /// </summary>
+        internal static string APIChecker_KeepAliveFailure {
+            get {
+                return ResourceManager.GetString("APIChecker_KeepAliveFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message Length Limit Exceeded.
+        /// </summary>
+        internal static string APIChecker_MessageLengthLimitExceeded {
+            get {
+                return ResourceManager.GetString("APIChecker_MessageLengthLimitExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name Resolution Failure.
+        /// </summary>
+        internal static string APIChecker_NameResolutionFailure {
+            get {
+                return ResourceManager.GetString("APIChecker_NameResolutionFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Found.
+        /// </summary>
+        internal static string APIChecker_NotFound {
+            get {
+                return ResourceManager.GetString("APIChecker_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL was Null.
+        /// </summary>
+        internal static string APIChecker_Null {
+            get {
+                return ResourceManager.GetString("APIChecker_Null", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Offline.
+        /// </summary>
+        internal static string APIChecker_Offline {
+            get {
+                return ResourceManager.GetString("APIChecker_Offline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Online.
+        /// </summary>
+        internal static string APIChecker_Online {
+            get {
+                return ResourceManager.GetString("APIChecker_Online", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Origin Unreachable.
+        /// </summary>
+        internal static string APIChecker_OriginUnreachable {
+            get {
+                return ResourceManager.GetString("APIChecker_OriginUnreachable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pending.
+        /// </summary>
+        internal static string APIChecker_Pending {
+            get {
+                return ResourceManager.GetString("APIChecker_Pending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pipeline Failure.
+        /// </summary>
+        internal static string APIChecker_PipelineFailure {
+            get {
+                return ResourceManager.GetString("APIChecker_PipelineFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proxy Name Resolution Failure.
+        /// </summary>
+        internal static string APIChecker_ProxyNameResolutionFailure {
+            get {
+                return ResourceManager.GetString("APIChecker_ProxyNameResolutionFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Receive Failure.
+        /// </summary>
+        internal static string APIChecker_ReceiveFailure {
+            get {
+                return ResourceManager.GetString("APIChecker_ReceiveFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request Canceled.
+        /// </summary>
+        internal static string APIChecker_RequestCanceled {
+            get {
+                return ResourceManager.GetString("APIChecker_RequestCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request Prohibited By Cache Policy.
+        /// </summary>
+        internal static string APIChecker_RequestProhibitedByCachePolicy {
+            get {
+                return ResourceManager.GetString("APIChecker_RequestProhibitedByCachePolicy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secure Channel Failure.
+        /// </summary>
+        internal static string APIChecker_SecureChannelFailure {
+            get {
+                return ResourceManager.GetString("APIChecker_SecureChannelFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send Failure.
+        /// </summary>
+        internal static string APIChecker_SendFailure {
+            get {
+                return ResourceManager.GetString("APIChecker_SendFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Error.
+        /// </summary>
+        internal static string APIChecker_ServerError {
+            get {
+                return ResourceManager.GetString("APIChecker_ServerError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Overloaded.
+        /// </summary>
+        internal static string APIChecker_ServerOverloaded {
+            get {
+                return ResourceManager.GetString("APIChecker_ServerOverloaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Protocol Violation.
+        /// </summary>
+        internal static string APIChecker_ServerProtocolViolation {
+            get {
+                return ResourceManager.GetString("APIChecker_ServerProtocolViolation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Unavailable.
+        /// </summary>
+        internal static string APIChecker_ServerUnavailable {
+            get {
+                return ResourceManager.GetString("APIChecker_ServerUnavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SSL Failed.
+        /// </summary>
+        internal static string APIChecker_SSLFailed {
+            get {
+                return ResourceManager.GetString("APIChecker_SSLFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success.
+        /// </summary>
+        internal static string APIChecker_Success {
+            get {
+                return ResourceManager.GetString("APIChecker_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timed Out.
+        /// </summary>
+        internal static string APIChecker_Timeout {
+            get {
+                return ResourceManager.GetString("APIChecker_Timeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trust Failure.
+        /// </summary>
+        internal static string APIChecker_TrustFailure {
+            get {
+                return ResourceManager.GetString("APIChecker_TrustFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown Error.
+        /// </summary>
+        internal static string APIChecker_Unknown {
+            get {
+                return ResourceManager.GetString("APIChecker_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown Status Code.
+        /// </summary>
+        internal static string APIChecker_UnknownStatusCode {
+            get {
+                return ResourceManager.GetString("APIChecker_UnknownStatusCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SBRW Launcher will have to Close due to a Thread Exception.
+        /// </summary>
+        internal static string Application_Exception_Thread {
+            get {
+                return ResourceManager.GetString("Application_Exception_Thread", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SBRW Launcher will have to Close due to a Unhandled Exception.
+        /// </summary>
+        internal static string Application_Exception_Unhandled {
+            get {
+                return ResourceManager.GetString("Application_Exception_Unhandled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
         internal static string Global_Text_About {
@@ -75,6 +381,159 @@ namespace GameLauncher.App.Languages {
         internal static string Global_Text_EG_1 {
             get {
                 return ResourceManager.GetString("Global_Text_EG_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BETA Build Date.
+        /// </summary>
+        internal static string KitEnabler_Beta {
+            get {
+                return ResourceManager.GetString("KitEnabler_Beta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DEV Build Date.
+        /// </summary>
+        internal static string KitEnabler_Dev {
+            get {
+                return ResourceManager.GetString("KitEnabler_Dev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build Date.
+        /// </summary>
+        internal static string KitEnabler_Public {
+            get {
+                return ResourceManager.GetString("KitEnabler_Public", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Web Browser has been opened to the Game Launcher&apos;s GitHub Latest Release Page to Download the New Version.
+        /// </summary>
+        internal static string LauncherUpdateCheck_FS {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_FS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launcher Status:.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Insider {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Insider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beta.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Insider_Beta {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Insider_Beta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Developer.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Insider_Dev {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Insider_Dev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Insider_Text_Build {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Insider_Text_Build", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current:.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Insider_Text_Current {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Insider_Text_Current", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stable:.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Insider_Text_Stable {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Insider_Text_Stable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unofficial.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Insider_Unofficial {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Insider_Unofficial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launcher Status:\n- API Version Error.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Text_Invalid_Error {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Text_Invalid_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launcher Status:\n- Invalid JSON.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Text_Invalid_JSON {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Text_Invalid_JSON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launcher Status:\n- Current Version.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Text_No_Update {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Text_No_Update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launcher Status:\n- Update Available.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Text_Update {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Text_Update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New:.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Text_Update_New {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Text_Update_New", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version:.
+        /// </summary>
+        internal static string LauncherUpdateCheck_VS_Text_Version {
+            get {
+                return ResourceManager.GetString("LauncherUpdateCheck_VS_Text_Version", resourceCulture);
             }
         }
         
@@ -142,7 +601,7 @@ namespace GameLauncher.App.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it..
+        ///   Looks up a localized string similar to Game is going to shut down in 5 minutes.\nPlease restart it manually before the launcher does it..
         /// </summary>
         internal static string MainScreen_Notification_Text_Alert {
             get {
@@ -196,9 +655,7 @@ namespace GameLauncher.App.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Main API
-        ///
-        ///- Pinging.
+        ///   Looks up a localized string similar to Main API\n- Pinging.
         /// </summary>
         internal static string MainScreen_Text_API_Launcher {
             get {
@@ -225,8 +682,7 @@ namespace GameLauncher.App.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Players Online: ###
-        ///Registered: ###.
+        ///   Looks up a localized string similar to Players Online: ###\nRegistered: ###.
         /// </summary>
         internal static string MainScreen_Text_API_Server {
             get {
@@ -235,7 +691,7 @@ namespace GameLauncher.App.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Launcher Status:\n - Linux Build.
+        ///   Looks up a localized string similar to Launcher Status:\n- Linux Build.
         /// </summary>
         internal static string MainScreen_Text_FS_Launcher_Status_Linux {
             get {
@@ -253,9 +709,7 @@ namespace GameLauncher.App.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Launcher
-        /// 
-        ///- Checking.
+        ///   Looks up a localized string similar to Launcher\n- Checking.
         /// </summary>
         internal static string MainScreen_Text_Launcher_Status {
             get {
@@ -480,7 +934,7 @@ namespace GameLauncher.App.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Online: {0}\nRegistered: {1}.
+        ///   Looks up a localized string similar to Online: {0}\n Registered: {1}.
         /// </summary>
         internal static string MainScreen_Text_ServerStatus_Description_Online {
             get {
@@ -543,7 +997,7 @@ namespace GameLauncher.App.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Drive {0} was not found. Your actual installation directory is set to {1} now..
+        ///   Looks up a localized string similar to Drive {0} was not found.\nYour actual installation directory is set to {1} now..
         /// </summary>
         internal static string MainScreen_TextBox_GameFiles_Invalid_Location {
             get {
@@ -561,11 +1015,389 @@ namespace GameLauncher.App.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Invalid File.
         /// </summary>
-        internal static string Program_TextBox {
+        internal static string Program_TextBox_File_Invalid {
             get {
-                return ResourceManager.GetString("Program_TextBox", resourceCulture);
+                return ResourceManager.GetString("Program_TextBox_File_Invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong Architecture.
+        /// </summary>
+        internal static string Program_TextBox_File_Invalid_CPU {
+            get {
+                return ResourceManager.GetString("Program_TextBox_File_Invalid_CPU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot Start GameLauncher.\nThe following files are invalid:\n\n.
+        /// </summary>
+        internal static string Program_TextBox_File_Invalid_Start {
+            get {
+                return ResourceManager.GetString("Program_TextBox_File_Invalid_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Version.
+        /// </summary>
+        internal static string Program_TextBox_File_Invalid_Version {
+            get {
+                return ResourceManager.GetString("Program_TextBox_File_Invalid_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Found.
+        /// </summary>
+        internal static string Program_TextBox_File_NotFound {
+            get {
+                return ResourceManager.GetString("Program_TextBox_File_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using this location for GameLauncher is not allowed..
+        /// </summary>
+        internal static string Program_TextBox_Folder_Check_Launcher {
+            get {
+                return ResourceManager.GetString("Program_TextBox_Folder_Check_Launcher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following locations are also NOT allowed:.
+        /// </summary>
+        internal static string Program_TextBox_Folder_Check_Launcher_P2 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_Folder_Check_Launcher_P2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (Root of Drive, such as C:\\ or D:\\, must be in a folder).
+        /// </summary>
+        internal static string Program_TextBox_Folder_Check_Launcher_P3 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_Folder_Check_Launcher_P3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (Includes &apos;Desktop&apos;, &apos;Documents&apos;, &apos;Downloads&apos;).
+        /// </summary>
+        internal static string Program_TextBox_Folder_Check_Launcher_P4 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_Folder_Check_Launcher_P4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instead, move the Launcher folder to someplace like:.
+        /// </summary>
+        internal static string Program_TextBox_Folder_Check_Launcher_P5 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_Folder_Check_Launcher_P5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to or.
+        /// </summary>
+        internal static string Program_TextBox_Folder_Check_Launcher_P6 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_Folder_Check_Launcher_P6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (Or any other NTFS &apos;Local Disk&apos; location such as &apos;D:&apos;).
+        /// </summary>
+        internal static string Program_TextBox_Folder_Check_Launcher_P7 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_Folder_Check_Launcher_P7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to do a Test Write to Launcher Folder.\nPermission Issue.
+        /// </summary>
+        internal static string Program_TextBox_Folder_Write_Test {
+            get {
+                return ResourceManager.GetString("Program_TextBox_Folder_Write_Test", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An instance of Need for Speed: World is already running.
+        /// </summary>
+        internal static string Program_TextBox_GameIsRunning {
+            get {
+                return ResourceManager.GetString("Program_TextBox_GameIsRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloaded Missing LZMA.dll File.\nPlease Restart Launcher, Thanks!.
+        /// </summary>
+        internal static string Program_TextBox_LZMA_Redownloaded {
+            get {
+                return ResourceManager.GetString("Program_TextBox_LZMA_Redownloaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This application requires a minimum version of the .NET Framework:\n.
+        /// </summary>
+        internal static string Program_TextBox_NetFrame_P1 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_NetFrame_P1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to install this .NET Framework version now?.
+        /// </summary>
+        internal static string Program_TextBox_NetFrame_P2 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_NetFrame_P2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This application could not be started..
+        /// </summary>
+        internal static string Program_TextBox_NetFrame_P3 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_NetFrame_P3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An instance of SBRW Launcher is already running.
+        /// </summary>
+        internal static string Program_TextBox_SBRWIsRunning {
+            get {
+                return ResourceManager.GetString("Program_TextBox_SBRWIsRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An instance of SBRW Simplified Launcher is already running.
+        /// </summary>
+        internal static string Program_TextBox_SimplifiedIsRunning {
+            get {
+                return ResourceManager.GetString("Program_TextBox_SimplifiedIsRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operating System Detection Check Encountered an Error..
+        /// </summary>
+        internal static string Program_TextBox_System_Detection {
+            get {
+                return ResourceManager.GetString("Program_TextBox_System_Detection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hey Windows 7 User, we&apos;ve detected a potential issue of some missing Updates that are required..
+        /// </summary>
+        internal static string Program_TextBox_W7_TLS {
+            get {
+                return ResourceManager.GetString("Program_TextBox_W7_TLS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We found that these Windows Update packages are showing as not installed:.
+        /// </summary>
+        internal static string Program_TextBox_W7_TLS_P2 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_W7_TLS_P2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        internal static string Program_TextBox_W7_TLS_P3 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_W7_TLS_P3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aditionally, we must add a value to the registry:.
+        /// </summary>
+        internal static string Program_TextBox_W7_TLS_P4 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_W7_TLS_P4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to add those values?.
+        /// </summary>
+        internal static string Program_TextBox_W7_TLS_P5 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_W7_TLS_P5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registry option set, Remember that the changes may require a system reboot to take effect.
+        /// </summary>
+        internal static string Program_TextBox_W7_TLS_P6 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_W7_TLS_P6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Roger that, There may be some issues connecting to the servers..
+        /// </summary>
+        internal static string Program_TextBox_W7_TLS_P7 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_W7_TLS_P7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed..
+        /// </summary>
+        internal static string Redistributable_VC_32 {
+            get {
+                return ResourceManager.GetString("Redistributable_VC_32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed..
+        /// </summary>
+        internal static string Redistributable_VC_64 {
+            get {
+                return ResourceManager.GetString("Redistributable_VC_64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to download package installer.\nThe game will not be started..
+        /// </summary>
+        internal static string Redistributable_VC_P10 {
+            get {
+                return ResourceManager.GetString("Redistributable_VC_P10", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will install in the Background.
+        /// </summary>
+        internal static string Redistributable_VC_P2 {
+            get {
+                return ResourceManager.GetString("Redistributable_VC_P2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This may restart your computer..
+        /// </summary>
+        internal static string Redistributable_VC_P3 {
+            get {
+                return ResourceManager.GetString("Redistributable_VC_P3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click OK to install it..
+        /// </summary>
+        internal static string Redistributable_VC_P4 {
+            get {
+                return ResourceManager.GetString("Redistributable_VC_P4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compatibility.
+        /// </summary>
+        internal static string Redistributable_VC_P5 {
+            get {
+                return ResourceManager.GetString("Redistributable_VC_P5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to run package installer.\n The game will not be started..
+        /// </summary>
+        internal static string Redistributable_VC_P6 {
+            get {
+                return ResourceManager.GetString("Redistributable_VC_P6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to run package installer.\n Installer Exit Code.
+        /// </summary>
+        internal static string Redistributable_VC_P7 {
+            get {
+                return ResourceManager.GetString("Redistributable_VC_P7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The game will not be started..
+        /// </summary>
+        internal static string Redistributable_VC_P8 {
+            get {
+                return ResourceManager.GetString("Redistributable_VC_P8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to start package installer.\n The game will not be started..
+        /// </summary>
+        internal static string Redistributable_VC_P9 {
+            get {
+                return ResourceManager.GetString("Redistributable_VC_P9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to Connect to any Server List API.\nPlease check your connection.\n\nClick Yes to Close Launcher\n\nor\n\nClick No Continue.
+        /// </summary>
+        internal static string VisualsAPIChecker_TextBox_No_API {
+            get {
+                return ResourceManager.GetString("VisualsAPIChecker_TextBox_No_API", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameLauncher has Stopped, Failed To Connect to any Server List API.
+        /// </summary>
+        internal static string VisualsAPIChecker_TextBox_No_API_P2 {
+            get {
+                return ResourceManager.GetString("VisualsAPIChecker_TextBox_No_API_P2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please keep in Mind Launcher might crash past this point.\nMake sure to resolve the issue next time.
+        /// </summary>
+        internal static string VisualsAPIChecker_TextBox_No_API_P3 {
+            get {
+                return ResourceManager.GetString("VisualsAPIChecker_TextBox_No_API_P3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameLauncher will continue, despite failing To Connect To API.
+        /// </summary>
+        internal static string VisualsAPIChecker_TextBox_No_API_P4 {
+            get {
+                return ResourceManager.GetString("VisualsAPIChecker_TextBox_No_API_P4", resourceCulture);
             }
         }
     }

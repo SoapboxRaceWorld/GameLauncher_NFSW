@@ -107,6 +107,7 @@
             // translatedBy
             // 
             this.translatedBy.BackColor = System.Drawing.Color.Transparent;
+            this.translatedBy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             resources.ApplyResources(this.translatedBy, "translatedBy");
             this.translatedBy.ForeColor = System.Drawing.Color.DarkGray;
             this.translatedBy.Name = "translatedBy";

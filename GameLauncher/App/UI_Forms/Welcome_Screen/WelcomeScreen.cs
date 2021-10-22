@@ -202,7 +202,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
 
             if (StatusCheck)
             {
-                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. " +
+                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs.\n" +
                     "Clicking 'Manual Bypass' will allow you to continue with the Error";
                 APIErrorFormElements();
             }
@@ -210,8 +210,9 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             {
                 APIErrorFormElements(false);
                 SettingsFormElements(true);
-                WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. " +
-                    "Please specify where you want to download all required game files";
+                WelcomeText.Text = "Howdy!\n" +
+                    "Looks like this is the first time this launcher has been started.\n" +
+                    "Please select from the options below in order to continue this setup.";
             }
         }
 
@@ -298,8 +299,9 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
         {
             APIErrorFormElements(false);
             SettingsFormElements();
-            WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. " +
-                "Please specify where you want to download all required game files";
+            WelcomeText.Text = "Howdy!\n" + 
+                "Looks like this is the first time this launcher has been started.\n" +
+                "Please select from the options below in order to continue this setup.";
         }
 
         private void APIErrorFormElements(bool hideElements = true)

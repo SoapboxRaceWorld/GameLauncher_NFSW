@@ -784,7 +784,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     ServerStatusText.Text = "Server Status:\n - Offline ( OFF )";
                     ServerStatusText.ForeColor = Theming.Error;
                     ServerStatusDesc.Text = (e2.Error != null) ?
-                    Strings.Truncate(e2.Error.Message ?? "Server Seems to be Offline", 36) : "Failed to Connect to Server";
+                    Strings.Encode(e2.Error.Message ?? "Server Seems to be Offline") : "Failed to Connect to Server";
 
                     if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.ID))
                     {

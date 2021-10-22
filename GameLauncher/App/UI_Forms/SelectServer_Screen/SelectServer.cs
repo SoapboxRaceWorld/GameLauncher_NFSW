@@ -86,6 +86,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             ServerListRenderer.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             Loading.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             BtnAddServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            BtnRemoveServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             BtnSelectServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             BtnClose.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             Version.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
@@ -106,6 +107,11 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             BtnAddServer.BackColor = Theming.BlueBackColorButton;
             BtnAddServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
             BtnAddServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            BtnRemoveServer.ForeColor = Theming.BlueForeColorButton;
+            BtnRemoveServer.BackColor = Theming.BlueBackColorButton;
+            BtnRemoveServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            BtnRemoveServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
 
             BtnSelectServer.ForeColor = Theming.BlueForeColorButton;
             BtnSelectServer.BackColor = Theming.BlueBackColorButton;
