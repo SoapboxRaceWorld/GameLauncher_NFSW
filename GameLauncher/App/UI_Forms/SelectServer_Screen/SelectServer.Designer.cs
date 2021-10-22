@@ -127,7 +127,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             this.Version.Size = new System.Drawing.Size(164, 14);
             this.Version.TabIndex = 9;
             this.Version.Text = "Version : vXX.XX.XX.XXXX";
-            this.Version.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.Version.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
             // BtnRemoveServer
             // 
