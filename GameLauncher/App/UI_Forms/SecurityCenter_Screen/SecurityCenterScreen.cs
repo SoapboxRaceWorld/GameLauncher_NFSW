@@ -154,7 +154,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     Elements.BackColor = Theming.GrayBackColorButton;
                     Elements.FlatAppearance.BorderColor = Theming.GrayBorderColorButton;
                     Elements.FlatAppearance.MouseOverBackColor = Theming.GrayMouseOverBackColorButton;
-                    Elements.Enabled = EnabledORDisabled;
+                    Elements.Enabled = !EnabledORDisabled;
                     break;
             }
         }
