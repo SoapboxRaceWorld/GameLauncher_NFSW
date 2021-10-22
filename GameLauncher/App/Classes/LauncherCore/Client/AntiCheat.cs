@@ -53,7 +53,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
             4587060, /* WALLHACK */
             4486168, /* DRIFTMOD/MULTIHACK */
             4820249, /* PURSUITBOT (NO COPS VARIATION) */
-            8972152, /* PROFILEMASKER */
             4573882  /* GHOSTING */
         };
 
