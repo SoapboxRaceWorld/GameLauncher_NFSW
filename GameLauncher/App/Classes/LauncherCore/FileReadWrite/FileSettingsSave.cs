@@ -3,6 +3,7 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using SBRWCore.Classes.System;
 using System;
 
 namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite

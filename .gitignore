@@ -290,3 +290,6 @@ __pycache__/
 # SIGN KEYS
 *.pfx
 *.p12
+
+# CUSTOM DLLs
+*.dll

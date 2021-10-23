@@ -1,4 +1,5 @@
-﻿using GameLauncher.App.Classes.InsiderKit;
+﻿using SBRWCore.Classes.System;
+using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
@@ -11,7 +12,6 @@ using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using System;
 using System.Collections.Generic;
@@ -26,6 +26,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
 
 namespace GameLauncher
 {

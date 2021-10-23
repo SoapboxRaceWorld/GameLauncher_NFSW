@@ -7,6 +7,7 @@ using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using SBRWCore.Classes.System;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -115,6 +115,9 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
+    <Reference Include="SBRWCore">
+      <HintPath>Resources\DLLs\SBRWCore.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -260,7 +263,6 @@
     <Compile Include="App\Classes\LauncherCore\Lists\ServerListUpdater.cs" />
     <Compile Include="App\Classes\LauncherCore\Proxy\ServerProxy.cs" />
     <Compile Include="App\Classes\LauncherCore\Proxy\Singleton.cs" />
-    <Compile Include="App\Classes\SystemPlatform\Windows\WindowsProductVersion.cs" />
     <Compile Include="App\Classes\SystemPlatform\TaskBar.cs" />
     <Compile Include="App\UI_Forms\Debug_Screen\DebugScreen.cs">
       <SubType>Form</SubType>

@@ -8,6 +8,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using NetFwTypeLib;
+using SBRWCore.Classes.System;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
