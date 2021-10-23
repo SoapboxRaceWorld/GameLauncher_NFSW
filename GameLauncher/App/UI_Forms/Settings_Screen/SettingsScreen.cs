@@ -864,6 +864,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             if (FileSettingsSave.Insider != (SettingsOptInsiderCheckBox.Checked ? "1" : "0"))
             {
                 EnableInsiderBetaTester.Allowed((FileSettingsSave.Insider = SettingsOptInsiderCheckBox.Checked ? "1" : "0") == "1");
+                _restartRequired = true;
             }
 
             if (FileSettingsSave.ThemeSupport != (SettingsThemeSupportCheckbox.Checked ? "1" : "0"))
