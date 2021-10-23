@@ -108,7 +108,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         {
                             try
                             {
-                                FunctionStatus.TLS();
                                 Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IPAddress + "/RecoveryPassword/forgotPassword");
                                 ServicePointManager.FindServicePoint(resetPasswordUrl).ConnectionLeaseTimeout =
                                     (int)TimeSpan.FromSeconds(30).TotalMilliseconds;

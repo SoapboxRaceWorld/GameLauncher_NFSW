@@ -24,7 +24,6 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 try
                 {
                     Log.Checking("Checking Status: ".ToUpper() + URI);
-                    FunctionStatus.TLS();
                     Uri ConvertedAPIURI = new Uri(URI);
                     /* Releases Connection Socket after 30 seconds */
                     ServicePointManager.FindServicePoint(ConvertedAPIURI).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Timer + 1).TotalMilliseconds;
@@ -386,7 +385,6 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             {
 
 
-                FunctionStatus.TLS();
                 Uri URLCall = new Uri(JSONUrl);
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 var Client = new WebClient

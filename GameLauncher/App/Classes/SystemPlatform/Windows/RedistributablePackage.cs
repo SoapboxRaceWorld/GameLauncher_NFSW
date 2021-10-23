@@ -130,7 +130,6 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     {
                         try
                         {
-                            FunctionStatus.TLS();
                             Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x86.exe");
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var Client = new WebClient
@@ -255,7 +254,6 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         {
                             try
                             {
-                                FunctionStatus.TLS();
                                 Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x64.exe");
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 var Client = new WebClient

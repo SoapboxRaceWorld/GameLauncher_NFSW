@@ -158,7 +158,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                 }
                 else
                 {
-                    FunctionStatus.TLS();
                     Uri URLCall = new Uri(url);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
@@ -871,7 +870,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
 
         public static byte[] GetData(string url)
         {
-            FunctionStatus.TLS();
             Uri URLCall = new Uri(url);
             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
             var Client = new WebClient

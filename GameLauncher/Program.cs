@@ -176,7 +176,6 @@ namespace GameLauncher
                     {
                         try
                         {
-                            FunctionStatus.TLS();
                             Uri URLCall = new Uri(URLs.File + "/LZMA.dll");
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             WebClient Client = new WebClient

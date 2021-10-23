@@ -51,7 +51,6 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             DiscordLauncherPresence.Status("Start Up", "Checking Latest Launcher Release Information");
             try
             {
-                FunctionStatus.TLS();
                 Uri URLCall = new Uri((EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed()) ? 
                     URLs.GitHub_Launcher_Beta : URLs.GitHub_Launcher_Stable);
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;

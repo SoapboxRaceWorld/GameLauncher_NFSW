@@ -155,11 +155,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             return addresses[0].ToString();
         }
 
-        public static void TLS()
-        {
-
-        }
-
         /// <summary>
         /// Used to Force Close Launcher when Launcher encounters an error during Startup
         /// </summary>

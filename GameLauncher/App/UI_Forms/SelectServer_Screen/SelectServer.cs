@@ -207,7 +207,6 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                         {
                             try
                             {
-                                FunctionStatus.TLS();
                                 Uri URLCall = new Uri(serverurl);
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 var Client = new WebClient

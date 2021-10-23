@@ -375,7 +375,6 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                     /* Fetch and Read Remote checksums.dat */
                     ScanProgressText.SafeInvokeAction(() => ScanProgressText.Text = "Downloading Checksums File");
 
-                    FunctionStatus.TLS();
                     Uri URLCall = new Uri(FinalCDNURL + "/unpacked/checksums.dat");
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
@@ -555,7 +554,6 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                         }
                         catch (Exception Error) { LogToFileAddons.OpenLog("VERIFY HASH File Info", null, Error, null, true); }
 
-                        FunctionStatus.TLS();
                         Uri URLCall = new Uri(address);
                         int Timeout = (int)TimeSpan.FromMinutes(5).TotalMilliseconds;
 

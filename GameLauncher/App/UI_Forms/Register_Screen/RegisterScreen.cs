@@ -108,14 +108,49 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
             {
                 bool allowReg = false;
 
+                String Email;
+                String Password;
+
+                switch (Authentication.HashType(InformationCache.SelectedServerJSON.authHash ?? string.Empty))
+                {
+                    case AuthHash.H10:
+                        Email = RegisterEmail.Text.ToString();
+                        Password = RegisterPassword.Text.ToString();
+                        break;
+                    case AuthHash.H11:
+                        Email = RegisterEmail.Text.ToString();
+                        Password = MDFive.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                        break;
+                    case AuthHash.H12:
+                        Email = RegisterEmail.Text.ToString();
+                        Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                        break;
+                    case AuthHash.H13:
+                        Email = RegisterEmail.Text.ToString();
+                        Password = SHATwoFiveSix.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                        break;
+                    case AuthHash.H20:
+                        Email = MDFive.Hashes(RegisterEmail.Text.ToString()).ToLower();
+                        Password = MDFive.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                        break;
+                    case AuthHash.H21:
+                        Email = SHA.Hashes(RegisterEmail.Text.ToString()).ToLower();
+                        Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                        break;
+                    case AuthHash.H22:
+                        Email = SHATwoFiveSix.Hashes(RegisterEmail.Text.ToString()).ToLower();
+                        Password = SHATwoFiveSix.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                        break;
+                    default:
+                        Log.Error("HASH TYPE: Unknown Hash Standard was Provided");
+                        return;
+                }
+
                 try
                 {
-                    String checkPassword = SHA.Hashes(RegisterPassword.Text.ToString()).ToUpper();
-                    var regex = new Regex(@"([0-9A-Z]{5})([0-9A-Z]{35})").Split(checkPassword);
-                    String range = regex[1];
+                    string[] regex = new Regex(@"([0-9A-Z]{5})([0-9A-Z]{35})").Split(Password.ToUpper());
 
-                    FunctionStatus.TLS();
-                    Uri URLCall = new Uri("https://api.pwnedpasswords.com/range/" + range);
+                    Uri URLCall = new Uri("https://api.pwnedpasswords.com/range/" + regex[1]);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
                     {
@@ -192,49 +227,10 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                 {
                     Tokens.Clear();
 
-                    String Email;
-                    String Password;
-                    String Ticket = (_ticketRequired) ? RegisterTicket.Text : null;
-
                     Tokens.IPAddress = InformationCache.SelectedServerData.IPAddress;
                     Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
-                    switch (Authentication.HashType(InformationCache.SelectedServerJSON.authHash ?? string.Empty))
-                    {
-                        case AuthHash.H10:
-                            Email = RegisterEmail.Text.ToString();
-                            Password = RegisterPassword.Text.ToString();
-                            break;
-                        case AuthHash.H11:
-                            Email = RegisterEmail.Text.ToString();
-                            Password = MDFive.Hashes(RegisterPassword.Text.ToString()).ToLower();
-                            break;
-                        case AuthHash.H12:
-                            Email = RegisterEmail.Text.ToString();
-                            Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
-                            break;
-                        case AuthHash.H13:
-                            Email = RegisterEmail.Text.ToString();
-                            Password = SHATwoFiveSix.Hashes(RegisterPassword.Text.ToString()).ToLower();
-                            break;
-                        case AuthHash.H20:
-                            Email = MDFive.Hashes(RegisterEmail.Text.ToString()).ToLower();
-                            Password = MDFive.Hashes(RegisterPassword.Text.ToString()).ToLower();
-                            break;
-                        case AuthHash.H21:
-                            Email = SHA.Hashes(RegisterEmail.Text.ToString()).ToLower();
-                            Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
-                            break;
-                        case AuthHash.H22:
-                            Email = SHATwoFiveSix.Hashes(RegisterEmail.Text.ToString()).ToLower();
-                            Password = SHATwoFiveSix.Hashes(RegisterPassword.Text.ToString()).ToLower();
-                            break;
-                        default:
-                            Log.Error("HASH TYPE: Unknown Hash Standard was Provided");
-                            return;
-                    }
-
-                    Authentication.Client("Register", InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", Email, Password, null);
+                    Authentication.Client("Register", InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", Email, Password, _ticketRequired ? RegisterTicket.Text : null);
 
                     if (!String.IsNullOrWhiteSpace(Tokens.Success))
                     {

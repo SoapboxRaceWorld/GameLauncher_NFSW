@@ -59,7 +59,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
                 }
             }
 
-            FunctionStatus.TLS();
             ServicePointManager.FindServicePoint(address).ConnectionLeaseTimeout =
                 (int)((FunctionStatus.ExternalToolsWasUsed) ? TimeSpan.FromSeconds(30).TotalMilliseconds : TimeSpan.FromSeconds(5).TotalMilliseconds);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);

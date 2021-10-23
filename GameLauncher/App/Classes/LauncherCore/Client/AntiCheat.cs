@@ -141,7 +141,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                             {
                                 try
                                 {
-                                    FunctionStatus.TLS();
                                     Uri sendReport = new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebHelpers.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt() + "&car_used=" + DiscordGamePresence.PersonaCarName + "&os_platform=" + InformationCache.OSName + "&event_status=" + CompletedEvent);
                                     ServicePointManager.FindServicePoint(sendReport).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
@@ -171,7 +170,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                             {
                                 try
                                 {
-                                    FunctionStatus.TLS();
                                     Uri sendReport = new Uri(report_url);
                                     ServicePointManager.FindServicePoint(sendReport).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
@@ -207,7 +205,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                                 {
                                     try
                                     {
-                                        FunctionStatus.TLS();
                                         Uri sendReport = new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&launcher_hash=" + WebHelpers.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt() + "&os_platform=" + InformationCache.OSName);
                                         ServicePointManager.FindServicePoint(sendReport).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 

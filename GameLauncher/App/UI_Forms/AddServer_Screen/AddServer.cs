@@ -216,7 +216,6 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
                 string ServerInfomationJSON = Empty;
                 try
                 {
-                    FunctionStatus.TLS();
                     Uri StringToUri = new Uri(FormattedURL + "/GetServerInformation");
                     ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
@@ -291,7 +290,6 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
                     else
                     {
                         string ServerID = Empty;
-                        FunctionStatus.TLS();
                         Uri newModNetUri = new Uri(FormattedURL + "/Modding/GetModInfo");
                         ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var Client = new WebClient

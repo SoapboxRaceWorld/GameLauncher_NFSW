@@ -749,7 +749,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 ServerInfoPanel.Visible = false;
             }
 
-            FunctionStatus.TLS();
             Uri ServerURI = new Uri(InformationCache.SelectedServerData.IPAddress + "/GetServerInformation");
             ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
             var Client = new WebClient
@@ -1114,7 +1113,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             if (!string.IsNullOrWhiteSpace(ImageUrl))
                             {
 
-                                FunctionStatus.TLS();
                                 Uri URICall_A = new Uri(ImageUrl);
                                 ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 var Client_A = new WebClient
@@ -1759,7 +1757,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                 ModNetFileNameInUse = FileName;
 
-                FunctionStatus.TLS();
                 ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 var Client = new WebClient
                 {
@@ -1883,7 +1880,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 {
                     DiscordLauncherPresence.Status("Checking ModNet", null);
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
-                    FunctionStatus.TLS();
                     Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
                     ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var ModNetJsonURI = new WebClient
@@ -1959,7 +1955,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                                     DiscordLauncherPresence.Status("Download ModNet", ModNetList);
 
-                                    FunctionStatus.TLS();
                                     Uri URLCall = new Uri(URLs.ModNet + "/launcher-modules/" + ModNetList);
                                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                     var newModNetFilesDownload = new WebClient
@@ -2002,7 +1997,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             }
                         }
 
-                        FunctionStatus.TLS();
                         Uri newModNetUri = new Uri(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo");
                         ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var ModInfoJson = new WebClient
@@ -2055,7 +2049,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             ServerModInfo = null;
 
                             /* Set and Get for RemoteRPC Files */
-                            FunctionStatus.TLS();
                             Uri URLCall_A = new Uri(json2.basePath + "/cars.json");
                             ServicePointManager.FindServicePoint(URLCall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var CarsJson = new WebClient
@@ -2083,7 +2076,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 }
                             }
 
-                            FunctionStatus.TLS();
                             Uri URLCall_B = new Uri(json2.basePath + "/events.json");
                             ServicePointManager.FindServicePoint(URLCall_B).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var EventsJson = new WebClient
@@ -2138,7 +2130,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                             Log.Core("CORE: Loading Server Mods List");
                             /* Get Server Mod Index */
-                            FunctionStatus.TLS();
                             Uri newIndexFile = new Uri(json2.basePath + "/index.json");
                             ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var ServerModsList = new WebClient
@@ -2660,7 +2651,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             {
                 speechFile = DownloaderAddons.SpeechFiles(FileSettingsSave.Lang);
 
-                FunctionStatus.TLS();
                 Uri URLCall = new Uri(FileSettingsSave.CDN + "/" + speechFile + "/index.xml");
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 var Client = new WebClient
@@ -3295,7 +3285,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 try
                                 {
                                     while (StillCheckingLastServer) { }
-                                    FunctionStatus.TLS();
                                     Uri URLCall = new Uri(Servers.IPAddress + "/GetServerInformation");
                                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                     var Client = new WebClient

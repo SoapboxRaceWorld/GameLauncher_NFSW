@@ -123,7 +123,6 @@ namespace GameLauncher.App.UI_Forms.About_Screen
         {
             try
             {
-                FunctionStatus.TLS();
                 XmlDocument doc = new XmlDocument();
                 doc.Load(URLs.Static_Alt + AboutXML);
 

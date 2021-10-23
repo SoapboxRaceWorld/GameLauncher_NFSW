@@ -40,7 +40,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             {
                 if (!Modern_Auth)
                 {
-                    FunctionStatus.TLS();
                     Uri URLCall =
                         new Uri((Method == "Login") ? Tokens.IPAddress + "/User/authenticateUser?email=" + Email + "&password=" + Password :
                         Tokens.IPAddress + "/User/createUser?email=" + Email + "&password=" + Password +
@@ -90,7 +89,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 }
                 else
                 {
-                    FunctionStatus.TLS();
                     string ServerUrl = Tokens.IPAddress + "/User/modernAuth";
                     if (Method == "Register")
                     {
