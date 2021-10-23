@@ -49,7 +49,11 @@ namespace GameLauncher.App.Classes.InsiderKit
         {
             return Enabled;
         }
-
+        /// <summary>
+        /// User had Opt-In to Use Beta Builds
+        /// </summary>
+        /// <param name="Opt_In">Takes in Boolean Values</param>
+        /// <returns>New Conditional Status</returns>
         public static bool Allowed(bool Opt_In)
         {
             return Enabled = Opt_In;

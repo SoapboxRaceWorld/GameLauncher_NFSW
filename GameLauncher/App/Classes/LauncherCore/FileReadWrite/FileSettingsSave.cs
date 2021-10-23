@@ -1,4 +1,5 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Logger;
+﻿using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
@@ -57,6 +58,24 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         public static string WebCallMethod = (!string.IsNullOrWhiteSpace(settingFile.Read("WebCallMethod")) &&
             (settingFile.Read("WebCallMethod") == "WebClient" || settingFile.Read("WebCallMethod") == "WebClientWithTimeout")) ?
             settingFile.Read("WebCallMethod") : "WebClient";
+        ///<summary>Launcher Theme Support [Saved/Ticked]</summary>
+        public static string ThemeSupport = (!string.IsNullOrWhiteSpace(settingFile.Read("ThemeSupport"))
+                                    && (settingFile.Read("ThemeSupport") == "1" || settingFile.Read("ThemeSupport") == "0")) ?
+            settingFile.Read("ThemeSupport") : "0";
+        ///<summary>Launcher Streaming Support [Saved/Ticked]</summary>
+        ///<remarks>Allows Video Capture Natively</remarks>
+        public static string StreamingSupport = (!string.IsNullOrWhiteSpace(settingFile.Read("StreamingSupport"))
+                                    && (settingFile.Read("StreamingSupport") == "1" || settingFile.Read("StreamingSupport") == "0")) ?
+            settingFile.Read("StreamingSupport") : "0";
+        ///<summary>Launcher Streaming Support [Saved Live Value]</summary>
+        ///<remarks>Allows Video Capture Natively</remarks>
+        ///<returns>True or False</returns>
+        public static bool LiveStreamingSupport() => StreamingSupport == "1";
+        ///<summary>Launcher Beta Builds [Saved/Ticked]</summary>
+        ///<remarks>User Opt-In to Preview Builds</remarks>
+        public static string Insider = (!string.IsNullOrWhiteSpace(settingFile.Read("Insider"))
+                                    && (settingFile.Read("Insider") == "1" || settingFile.Read("Insider") == "0")) ?
+            settingFile.Read("Insider") : "0";
         /// <summary>Creates all the NullSafe Values for Settings.ini</summary>
         public static void NullSafeSettings()
         {
@@ -179,6 +198,25 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             if (!settingFile.KeyExists("WebCallMethod"))
             {
                 settingFile.Write("WebCallMethod", WebCallMethod);
+            }
+
+            if (!settingFile.KeyExists("ThemeSupport"))
+            {
+                settingFile.Write("ThemeSupport", ThemeSupport);
+            }
+
+            if (!settingFile.KeyExists("StreamingSupport"))
+            {
+                settingFile.Write("StreamingSupport", StreamingSupport);
+            }
+
+            if (!settingFile.KeyExists("Insider"))
+            {
+                settingFile.Write("Insider", Insider);
+            }
+            else if (settingFile.KeyExists("Insider") && !EnableInsiderBetaTester.Allowed())
+            {
+                Log.Core("Insider Status: ".ToUpper() + "Opted Into the Beta Preview -> " + EnableInsiderBetaTester.Allowed(Insider == "1"));
             }
 
             if (!UnixOS.Detected())
@@ -359,6 +397,21 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             if (settingFile.Read("WebCallMethod") != WebCallMethod)
             {
                 settingFile.Write("WebCallMethod", WebCallMethod);
+            }
+
+            if (settingFile.Read("ThemeSupport") != ThemeSupport)
+            {
+                settingFile.Write("ThemeSupport", ThemeSupport);
+            }
+
+            if (settingFile.Read("StreamingSupport") != StreamingSupport)
+            {
+                settingFile.Write("StreamingSupport", StreamingSupport);
+            }
+
+            if (settingFile.Read("Insider") != Insider)
+            {
+                settingFile.Write("Insider", Insider);
             }
 
             if (!UnixOS.Detected())

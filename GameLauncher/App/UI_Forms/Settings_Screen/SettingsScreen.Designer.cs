@@ -64,6 +64,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.ButtonSecurityPanel = new System.Windows.Forms.Button();
             this.SettingsClearLauncherLogsButton = new System.Windows.Forms.Button();
             this.SettingsAltWebCallsheckbox = new System.Windows.Forms.CheckBox();
+            this.SettingsOptInsiderCheckBox = new System.Windows.Forms.CheckBox();
+            this.SettingsThemeSupportCheckbox = new System.Windows.Forms.CheckBox();
+            this.SettingsStreanCheckbox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // SettingsClearServerModCacheButton
@@ -89,7 +92,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsLauncherVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsLauncherVersion.Location = new System.Drawing.Point(36, 480);
             this.SettingsLauncherVersion.Name = "SettingsLauncherVersion";
-            this.SettingsLauncherVersion.Size = new System.Drawing.Size(164, 14);
+            this.SettingsLauncherVersion.Size = new System.Drawing.Size(323, 14);
             this.SettingsLauncherVersion.TabIndex = 118;
             this.SettingsLauncherVersion.Text = "Version: vXX.XX.XX.XXXX";
             this.SettingsLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -180,7 +183,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsGamePathText.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsGamePathText.Location = new System.Drawing.Point(36, 61);
             this.SettingsGamePathText.Name = "SettingsGamePathText";
-            this.SettingsGamePathText.Size = new System.Drawing.Size(100, 14);
+            this.SettingsGamePathText.Size = new System.Drawing.Size(319, 14);
             this.SettingsGamePathText.TabIndex = 169;
             this.SettingsGamePathText.Text = "GAMEFILES:";
             this.SettingsGamePathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -196,7 +199,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsCDNText.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsCDNText.Location = new System.Drawing.Point(36, 113);
             this.SettingsCDNText.Name = "SettingsCDNText";
-            this.SettingsCDNText.Size = new System.Drawing.Size(124, 14);
+            this.SettingsCDNText.Size = new System.Drawing.Size(319, 14);
             this.SettingsCDNText.TabIndex = 172;
             this.SettingsCDNText.Text = "CDN: PINGING";
             this.SettingsCDNText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -224,7 +227,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsLanguageText.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsLanguageText.Location = new System.Drawing.Point(36, 161);
             this.SettingsLanguageText.Name = "SettingsLanguageText";
-            this.SettingsLanguageText.Size = new System.Drawing.Size(135, 14);
+            this.SettingsLanguageText.Size = new System.Drawing.Size(319, 14);
             this.SettingsLanguageText.TabIndex = 163;
             this.SettingsLanguageText.Text = "GAME LANGUAGE";
             this.SettingsLanguageText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -252,7 +255,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsWordFilterCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsWordFilterCheck.Location = new System.Drawing.Point(39, 343);
             this.SettingsWordFilterCheck.Name = "SettingsWordFilterCheck";
-            this.SettingsWordFilterCheck.Size = new System.Drawing.Size(264, 18);
+            this.SettingsWordFilterCheck.Size = new System.Drawing.Size(319, 18);
             this.SettingsWordFilterCheck.TabIndex = 108;
             this.SettingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.SettingsWordFilterCheck.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -266,7 +269,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsProxyCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsProxyCheckbox.Location = new System.Drawing.Point(39, 365);
             this.SettingsProxyCheckbox.Name = "SettingsProxyCheckbox";
-            this.SettingsProxyCheckbox.Size = new System.Drawing.Size(264, 18);
+            this.SettingsProxyCheckbox.Size = new System.Drawing.Size(319, 18);
             this.SettingsProxyCheckbox.TabIndex = 109;
             this.SettingsProxyCheckbox.Text = "Disable Proxy";
             this.SettingsProxyCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -280,7 +283,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsDiscordRPCCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsDiscordRPCCheckbox.Location = new System.Drawing.Point(39, 387);
             this.SettingsDiscordRPCCheckbox.Name = "SettingsDiscordRPCCheckbox";
-            this.SettingsDiscordRPCCheckbox.Size = new System.Drawing.Size(264, 18);
+            this.SettingsDiscordRPCCheckbox.Size = new System.Drawing.Size(319, 18);
             this.SettingsDiscordRPCCheckbox.TabIndex = 110;
             this.SettingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.SettingsDiscordRPCCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -293,7 +296,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsGameFilesCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsGameFilesCurrentText.Location = new System.Drawing.Point(418, 62);
             this.SettingsGameFilesCurrentText.Name = "SettingsGameFilesCurrentText";
-            this.SettingsGameFilesCurrentText.Size = new System.Drawing.Size(164, 14);
+            this.SettingsGameFilesCurrentText.Size = new System.Drawing.Size(359, 14);
             this.SettingsGameFilesCurrentText.TabIndex = 183;
             this.SettingsGameFilesCurrentText.Text = "CURRENT DIRECTORY:";
             this.SettingsGameFilesCurrentText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -321,7 +324,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsCDNCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsCDNCurrentText.Location = new System.Drawing.Point(418, 118);
             this.SettingsCDNCurrentText.Name = "SettingsCDNCurrentText";
-            this.SettingsCDNCurrentText.Size = new System.Drawing.Size(112, 14);
+            this.SettingsCDNCurrentText.Size = new System.Drawing.Size(360, 14);
             this.SettingsCDNCurrentText.TabIndex = 184;
             this.SettingsCDNCurrentText.Text = "CURRENT CDN:";
             this.SettingsCDNCurrentText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -350,7 +353,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsLauncherPathText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsLauncherPathText.Location = new System.Drawing.Point(418, 161);
             this.SettingsLauncherPathText.Name = "SettingsLauncherPathText";
-            this.SettingsLauncherPathText.Size = new System.Drawing.Size(150, 14);
+            this.SettingsLauncherPathText.Size = new System.Drawing.Size(360, 14);
             this.SettingsLauncherPathText.TabIndex = 171;
             this.SettingsLauncherPathText.Text = "LAUNCHER FOLDER:";
             this.SettingsLauncherPathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -378,7 +381,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsNetworkText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsNetworkText.Location = new System.Drawing.Point(418, 222);
             this.SettingsNetworkText.Name = "SettingsNetworkText";
-            this.SettingsNetworkText.Size = new System.Drawing.Size(210, 14);
+            this.SettingsNetworkText.Size = new System.Drawing.Size(360, 14);
             this.SettingsNetworkText.TabIndex = 178;
             this.SettingsNetworkText.Text = "API CONNECTION STATUS:";
             this.SettingsNetworkText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -390,7 +393,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsMainSrvText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.SettingsMainSrvText.Location = new System.Drawing.Point(418, 238);
             this.SettingsMainSrvText.Name = "SettingsMainSrvText";
-            this.SettingsMainSrvText.Size = new System.Drawing.Size(210, 14);
+            this.SettingsMainSrvText.Size = new System.Drawing.Size(360, 14);
             this.SettingsMainSrvText.TabIndex = 179;
             this.SettingsMainSrvText.Text = "Main Server List API: PINGING";
             // 
@@ -401,7 +404,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsMainCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.SettingsMainCDNText.Location = new System.Drawing.Point(418, 258);
             this.SettingsMainCDNText.Name = "SettingsMainCDNText";
-            this.SettingsMainCDNText.Size = new System.Drawing.Size(210, 14);
+            this.SettingsMainCDNText.Size = new System.Drawing.Size(360, 14);
             this.SettingsMainCDNText.TabIndex = 182;
             this.SettingsMainCDNText.Text = "Main CDN List API: PINGING";
             this.SettingsMainCDNText.Visible = false;
@@ -413,7 +416,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsBkupSrvText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.SettingsBkupSrvText.Location = new System.Drawing.Point(418, 278);
             this.SettingsBkupSrvText.Name = "SettingsBkupSrvText";
-            this.SettingsBkupSrvText.Size = new System.Drawing.Size(210, 14);
+            this.SettingsBkupSrvText.Size = new System.Drawing.Size(360, 14);
             this.SettingsBkupSrvText.TabIndex = 180;
             this.SettingsBkupSrvText.Text = "Backup Server List API: PINGING";
             this.SettingsBkupSrvText.Visible = false;
@@ -425,7 +428,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsBkupCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.SettingsBkupCDNText.Location = new System.Drawing.Point(418, 298);
             this.SettingsBkupCDNText.Name = "SettingsBkupCDNText";
-            this.SettingsBkupCDNText.Size = new System.Drawing.Size(210, 14);
+            this.SettingsBkupCDNText.Size = new System.Drawing.Size(360, 14);
             this.SettingsBkupCDNText.TabIndex = 181;
             this.SettingsBkupCDNText.Text = "Backup CDN List API: PINGING";
             this.SettingsBkupCDNText.Visible = false;
@@ -538,13 +541,55 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsAltWebCallsheckbox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsAltWebCallsheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsAltWebCallsheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsAltWebCallsheckbox.Location = new System.Drawing.Point(39, 409);
+            this.SettingsAltWebCallsheckbox.Location = new System.Drawing.Point(421, 411);
             this.SettingsAltWebCallsheckbox.Name = "SettingsAltWebCallsheckbox";
-            this.SettingsAltWebCallsheckbox.Size = new System.Drawing.Size(264, 18);
+            this.SettingsAltWebCallsheckbox.Size = new System.Drawing.Size(319, 18);
             this.SettingsAltWebCallsheckbox.TabIndex = 195;
             this.SettingsAltWebCallsheckbox.Text = "Enable Alternative WebCalls";
             this.SettingsAltWebCallsheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.SettingsAltWebCallsheckbox.UseVisualStyleBackColor = false;
+            // 
+            // SettingsOptInsiderCheckBox
+            // 
+            this.SettingsOptInsiderCheckBox.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsOptInsiderCheckBox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsOptInsiderCheckBox.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.SettingsOptInsiderCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SettingsOptInsiderCheckBox.Location = new System.Drawing.Point(421, 343);
+            this.SettingsOptInsiderCheckBox.Name = "SettingsOptInsiderCheckBox";
+            this.SettingsOptInsiderCheckBox.Size = new System.Drawing.Size(361, 18);
+            this.SettingsOptInsiderCheckBox.TabIndex = 196;
+            this.SettingsOptInsiderCheckBox.Text = "Opt Into Beta Launcher Builds";
+            this.SettingsOptInsiderCheckBox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.SettingsOptInsiderCheckBox.UseVisualStyleBackColor = false;
+            // 
+            // SettingsThemeSupportCheckbox
+            // 
+            this.SettingsThemeSupportCheckbox.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsThemeSupportCheckbox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsThemeSupportCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.SettingsThemeSupportCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SettingsThemeSupportCheckbox.Location = new System.Drawing.Point(421, 365);
+            this.SettingsThemeSupportCheckbox.Name = "SettingsThemeSupportCheckbox";
+            this.SettingsThemeSupportCheckbox.Size = new System.Drawing.Size(361, 18);
+            this.SettingsThemeSupportCheckbox.TabIndex = 197;
+            this.SettingsThemeSupportCheckbox.Text = "Enable Custom Theme Support";
+            this.SettingsThemeSupportCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.SettingsThemeSupportCheckbox.UseVisualStyleBackColor = false;
+            // 
+            // SettingsStreanCheckbox
+            // 
+            this.SettingsStreanCheckbox.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsStreanCheckbox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsStreanCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.SettingsStreanCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SettingsStreanCheckbox.Location = new System.Drawing.Point(421, 387);
+            this.SettingsStreanCheckbox.Name = "SettingsStreanCheckbox";
+            this.SettingsStreanCheckbox.Size = new System.Drawing.Size(361, 18);
+            this.SettingsStreanCheckbox.TabIndex = 198;
+            this.SettingsStreanCheckbox.Text = "Enable Streaming Support";
+            this.SettingsStreanCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.SettingsStreanCheckbox.UseVisualStyleBackColor = false;
             // 
             // SettingsScreen
             // 
@@ -552,6 +597,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.SettingsOptInsiderCheckBox);
+            this.Controls.Add(this.SettingsThemeSupportCheckbox);
+            this.Controls.Add(this.SettingsStreanCheckbox);
             this.Controls.Add(this.SettingsAltWebCallsheckbox);
             this.Controls.Add(this.SettingsClearLauncherLogsButton);
             this.Controls.Add(this.ButtonSecurityPanel);
@@ -637,5 +685,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         private System.Windows.Forms.Button ButtonSecurityPanel;
         private System.Windows.Forms.Button SettingsClearLauncherLogsButton;
         private System.Windows.Forms.CheckBox SettingsAltWebCallsheckbox;
+        private System.Windows.Forms.CheckBox SettingsOptInsiderCheckBox;
+        private System.Windows.Forms.CheckBox SettingsThemeSupportCheckbox;
+        private System.Windows.Forms.CheckBox SettingsStreanCheckbox;
     }
 }

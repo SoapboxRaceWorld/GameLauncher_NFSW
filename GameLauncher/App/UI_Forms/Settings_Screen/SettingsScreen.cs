@@ -40,6 +40,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         private bool _disableProxy;
         private bool _disableDiscordRPC;
         private bool _enableAltWebCalls;
+        private bool _enableInsiderPreview;
+        private bool _enableThemeSupport;
+        private bool _enableStreamSupport;
         private bool _restartRequired;
         private string _newLauncherPath;
         private string _newGameFilesPath;
@@ -229,6 +232,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             SettingsProxyCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsAltWebCallsheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsOptInsiderCheckBox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsThemeSupportCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsStreanCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsGameFilesCurrentText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGameFilesCurrent.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsCDNCurrentText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -283,6 +289,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             SettingsProxyCheckbox.ForeColor = Theming.SettingsCheckBoxes;
             SettingsDiscordRPCCheckbox.ForeColor = Theming.SettingsCheckBoxes;
             SettingsAltWebCallsheckbox.ForeColor = Theming.SettingsCheckBoxes;
+            SettingsOptInsiderCheckBox.ForeColor = Theming.SettingsCheckBoxes;
+            SettingsThemeSupportCheckbox.ForeColor = Theming.SettingsCheckBoxes;
+            SettingsStreanCheckbox.ForeColor = Theming.SettingsCheckBoxes;
 
             /* Bottom Left */
             SettingsLauncherVersion.ForeColor = Theming.FivithTextForeColor;
@@ -499,7 +508,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 SettingsWordFilterCheck.Enabled = false;
             }
 
-            if (File.Exists("Theme.ini"))
+            if (File.Exists(Path.Combine(Locations.LauncherThemeFolder, "Theme.ini")))
             {
                 ThemeName.Text = "Theme Name: " + Theming.ThemeName;
                 ThemeAuthor.Text = "Theme Author: " + Theming.ThemeAuthor;
@@ -520,10 +529,16 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             _disableProxy = (FileSettingsSave.Proxy == "1");
             _disableDiscordRPC = (FileSettingsSave.RPC == "1");
             _enableAltWebCalls = (FileSettingsSave.WebCallMethod == "WebClientWithTimeout");
+            _enableInsiderPreview = FileSettingsSave.Insider == "1";
+            _enableThemeSupport = FileSettingsSave.ThemeSupport == "1";
+            _enableStreamSupport = FileSettingsSave.StreamingSupport == "1";
 
             SettingsProxyCheckbox.Checked = _disableProxy;
             SettingsDiscordRPCCheckbox.Checked = _disableDiscordRPC;
             SettingsAltWebCallsheckbox.Checked = _enableAltWebCalls;
+            SettingsOptInsiderCheckBox.Checked = _enableInsiderPreview;
+            SettingsThemeSupportCheckbox.Checked = _enableThemeSupport;
+            SettingsStreanCheckbox.Checked = _enableStreamSupport;
 
             /*******************************/
             /* Enable/Disable Visuals       /
@@ -846,9 +861,25 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 }
             }
 
+            if (FileSettingsSave.Insider != (SettingsOptInsiderCheckBox.Checked ? "1" : "0"))
+            {
+                EnableInsiderBetaTester.Allowed((FileSettingsSave.Insider = SettingsOptInsiderCheckBox.Checked ? "1" : "0") == "1");
+            }
+
+            if (FileSettingsSave.ThemeSupport != (SettingsThemeSupportCheckbox.Checked ? "1" : "0"))
+            {
+                FileSettingsSave.ThemeSupport = SettingsThemeSupportCheckbox.Checked ? "1" : "0";
+                _restartRequired = true;
+            }
+
             if (FileSettingsSave.WebCallMethod != (SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient"))
             {
                 FileSettingsSave.WebCallMethod = SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient";
+            }
+
+            if (FileSettingsSave.StreamingSupport != (SettingsStreanCheckbox.Checked ? "1" : "0"))
+            {
+                FileSettingsSave.StreamingSupport = SettingsStreanCheckbox.Checked ? "1" : "0";
             }
 
             try

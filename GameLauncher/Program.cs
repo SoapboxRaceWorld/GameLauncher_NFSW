@@ -12,6 +12,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using GameLauncher.App.UI_Forms.Splash_Screen;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -409,8 +410,8 @@ namespace GameLauncher
                 /* Splash Screen */
                 if (!Debugger.IsAttached)
                 {
-                    /* (Start Process) Sets up Theming */
-                    Theming.CheckIfThemeExists();
+                    /* Starts Splash Screen */
+                    SplashScreen.ThreadStatus("Start");
                 }
 
                 LogToFileAddons.RemoveLogs();
@@ -574,6 +575,8 @@ namespace GameLauncher
                         FileSettingsSave.NullSafeSettings();
                         FileAccountSave.NullSafeAccount();
                         Log.Completed("INI FILES: Done");
+                        /* Sets up Theming */
+                        Theming.CheckIfThemeExists();
 
                         Log.Function("APPLICATION: Setting Language");
                         CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Translations.UI(Translations.Application_Language = FileSettingsSave.Lang.ToLower(), true));

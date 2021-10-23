@@ -139,8 +139,6 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             {
                 Revisions = CurrentLauncherBuild.CompareTo(LatestLauncherBuild);
 
-                Log.Debug(Revisions.ToString());
-
                 if (Revisions < 0)
                 {
                     Log.Info("LAUNCHER POPUP: Checking if Popup is Required");
@@ -159,8 +157,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                             string UpdaterPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater));
                             if (File.Exists(UpdaterPath))
                             {
-                                //@ToDo: Feed a Third string so Updater can switch to use Insider-Release instead of Stable
-                                Process.Start(UpdaterPath, Process.GetCurrentProcess().Id.ToString());
+                                Process.Start(UpdaterPath, Process.GetCurrentProcess().Id.ToString() + 
+                                    (EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed() ? " Preview" : " Stable"));
                             }
                             else
                             {

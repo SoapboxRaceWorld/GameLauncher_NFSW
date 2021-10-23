@@ -487,6 +487,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         public static readonly string NameLZMA = "LZMA.dll";
 
         public static readonly string LauncherFolder = Strings.Encode(AppDomain.CurrentDomain.BaseDirectory);
+        public static readonly string LauncherThemeFolder = Strings.Encode(Path.Combine(LauncherFolder, "Theme"));
 
         public static readonly string LauncherCustomServers = Strings.Encode(Path.Combine(LauncherFolder, NameNewServersJSON));
 

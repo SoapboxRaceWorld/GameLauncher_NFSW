@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using System;
@@ -439,11 +440,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         /* Read Theme File and Check Values */
         public static void CheckIfThemeExists()
         {
-            if (File.Exists("Theme.ini"))
+            Log.Debug((FileSettingsSave.ThemeSupport == "1").ToString());
+            if (File.Exists(Path.Combine(Locations.LauncherThemeFolder, "Theme.ini")) && 
+                (FileSettingsSave.ThemeSupport == "1"))
             {
                 try
                 {
-                    IniFile ThemeFile = new IniFile("Theme.ini");
+                    IniFile ThemeFile = new IniFile(Path.Combine(Locations.LauncherThemeFolder, "Theme.ini"));
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ThemeName")))
                     {
@@ -1395,8 +1398,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                     LogToFileAddons.OpenLog("THEMING", null, Error, null, true);
                 }
             }
-
-            SplashScreen.ThreadStatus("Start");
         }
 
         /* Convert User Inputed String into a Valid RBG Spectrum Values */
