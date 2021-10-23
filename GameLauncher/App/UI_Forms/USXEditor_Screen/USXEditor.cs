@@ -71,7 +71,7 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             {
                 DiscordLauncherPresence.Status("Settings", null);
                 if (IsUSXEditorOpen) { IsUSXEditorOpen = false; }
-
+                /* This is for Mono Support */
                 if (Hover.Active)
                 {
                     Hover.RemoveAll();
@@ -1395,6 +1395,11 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             Hover.SetToolTip(PresetButtonHigh, "Preset: High Graphics");
             Hover.SetToolTip(PresetButtonMax, "Preset: Max Graphics");
             Hover.SetToolTip(PresetButtonCustom, "Preset: Saved Graphics");
+            Hover.SetToolTip(labelGPOTrans, "Only Applies to \"Drag\" Event control");
+            Hover.SetToolTip(labelPixelAspect, "Control Aspect Ratio:\n" +
+                "0: Default POV Ratio\n" +
+                "0 -> 100 : Condense POV to Center\n" +
+                "0 -> -100 : Stretch POV from Center");
 
             Shown += (x, y) =>
             {

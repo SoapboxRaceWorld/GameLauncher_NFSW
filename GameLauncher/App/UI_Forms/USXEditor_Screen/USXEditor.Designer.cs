@@ -322,7 +322,6 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             this.labelGPOTrans.TabIndex = 15;
             this.labelGPOTrans.Text = "Transmission:";
             this.labelGPOTrans.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Hover.SetToolTip(this.labelGPOTrans, "Only Applies to \"Drag\" Event control");
             // 
             // labelResolution
             // 
@@ -628,8 +627,6 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             this.labelPixelAspect.TabIndex = 13;
             this.labelPixelAspect.Text = "Pixel Aspect:";
             this.labelPixelAspect.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Hover.SetToolTip(this.labelPixelAspect, "Control Aspect Ratio:\r\n0: Default POV Ratio\r\n0 -> 100 : Condense POV to Center\r\n0" +
-        " -> -100 : Stretch POV from Center");
             // 
             // labelGameplayOptions
             // 

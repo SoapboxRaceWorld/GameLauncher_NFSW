@@ -94,6 +94,14 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 }
 
                 IsSettingsScreenOpen = false;
+
+                /* This is for Mono Support */
+                if (Hover.Active)
+                {
+                    Hover.RemoveAll();
+                    Hover.Dispose();
+                }
+
                 GC.Collect();
             };
 
@@ -367,6 +375,41 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             {
                 ButtonsColorSet(SettingsVFilesButton, 3, true);
             }
+
+            /*******************************/
+            /* Set ToolTip Texts            /
+            /*******************************/
+
+            Hover.SetToolTip(SettingsGameFiles, "Change the location of where the \'nfsw.exe\' that the Launcher will run");
+            Hover.SetToolTip(SettingsVFilesButton, "Checks and Restores GameFiles back to \"Stock\"");
+            Hover.SetToolTip(SettingsCDNPick, "Download Location for Fetching the base GameFiles\n" +
+                "Can also be a Soruce for VerifyHash to get replacement files");
+            Hover.SetToolTip(SettingsLanguage, "Controls the In-Game Lanuguage setting\n" +
+                "This also includes setting the Default Chat joined In-Game");
+            Hover.SetToolTip(SettingsUEditorButton, "Opens a UserSettings.xml Editor\nAllows in-depth control over Game Settings");
+
+            Hover.SetToolTip(SettingsClearCrashLogsButton, "Removes \"SBRCrashLogs_*\" DMP and TXT files from GameFiles Folder");
+
+            Hover.SetToolTip(SettingsClearLauncherLogsButton, "Removes all but current session \"LOGS\\\" folders");
+            Hover.SetToolTip(SettingsClearServerModCacheButton, "Erases all Server Mods from .data/MODS folders");
+            Hover.SetToolTip(ButtonSecurityPanel, "Opens a new Panel to review Security Information and Settings");
+
+            Hover.SetToolTip(SettingsWordFilterCheck, "Disables the In-Game Chat \"censor\" or word filter.");
+            Hover.SetToolTip(SettingsProxyCheckbox, "Disables the Launcher Proxy communications hook.\n" +
+                "Can not be turned off for httpS Servers.\n" +
+                "Will also impact/limit the DiscordRPC functions.");
+            Hover.SetToolTip(SettingsDiscordRPCCheckbox, "Prevents Launcher from sending Discord Presence information.");
+
+            Hover.SetToolTip(SettingsOptInsiderCheckBox, "Unchecked: Only Official \"Release\" Builds will prompt Updates\n" +
+                "Checked: Insider/Beta Build\'s will be available to the Updater");
+            Hover.SetToolTip(SettingsThemeSupportCheckbox, "Enables supporting External Themes for the Launcher");
+            Hover.SetToolTip(SettingsStreanCheckbox, "Setting for Recording/Streaming Programs:\n" +
+                "Enable \"Native\" capture of the NFSW Game Window\n" +
+                "If Checked, this removes the Window Title countdown timer\n" +
+                "If Unchecked, you can still capture, but may need special methods");
+            Hover.SetToolTip(SettingsAltWebCallsheckbox, "Changes the internal method used by Launcher for Communications\n" +
+                "Unchecked: Uses \'standard\' WebClient calls\n" +
+                "Checked: Uses WebClientWithTimeout");
 
             Shown += (x, y) =>
             {
