@@ -385,26 +385,29 @@
   <data name="Program_TextBox_Folder_Write_Test" xml:space="preserve">
     <value>Unable to do a Test Write to Launcher Folder.\nPermission Issue</value>
   </data>
-  <data name="Program_TextBox_W7_TLS" xml:space="preserve">
-    <value>Hey Windows 7 User, we've detected a potential issue of some missing Updates that are required.</value>
+  <data name="Program_TextBox_W7_TLS_P1" xml:space="preserve">
+    <value>Notice: The following Registry Key has not been found:</value>
   </data>
   <data name="Program_TextBox_W7_TLS_P2" xml:space="preserve">
-    <value>We found that these Windows Update packages are showing as not installed:</value>
+    <value>This setting must be present for the Launcher to work properly!</value>
   </data>
   <data name="Program_TextBox_W7_TLS_P3" xml:space="preserve">
-    <value>Update</value>
+    <value>Clicking 'OK' will attempt to add this Key.</value>
   </data>
   <data name="Program_TextBox_W7_TLS_P4" xml:space="preserve">
-    <value>Aditionally, we must add a value to the registry:</value>
+    <value>Registry option set.\n\nRemember that the changes may\nrequire a system reboot to take effect.</value>
   </data>
-  <data name="Program_TextBox_W7_TLS_P5" xml:space="preserve">
-    <value>Would you like to add those values?</value>
+  <data name="Program_TextBox_W7_KB_P1" xml:space="preserve">
+    <value>Hey Windows 7 User:\nWe've detected a potential issue of some missing Updates that might be required.</value>
   </data>
-  <data name="Program_TextBox_W7_TLS_P6" xml:space="preserve">
-    <value>Registry option set, Remember that the changes may require a system reboot to take effect</value>
+  <data name="Program_TextBox_W7_KB_P2" xml:space="preserve">
+    <value>We found that these Windows Update package(s) are showing as not installed:</value>
   </data>
-  <data name="Program_TextBox_W7_TLS_P7" xml:space="preserve">
-    <value>Roger that, There may be some issues connecting to the servers.</value>
+  <data name="Program_TextBox_W7_KB_P3" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Program_TextBox_W7_KB_P4" xml:space="preserve">
+    <value>You can press 'OK' to continue and you will not see this message again.</value>
   </data>
   <data name="Redistributable_VC_32" xml:space="preserve">
     <value>You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed.</value>

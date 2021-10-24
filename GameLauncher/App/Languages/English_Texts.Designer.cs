@@ -1206,9 +1206,9 @@ namespace GameLauncher.App.Languages {
         /// <summary>
         ///   Looks up a localized string similar to Hey Windows 7 User, we&apos;ve detected a potential issue of some missing Updates that are required..
         /// </summary>
-        internal static string Program_TextBox_W7_TLS {
+        internal static string Program_TextBox_W7_TLS_P1 {
             get {
-                return ResourceManager.GetString("Program_TextBox_W7_TLS", resourceCulture);
+                return ResourceManager.GetString("Program_TextBox_W7_TLS_P1", resourceCulture);
             }
         }
         
@@ -1242,27 +1242,36 @@ namespace GameLauncher.App.Languages {
         /// <summary>
         ///   Looks up a localized string similar to Would you like to add those values?.
         /// </summary>
-        internal static string Program_TextBox_W7_TLS_P5 {
+        internal static string Program_TextBox_W7_KB_P1 {
             get {
-                return ResourceManager.GetString("Program_TextBox_W7_TLS_P5", resourceCulture);
+                return ResourceManager.GetString("Program_TextBox_W7_KB_P1", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Registry option set, Remember that the changes may require a system reboot to take effect.
         /// </summary>
-        internal static string Program_TextBox_W7_TLS_P6 {
+        internal static string Program_TextBox_W7_KB_P2 {
             get {
-                return ResourceManager.GetString("Program_TextBox_W7_TLS_P6", resourceCulture);
+                return ResourceManager.GetString("Program_TextBox_W7_KB_P2", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Roger that, There may be some issues connecting to the servers..
         /// </summary>
-        internal static string Program_TextBox_W7_TLS_P7 {
+        internal static string Program_TextBox_W7_KB_P3 {
             get {
-                return ResourceManager.GetString("Program_TextBox_W7_TLS_P7", resourceCulture);
+                return ResourceManager.GetString("Program_TextBox_W7_KB_P3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Roger that, There may be some issues connecting to the servers..
+        /// </summary>
+        internal static string Program_TextBox_W7_KB_P4 {
+            get {
+                return ResourceManager.GetString("Program_TextBox_W7_KB_P4", resourceCulture);
             }
         }
         

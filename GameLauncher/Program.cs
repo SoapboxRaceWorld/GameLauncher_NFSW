@@ -13,6 +13,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.UI_Forms.Splash_Screen;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -582,61 +583,95 @@ namespace GameLauncher
                         CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Translations.UI(Translations.Application_Language = FileSettingsSave.Lang.ToLower(), true));
                         Log.Completed("APPLICATION: Done Setting Language '" + Translations.UI(Translations.Application_Language) + "'");
 
-                        /* Windows 7 Fix */
-                        if (WindowsProductVersion.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))
+                        /* Windows 7 TLS Check */
+                        if (WindowsProductVersion.GetWindowsNumber() == 6.1)
                         {
                             Log.Checking("SSL/TLS: Windows 7 Detected");
-                            DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 TLS/SSL Update");
+                            DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 SSL/TLS");
+
+                            try
+                            {
+                                String MessageBoxPopupTLS = String.Empty;
+                                string keyName=@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client";
+                                string subKey = "DisabledByDefault";
+
+                                if (Registry.GetValue(keyName, subKey, null) == null)
+                                {
+                                    MessageBoxPopupTLS = Translations.Database("Program_TextBox_W7_TLS_P1") + "\n\n";
+
+                                    MessageBoxPopupTLS += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n  /SCHANNEL/Protocols/TLS 1.2/Client\n";
+                                    MessageBoxPopupTLS += "- Value: DisabledByDefault -> 0\n\n";
+
+                                    MessageBoxPopupTLS += Translations.Database("Program_TextBox_W7_TLS_P2") + "\n\n";
+                                    MessageBoxPopupTLS += Translations.Database("Program_TextBox_W7_TLS_P3");
+
+                                    /* There is only 'OK' Available because this IS Required */
+                                    if (MessageBox.Show(null, MessageBoxPopupTLS, "SBRW Launcher",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Warning) == DialogResult.OK)
+                                    {
+                                        RegistryCore.Write("DisabledByDefault", 0x0,
+                                            @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
+                                        MessageBox.Show(null, Translations.Database("Program_TextBox_W7_TLS_P4"),
+                                            "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    }
+                                    Log.Completed("SSL/TLS: Added Registry Key");
+                                }
+                                else
+                                {
+                                    Log.Completed("SSL/TLS: Done");
+                                }
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("SSL/TLS", null, Error, null, true);
+                            }
+                        }
+
+                        /* Windows 7 HotFix Check */
+                        if (WindowsProductVersion.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))
+                        {
+                            Log.Checking("HotFixes: Windows 7 Detected");
+                            DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 HotFixes");
 
                             try
                             {
                                 if (!ManagementSearcher.GetInstalledHotFix("KB3020369") || !ManagementSearcher.GetInstalledHotFix("KB3125574"))
                                 {
                                     String MessageBoxPopupKB = String.Empty;
-                                    MessageBoxPopupKB = Translations.Database("Program_TextBox_W7_TLS") + "\n";
-                                    MessageBoxPopupKB += Translations.Database("Program_TextBox_W7_TLS_P2") + "\n\n";
+                                    MessageBoxPopupKB = Translations.Database("Program_TextBox_W7_KB_P1") + "\n";
+                                    MessageBoxPopupKB += Translations.Database("Program_TextBox_W7_KB_P2") + "\n\n";
 
                                     if (!ManagementSearcher.GetInstalledHotFix("KB3020369"))
                                     {
-                                        MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_TLS_P3") + " KB3020369\n";
+                                        MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_KB_P3") + " KB3020369\n";
                                     }
 
                                     if (!ManagementSearcher.GetInstalledHotFix("KB3125574"))
                                     {
-                                        MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_TLS_P3") + " KB3125574\n";
+                                        MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_KB_P3") + " KB3125574\n";
                                     }
-
-                                    MessageBoxPopupKB += "\n" + Translations.Database("Program_TextBox_W7_TLS_P4") + "\n";
-
-                                    MessageBoxPopupKB += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n/SCHANNEL/Protocols/TLS 1.2/Client\n";
-                                    MessageBoxPopupKB += "- Value: DisabledByDefault -> 0\n\n";
-
-                                    MessageBoxPopupKB += Translations.Database("Program_TextBox_W7_TLS_P5");
+                                    MessageBoxPopupKB += "\n" + Translations.Database("Program_TextBox_W7_KB_P4") + "\n";
 
                                     if (MessageBox.Show(null, MessageBoxPopupKB, "SBRW Launcher",
-                                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                                        MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
                                     {
-                                        RegistryCore.Write("DisabledByDefault", 0x0,
-                                            @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
-                                        MessageBox.Show(null, Translations.Database("Program_TextBox_W7_TLS_P6"),
-                                            "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                        /* Since it's Informational we just need to know if they clicked 'OK' */
                                         FileSettingsSave.Win7UpdatePatches = "1";
                                     }
                                     else
                                     {
-                                        MessageBox.Show(null, Translations.Database("Program_TextBox_W7_TLS_P7"),
-                                            "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                        /* or if they clicked 'Cancel' */
                                         FileSettingsSave.Win7UpdatePatches = "0";
                                     }
 
                                     FileSettingsSave.SaveSettings();
                                 }
 
-                                Log.Completed("SSL/TLS: Done");
+                                Log.Completed("HotFixes: Done");
                             }
                             catch (Exception Error)
                             {
-                                LogToFileAddons.OpenLog("SSL/TLS", null, Error, null, true);
+                                LogToFileAddons.OpenLog("HotFixes", null, Error, null, true);
                             }
                         }
                     }
