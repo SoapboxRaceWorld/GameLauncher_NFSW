@@ -44,25 +44,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
                     {
-                        Encoding = Encoding.UTF8
+                        Encoding = Encoding.UTF8,
+                        Headers = CustomHeaders.Headers_WHC()
                     };
 
                     if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                     else
                     {
-                        Client.Headers = CustomHeaders.Headers_WHC();
+                        Client.Headers.Add(HttpRequestHeader.UserAgent, CustomHeaders.Primary);
                     }
 
                     try
                     {
-                        if (Method == "Login")
-                        {
-                            LoginResponse = Client.DownloadString(URLCall);
-                        }
-                        else
-                        {
-                            LoginResponse = Client.DownloadString(URLCall);
-                        }
+                        LoginResponse = Client.DownloadString(URLCall);
                     }
                     catch
                     {
