@@ -1,14 +1,15 @@
 ﻿using GameLauncher.App.Classes.Auth;
-using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extentions.API;
+using SBRWCore.Classes.Extentions.Validator;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;
@@ -120,27 +121,27 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                         break;
                     case AuthHash.H11:
                         Email = RegisterEmail.Text.ToString();
-                        Password = MDFive.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                        Password = Hash_Extention.Hashes(0, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H12:
                         Email = RegisterEmail.Text.ToString();
-                        Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                        Password = Hash_Extention.Hashes(1, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H13:
                         Email = RegisterEmail.Text.ToString();
-                        Password = SHATwoFiveSix.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                        Password = Hash_Extention.Hashes(2, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H20:
-                        Email = MDFive.Hashes(RegisterEmail.Text.ToString()).ToLower();
-                        Password = MDFive.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                        Email = Hash_Extention.Hashes(0, RegisterEmail.Text.ToString()).ToLower();
+                        Password = Hash_Extention.Hashes(0, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H21:
-                        Email = SHA.Hashes(RegisterEmail.Text.ToString()).ToLower();
-                        Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                        Email = Hash_Extention.Hashes(1, RegisterEmail.Text.ToString()).ToLower();
+                        Password = Hash_Extention.Hashes(1, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H22:
-                        Email = SHATwoFiveSix.Hashes(RegisterEmail.Text.ToString()).ToLower();
-                        Password = SHATwoFiveSix.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                        Email = Hash_Extention.Hashes(2, RegisterEmail.Text.ToString()).ToLower();
+                        Password = Hash_Extention.Hashes(2, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     default:
                         Log.Error("HASH TYPE: Unknown Hash Standard was Provided");
@@ -171,7 +172,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                     }
                     catch (WebException Error)
                     {
-                        APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                        API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
                             Error, (HttpWebResponse)Error.Response);
                     }
                     catch (Exception Error)

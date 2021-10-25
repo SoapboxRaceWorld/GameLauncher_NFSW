@@ -4,6 +4,8 @@ using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
+using SBRWCore.Classes.Extentions.API;
+using SBRWCore.Classes.Extentions.Validator;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;
@@ -15,177 +17,6 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 {
     class APIChecker
     {
-        public static APIStatus CheckStatus(string URI, int Timer)
-        {
-            if (!string.IsNullOrWhiteSpace(URI))
-            {
-                HttpWebResponse ServerResponse = null;
-                HttpWebRequest URLConnection = null;
-
-                try
-                {
-                    Log.Checking("Checking Status: ".ToUpper() + URI);
-                    Uri ConvertedAPIURI = new Uri(URI);
-                    /* Releases Connection Socket after 30 seconds */
-                    ServicePointManager.FindServicePoint(ConvertedAPIURI).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Timer + 1).TotalMilliseconds;
-                    URLConnection = (HttpWebRequest)WebRequest.Create(ConvertedAPIURI);
-                    URLConnection.AllowAutoRedirect = false; /* Find out if this site is up and don't follow a redirector */
-                    URLConnection.Method = "GET";
-                    URLConnection.UserAgent = "SBRW Launcher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                    URLConnection.Timeout = (int)TimeSpan.FromSeconds(Timer).TotalMilliseconds;
-                    URLConnection.KeepAlive = false;
-
-                    try
-                    {
-                        ServerResponse = (HttpWebResponse)URLConnection.GetResponse();
-                        Log.Completed("Checking Status: ".ToUpper() + URI + " [Is Online]");
-                        return APIStatus.Online;
-                        /* Do something with response.Headers to find out information about the request */
-                    }
-                    catch (WebException Error)
-                    {
-                        Log.Completed("Checking Status: ".ToUpper() + URI + " [WebException]");
-                        return StatusCodes(URI, Error, (HttpWebResponse)Error.Response);
-                    }
-                }
-                catch (Exception Error)
-                {
-                    Log.Completed("Checking Status: ".ToUpper() + URI + " [Exception]");
-                    LogToFileAddons.OpenLog("API Checker", null, Error, null, true);
-                    return APIStatus.UnknownError;
-                }
-                finally
-                {
-                    if (ServerResponse != null)
-                    {
-                        ServerResponse.Close();
-                        ServerResponse.Dispose();
-                    }
-
-                    if (URLConnection != null)
-                    {
-                        URLConnection.Abort();
-                    }
-                }
-            }
-            else
-            {
-                Log.Error("CORE: " + URI + " URI can not be Null!");
-                return APIStatus.Null;
-            }
-        }
-
-        public static APIStatus StatusCodes(string URI, WebException Error, HttpWebResponse Response)
-        {
-            if (!string.IsNullOrWhiteSpace(Error.GetBaseException().Message))
-            { Log.Error("CORE: " + URI + " Additional Details -> " + Error.GetBaseException().Message); }
-
-            if (!string.IsNullOrWhiteSpace(URI))
-            {
-                switch (Error.Status)
-                {
-                    case WebExceptionStatus.CacheEntryNotFound:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Cache Entry Not Found");
-                        return APIStatus.CacheEntryNotFound;
-                    case WebExceptionStatus.ConnectFailure:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Connect Failure");
-                        return APIStatus.ConnectFailure;
-                    case WebExceptionStatus.ConnectionClosed:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Connection Closed");
-                        return APIStatus.ConnectionClosed;
-                    case WebExceptionStatus.KeepAliveFailure:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Keep Alive Failure");
-                        return APIStatus.KeepAliveFailure;
-                    case WebExceptionStatus.MessageLengthLimitExceeded:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Message Length Limit Exceeded");
-                        return APIStatus.MessageLengthLimitExceeded;
-                    case WebExceptionStatus.NameResolutionFailure:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Name Resolution Failure");
-                        return APIStatus.NameResolutionFailure;
-                    case WebExceptionStatus.Pending:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Pending");
-                        return APIStatus.Pending;
-                    case WebExceptionStatus.PipelineFailure:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Pipeline Failure");
-                        return APIStatus.PipelineFailure;
-                    case WebExceptionStatus.ProtocolError:
-                        Log.Error("CORE: " + URI + " has an Error! Status Code: " + (int)Response.StatusCode);
-
-                        /* Set flag if there was a timeout or some other issues */
-                        switch ((int)Response.StatusCode)
-                        {
-                            case 404:
-                                return APIStatus.NotFound;
-                            case 500:
-                                return APIStatus.ServerError;
-                            case 502:
-                                return APIStatus.ServerOverloaded;
-                            case 503:
-                                return APIStatus.ServerUnavailable;
-                            case 504:
-                                return APIStatus.GetWayTimeOut;
-                            case 520:
-                                return APIStatus.Unknown;
-                            case 521:
-                                return APIStatus.Offline;
-                            case 522:
-                                return APIStatus.ConnectionTimeOut;
-                            case 523:
-                                return APIStatus.OriginUnreachable;
-                            case 524:
-                                return APIStatus.Timeout;
-                            case 525:
-                                return APIStatus.SSLFailed;
-                            case 526:
-                                return APIStatus.InvaildSSL;
-                            default:
-                                return APIStatus.UnknownStatusCode;
-                        }
-                    case WebExceptionStatus.ProxyNameResolutionFailure:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Proxy Name Resolution Failure");
-                        return APIStatus.ProxyNameResolutionFailure;
-                    case WebExceptionStatus.ReceiveFailure:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Receive Failure");
-                        return APIStatus.ReceiveFailure;
-                    case WebExceptionStatus.RequestCanceled:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Request Canceled");
-                        return APIStatus.RequestCanceled;
-                    case WebExceptionStatus.RequestProhibitedByCachePolicy:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Request Prohibited By Cache Policy");
-                        return APIStatus.RequestProhibitedByCachePolicy;
-                    case WebExceptionStatus.SecureChannelFailure:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Secure Channel Failure");
-                        return APIStatus.SecureChannelFailure;
-                    case WebExceptionStatus.SendFailure:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Send Failure");
-                        return APIStatus.SendFailure;
-                    case WebExceptionStatus.ServerProtocolViolation:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Server Protocol Violation");
-                        return APIStatus.ServerProtocolViolation;
-                    case WebExceptionStatus.Success:
-                        Log.Warning("CORE: " + URI + " has Encounterd an Error -> Success");
-                        return APIStatus.Success;
-                    case WebExceptionStatus.Timeout:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Timeout");
-                        return APIStatus.Timeout;
-                    case WebExceptionStatus.TrustFailure:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Trust Failure");
-                        return APIStatus.TrustFailure;
-                    case WebExceptionStatus.UnknownError:
-                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Unknown Error");
-                        return APIStatus.UnknownError;
-                    default:
-                        Log.Error("CORE: " + URI + " is Offline!");
-                        return APIStatus.Offline;
-                }
-            }
-            else
-            {
-                Log.Error("CORE: " + URI + " URI can not be Null!");
-                return APIStatus.Null;
-            }
-        }
-
         public static string StatusStrings(APIStatus Error)
         {
             switch (Error)
@@ -283,7 +114,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
         {
             Log.Checking("API: Checking Status");
             Log.Checking("API Status: WorldUnited");
-            switch (UnitedSC = APIChecker.CheckStatus(URLs.Main + "/serverlist.json", 15))
+            switch (UnitedSC = API_Core.StatusCheck(URLs.Main + "/serverlist.json", 15))
             {
                 case APIStatus.Online:
                     UnitedSL = RetrieveJSON(URLs.Main + "/serverlist.json", "SL");
@@ -298,7 +129,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             if (!UnitedAPI())
             {
                 Log.Checking("API Status: DavidCarbon");
-                switch (CarbonSC = APIChecker.CheckStatus(URLs.Static + "/serverlist.json", 15))
+                switch (CarbonSC = API_Core.StatusCheck(URLs.Static + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
                         if (!UnitedSL) { CarbonSL = RetrieveJSON(URLs.Static + "/serverlist.json", "SL"); }
@@ -321,7 +152,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             if (!CarbonAPI())
             {
                 Log.Checking("API Status: DavidCarbon [Second]");
-                switch (CarbonTwoSC = APIChecker.CheckStatus(URLs.Static_Alt + "/serverlist.json", 15))
+                switch (CarbonTwoSC = API_Core.StatusCheck(URLs.Static_Alt + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
                         if (!CarbonSL) { CarbonTwoSL = RetrieveJSON(URLs.Static_Alt + "/serverlist.json", "SL"); }
@@ -413,7 +244,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 }
                 catch (WebException Error)
                 {
-                    APIStatus API_Status = APIChecker.StatusCodes(JSONUrl, Error, (HttpWebResponse)Error.Response);
+                    APIStatus API_Status = API_Core.StatusCodes(JSONUrl, Error, (HttpWebResponse)Error.Response);
 
                     if (URLCall.OriginalString.Contains(URLs.Main))
                     { UnitedSC = API_Status; }

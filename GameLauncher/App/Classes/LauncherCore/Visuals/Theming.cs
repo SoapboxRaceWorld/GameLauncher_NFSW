@@ -21,9 +21,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* Theme Name & Author */
 
-        public static string ThemeName = "Custom";
+        public static string ThemeName = "Default";
 
-        public static string ThemeAuthor = "Unknown - Check File";
+        public static string ThemeAuthor = "Launcher - Division";
 
 
         /* Logo */
@@ -439,7 +439,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         /* Read Theme File and Check Values */
         public static void CheckIfThemeExists()
         {
-            Log.Debug((FileSettingsSave.ThemeSupport == "1").ToString());
             if (File.Exists(Path.Combine(Locations.LauncherThemeFolder, "Theme.ini")) &&
                 (FileSettingsSave.ThemeSupport == "1"))
             {
@@ -451,10 +450,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                     {
                         ThemeName = ThemeFile.Read("ThemeName");
                     }
+                    else
+                    {
+                       ThemeName = "Custom";
+                    }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ThemeAuthor")))
                     {
                         ThemeAuthor = ThemeFile.Read("ThemeAuthor");
+                    }
+                    else
+                    {
+                        ThemeAuthor = "Unknown - Check File";
                     }
 
                     /* Logo */

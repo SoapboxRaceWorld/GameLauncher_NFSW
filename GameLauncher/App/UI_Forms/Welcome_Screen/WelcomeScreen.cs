@@ -5,6 +5,7 @@ using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using SBRWCore.Classes.Required;
 using System;
 using System.Drawing;
 using System.IO;

@@ -7,7 +7,6 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
@@ -30,6 +29,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using SBRWCore.Classes.Extentions;
 
 namespace GameLauncher
 {
@@ -360,7 +360,7 @@ namespace GameLauncher
                 try
                 {
                     /* Check if User has a compatible .NET Framework Installed */
-                    if (int.TryParse(RegistryCore.Read("Release", @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\"), out int NetFrame_Version))
+                    if (int.TryParse(Registry_Core.Read("Release", @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\"), out int NetFrame_Version))
                     {
                         /* For now, allow edge case of Windows 8.0 to run .NET 4.6.1 where upgrading to 8.1 is not possible */
                         if (WindowsProductVersion.GetWindowsNumber() == 6.2 && NetFrame_Version <= 394254)
@@ -417,10 +417,10 @@ namespace GameLauncher
                     SplashScreen.ThreadStatus("Start");
                 }
 
-                LogToFileAddons.RemoveLogs();
                 Log.StartLogging();
+                LogToFile_Extentions.RemoveLogs();
 
-                Log.Info("CURRENT DATE: " + Time.GetTime("Date"));
+                Log.Info("CURRENT DATE: " + TimeDate.GetTime("Date"));
                 Log.Checking("LAUNCHER MIGRATION: Appdata and/or Roaming Folders");
                 /* Deletes Folders that will Crash the Launcher (Cleanup Migration) */
                 try
@@ -611,7 +611,7 @@ namespace GameLauncher
                                     if (MessageBox.Show(null, MessageBoxPopupTLS, "SBRW Launcher",
                                         MessageBoxButtons.OK, MessageBoxIcon.Warning) == DialogResult.OK)
                                     {
-                                        RegistryCore.Write("DisabledByDefault", 0x0,
+                                        Registry_Core.Write("DisabledByDefault", 0x0,
                                             @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
                                         MessageBox.Show(null, Translations.Database("Program_TextBox_W7_TLS_P4"),
                                             "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -742,6 +742,8 @@ namespace GameLauncher
                     Log.Checking("PRELOAD: Headers");
                     CustomHeaders.Headers_WHC();
                     Log.Completed("PRELOAD: Headers");
+                    DiscordLauncherPresence.Status("Start Up", "Checking Root Certificate Authority");
+                    Certificate_Store.Latest();
 
                     Log.Info("REDISTRIBUTABLE: Moved to Function");
                     /* (Starts Function Chain) Check if Redistributable Packages are Installed */

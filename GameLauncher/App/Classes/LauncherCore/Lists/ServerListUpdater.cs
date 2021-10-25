@@ -1,12 +1,13 @@
-﻿using GameLauncher.App.Classes.Hash;
-using GameLauncher.App.Classes.LauncherCore.Global;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.UI_Forms.SelectServer_Screen;
 using Newtonsoft.Json;
+using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -62,7 +63,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     {
                         fileItems.Select(si =>
                         {
-                            si.ID = string.IsNullOrWhiteSpace(si.ID) ? SHA.Hashes($"{si.Name}:{si.ID}:{si.IPAddress}") : si.ID;
+                            si.ID = string.IsNullOrWhiteSpace(si.ID) ? Hash_Extention.Hashes(1, $"{si.Name}:{si.ID}:{si.IPAddress}") : si.ID;
                             si.IsSpecial = false;
                             si.Category = string.IsNullOrWhiteSpace(si.Category) ? "CUSTOM" : si.Category;
 
@@ -158,9 +159,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 LogToFileAddons.OpenLog("SERVER LIST CORE", null, Error, null, true);
             }
 
-            Log.Info("CERTIFICATE STORE: Moved to Function");
-            /* (Start Process) Check Up to Date Certificate Status */
-            CertificateStore.Latest();
+            Log.Info("LAUNCHER UPDATER: Moved to Function");
+            /* (Start Process) Check If Updater Exists or Requires an Update */
+            UpdaterExecutable.Check();
         }
 
         /* Converts 2 Letter Country Code and Returns Full Country Name (In English) */

@@ -1,6 +1,7 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using IniParser;
 using IniParser.Model;
+using SBRWCore.Classes.Required;
 using System.IO;
 using System.Text;
 

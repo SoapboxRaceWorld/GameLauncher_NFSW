@@ -6,7 +6,9 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using SBRWCore.Classes.Extentions.Validator;
 using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
 using DiscordButton = DiscordRPC.Button;
@@ -129,7 +131,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         LargeImageText = "Launcher",
                         LargeImageKey = "nfsw",
                         SmallImageText = string.Empty,
-                        SmallImageKey = !string.IsNullOrWhiteSpace(CertificateStore.LauncherSerial) ? "official" : "unofficial"
+                        SmallImageKey = Check_Signature.Signed() ? "official" : "unofficial"
                     };
                     Presence.Buttons = ButtonsList.ToArray();
                 }

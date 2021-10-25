@@ -3,6 +3,7 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.Required;
 using SBRWCore.Classes.System;
 using System;
 

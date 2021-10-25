@@ -151,7 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App\Classes\LauncherCore\Support\FormsControls.cs" />
-    <Compile Include="App\Classes\LauncherCore\Support\RegistryCore.cs" />
+    <Compile Include="App\Classes\LauncherCore\Validator\JSON\IsJSONValid.cs" />
     <Compile Include="App\UI_Forms\AddServer_Screen\AddServer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,7 +170,6 @@
     <Compile Include="App\Classes\LauncherCore\Global\FunctionEvents.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\FunctionStatus.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\URLs.cs" />
-    <Compile Include="App\Classes\LauncherCore\Hash\SHATwoFiveSix.cs" />
     <Compile Include="App\Classes\LauncherCore\Languages\Visual_Forms\Translations.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterExecutable.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonCDNList.cs" />
@@ -184,29 +183,18 @@
     <Compile Include="App\Classes\LauncherCore\Logger\LogToFileAddons.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\JSON\JsonServerModNet.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordLauncherPresence.cs" />
-    <Compile Include="App\Classes\LauncherCore\Support\BitmapHandler.cs" />
     <Compile Include="App\Classes\LauncherCore\Support\SecurityCenter.cs" />
-    <Compile Include="App\Classes\LauncherCore\Support\Strings.cs" />
-    <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
-    <Compile Include="App\Classes\LauncherCore\Validator\JSON\IsJSONValid.cs" />
-    <Compile Include="App\Classes\LauncherCore\Validator\VerifyTrust\IsExeVerified.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\ProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="App\Classes\LauncherCore\Visuals\Theming.cs" />
-    <Compile Include="App\Classes\LauncherCore\Support\Time.cs" />
-    <Compile Include="App\Classes\LauncherCore\Support\TimeConversions.cs" />
-    <Compile Include="App\Classes\LauncherCore\Support\Banners.cs" />
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareInfo.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderHandler.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderHashReader.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterSchema.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\ExtractResource.cs" />
-    <Compile Include="App\Classes\LauncherCore\Hash\MD5.cs" />
-    <Compile Include="App\Classes\LauncherCore\Hash\SHA.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\IniFile.cs" />
     <Compile Include="App\Classes\LauncherCore\InsiderKit\KitEnabler.cs" />
-    <Compile Include="App\Classes\LauncherCore\Logger\LogToFile.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\ModNetHandler.cs" />
     <Compile Include="App\Classes\SystemPlatform\NativeFunctions.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\Updater.cs" />
@@ -225,7 +213,6 @@
     <Compile Include="App\Classes\LauncherCore\RPC\CarList.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\EventList.cs" />
-    <Compile Include="App\Classes\SystemPlatform\Windows\CertificateStore.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\ScreenResolutions.cs" />
     <Compile Include="App\Languages\English_Texts.Designer.cs">
       <AutoGen>True</AutoGen>

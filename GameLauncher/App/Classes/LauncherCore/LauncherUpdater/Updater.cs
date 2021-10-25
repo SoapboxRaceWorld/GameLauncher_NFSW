@@ -6,12 +6,14 @@ using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using GameLauncher.App.UI_Forms.UpdatePopup_Screen;
 using Newtonsoft.Json;
+using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extentions.API;
+using SBRWCore.Classes.Extentions.Validator;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;
@@ -74,7 +76,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 catch (WebException Error)
                 {
-                    APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                    API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
                         Error, (HttpWebResponse)Error.Response);
                 }
                 catch (Exception Error)

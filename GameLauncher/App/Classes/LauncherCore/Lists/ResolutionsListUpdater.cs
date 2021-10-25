@@ -3,6 +3,7 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using Newtonsoft.Json;
+using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
 using static GameLauncher.App.Classes.SystemPlatform.Windows.ScreenResolutions;

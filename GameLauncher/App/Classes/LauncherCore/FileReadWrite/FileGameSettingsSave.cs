@@ -2,6 +2,8 @@
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
+using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Required;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -82,7 +84,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("USX File", null, Error, null, true);
+                    Classes.LauncherCore.Logger.LogToFileAddons.OpenLog("USX File", null, Error, null, true);
                 }
             }
             else
@@ -296,7 +298,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("USX File", null, Error, null, true);
+                Classes.LauncherCore.Logger.LogToFileAddons.OpenLog("USX File", null, Error, null, true);
             }
         }
 

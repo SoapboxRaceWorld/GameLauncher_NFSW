@@ -1,5 +1,4 @@
-﻿using GameLauncher.App.Classes.Hash;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
@@ -7,6 +6,7 @@ using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using SBRWCore.Classes.Extentions;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;
@@ -57,7 +57,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 catch (Exception Error)
                 {
                     string ErrorMessage = "Verify Hash Screen Encountered an Error";
-                    LogToFileAddons.OpenLog("Verify Hash Screen", ErrorMessage, Error, "Exclamation", false);
+                    Classes.LauncherCore.Logger.LogToFileAddons.OpenLog("Verify Hash Screen", ErrorMessage, Error, "Exclamation", false);
                 }
             }
         }
@@ -100,7 +100,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
 
             if (!FunctionStatus.IsVerifyHashDisabled)
             {
-                LogVerify.StartVerifyLogging();
+                Log_Verify.StartVerifyLogging();
 
                 /* Clean up previous logs and start logging */
                 string[] filestocheck = new string[] { "checksums.dat", "validfiles.dat", "invalidfiles.dat", "Verify.log" };
@@ -112,24 +112,24 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                         catch (Exception Error)
                         {
                             DeletionError++;
-                            LogVerify.Error("File: " + file + " Error: " + Error.Message);
-                            LogVerify.ErrorIC("File: " + file + " Error: " + Error.HResult);
-                            LogVerify.ErrorFR("File: " + file + " Error: " + Error.ToString());
+                            Log_Verify.Error("File: " + file + " Error: " + Error.Message);
+                            Log_Verify.ErrorIC("File: " + file + " Error: " + Error.HResult);
+                            Log_Verify.ErrorFR("File: " + file + " Error: " + Error.ToString());
                         }
                     }
                 }
 
-                LogVerify.Info("VERIFYHASH: Checking Characters in URL");
+                Log_Verify.Info("VERIFYHASH: Checking Characters in URL");
                 if (FileSettingsSave.CDN.EndsWith("/"))
                 {
                     char[] charsToTrim = { '/' };
                     FinalCDNURL = FileSettingsSave.CDN.TrimEnd(charsToTrim);
-                    LogVerify.Info("VERIFYHASH: Trimed end of CDN URL -> " + FinalCDNURL);
+                    Log_Verify.Info("VERIFYHASH: Trimed end of CDN URL -> " + FinalCDNURL);
                 }
                 else
                 {
                     FinalCDNURL = FileSettingsSave.CDN;
-                    LogVerify.Info("VERIFYHASH: Choosen CDN URL -> " + FinalCDNURL);
+                    Log_Verify.Info("VERIFYHASH: Choosen CDN URL -> " + FinalCDNURL);
                 }
             }
             else
@@ -172,10 +172,10 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                     if (MessageBox.Show("Verify Hash has encountered Download Errors.\n" +
                         "Would you like to Open Verify.Log", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string LogFile = Strings.Encode(Locations.LogVerify);
-                        if (File.Exists(LogFile))
+                        if (File.Exists(LogToFile_Extentions.LogVerify))
                         {
-                            Process.Start(LogFile);
+                            Process.Start(LogToFile_Extentions.LogCurrentFolder);
+                            Process.Start(LogToFile_Extentions.LogVerify);
                         }
                     }
                 }
@@ -198,14 +198,14 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                         try
                         {
                             FoundFile.Delete();
-                            LogVerify.Deleted("File: " + FoundFile.Name);
+                            Log_Verify.Deleted("File: " + FoundFile.Name);
                         }
                         catch (Exception Error)
                         {
                             DeletionError++;
-                            LogVerify.Error("File: " + FoundFile.Name + " Error: " + Error.Message);
-                            LogVerify.ErrorIC("File: " + FoundFile.Name + " Error: " + Error.HResult);
-                            LogVerify.ErrorFR("File: " + FoundFile.Name + " Error: " + Error.ToString());
+                            Log_Verify.Error("File: " + FoundFile.Name + " Error: " + Error.Message);
+                            Log_Verify.ErrorIC("File: " + FoundFile.Name + " Error: " + Error.HResult);
+                            Log_Verify.ErrorFR("File: " + FoundFile.Name + " Error: " + Error.ToString());
                         }
                     }
 
@@ -214,14 +214,14 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                         try
                         {
                             FoundFile.Delete();
-                            LogVerify.Deleted("File: " + FoundFile.Name);
+                            Log_Verify.Deleted("File: " + FoundFile.Name);
                         }
                         catch (Exception Error)
                         {
                             DeletionError++;
-                            LogVerify.Error("File: " + FoundFile.Name + " Error: " + Error.Message);
-                            LogVerify.ErrorIC("File: " + FoundFile.Name + " Error: " + Error.HResult);
-                            LogVerify.ErrorFR("File: " + FoundFile.Name + " Error: " + Error.ToString());
+                            Log_Verify.Error("File: " + FoundFile.Name + " Error: " + Error.Message);
+                            Log_Verify.ErrorIC("File: " + FoundFile.Name + " Error: " + Error.HResult);
+                            Log_Verify.ErrorFR("File: " + FoundFile.Name + " Error: " + Error.ToString());
                         }
                     }
 
@@ -234,14 +234,14 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                                 try
                                 {
                                     Directory.Delete(FoundDirectory.FullName, true);
-                                    LogVerify.Deleted("Folder: " + FoundDirectory.Name);
+                                    Log_Verify.Deleted("Folder: " + FoundDirectory.Name);
                                 }
                                 catch (Exception Error)
                                 {
                                     DeletionError++;
-                                    LogVerify.Error("Folder: " + FoundDirectory.Name + " Error: " + Error.Message);
-                                    LogVerify.ErrorIC("Folder: " + FoundDirectory.Name + " Error: " + Error.HResult);
-                                    LogVerify.ErrorFR("Folder: " + FoundDirectory.Name + " Error: " + Error.ToString());
+                                    Log_Verify.Error("Folder: " + FoundDirectory.Name + " Error: " + Error.Message);
+                                    Log_Verify.ErrorIC("Folder: " + FoundDirectory.Name + " Error: " + Error.HResult);
+                                    Log_Verify.ErrorFR("Folder: " + FoundDirectory.Name + " Error: " + Error.ToString());
                                 }
                             }
                             else if (File.Exists(FoundDirectory.FullName))
@@ -249,14 +249,14 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                                 try
                                 {
                                     File.Delete(FoundDirectory.FullName);
-                                    LogVerify.Deleted("File: " + FoundDirectory.Name);
+                                    Log_Verify.Deleted("File: " + FoundDirectory.Name);
                                 }
                                 catch (Exception Error)
                                 {
                                     DeletionError++;
-                                    LogVerify.Error("File: " + FoundDirectory.Name + " Error: " + Error.Message);
-                                    LogVerify.ErrorIC("File: " + FoundDirectory.Name + " Error: " + Error.HResult);
-                                    LogVerify.ErrorFR("File: " + FoundDirectory.Name + " Error: " + Error.ToString());
+                                    Log_Verify.Error("File: " + FoundDirectory.Name + " Error: " + Error.Message);
+                                    Log_Verify.ErrorIC("File: " + FoundDirectory.Name + " Error: " + Error.HResult);
+                                    Log_Verify.ErrorFR("File: " + FoundDirectory.Name + " Error: " + Error.ToString());
                                 }
                             }
                         }
@@ -271,14 +271,14 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                                 try
                                 {
                                     Directory.Delete(FoundDirectory.FullName, true);
-                                    LogVerify.Deleted("Folder: " + FoundDirectory.Name);
+                                    Log_Verify.Deleted("Folder: " + FoundDirectory.Name);
                                 }
                                 catch (Exception Error)
                                 {
                                     DeletionError++;
-                                    LogVerify.Error("Folder: " + FoundDirectory.Name + " Error: " + Error.Message);
-                                    LogVerify.ErrorIC("Folder: " + FoundDirectory.Name + " Error: " + Error.HResult);
-                                    LogVerify.ErrorFR("Folder: " + FoundDirectory.Name + " Error: " + Error.ToString());
+                                    Log_Verify.Error("Folder: " + FoundDirectory.Name + " Error: " + Error.Message);
+                                    Log_Verify.ErrorIC("Folder: " + FoundDirectory.Name + " Error: " + Error.HResult);
+                                    Log_Verify.ErrorFR("Folder: " + FoundDirectory.Name + " Error: " + Error.ToString());
                                 }
                             }
                             else if (File.Exists(FoundDirectory.FullName))
@@ -286,14 +286,14 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                                 try
                                 {
                                     File.Delete(FoundDirectory.FullName);
-                                    LogVerify.Deleted("File: " + FoundDirectory.Name);
+                                    Log_Verify.Deleted("File: " + FoundDirectory.Name);
                                 }
                                 catch (Exception Error)
                                 {
                                     DeletionError++;
-                                    LogVerify.Error("File: " + FoundDirectory.Name + " Error: " + Error.Message);
-                                    LogVerify.ErrorIC("File: " + FoundDirectory.Name + " Error: " + Error.HResult);
-                                    LogVerify.ErrorFR("File: " + FoundDirectory.Name + " Error: " + Error.ToString());
+                                    Log_Verify.Error("File: " + FoundDirectory.Name + " Error: " + Error.Message);
+                                    Log_Verify.ErrorIC("File: " + FoundDirectory.Name + " Error: " + Error.HResult);
+                                    Log_Verify.ErrorFR("File: " + FoundDirectory.Name + " Error: " + Error.ToString());
                                 }
                             }
                         }
@@ -318,14 +318,14 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                                     try
                                     {
                                         File.Delete(FoundFile.FullName);
-                                        LogVerify.Deleted("File: " + FoundFile.Name);
+                                        Log_Verify.Deleted("File: " + FoundFile.Name);
                                     }
                                     catch (Exception Error)
                                     {
                                         DeletionError++;
-                                        LogVerify.Error("File: " + FoundFile.Name + " Error: " + Error.Message);
-                                        LogVerify.ErrorIC("File: " + FoundFile.Name + " Error: " + Error.HResult);
-                                        LogVerify.ErrorFR("File: " + FoundFile.Name + " Error: " + Error.ToString());
+                                        Log_Verify.Error("File: " + FoundFile.Name + " Error: " + Error.Message);
+                                        Log_Verify.ErrorIC("File: " + FoundFile.Name + " Error: " + Error.HResult);
+                                        Log_Verify.ErrorFR("File: " + FoundFile.Name + " Error: " + Error.ToString());
                                     }
                                 }
                             }
@@ -346,10 +346,10 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 if (MessageBox.Show("Verify Hash has encountered File or Folder Deletion Errors.\n" +
                 "Would you like to Open Verify.Log and Stop the Scanner?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    string LogFile = Strings.Encode(Locations.LogVerify);
-                    if (File.Exists(LogFile))
+                    if (File.Exists(LogToFile_Extentions.LogVerify))
                     {
-                        Process.Start(LogFile);
+                        Process.Start(LogToFile_Extentions.LogCurrentFolder);
+                        Process.Start(LogToFile_Extentions.LogVerify);
                     }
 
                     StopScanner_Click(null, null);
@@ -443,18 +443,18 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                     if (!File.Exists(RealPathToFile))
                     {
                         InvalidFileList.Add(FileName);
-                        LogVerify.Missing("File: " + FileName);
+                        Log_Verify.Missing("File: " + FileName);
                     }
                     else
                     {
-                        if (FileHash != SHA.Files(RealPathToFile).Trim())
+                        if (FileHash != Hash_Extention.HashesSHA(RealPathToFile).Trim())
                         {
                             InvalidFileList.Add(FileName);
-                            LogVerify.Invalid("File: " + FileName);
+                            Log_Verify.Invalid("File: " + FileName);
                         }
                         else
                         {
-                            LogVerify.Valid("File: " + FileName);
+                            Log_Verify.Valid("File: " + FileName);
                         }
                     }
                     totalFilesScanned++;
@@ -535,14 +535,14 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                         {
                             try
                             {
-                                LogVerify.Deleted("File: " + text2);
+                                Log_Verify.Deleted("File: " + text2);
                                 File.Delete(text2);
                             }
                             catch (Exception Error)
                             {
-                                LogVerify.Error("File: " + text2 + " Error: " + Error.Message);
-                                LogVerify.ErrorIC("File: " + text2 + " Error: " + Error.HResult);
-                                LogVerify.ErrorFR("File: " + text2 + " Error: " + Error.ToString());
+                                Log_Verify.Error("File: " + text2 + " Error: " + Error.Message);
+                                Log_Verify.ErrorIC("File: " + text2 + " Error: " + Error.HResult);
+                                Log_Verify.ErrorFR("File: " + text2 + " Error: " + Error.ToString());
                             }
                         }
 
@@ -627,14 +627,14 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
             {
                 redownloadErrorCount++;
                 DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + redownloadErrorCount + " out of " + currentCount);
-                LogVerify.Downloaded("File: " + CurrentDownloadingFile);
+                Log_Verify.Downloaded("File: " + CurrentDownloadingFile);
 
                 DownloadProgressText.SafeInvokeAction(() =>
                 DownloadProgressText.Text = "Failed To Download File [ " + redownloadedCount + redownloadErrorCount + " / " + currentCount + " ]:" + "\n" + CurrentDownloadingFile);
 
                 DownloadProgressBar.SafeInvokeAction(() => DownloadProgressBar.Value = redownloadedCount + redownloadErrorCount * 100 / currentCount);
 
-                LogVerify.Error("Download for [" + CurrentDownloadingFile + "] - " +
+                Log_Verify.Error("Download for [" + CurrentDownloadingFile + "] - " +
                 (e.Cancelled ? "has been Cancelled" :
                 (e.Error != null ? (string.IsNullOrWhiteSpace(e.Error.Message) ? e.Error.ToString() : e.Error.Message) : "No Exception Error Provided")));
 
@@ -663,7 +663,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 redownloadedCount++;
 
                 DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + " out of " + currentCount);
-                LogVerify.Downloaded("File: " + CurrentDownloadingFile);
+                Log_Verify.Downloaded("File: " + CurrentDownloadingFile);
 
                 DownloadProgressText.SafeInvokeAction(() =>
                 DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + CurrentDownloadingFile);
@@ -712,8 +712,8 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
             {
                 DownloadProgressText.SafeInvokeAction(() =>
                 DownloadProgressText.Text = "Downloading File [ " + redownloadedCount + " / " +
-                currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + TimeConversions.FormatFileSize(e.BytesReceived) +
-                " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive));
+                currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + TimeConversion.FormatFileSize(e.BytesReceived) +
+                " of " + TimeConversion.FormatFileSize(e.TotalBytesToReceive));
             }
         }
 

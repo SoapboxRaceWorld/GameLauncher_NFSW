@@ -2,9 +2,11 @@
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using Newtonsoft.Json;
+using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extentions.API;
+using SBRWCore.Classes.Extentions.Validator;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;
@@ -53,7 +55,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 catch (WebException Error)
                 {
-                    APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                    API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
                         Error, (HttpWebResponse)Error.Response);
                 }
                 catch (Exception Error)
@@ -162,7 +164,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     }
                     catch (WebException Error)
                     {
-                        APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                        API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
                             Error, (HttpWebResponse)Error.Response);
                     }
                     catch (Exception Error)
@@ -242,7 +244,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         }
                         catch (WebException Error)
                         {
-                            APIChecker.StatusCodes(
+                            API_Core.StatusCodes(
                                 "https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe",
                                 Error, (HttpWebResponse)Error.Response);
                         }

@@ -8,7 +8,7 @@ namespace GameLauncher.App.Classes.InsiderKit
     {
         /* Current month, day, year (2 digits), and letter! Ex: 12-15-20-A */
         /* If a second build gets release within the same day bump letter version up (No R2 or D2)*/
-        private static string InsiderBuildNumber = "10-24-21-A";
+        private static readonly string InsiderBuildNumber = "10-25-21-A";
 
         public static string BuildNumberOnly()
         {
@@ -33,7 +33,7 @@ namespace GameLauncher.App.Classes.InsiderKit
     /* This is only used for Developers (Bypasses Most Checks) */
     class EnableInsiderDeveloper
     {
-        private static bool Enabled = false;
+        private static readonly bool Enabled = false;
 
         public static bool Allowed()
         {

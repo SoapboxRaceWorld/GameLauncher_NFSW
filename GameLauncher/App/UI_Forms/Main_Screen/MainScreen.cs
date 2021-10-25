@@ -1,5 +1,4 @@
 ﻿using GameLauncher.App.Classes.Auth;
-using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Client;
@@ -17,7 +16,6 @@ using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform;
@@ -29,6 +27,8 @@ using GameLauncher.App.UI_Forms.SelectServer_Screen;
 using GameLauncher.App.UI_Forms.Settings_Screen;
 using Newtonsoft.Json;
 using SBRWCore.Classes.Anti_Cheat;
+using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extentions.Validator;
 using SBRWCore.Classes.Game_Client;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
@@ -539,27 +539,27 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     break;
                 case AuthHash.H11:
                     Email = MainEmail.Text.ToString();
-                    Password = MDFive.Hashes(MainPassword.Text.ToString()).ToLower();
+                    Password = Hash_Extention.Hashes(0, MainPassword.Text.ToString()).ToLower();
                     break;
                 case AuthHash.H12:
                     Email = MainEmail.Text.ToString();
-                    Password = SHA.Hashes(MainPassword.Text.ToString()).ToLower();
+                    Password = Hash_Extention.Hashes(1, MainPassword.Text.ToString()).ToLower();
                     break;
                 case AuthHash.H13:
                     Email = MainEmail.Text.ToString();
-                    Password = SHATwoFiveSix.Hashes(MainPassword.Text.ToString()).ToLower();
+                    Password = Hash_Extention.Hashes(2, MainPassword.Text.ToString()).ToLower();
                     break;
                 case AuthHash.H20:
-                    Email = MDFive.Hashes(MainEmail.Text.ToString()).ToLower();
-                    Password = MDFive.Hashes(MainPassword.Text.ToString()).ToLower();
+                    Email = Hash_Extention.Hashes(0, MainEmail.Text.ToString()).ToLower();
+                    Password = Hash_Extention.Hashes(0, MainPassword.Text.ToString()).ToLower();
                     break;
                 case AuthHash.H21:
-                    Email = SHA.Hashes(MainEmail.Text.ToString()).ToLower();
-                    Password = SHA.Hashes(MainPassword.Text.ToString()).ToLower();
+                    Email = Hash_Extention.Hashes(1, MainEmail.Text.ToString()).ToLower();
+                    Password = Hash_Extention.Hashes(1, MainPassword.Text.ToString()).ToLower();
                     break;
                 case AuthHash.H22:
-                    Email = SHATwoFiveSix.Hashes(MainEmail.Text.ToString()).ToLower();
-                    Password = SHATwoFiveSix.Hashes(MainPassword.Text.ToString()).ToLower();
+                    Email = Hash_Extention.Hashes(2, MainEmail.Text.ToString()).ToLower();
+                    Password = Hash_Extention.Hashes(2, MainPassword.Text.ToString()).ToLower();
                     break;
                 default:
                     Log.Error("HASH TYPE: Unknown Hash Standard was Provided");
@@ -596,32 +596,32 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     case AuthHash.H11:
                         FileAccountSave.SavedGameServerHash = "1.1";
                         FileAccountSave.UserHashedEmail = string.Empty;
-                        FileAccountSave.UserHashedPassword = MDFive.Hashes(MainPassword.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedPassword = Hash_Extention.Hashes(0, MainPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H12:
                         FileAccountSave.SavedGameServerHash = "1.2";
                         FileAccountSave.UserHashedEmail = string.Empty;
-                        FileAccountSave.UserHashedPassword = SHA.Hashes(MainPassword.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedPassword = Hash_Extention.Hashes(1, MainPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H13:
                         FileAccountSave.SavedGameServerHash = "1.3";
                         FileAccountSave.UserHashedEmail = string.Empty;
-                        FileAccountSave.UserHashedPassword = SHATwoFiveSix.Hashes(MainPassword.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedPassword = Hash_Extention.Hashes(2, MainPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H20:
                         FileAccountSave.SavedGameServerHash = "2.0";
-                        FileAccountSave.UserHashedEmail = MDFive.Hashes(MainEmail.Text.ToString()).ToLower();
-                        FileAccountSave.UserHashedPassword = MDFive.Hashes(MainPassword.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedEmail = Hash_Extention.Hashes(0, MainEmail.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedPassword = Hash_Extention.Hashes(0, MainPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H21:
                         FileAccountSave.SavedGameServerHash = "2.1";
-                        FileAccountSave.UserHashedEmail = SHA.Hashes(MainEmail.Text.ToString()).ToLower();
-                        FileAccountSave.UserHashedPassword = SHA.Hashes(MainPassword.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedEmail = Hash_Extention.Hashes(1, MainEmail.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedPassword = Hash_Extention.Hashes(1, MainPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H22:
                         FileAccountSave.SavedGameServerHash = "2.2";
-                        FileAccountSave.UserHashedEmail = SHATwoFiveSix.Hashes(MainEmail.Text.ToString()).ToLower();
-                        FileAccountSave.UserHashedPassword = SHATwoFiveSix.Hashes(MainPassword.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedEmail = Hash_Extention.Hashes(2, MainEmail.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedPassword = Hash_Extention.Hashes(2, MainPassword.Text.ToString()).ToLower();
                         break;
                     default:
                         FileAccountSave.SavedGameServerHash = "Unknown";
@@ -728,8 +728,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
             LoginButton.ForeColor = Theming.SixTextForeColor;
             string BannerCache = Strings.Encode(
-                                            Path.Combine(".BannerCache", SHA.Hashes(InformationCache.SelectedServerData.IPAddress) + ".bin"));
-            Banner.Image = Banners.Grayscale(BannerCache);
+                                            Path.Combine(".BannerCache", Hash_Extention.Hashes(1, InformationCache.SelectedServerData.IPAddress) + ".bin"));
+            Banner.Image = Bitmap_Handler.Grayscale(BannerCache);
             Banner.BackColor = Color.Transparent;
             string ImageUrl = string.Empty;
             string numPlayers = string.Empty;
@@ -938,7 +938,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 serverSecondsToShutDown =
                                 (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 7200;
                                 ServerShutDown.Text = string.Format(Translations.Database("MainScreen_Text_ServerShutDown") +
-                                    " " + TimeConversions.RelativeTime(serverSecondsToShutDown));
+                                    " " + TimeConversion.RelativeTime(serverSecondsToShutDown));
                             }
                             catch { }
 
@@ -1159,7 +1159,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                         if (!ServerChangeTriggered)
                                         {
                                             /* Load cached banner! */
-                                            Banner.Image = Banners.Grayscale(BannerCache);
+                                            Banner.Image = Bitmap_Handler.Grayscale(BannerCache);
                                             GC.Collect();
                                         }
 
@@ -1189,7 +1189,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                                             Banner.Image = Image.FromStream(_serverRawBanner);
 
-                                            if (Banners.GetFileExtension(ImageUrl) == "gif")
+                                            if (Bitmap_Handler.GetFileExtension(ImageUrl) == "gif")
                                             {
                                                 Image.FromStream(_serverRawBanner).Save(BannerCache);
                                             }
@@ -1218,7 +1218,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             else if (File.Exists(BannerCache) && !Application.OpenForms[this.Name].IsDisposed)
                             {
                                 /* Load cached banner! */
-                                Banner.Image = Banners.Grayscale(BannerCache);
+                                Banner.Image = Bitmap_Handler.Grayscale(BannerCache);
                                 GC.Collect();
                             }
                             else if (!Application.OpenForms[this.Name].IsDisposed)
@@ -1730,7 +1730,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             if (e.TotalBytesToReceive >= 1)
             {
                 PlayProgressText.SafeInvokeAction(() =>
-                PlayProgressText.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + TimeConversions.FormatFileSize(e.BytesReceived) + " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper(), this);
+                PlayProgressText.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + TimeConversion.FormatFileSize(e.BytesReceived) + " of " + TimeConversion.FormatFileSize(e.TotalBytesToReceive)).ToUpper(), this);
 
                 ExtractingProgress.SafeInvokeAction(() =>
                 {
@@ -1935,7 +1935,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                                 String ModNetFilePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, ModNetList));
 
-                                if (SHATwoFiveSix.Files(ModNetFilePath).ToLower() != ModNetSHA || !File.Exists(ModNetFilePath))
+                                if (Hash_Extention.HashesSHA256(ModNetFilePath).ToLower() != ModNetSHA || !File.Exists(ModNetFilePath))
                                 {
                                     PlayProgressText.Text = ("ModNet: Downloading " + ModNetList).ToUpper();
 
@@ -2175,7 +2175,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 {
                                     json3 = JsonConvert.DeserializeObject<ServerModList>(ServerModListJSON);
                                     ServerModListJSON = null;
-                                    String ModFolderCache = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.Hashes(json2.serverID).ToLower()));
+                                    String ModFolderCache = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "MODS", Hash_Extention.Hashes(0, json2.serverID).ToLower()));
                                     if (!Directory.Exists(ModFolderCache)) Directory.CreateDirectory(ModFolderCache);
 
                                     /* (FILENAME.mods) 
@@ -2209,18 +2209,18 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                     foreach (ServerModFileEntry modfile in json3.entries)
                                     {
                                         string ModCachedFile = Strings.Encode(Path.Combine(ModFolderCache, modfile.Name));
-                                        if (SHA.Files(ModCachedFile).ToLower() != modfile.Checksum)
+                                        if (Hash_Extention.HashesSHA(ModCachedFile).ToLower() != modfile.Checksum)
                                         {
                                             try
                                             {
                                                 if (ExtractedServerFolderRunTime == 0)
                                                 {
                                                     String ExtractedServerFolder = Strings.Encode(
-                                                        Path.Combine(FileSettingsSave.GameInstallation, ".data", MDFive.Hashes(json2.serverID).ToLower()));
+                                                        Path.Combine(FileSettingsSave.GameInstallation, ".data", Hash_Extention.Hashes(0, json2.serverID).ToLower()));
                                                     if (Directory.Exists(ExtractedServerFolder))
                                                     {
                                                         Directory.Delete(ExtractedServerFolder, true);
-                                                        Log.Core("LAUNCHER: Removed Extracted Server Mods Folder: .data/" + MDFive.Hashes(json2.serverID).ToLower());
+                                                        Log.Core("LAUNCHER: Removed Extracted Server Mods Folder: .data/" + Hash_Extention.Hashes(0, json2.serverID).ToLower());
                                                     }
 
                                                     ExtractedServerFolderRunTime++;
@@ -2359,10 +2359,10 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 string GameExePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
                 if
                   (
-                    SHA.Files(GameExePath) == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
-                    SHA.Files(GameExePath) == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
-                    SHA.Files(GameExePath) == "E69890D31919DE1649D319956560269DB88B8F22" ||
-                    SHA.Files(GameExePath) == "3CBE3FAAFF00FAD84F78A2AFEA4FFFC78294EEA2"
+                    Hash_Extention.HashesSHA(GameExePath) == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
+                    Hash_Extention.HashesSHA(GameExePath) == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
+                    Hash_Extention.HashesSHA(GameExePath) == "E69890D31919DE1649D319956560269DB88B8F22" ||
+                    Hash_Extention.HashesSHA(GameExePath) == "3CBE3FAAFF00FAD84F78A2AFEA4FFFC78294EEA2"
                   )
                 {
                     ServerProxy.Instance.SetServerUrl(InformationCache.SelectedServerData.IPAddress);
@@ -2714,7 +2714,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
         private async void LocalGameFiles()
         {
             await Task.Delay(5000);
-            if (SHA.Files("GameFiles.sbrwpack") == "88C886B6D131C052365C3D6D14E14F67A4E2C253")
+            if (Hash_Extention.HashesSHA("GameFiles.sbrwpack") == "88C886B6D131C052365C3D6D14E14F67A4E2C253")
             {
                 TaskbarProgress.SetValue(Handle, 100, 100);
 
@@ -2803,8 +2803,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                                 newFileName = split.Last();
                                             }
 
-                                            String KEY = Regex.Replace(SHA.Hashes(newFileName), "[^0-9.]", "").Substring(0, 8);
-                                            String IV = Regex.Replace(MDFive.Hashes(newFileName), "[^0-9.]", "").Substring(0, 8);
+                                            String KEY = Regex.Replace(Hash_Extention.Hashes(1, newFileName), "[^0-9.]", "").Substring(0, 8);
+                                            String IV = Regex.Replace(Hash_Extention.Hashes(0, newFileName), "[^0-9.]", "").Substring(0, 8);
 
                                             entry.ExtractToFile(getTempNa, true);
 
@@ -2874,7 +2874,9 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 if (downloadCurrent < compressedLength)
                 {
                     PlayProgressText.SafeInvokeAction(() =>
-                    PlayProgressText.Text = String.Format("{0} of {1} ({3}%) — {2}", TimeConversions.FormatFileSize(downloadCurrent), TimeConversions.FormatFileSize(compressedLength), TimeConversions.EstimateFinishTime(downloadCurrent, compressedLength, _downloadStartTime), (int)(100 * downloadCurrent / compressedLength)).ToUpper(), this);
+                    PlayProgressText.Text = String.Format("{0} of {1} ({3}%) — {2}", TimeConversion.FormatFileSize(downloadCurrent), 
+                    TimeConversion.FormatFileSize(compressedLength), TimeConversion.EstimateFinishTime(downloadCurrent, compressedLength, 
+                    _downloadStartTime), (int)(100 * downloadCurrent / compressedLength)).ToUpper(), this);
                 }
             }
             catch { }
@@ -2994,7 +2996,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 if (PlayProgress.Value == 100)
                 {
                     PlayProgressText.SafeInvokeAction(() =>
-                    PlayProgressText.Text = String.Format("{0} of {1} : ({3}%) — {2}", TimeConversions.FormatFileSize(currentCount), TimeConversions.FormatFileSize(allFilesCount), TimeConversions.EstimateFinishTime(currentCount, allFilesCount, _downloadStartTime), (int)(100 * currentCount / allFilesCount)).ToUpper(), this);
+                    PlayProgressText.Text = String.Format("{0} of {1} : ({3}%) — {2}", TimeConversion.FormatFileSize(currentCount), TimeConversion.FormatFileSize(allFilesCount), TimeConversion.EstimateFinishTime(currentCount, allFilesCount, _downloadStartTime), (int)(100 * currentCount / allFilesCount)).ToUpper(), this);
                 }
             }
             catch { }

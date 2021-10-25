@@ -3,6 +3,7 @@ using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using Newtonsoft.Json;
+using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
 using System.Linq;

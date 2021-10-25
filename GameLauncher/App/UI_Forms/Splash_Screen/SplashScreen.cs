@@ -2,6 +2,7 @@
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using SBRWCore.Classes.Required;
 using System;
 using System.Threading;
 using System.Windows.Forms;

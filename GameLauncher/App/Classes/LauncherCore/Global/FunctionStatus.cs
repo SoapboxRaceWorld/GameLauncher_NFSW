@@ -13,6 +13,8 @@ using GameLauncher.App.UI_Forms.Main_Screen;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using GameLauncher.App.UI_Forms.Welcome_Screen;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -173,7 +175,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                 if (OpenLogFile == DialogResult.Yes)
                 {
-                    Process.Start(Locations.LogLauncher);
+                    Process.Start(LogToFile_Extentions.LogCurrentFolder);
+                    Process.Start(LogToFile_Extentions.LogLauncher);
                 }
             }
 
@@ -464,30 +467,24 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
     class Locations
     {
-        public static readonly string NameLauncher = Strings.Encode(AppDomain.CurrentDomain.FriendlyName);
+        public static readonly string NameLauncher = AppDomain.CurrentDomain.FriendlyName;
         public static readonly string NameUpdater = "GameLauncherUpdater.exe";
         public static readonly string NameNewServersJSON = "Servers-Custom.json";
         public static readonly string NameOldServersJSON = "servers.json";
         public static readonly string NameLZMA = "LZMA.dll";
 
-        public static readonly string LauncherFolder = Strings.Encode(AppDomain.CurrentDomain.BaseDirectory);
-        public static readonly string LauncherThemeFolder = Strings.Encode(Path.Combine(LauncherFolder, "Theme"));
+        public static readonly string LauncherFolder = AppDomain.CurrentDomain.BaseDirectory;
+        public static readonly string LauncherThemeFolder = Path.Combine(LauncherFolder, "Theme");
 
-        public static readonly string LauncherCustomServers = Strings.Encode(Path.Combine(LauncherFolder, NameNewServersJSON));
+        public static readonly string LauncherCustomServers = Path.Combine(LauncherFolder, NameNewServersJSON);
 
-        public static readonly string LocalAppDataFolder = Strings.Encode(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
-        public static readonly string RoamingAppDataFolder = Strings.Encode(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+        public static readonly string LocalAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        public static readonly string RoamingAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-        public static readonly string UserSettingsFolder = Strings.Encode(Path.Combine(RoamingAppDataFolder, "Need for Speed World", "Settings"));
-        public static readonly string UserSettingsXML = Strings.Encode(Path.Combine(UserSettingsFolder, "UserSettings.xml"));
+        public static readonly string UserSettingsFolder = Path.Combine(RoamingAppDataFolder, "Need for Speed World", "Settings");
+        public static readonly string UserSettingsXML = Path.Combine(UserSettingsFolder, "UserSettings.xml");
 
-        public static readonly string LogFolder = Strings.Encode(Path.Combine(LauncherFolder, "Logs"));
-        public static readonly string LogCurrentFolder = Strings.Encode(Path.Combine(LogFolder, LogToFileAddons.DateAndTime()));
-        public static readonly string LogLauncher = Strings.Encode(Path.Combine(LogCurrentFolder, "Launcher.log"));
-        public static readonly string LogVerify = Strings.Encode(Path.Combine(LogCurrentFolder, "Verify.log"));
-        public static readonly string LogCommunication = Strings.Encode(Path.Combine(LogCurrentFolder, "Communication.log"));
-
-        public static readonly string GameLinksFile = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, ".links"));
-        public static readonly string GameFilesFailSafePath = Strings.Encode(Path.Combine(LauncherFolder, "Game Files"));
+        public static readonly string GameLinksFile = Path.Combine(FileSettingsSave.GameInstallation, ".links");
+        public static readonly string GameFilesFailSafePath = Path.Combine(LauncherFolder, "Game Files");
     }
 }

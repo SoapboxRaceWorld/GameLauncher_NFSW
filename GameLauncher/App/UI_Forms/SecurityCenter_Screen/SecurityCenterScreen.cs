@@ -7,6 +7,8 @@ using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using NetFwTypeLib;
+using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Required;
 using SBRWCore.Classes.System;
 using System;
 using System.Collections.Generic;

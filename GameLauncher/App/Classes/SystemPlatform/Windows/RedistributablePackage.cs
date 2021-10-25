@@ -5,6 +5,7 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Microsoft.Win32;
+using SBRWCore.Classes.Extentions.API;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;
@@ -150,7 +151,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             }
                             catch (WebException Error)
                             {
-                                APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                                API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
                                     Error, (HttpWebResponse)Error.Response);
                             }
                             catch (Exception Error)
@@ -274,7 +275,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                 }
                                 catch (WebException Error)
                                 {
-                                    APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                                    API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
                                         Error, (HttpWebResponse)Error.Response);
                                 }
                                 catch (Exception Error)

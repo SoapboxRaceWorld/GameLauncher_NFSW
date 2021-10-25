@@ -7,6 +7,7 @@ using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Newtonsoft.Json;
+using SBRWCore.Classes.Extentions;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;

@@ -4,6 +4,7 @@ using System;
 using System.Reflection;
 using System.Resources;
 using System.Text.RegularExpressions;
+using SBRWCore.Classes.Required;
 
 namespace GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms
 {

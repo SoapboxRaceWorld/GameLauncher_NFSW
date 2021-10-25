@@ -1,6 +1,7 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.SystemPlatform;
+using SBRWCore.Classes.Extentions;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;

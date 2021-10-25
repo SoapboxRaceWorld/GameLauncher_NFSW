@@ -16,7 +16,10 @@ using GameLauncher.App.UI_Forms.Debug_Screen;
 using GameLauncher.App.UI_Forms.SecurityCenter_Screen;
 using GameLauncher.App.UI_Forms.USXEditor_Screen;
 using GameLauncher.App.UI_Forms.VerifyHash_Screen;
+using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extentions.API;
 using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.Required;
 using SBRWCore.Classes.System;
 using System;
 using System.Diagnostics;
@@ -539,6 +542,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
         private void SettingsScreen_Load(object sender, EventArgs e)
         {
+
             /*******************************/
             /* Read Settings.ini            /
             /*******************************/
@@ -552,16 +556,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 SettingsWordFilterCheck.Enabled = false;
             }
 
-            if (File.Exists(Path.Combine(Locations.LauncherThemeFolder, "Theme.ini")))
-            {
-                ThemeName.Text = "Theme Name: " + Theming.ThemeName;
-                ThemeAuthor.Text = "Theme Author: " + Theming.ThemeAuthor;
-            }
-            else
-            {
-                ThemeName.Text = "Theme Name: Default";
-                ThemeAuthor.Text = "Theme Author: Launcher - Division";
-            }
+            ThemeName.Text = "Theme Name: " + Theming.ThemeName;
+            ThemeAuthor.Text = "Theme Author: " + Theming.ThemeAuthor;
 
             /*******************************/
             /* Folder Locations             /
@@ -631,7 +627,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
             try
             {
-                DirectoryInfo LauncherLogFilesDirectory = new DirectoryInfo(Locations.LogFolder);
+                DirectoryInfo LauncherLogFilesDirectory = new DirectoryInfo(LogToFile_Extentions.LogFolder);
 
                 if (LauncherLogFilesDirectory.EnumerateDirectories().Count() != 1)
                 {
@@ -690,7 +686,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                             if (!Application.OpenForms[this.Name].Disposing)
                             {
                                 ButtonsColorSet(SettingsVFilesButton, 0, false);
-                                switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat", 10))
+                                switch (API_Core.StatusCheck(FinalCDNURL + "/unpacked/checksums.dat", 10))
                                 {
                                     case APIStatus.Online:
                                         FunctionStatus.DoesCDNSupportVerifyHash = true;
@@ -838,7 +834,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                     {
                         ButtonsColorSet(SettingsVFilesButton, 0, false);
 
-                        switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat", 10))
+                        switch (API_Core.StatusCheck(FinalCDNURL + "/unpacked/checksums.dat", 10))
                         {
                             case APIStatus.Online:
                                 FunctionStatus.DoesCDNSupportVerifyHash = true;
@@ -1069,13 +1065,13 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         {
             try
             {
-                DirectoryInfo InstallationDirectory = new DirectoryInfo(Locations.LogFolder);
+                DirectoryInfo InstallationDirectory = new DirectoryInfo(LogToFile_Extentions.LogFolder);
 
                 foreach (var Folder in InstallationDirectory.EnumerateDirectories())
                 {
                     if (Directory.Exists(Folder.FullName))
                     {
-                        if (Folder.FullName != Locations.LogCurrentFolder)
+                        if (Folder.FullName != LogToFile_Extentions.LogCurrentFolder)
                         {
                             Directory.Delete(Folder.FullName, true);
                         }
@@ -1240,7 +1236,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 {
                     if (!Application.OpenForms[this.Name].IsDisposed)
                     {
-                        switch (APIChecker.CheckStatus(((CDNList)SettingsCDNPick.SelectedItem).Url + "/index.xml", 10))
+                        switch (API_Core.StatusCheck(((CDNList)SettingsCDNPick.SelectedItem).Url + "/index.xml", 10))
                         {
                             case APIStatus.Online:
                                 SettingsCDNText.SafeInvokeAction(() =>
@@ -1586,7 +1582,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 {
                     if (!Application.OpenForms[this.Name].IsDisposed)
                     {
-                        switch (APIChecker.CheckStatus(FileSettingsSave.CDN + "/index.xml", 10))
+                        switch (API_Core.StatusCheck(FileSettingsSave.CDN + "/index.xml", 10))
                         {
                             case APIStatus.Online:
                                 SettingsCDNCurrent.SafeInvokeAction(() =>

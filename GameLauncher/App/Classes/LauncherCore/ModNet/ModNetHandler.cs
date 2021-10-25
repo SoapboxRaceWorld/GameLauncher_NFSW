@@ -4,6 +4,9 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
+using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extentions.API;
+using SBRWCore.Classes.Required;
 using System;
 using System.IO;
 
@@ -87,7 +90,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
         public static bool Supported()
         {
-            if (APIChecker.CheckStatus(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo", 10) == APIStatus.NotFound)
+            if (API_Core.StatusCheck(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo", 10) == APIStatus.NotFound)
             {
                 return false;
             }
