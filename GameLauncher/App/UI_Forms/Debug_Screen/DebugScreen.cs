@@ -12,7 +12,6 @@ using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Management;
 using System.Windows.Forms;
 
@@ -112,8 +111,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
                 }
             }
 
-            string UpdateSkip = "";
-
+            string UpdateSkip;
             if (FileSettingsSave.IgnoreVersion == Application.ProductVersion || FileSettingsSave.IgnoreVersion == String.Empty)
             {
                 UpdateSkip = "False";
@@ -123,7 +121,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
                 UpdateSkip = FileSettingsSave.IgnoreVersion;
             }
 
-            string StreamOpt = String.Empty;
+            string StreamOpt;
             if (FileSettingsSave.StreamingSupport == "0")
             {
                 StreamOpt = "Displaying Timer";
@@ -133,7 +131,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
                 StreamOpt = "Native (Timer Removed)";
             }
 
-            string ThemeOpt = String.Empty;
+            string ThemeOpt;
             if (FileSettingsSave.ThemeSupport == "0")
             {
                 ThemeOpt = "Disabled";
@@ -143,7 +141,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
                 ThemeOpt = "Enabled";
             }
 
-            string InsiderOpt = String.Empty;
+            string InsiderOpt;
             if (FileSettingsSave.Insider == "0")
             {
                 InsiderOpt = "Release Only";
