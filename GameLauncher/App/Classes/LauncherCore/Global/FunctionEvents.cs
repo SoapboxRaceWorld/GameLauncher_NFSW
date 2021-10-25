@@ -1,7 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.UI_Forms.AddServer_Screen;

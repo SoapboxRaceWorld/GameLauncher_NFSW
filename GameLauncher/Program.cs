@@ -1,5 +1,4 @@
-﻿using SBRWCore.Classes.System;
-using GameLauncher.App.Classes.InsiderKit;
+﻿using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
@@ -12,8 +11,12 @@ using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using Microsoft.Win32;
+using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.Required;
+using SBRWCore.Classes.System;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,10 +30,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
-using SBRWCore.Classes.Required;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.Anti_Cheat;
 
 namespace GameLauncher
 {
@@ -595,7 +594,7 @@ namespace GameLauncher
                             try
                             {
                                 String MessageBoxPopupTLS = String.Empty;
-                                string keyName=@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client";
+                                string keyName = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client";
                                 string subKey = "DisabledByDefault";
 
                                 if (Registry.GetValue(keyName, subKey, null) == null)

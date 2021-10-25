@@ -1,7 +1,4 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Client;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Proxy;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using System;
 
 namespace GameLauncher.App.Classes.LauncherCore.Support

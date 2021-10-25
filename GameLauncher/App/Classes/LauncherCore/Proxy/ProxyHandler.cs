@@ -2,7 +2,6 @@
 using Flurl.Http;
 using Flurl.Http.Content;
 using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;

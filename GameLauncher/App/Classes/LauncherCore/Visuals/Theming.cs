@@ -1,7 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.UI_Forms.Splash_Screen;
 using System;
 using System.Drawing;
 using System.IO;
@@ -441,7 +440,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static void CheckIfThemeExists()
         {
             Log.Debug((FileSettingsSave.ThemeSupport == "1").ToString());
-            if (File.Exists(Path.Combine(Locations.LauncherThemeFolder, "Theme.ini")) && 
+            if (File.Exists(Path.Combine(Locations.LauncherThemeFolder, "Theme.ini")) &&
                 (FileSettingsSave.ThemeSupport == "1"))
             {
                 try

@@ -299,7 +299,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
         {
             APIErrorFormElements(false);
             SettingsFormElements();
-            WelcomeText.Text = "Howdy!\n" + 
+            WelcomeText.Text = "Howdy!\n" +
                 "Looks like this is the first time this launcher has been started.\n" +
                 "Please select from the options below in order to continue this setup.";
         }

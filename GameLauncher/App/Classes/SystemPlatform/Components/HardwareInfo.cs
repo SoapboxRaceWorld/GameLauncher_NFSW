@@ -16,7 +16,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 try
                 {
                     _cpuName = (from x in new ManagementObjectSearcher("SELECT Name FROM Win32_Processor").Get().Cast<ManagementObject>()
-                                       select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
+                                select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
                 }
                 catch (Exception Error)
                 {

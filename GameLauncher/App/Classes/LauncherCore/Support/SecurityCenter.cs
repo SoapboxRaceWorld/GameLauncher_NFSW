@@ -2,7 +2,6 @@
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
 using SBRWCore.Classes.System;
 using System.Drawing;
 

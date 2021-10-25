@@ -6,7 +6,6 @@ using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
 using NetFwTypeLib;
 using SBRWCore.Classes.System;
 using System;
