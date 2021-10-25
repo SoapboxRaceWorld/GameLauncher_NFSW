@@ -8,6 +8,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -192,7 +193,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
             }
             settings.AddRange(new[]
             {
-                new ListType{ Name = "HWID", Value = HardwareID.FingerPrint.Level_One_Value()},
+                new ListType{ Name = "HWID", Value = FingerPrint.Level_One_Value()},
                 new ListType{ Name = "Operating System", Value = (UnixOS.Detected())? UnixOS.FullName() : Environment.OSVersion.VersionString},
                 new ListType{ Name = "Environment Version", Value = Environment.OSVersion.Version.ToString() },
                 new ListType{ Name = "Screen Resolution", Value = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height }

@@ -1,12 +1,12 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
+using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Microsoft.Win32;
+using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.Required;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -137,7 +137,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                 Encoding = Encoding.UTF8
                             };
 
-                            if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                             else
                             {
                                 Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -261,7 +261,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                     Encoding = Encoding.UTF8
                                 };
 
-                                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                                 else
                                 {
                                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -371,9 +371,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 Log.Completed("REDISTRIBUTABLE: Done");
             }
 
-            Log.Info("ID: Moved to Function");
-            /* (Start Process) */
-            HardwareID.FingerPrint.Get();
+            Log.Info("LIST: Moved to Function");
+            /* (Start Process) Sets Up Langauge List */
+            LanguageListUpdater.GetList();
         }
     }
 }

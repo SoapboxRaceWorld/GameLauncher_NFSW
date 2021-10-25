@@ -1,9 +1,11 @@
 ﻿using DiscordRPC;
-using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using SBRWCore.Classes.Anti_Cheat;
+using SBRWCore.Classes.Game_Client;
+using SBRWCore.Classes.Launcher;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,15 +27,12 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         private static int EventID;
         private static string carslotsXML = String.Empty;
         private static bool inSafeHouse = false;
-        public static bool T1000() => eventTerminatedManually && (InformationCache.RestartTimer <= 0);
+        public static bool T1000() => eventTerminatedManually && (Session_Timer.Remaining <= 0);
 
         /* Some data related, can be touched. */
         public static string PersonaId = String.Empty;
-        public static string PersonaName = String.Empty;
         public static string PersonaLevel = String.Empty;
         public static string PersonaAvatarId = String.Empty;
-        public static string PersonaCarId = String.Empty;
-        public static string PersonaCarName = String.Empty;
         public static string LoggedPersonaId = String.Empty;
         public static string LauncherRPC = "SBRW Launcher: v" + Theming.PrivacyRPCBuild;
         public static int PersonaTreasure = 0;
@@ -79,7 +78,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     if (!String.IsNullOrWhiteSpace(_serverPanelLink))
                     {
                         /* Let's format it now, if possible */
-                        if (AntiCheat.persona_id == String.Empty || AntiCheat.persona_name == String.Empty)
+                        if (Live_Cache.Game_Persona_ID == String.Empty || Live_Cache.Game_Persona_Name == String.Empty)
                         {
                             DiscordLauncherPresence.ButtonsList.Add(new DiscordButton()
                             {
@@ -89,13 +88,13 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         }
                         else
                         {
-                            _serverPanelLink = _serverPanelLink.Replace("{personaid}", AntiCheat.persona_id);
-                            _serverPanelLink = _serverPanelLink.Replace("{personaname}", AntiCheat.persona_name);
+                            _serverPanelLink = _serverPanelLink.Replace("{personaid}", Live_Cache.Game_Persona_ID);
+                            _serverPanelLink = _serverPanelLink.Replace("{personaname}", Live_Cache.Game_Persona_Name);
                             _serverPanelLink = _serverPanelLink.Replace("{sep}", String.Empty);
 
                             DiscordLauncherPresence.ButtonsList.Add(new DiscordButton()
                             {
-                                Label = "Check " + AntiCheat.persona_name + " on Panel",
+                                Label = "Check " + Live_Cache.Game_Persona_Name + " on Panel",
                                 Url = _serverPanelLink
                             });
                         }
@@ -128,11 +127,10 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 if (uri == "/User/SecureLogoutPersona")
                 {
                     PersonaId = String.Empty;
-                    PersonaName = String.Empty;
+                    Live_Cache.Game_Persona_Name_Live = String.Empty;
                     PersonaLevel = String.Empty;
                     PersonaAvatarId = String.Empty;
-                    PersonaCarId = String.Empty;
-                    PersonaCarName = String.Empty;
+                    Live_Cache.Game_Car_Name = String.Empty;
                     LauncherRPC = String.Empty;
                     PersonaTreasure = 0;
                 }
@@ -145,7 +143,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                     SBRW_XML.LoadXml(serverreply);
 
-                    PersonaName = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/Name").InnerText.Replace("¤", "[S]");
+                    Live_Cache.Game_Persona_Name_Live = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/Name").InnerText.Replace("¤", "[S]");
                     PersonaLevel = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/Level").InnerText;
                     PersonaAvatarId = "avatar_" + SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/IconIndex").InnerText;
                     PersonaId = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/PersonaId").InnerText;
@@ -172,13 +170,13 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     if (LoggedPersonaId == GETContent.Split(';').Last().Split('=').Last())
                     {
                         SBRW_XML.LoadXml(serverreply);
-                        PersonaName = SBRW_XML.SelectSingleNode("ProfileData/Name").InnerText.Replace("¤", "[S]");
+                        Live_Cache.Game_Persona_Name_Live = SBRW_XML.SelectSingleNode("ProfileData/Name").InnerText.Replace("¤", "[S]");
                         PersonaLevel = SBRW_XML.SelectSingleNode("ProfileData/Level").InnerText;
                         PersonaAvatarId = "avatar_" + SBRW_XML.SelectSingleNode("ProfileData/IconIndex").InnerText;
                         PersonaId = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
 
-                        AntiCheat.persona_id = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
-                        AntiCheat.persona_name = SBRW_XML.SelectSingleNode("ProfileData/Name").InnerText.Replace("¤", "[S]");
+                        Live_Cache.Game_Persona_ID = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
+                        Live_Cache.Game_Persona_Name = SBRW_XML.SelectSingleNode("ProfileData/Name").InnerText.Replace("¤", "[S]");
                     }
                 }
 
@@ -219,7 +217,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.State = LauncherRPC;
                     _presence.Assets = new Assets
                     {
-                        LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                        LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
                         SmallImageText = "Treasure Hunt - Day: " + THDay,
                         SmallImageKey = "gamemode_treasure"
@@ -236,7 +234,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.Assets = new Assets();
                     if (UpdatePersonaPresenceParam == "1")
                     {
-                        _presence.Details = "Driving " + PersonaCarName;
+                        _presence.Details = "Driving " + Live_Cache.Game_Car_Name;
                         _presence.Assets.SmallImageText = "In-Freeroam";
                         _presence.Assets.SmallImageKey = "gamemode_freeroam";
                         _presence.State = LauncherRPC;
@@ -253,7 +251,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         inSafeHouse = true;
                     }
 
-                    _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
+                    _presence.Assets.LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel;
                     _presence.Assets.LargeImageKey = PersonaAvatarId;
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
@@ -263,11 +261,11 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 if (uri == "/matchmaking/leavelobby" || uri == "/matchmaking/declineinvite")
                 {
                     /* Display Current Car in Freeroam */
-                    _presence.Details = "Driving " + PersonaCarName;
+                    _presence.Details = "Driving " + Live_Cache.Game_Car_Name;
                     _presence.State = LauncherRPC;
                     _presence.Assets = new Assets
                     {
-                        LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                        LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
                         SmallImageText = "In-Freeroam",
                         SmallImageKey = "gamemode_freeroam"
@@ -276,7 +274,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                     if (uri == "/matchmaking/leavelobby")
                     {
-                        AntiCheat.DisableChecks(false);
+                        AC_Core.Stop(false);
                     }
 
                     eventTerminatedManually = FunctionStatus.CanCloseGame = true;
@@ -300,7 +298,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         _presence.State = serverName;
                         _presence.Assets = new Assets
                         {
-                            LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                            LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                             LargeImageKey = PersonaAvatarId,
                             SmallImageText = LauncherRPC,
                             SmallImageKey = EventsList.GetEventType(Convert.ToInt32(EventID))
@@ -319,7 +317,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.State = LauncherRPC;
                     _presence.Assets = new Assets
                     {
-                        LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                        LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
                         SmallImageText = "In-Freeroam",
                         SmallImageKey = "gamemode_freeroam"
@@ -341,7 +339,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.State = serverName;
                     _presence.Assets = new Assets
                     {
-                        LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                        LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
                         SmallImageText = LauncherRPC,
                         SmallImageKey = EventsList.GetEventType(EventID)
@@ -357,15 +355,16 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.State = serverName;
                     _presence.Assets = new Assets
                     {
-                        LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                        LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
                         SmallImageText = LauncherRPC,
                         SmallImageKey = EventsList.GetEventType(EventID)
                     };
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    AntiCheat.event_id = EventID;
-                    AntiCheat.EnableChecks();
+
+                    Live_Cache.Game_Event_ID = EventID;
+                    AC_Core.Start();
 
                     if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
@@ -378,14 +377,14 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.State = serverName;
                     _presence.Assets = new Assets
                     {
-                        LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                        LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
                         SmallImageText = LauncherRPC,
                         SmallImageKey = EventsList.GetEventType(EventID)
                     };
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    AntiCheat.DisableChecks(true);
+                    AC_Core.Stop(true);
                     if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
 
@@ -406,7 +405,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         SmallImageKey = "gamemode_safehouse"
                     };
                     _presence.State = serverName;
-                    _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
+                    _presence.Assets.LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel;
                     _presence.Assets.LargeImageKey = PersonaAvatarId;
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
@@ -432,7 +431,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         {
                             if (DefaultID == current)
                             {
-                                PersonaCarName = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes
+                                Live_Cache.Game_Car_Name = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes
                                     (CarsList.GetCarName(node.SelectSingleNode("CustomCar/Name").InnerText)));
                             }
                             current++;
@@ -452,7 +451,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                             {
                                 if (receivedId == node.SelectSingleNode("Id").InnerText)
                                 {
-                                    PersonaCarName = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(
+                                    Live_Cache.Game_Car_Name = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(
                                         CarsList.GetCarName(node.SelectSingleNode("CustomCar/Name").InnerText)));
                                 }
                             }

@@ -16,6 +16,7 @@ using GameLauncher.App.UI_Forms.Debug_Screen;
 using GameLauncher.App.UI_Forms.SecurityCenter_Screen;
 using GameLauncher.App.UI_Forms.USXEditor_Screen;
 using GameLauncher.App.UI_Forms.VerifyHash_Screen;
+using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.System;
 using System;
 using System.Diagnostics;
@@ -919,6 +920,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             if (FileSettingsSave.WebCallMethod != (SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient"))
             {
                 FileSettingsSave.WebCallMethod = SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient";
+                Live_Cache.Launcher_Alternative_Webcalls(FileSettingsSave.WebCallMethod == "WebClient");
             }
 
             if (FileSettingsSave.StreamingSupport != (SettingsStreanCheckbox.Checked ? "1" : "0"))

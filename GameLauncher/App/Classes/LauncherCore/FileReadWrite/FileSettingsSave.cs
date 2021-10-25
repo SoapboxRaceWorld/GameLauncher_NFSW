@@ -2,7 +2,7 @@
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
+using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.System;
 using System;
 
@@ -303,10 +303,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 Log.Info("SETTINGS FILE: Random Generated Default Port -> " + ServerProxy.ProxyPort);
             }
 
-            if (!string.IsNullOrWhiteSpace(WebCallMethod))
-            {
-                Log.Info("SETTINGS FILE: Choosen WebCall Method -> " + WebCallMethod);
-            }
+            Live_Cache.Launcher_Alternative_Webcalls(WebCallMethod == "WebClient");
 
             /* Key Entries to Remove (No Longer Needed) */
 

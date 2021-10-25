@@ -1,5 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using SBRWCore.Classes.Launcher;
 using System;
 using System.IO;
 
@@ -74,7 +75,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Unix
             }
         }
 
-        public static bool Detected() => AmI();
+        public static bool Detected() => Live_Cache.System_Unix = AmI();
 
         private static string PlatformOSName()
         {

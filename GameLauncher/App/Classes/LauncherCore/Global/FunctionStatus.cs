@@ -20,9 +20,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Net.Security;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -38,9 +36,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* Parent Screen Cords */
         public static Point ParentScreenLocation;
 
-        /* System OS Name */
-        public static string OSName;
-
         /* Selected Server Is Enforcing Proxy */
         public static bool SelectedServerEnforceProxy = false;
 
@@ -55,9 +50,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         /* Holds a collection of Server Status of Servers */
         public static Dictionary<string, int> ServerStatusBook = new Dictionary<string, int>();
-
-        /* Selected Server Force Restart Timer */
-        public static int RestartTimer;
     }
 
     /* This is Used to call Certain Functions (Such as Completion Status or Function Callbacks) */
@@ -92,9 +84,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         /* Sets Conditional to If its Possible to Close Game */
         public static bool CanCloseGame = true;
-
-        /* If In-Game OverLays was Used */
-        public static bool ExternalToolsWasUsed = false;
 
         /* Sets Conditional if Game was Closed (By Timer) */
         public static bool GameKilledBySpeedBugCheck = false;

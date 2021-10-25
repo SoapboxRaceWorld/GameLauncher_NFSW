@@ -6,6 +6,7 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using SBRWCore.Classes.Launcher;
 using System;
 using System.Collections.Generic;
 using DiscordButton = DiscordRPC.Button;
@@ -25,12 +26,6 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         /// </summary>
         /// <returns>True or False</returns>
         public static bool Running() => Client != null;
-
-        /// <summary>
-        /// User's Discord ID Cache and is Set Once by Startuo or During Operation of Launcher's State
-        /// </summary>
-        /// <remarks>User's Discord ID</remarks>
-        public static string UserID = String.Empty;
 
         /// <summary>
         /// Launcher's Discord Presence To Show Statuss
@@ -394,7 +389,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         Client.OnReady += (sender, e) =>
                         {
                             Log.Info("DISCORD: Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
-                            UserID = e.User.ID.ToString();
+                            Live_Cache.Launcher_Discord_UserID = e.User.ID.ToString();
                         };
 
                         Client.OnError += (sender, Error) =>

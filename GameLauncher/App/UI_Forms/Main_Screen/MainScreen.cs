@@ -4,7 +4,6 @@ using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Downloader;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
@@ -29,6 +28,10 @@ using GameLauncher.App.UI_Forms.SecurityCenter_Screen;
 using GameLauncher.App.UI_Forms.SelectServer_Screen;
 using GameLauncher.App.UI_Forms.Settings_Screen;
 using Newtonsoft.Json;
+using SBRWCore.Classes.Anti_Cheat;
+using SBRWCore.Classes.Game_Client;
+using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -756,7 +759,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 Encoding = Encoding.UTF8
             };
 
-            if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+            if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
             else
             {
                 Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1020,7 +1023,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             LoginButton.Enabled = true;
                             RegisterText.Enabled = true;
                             InformationCache.SelectedServerCategory = ((ServerList)ServerPick.SelectedItem).Category;
-                            InformationCache.RestartTimer = (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
+                            Session_Timer.Remaining = (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
 
                             if ((InformationCache.SelectedServerCategory ?? string.Empty).ToUpper() == "DEV" ||
                             (InformationCache.SelectedServerCategory ?? string.Empty).ToUpper() == "OFFLINE")
@@ -1120,7 +1123,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                     Encoding = Encoding.UTF8
                                 };
 
-                                if (!WebCalls.Alternative()) { Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                                 else
                                 {
                                     Client_A.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1522,7 +1525,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
             nfswProcess.ProcessorAffinity = (IntPtr)processorAffinity;
 
-            AntiCheat.process_id = nfswProcess.Id;
+            Live_Cache.Game_ID = nfswProcess.Id;
             CloseBTN.SafeInvokeAction(() =>
             CloseBTN.Visible = false, this);
             FunctionStatus.LauncherBattlePass = true;
@@ -1536,7 +1539,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 if (ProcessID == 0)
                 {
                     ProcessID++;
-                    InformationCache.RestartTimer -= ServerProxy.Running() ? 120 : 60;
+                    Session_Timer.Remaining -= ServerProxy.Running() ? 120 : 60;
 
                     x.SafeInvokeAction(() =>
                     {
@@ -1546,7 +1549,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 }
                 else
                 {
-                    InformationCache.RestartTimer -= ServerProxy.Running() ? 60 : 30;
+                    Session_Timer.Remaining -= ServerProxy.Running() ? 60 : 30;
                 }
 
                 if (!ServerProxy.Running())
@@ -1554,19 +1557,19 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     if (ProcessID == 1)
                     {
                         ProcessID++;
-                        AntiCheat.EnableChecks();
+                        AC_Core.Start();
                     }
 
-                    if (FunctionStatus.ExternalToolsWasUsed && ProcessID == 2)
+                    if (AC_Core.Good_Status() && ProcessID == 2)
                     {
                         ProcessID++;
-                        AntiCheat.DisableChecks(true);
+                        AC_Core.Stop(true);
                     }
                 }
 
                 Process[] allOfThem = Process.GetProcessesByName("nfsw");
 
-                if (InformationCache.RestartTimer == 300)
+                if (Session_Timer.Remaining == 300)
                 {
                     try
                     {
@@ -1582,7 +1585,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         GC.Collect();
                     }
                 }
-                else if (InformationCache.RestartTimer <= 0)
+                else if (Session_Timer.Remaining <= 0)
                 {
                     if (FunctionStatus.CanCloseGame)
                     {
@@ -1594,7 +1597,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     }
                     else
                     {
-                        InformationCache.RestartTimer = 0;
+                        Session_Timer.Remaining = 0;
                     }
                 }
 
@@ -1617,7 +1620,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         }
                         else
                         {
-                            TimeSpan t = TimeSpan.FromSeconds(InformationCache.RestartTimer);
+                            TimeSpan t = TimeSpan.FromSeconds(Session_Timer.Remaining);
 
                             String secondsToShutDownNamed = String.Empty;
 
@@ -1641,7 +1644,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 secondsToShutDownNamed = list_of_times[0];
                             }
 
-                            if (InformationCache.RestartTimer == 0)
+                            if (Session_Timer.Remaining == 0)
                             {
                                 secondsToShutDownNamed = "Waiting for event to finish.";
                             }
@@ -1673,26 +1676,16 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                     if (FunctionStatus.GameKilledBySpeedBugCheck)
                     {
-                        if (FunctionStatus.ExternalToolsWasUsed) exitCode = 2017;
+                        if (AC_Core.Good_Status()) exitCode = 2017;
                         else exitCode = 2137;
                     }
 
-                    if (exitCode == 0 && !FunctionStatus.GameKilledBySpeedBugCheck)
+                    if (exitCode == 0 && !FunctionStatus.GameKilledBySpeedBugCheck && AC_Core.Stop_Check())
                     {
-                        if (AntiCheat.Secret != null)
-                        {
-                            AntiCheat.Secret.Abort();
-                        }
-
                         CloseBTN_Click(null, null);
                     }
-                    else
+                    else if (AC_Core.Stop_Check())
                     {
-                        if (AntiCheat.Secret != null)
-                        {
-                            AntiCheat.Secret.Abort();
-                        }
-
                         x.SafeEndInvokeAsyncCatch(x.SafeBeginInvokeActionAsync(Launcher_X_Form =>
                         {
                             x.WindowState = FormWindowState.Normal;
@@ -1763,7 +1756,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     Encoding = Encoding.UTF8
                 };
 
-                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                 else
                 {
                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1887,7 +1880,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         Encoding = Encoding.UTF8
                     };
 
-                    if (!WebCalls.Alternative()) { ModNetJsonURI = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Live_Cache.Launcher_Alternative_Webcalls()) { ModNetJsonURI = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                     else
                     {
                         ModNetJsonURI.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1962,7 +1955,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                         Encoding = Encoding.UTF8
                                     };
 
-                                    if (!WebCalls.Alternative()) { newModNetFilesDownload = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                    if (!Live_Cache.Launcher_Alternative_Webcalls()) { newModNetFilesDownload = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                                     else
                                     {
                                         newModNetFilesDownload.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2004,7 +1997,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             Encoding = Encoding.UTF8
                         };
 
-                        if (!WebCalls.Alternative()) { ModInfoJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        if (!Live_Cache.Launcher_Alternative_Webcalls()) { ModInfoJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                         else
                         {
                             ModInfoJson.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2056,7 +2049,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 Encoding = Encoding.UTF8
                             };
 
-                            if (!WebCalls.Alternative()) { CarsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!Live_Cache.Launcher_Alternative_Webcalls()) { CarsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                             else
                             {
                                 CarsJson.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2083,7 +2076,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 Encoding = Encoding.UTF8
                             };
 
-                            if (!WebCalls.Alternative()) { EventsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!Live_Cache.Launcher_Alternative_Webcalls()) { EventsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                             else
                             {
                                 EventsJson.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2137,7 +2130,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 Encoding = Encoding.UTF8
                             };
 
-                            if (!WebCalls.Alternative()) { ServerModsList = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!Live_Cache.Launcher_Alternative_Webcalls()) { ServerModsList = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                             else
                             {
                                 ServerModsList.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2375,8 +2368,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     ServerProxy.Instance.SetServerUrl(InformationCache.SelectedServerData.IPAddress);
                     ServerProxy.Instance.SetServerName(ServerListUpdater.ServerName("Proxy"));
 
-                    AntiCheat.user_id = _userId;
-                    AntiCheat.serverip = new Uri(InformationCache.SelectedServerData.IPAddress).Host;
+                    Live_Cache.Game_User_ID = _userId;
+                    Live_Cache.Game_Server_IP = new Uri(InformationCache.SelectedServerData.IPAddress).Host;
 
                     StartGame(_userId, _loginToken);
 
@@ -2658,7 +2651,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     Encoding = Encoding.UTF8
                 };
 
-                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                 else
                 {
                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -3292,7 +3285,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                         Encoding = Encoding.UTF8
                                     };
 
-                                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                    if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                                     else
                                     {
                                         Client.Headers.Add("user-agent", "SBRW Launcher " +

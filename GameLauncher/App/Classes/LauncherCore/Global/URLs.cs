@@ -17,18 +17,5 @@
         public static string GitHub_Launcher_Beta = "https://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases";
 
         public static string GitHub_Updater = "https://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest";
-
-        public static string[] AntiCheatFD = new string[]
-        {
-            Main + "/report",
-            "https://la-sbrw.davidcarbon.download/report?",
-            "https://la2-sbrw.davidcarbon.download/report?"
-        };
-
-        public static string[] AntiCheatSD = new string[]
-        {
-            "https://la-sbrw.davidcarbon.download/report-manual?",
-            "https://la2-sbrw.davidcarbon.download/report-manual?"
-        };
     }
 }

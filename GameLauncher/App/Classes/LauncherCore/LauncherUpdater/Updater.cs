@@ -1,6 +1,5 @@
 ﻿using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
@@ -13,6 +12,8 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using GameLauncher.App.UI_Forms.UpdatePopup_Screen;
 using Newtonsoft.Json;
+using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -59,7 +60,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     Encoding = Encoding.UTF8
                 };
 
-                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                 else
                 {
                     Client.Headers.Add("user-agent", "SBRW Launcher " +

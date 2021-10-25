@@ -1,18 +1,15 @@
 ﻿using GameLauncher.App.Classes.Auth;
 using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.SystemPlatform.Components;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
 using Nancy.Json;
 using Newtonsoft.Json;
+using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.Required;
 using System;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Windows.Forms;
 using System.Xml;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
@@ -50,18 +47,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         Encoding = Encoding.UTF8
                     };
 
-                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                     else
                     {
-                        Client.Headers.Add("user-agent", "SBRW Launcher " +
-                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        Client.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
-                        Client.Headers["X-HiddenHWID"] = HardwareID.FingerPrint.ValueAlt();
-                        Client.Headers["X-UserAgent"] = "GameLauncherReborn " +
-                            Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                        Client.Headers["X-GameLauncherHash"] = WebHelpers.Value();
-                        Client.Headers["X-GameLauncherCertificate"] = CertificateStore.LauncherSerial;
-                        Client.Headers["X-DiscordID"] = DiscordLauncherPresence.UserID;
+                        Client.Headers = CustomHeaders.Headers_WHC();
                     }
 
                     try

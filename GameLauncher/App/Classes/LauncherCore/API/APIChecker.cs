@@ -1,10 +1,11 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.LauncherCore.Global;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
+using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.Required;
 using System;
 using System.Net;
 using System.Text;
@@ -383,8 +384,6 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             Log.Checking("JSON LIST: Retriving " + JSONUrl);
             try
             {
-
-
                 Uri URLCall = new Uri(JSONUrl);
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 var Client = new WebClient
@@ -392,7 +391,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     Encoding = Encoding.UTF8
                 };
 
-                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                 else
                 {
                     Client.Headers.Add("user-agent", "SBRW Launcher " +

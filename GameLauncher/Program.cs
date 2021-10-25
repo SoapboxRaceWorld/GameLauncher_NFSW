@@ -28,6 +28,9 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using SBRWCore.Classes.Required;
+using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.Anti_Cheat;
 
 namespace GameLauncher
 {
@@ -493,13 +496,13 @@ namespace GameLauncher
                 {
                     if (UnixOS.Detected())
                     {
-                        InformationCache.OSName = UnixOS.FullName();
-                        Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
+                        Live_Cache.System_OS_Name = UnixOS.FullName();
+                        Log.System("SYSTEM: Detected OS: " + Live_Cache.System_OS_Name);
                     }
                     else
                     {
-                        InformationCache.OSName = WindowsProductVersion.ConvertWindowsNumberToName();
-                        Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
+                        Live_Cache.System_OS_Name = WindowsProductVersion.ConvertWindowsNumberToName();
+                        Log.System("SYSTEM: Detected OS: " + Live_Cache.System_OS_Name);
                         Log.System("SYSTEM: Windows Build: " + WindowsProductVersion.GetWindowsBuildNumber());
                         Log.System("SYSTEM: NT Version: " + Environment.OSVersion.VersionString);
                         Log.System("SYSTEM: Video Card: " + HardwareInfo.GPU.CardName());
@@ -736,6 +739,10 @@ namespace GameLauncher
                     {
                         Log.Completed("PROXY: Disabled");
                     }
+
+                    Log.Checking("PRELOAD: Headers");
+                    CustomHeaders.Headers_WHC();
+                    Log.Completed("PRELOAD: Headers");
 
                     Log.Info("REDISTRIBUTABLE: Moved to Function");
                     /* (Starts Function Chain) Check if Redistributable Packages are Installed */

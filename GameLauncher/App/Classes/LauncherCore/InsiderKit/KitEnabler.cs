@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
+using SBRWCore.Classes.Launcher;
 
 namespace GameLauncher.App.Classes.InsiderKit
 {
@@ -7,11 +8,11 @@ namespace GameLauncher.App.Classes.InsiderKit
     {
         /* Current month, day, year (2 digits), and letter! Ex: 12-15-20-A */
         /* If a second build gets release within the same day bump letter version up (No R2 or D2)*/
-        public static string InsiderBuildNumber = "10-23-21-B";
+        private static string InsiderBuildNumber = "10-23-21-B";
 
         public static string BuildNumberOnly()
         {
-            return InsiderBuildNumber;
+            return Live_Cache.Launcher_Version_Insider = InsiderBuildNumber;
         }
 
         public static string BuildNumber()
