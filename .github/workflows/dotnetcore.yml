@@ -19,7 +19,11 @@ jobs:
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
       env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'      
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    - name: Download missing Libraries
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      run: mkdir ${{ github.workspace }}/GameLauncher/Resources/DLLs && cd ${{ github.workspace }}/GameLauncher/Resources/DLLs && wget http://f-sbrw.davidcarbon.download/Launcher/Libraries/Development/0.0.0.2/SBRWCore.dll && cd ${{ github.workspace }}
     - name: Build with MSBuild
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'    
