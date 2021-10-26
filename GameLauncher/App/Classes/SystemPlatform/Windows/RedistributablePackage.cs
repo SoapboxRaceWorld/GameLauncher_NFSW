@@ -1,11 +1,10 @@
-﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
-using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
+﻿using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Microsoft.Win32;
-using SBRWCore.Classes.Extentions.API;
+using SBRWCore.Classes.Extensions.API;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;

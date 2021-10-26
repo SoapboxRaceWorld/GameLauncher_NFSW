@@ -1,7 +1,7 @@
 ﻿using GameLauncher.App.Classes.Auth;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Support;
-using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extensions;
 using System.Diagnostics;
 using System.Threading;
 

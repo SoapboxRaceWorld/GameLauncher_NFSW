@@ -5,7 +5,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.UI_Forms.AddServer_Screen;
 using GameLauncher.App.UI_Forms.Register_Screen;
 using GameLauncher.App.UI_Forms.SelectServer_Screen;
-using SBRWCore.Classes.Extentions.Validator;
+using SBRWCore.Classes.Extensions.Validator;
 using SBRWCore.Classes.Launcher;
 using System;
 using System.Diagnostics;

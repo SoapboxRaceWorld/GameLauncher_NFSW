@@ -16,7 +16,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
         {
             if (File.Exists(Path.Combine(Locations.LauncherFolder, "SBRWCore.dll")))
             {
-                LogToFile_Extentions.OpenLog(From, MessageDetails, Error, Icon, Suppress, OpenLogMessage);
+                LogToFile_Extensions.OpenLog(From, MessageDetails, Error, Icon, Suppress, OpenLogMessage);
             }
             else
             {

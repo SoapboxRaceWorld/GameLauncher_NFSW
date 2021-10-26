@@ -1,8 +1,6 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Support;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using Newtonsoft.Json;
-using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extensions;
 using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
@@ -85,9 +83,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         {
             try
             {
-                if (!Directory.Exists(Strings.Encode(LogToFile_Extentions.LogCurrentFolder)))
+                if (!Directory.Exists(Strings.Encode(LogToFile_Extensions.LogCurrentFolder)))
                 {
-                    Directory.CreateDirectory(Strings.Encode(LogToFile_Extentions.LogCurrentFolder));
+                    Directory.CreateDirectory(Strings.Encode(LogToFile_Extensions.LogCurrentFolder));
                 }
             }
             catch { }
@@ -103,7 +101,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     RecordedAt = TimeDate.GetTime("Now - UTC Time (Offset)")
                 };
 
-                File.AppendAllLines(LogToFile_Extentions.LogCommunication, new List<string>
+                File.AppendAllLines(LogToFile_Extensions.LogCommunication, new List<string>
                 {
                     JsonConvert.SerializeObject(Entry, Formatting.Indented)
                 });

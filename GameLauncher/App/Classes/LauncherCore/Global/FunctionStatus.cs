@@ -7,13 +7,12 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.UI_Forms.Main_Screen;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using GameLauncher.App.UI_Forms.Welcome_Screen;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extensions;
 using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
@@ -175,8 +174,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                 if (OpenLogFile == DialogResult.Yes)
                 {
-                    Process.Start(LogToFile_Extentions.LogCurrentFolder);
-                    Process.Start(LogToFile_Extentions.LogLauncher);
+                    Process.Start(LogToFile_Extensions.LogCurrentFolder);
+                    Process.Start(LogToFile_Extensions.LogLauncher);
                 }
             }
 

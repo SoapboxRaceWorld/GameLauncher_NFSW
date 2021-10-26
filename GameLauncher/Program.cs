@@ -29,7 +29,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extensions;
 
 namespace GameLauncher
 {
@@ -418,7 +418,7 @@ namespace GameLauncher
                 }
 
                 Log.StartLogging();
-                LogToFile_Extentions.RemoveLogs();
+                LogToFile_Extensions.RemoveLogs();
 
                 Log.Info("CURRENT DATE: " + TimeDate.GetTime("Date"));
                 Log.Checking("LAUNCHER MIGRATION: Appdata and/or Roaming Folders");

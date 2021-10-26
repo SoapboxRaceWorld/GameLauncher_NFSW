@@ -1,12 +1,10 @@
-﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
-using GameLauncher.App.Classes.LauncherCore.Global;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using Newtonsoft.Json;
-using SBRWCore.Classes.Extentions;
-using SBRWCore.Classes.Extentions.API;
-using SBRWCore.Classes.Extentions.Validator;
+using SBRWCore.Classes.Extensions;
+using SBRWCore.Classes.Extensions.API;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;

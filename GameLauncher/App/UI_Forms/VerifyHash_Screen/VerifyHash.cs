@@ -6,7 +6,7 @@ using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extensions;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;
@@ -172,10 +172,10 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                     if (MessageBox.Show("Verify Hash has encountered Download Errors.\n" +
                         "Would you like to Open Verify.Log", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        if (File.Exists(LogToFile_Extentions.LogVerify))
+                        if (File.Exists(LogToFile_Extensions.LogVerify))
                         {
-                            Process.Start(LogToFile_Extentions.LogCurrentFolder);
-                            Process.Start(LogToFile_Extentions.LogVerify);
+                            Process.Start(LogToFile_Extensions.LogCurrentFolder);
+                            Process.Start(LogToFile_Extensions.LogVerify);
                         }
                     }
                 }
@@ -346,10 +346,10 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 if (MessageBox.Show("Verify Hash has encountered File or Folder Deletion Errors.\n" +
                 "Would you like to Open Verify.Log and Stop the Scanner?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    if (File.Exists(LogToFile_Extentions.LogVerify))
+                    if (File.Exists(LogToFile_Extensions.LogVerify))
                     {
-                        Process.Start(LogToFile_Extentions.LogCurrentFolder);
-                        Process.Start(LogToFile_Extentions.LogVerify);
+                        Process.Start(LogToFile_Extensions.LogCurrentFolder);
+                        Process.Start(LogToFile_Extensions.LogVerify);
                     }
 
                     StopScanner_Click(null, null);

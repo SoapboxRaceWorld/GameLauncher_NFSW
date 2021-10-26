@@ -16,8 +16,8 @@ using GameLauncher.App.UI_Forms.Debug_Screen;
 using GameLauncher.App.UI_Forms.SecurityCenter_Screen;
 using GameLauncher.App.UI_Forms.USXEditor_Screen;
 using GameLauncher.App.UI_Forms.VerifyHash_Screen;
-using SBRWCore.Classes.Extentions;
-using SBRWCore.Classes.Extentions.API;
+using SBRWCore.Classes.Extensions;
+using SBRWCore.Classes.Extensions.API;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using SBRWCore.Classes.System;
@@ -627,7 +627,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
             try
             {
-                DirectoryInfo LauncherLogFilesDirectory = new DirectoryInfo(LogToFile_Extentions.LogFolder);
+                DirectoryInfo LauncherLogFilesDirectory = new DirectoryInfo(LogToFile_Extensions.LogFolder);
 
                 if (LauncherLogFilesDirectory.EnumerateDirectories().Count() != 1)
                 {
@@ -1065,13 +1065,13 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         {
             try
             {
-                DirectoryInfo InstallationDirectory = new DirectoryInfo(LogToFile_Extentions.LogFolder);
+                DirectoryInfo InstallationDirectory = new DirectoryInfo(LogToFile_Extensions.LogFolder);
 
                 foreach (var Folder in InstallationDirectory.EnumerateDirectories())
                 {
                     if (Directory.Exists(Folder.FullName))
                     {
-                        if (Folder.FullName != LogToFile_Extentions.LogCurrentFolder)
+                        if (Folder.FullName != LogToFile_Extensions.LogCurrentFolder)
                         {
                             Directory.Delete(Folder.FullName, true);
                         }

@@ -1,11 +1,10 @@
 ﻿using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
-using SBRWCore.Classes.Extentions;
-using SBRWCore.Classes.Extentions.API;
+using SBRWCore.Classes.Extensions;
+using SBRWCore.Classes.Extensions.API;
 using SBRWCore.Classes.Required;
 using System;
 using System.IO;

@@ -2,12 +2,11 @@
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
-using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Newtonsoft.Json;
-using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extensions;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;

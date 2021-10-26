@@ -10,7 +10,7 @@ using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Extensions;
 using Nancy.Responses;
-using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extensions;
 using SBRWCore.Classes.Launcher;
 using SBRWCore.Classes.Required;
 using System;

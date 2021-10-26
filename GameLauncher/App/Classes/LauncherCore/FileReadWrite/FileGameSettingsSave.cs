@@ -1,8 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Downloader;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Support;
-using SBRWCore.Classes.Extentions;
+using SBRWCore.Classes.Extensions;
 using SBRWCore.Classes.Required;
 using System;
 using System.IO;
