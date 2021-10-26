@@ -482,7 +482,9 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                     });
 
                     Integrity();
-                    GameScanner(false);
+                    //GameScanner(false);
+                    /* Commenting out the above prevents dirty logging of "Abort"
+                     * Maybe it needs to be a GC.Collect(); instead? */
                 }
                 else
                 {
@@ -569,11 +571,8 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
 
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = Timeout;
 
-                        var Client = new WebClient
-                        {
-                            Encoding = Encoding.UTF8
-                        };
-                        if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        var Client = new WebClient();
+                        if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout(); }
                         else
                         {
                             Client.Headers.Add("user-agent", "SBRW Launcher " +
