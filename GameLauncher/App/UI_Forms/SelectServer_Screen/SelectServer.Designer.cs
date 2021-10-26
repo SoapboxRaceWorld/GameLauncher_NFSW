@@ -98,7 +98,6 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             this.BtnSelectServer.TabIndex = 2;
             this.BtnSelectServer.Text = "Select";
             this.BtnSelectServer.UseVisualStyleBackColor = false;
-            this.BtnSelectServer.Click += new System.EventHandler(this.BtnSelectServer_Click);
             // 
             // BtnClose
             // 

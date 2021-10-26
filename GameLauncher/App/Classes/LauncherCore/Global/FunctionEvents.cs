@@ -23,12 +23,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* ServerList Load Checks */
         public static void SelectServerBtn_Click(object sender, EventArgs e)
         {
-            SelectServer.OpenScreen();
+            SelectServer.OpenScreen(false);
         }
 
         public static void AddServer_Click(object sender, EventArgs e)
         {
-            AddServer.OpenScreen();
+            SelectServer.OpenScreen(true);
         }
 
         public static void RegisterText_LinkClicked(object sender, EventArgs e)

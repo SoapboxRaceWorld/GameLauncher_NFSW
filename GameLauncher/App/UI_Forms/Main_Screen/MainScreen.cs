@@ -170,7 +170,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             /* Display Server List Dialog if Server IP Doesn't Exist */
             if (string.IsNullOrWhiteSpace(FileAccountSave.ChoosenGameServer))
             {
-                SelectServer.OpenScreen();
+                SelectServer.OpenScreen(false);
 
                 if (SelectedServer.Data != null)
                 {
