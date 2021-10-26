@@ -132,12 +132,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         {
                             Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x86.exe");
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                            var Client = new WebClient
-                            {
-                                Encoding = Encoding.UTF8
-                            };
+                            var Client = new WebClient();
 
-                            if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout(); }
                             else
                             {
                                 Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -256,12 +253,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             {
                                 Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x64.exe");
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                                var Client = new WebClient
-                                {
-                                    Encoding = Encoding.UTF8
-                                };
+                                var Client = new WebClient();
 
-                                if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout(); }
                                 else
                                 {
                                     Client.Headers.Add("user-agent", "SBRW Launcher " +
