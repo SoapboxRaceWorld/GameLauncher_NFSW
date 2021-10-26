@@ -134,7 +134,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             /* Functions                     /
             /********************************/
 
-            Name = (CustomServersOnly ? "Saved Custom Servers" : "Please Select a Server") + " - SBRW Launcher";
+            Text = (CustomServersOnly ? "Saved Custom Servers" : "Please Select a Server") + " - SBRW Launcher";
 
             ServerListRenderer.AllowColumnReorder = false;
             ServerListRenderer.ColumnWidthChanging += (handler, args) =>
