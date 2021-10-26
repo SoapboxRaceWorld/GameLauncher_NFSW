@@ -2491,7 +2491,27 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     {
                         if (d.Name == Path.GetPathRoot(FileSettingsSave.GameInstallation))
                         {
-                            if (d.TotalFreeSpace < 8589934592)
+                            if (!string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                ExtractingProgress.SafeInvokeAction(() =>
+                                {
+                                    ExtractingProgress.Value = 100;
+                                    ExtractingProgress.Width = 519;
+                                    ExtractingProgress.Image = Theming.ProgressBarWarning;
+                                    ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
+                                }, this);
+
+                                PlayProgressTextTimer.SafeInvokeAction(() =>
+                                PlayProgressTextTimer.Text = ("Playing the game on a non-NTFS-formatted drive is not supported.").ToUpper(), this);
+                                PlayProgressText.SafeInvokeAction(() =>
+                                PlayProgressText.Text = ("Drive '" + d.Name + "' is formatted with: " + d.DriveFormat + " Type.").ToUpper(), this);
+
+                                FunctionStatus.IsVerifyHashDisabled = true;
+
+                                TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
+                                TaskbarProgress.SetValue(Handle, 100, 100);
+                            }
+                            else if (d.TotalFreeSpace < 8589934592)
                             {
                                 ExtractingProgress.SafeInvokeAction(() =>
                                 {
