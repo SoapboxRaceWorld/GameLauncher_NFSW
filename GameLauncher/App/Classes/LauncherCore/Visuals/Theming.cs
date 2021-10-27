@@ -440,7 +440,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static void CheckIfThemeExists()
         {
             if (File.Exists(Path.Combine(Locations.LauncherThemeFolder, "Theme.ini")) &&
-                (FileSettingsSave.ThemeSupport == "1"))
+                (FileSettingsSave.Live_Data.Launcher_Theme_Support == "1"))
             {
                 try
                 {

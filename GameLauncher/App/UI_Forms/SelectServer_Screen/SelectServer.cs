@@ -207,7 +207,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
 
                 new Thread(() =>
                 {
-                    while (ServersToPing.Count != 0)
+                    while ((ServersToPing.Count != 0) && IsSelectServerOpen)
                     {
                         string QueueContent = ServersToPing.Dequeue();
                         string[] QueueContent2 = QueueContent.Split(new string[] { "_|||_" }, StringSplitOptions.None);

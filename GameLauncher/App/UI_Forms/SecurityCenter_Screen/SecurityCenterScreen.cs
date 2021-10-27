@@ -31,7 +31,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
         ///<summary>Prevents a Duplicate Window from Happening</summary>
         private static bool IsSecurityCenterOpen = false;
         ///<summary>Windows 10: Caches Old Game Path in the event of the user does Firewall First</summary>
-        private static string CacheOldGameLocation = FileSettingsSave.GameInstallationOld;
+        private static string CacheOldGameLocation = FileSettingsSave.Live_Data.Game_Path_Old;
         ///<summary>Disable Button: Firewall Rules API</summary>
         private static bool DisableButtonFRAPI = false;
         ///<summary>Disable Button: Firewall Rules Check</summary>
@@ -805,22 +805,22 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     {
                         if (ModeType == 2)
                         {
-                            AppPath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
+                            AppPath = Strings.Encode(Path.Combine(FileSettingsSave.Live_Data.Game_Path, "nfsw.exe"));
                         }
                         else
                         {
-                            AppPath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallationOld, "nfsw.exe"));
+                            AppPath = Strings.Encode(Path.Combine(FileSettingsSave.Live_Data.Game_Path_Old, "nfsw.exe"));
                         }
                     }
                     else
                     {
                         if (ModeType == 2)
                         {
-                            AppPath = FileSettingsSave.GameInstallation;
+                            AppPath = FileSettingsSave.Live_Data.Game_Path;
                         }
                         else
                         {
-                            AppPath = FileSettingsSave.GameInstallationOld;
+                            AppPath = FileSettingsSave.Live_Data.Game_Path_Old;
                         }
                     }
                     break;
@@ -830,7 +830,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     return Defender();
                 case 6:
                     return CheckPermissionAccess(1, Locations.LauncherFolder) &&
-                            CheckPermissionAccess(1, FileSettingsSave.GameInstallation);
+                            CheckPermissionAccess(1, FileSettingsSave.Live_Data.Game_Path);
                 default:
                     return false;
             }
@@ -889,7 +889,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         return ExclusionExist(AppPath);
                     case 6:
                         return GiveEveryoneReadWriteAccess(1, Locations.LauncherFolder) &&
-                            GiveEveryoneReadWriteAccess(1, FileSettingsSave.GameInstallation);
+                            GiveEveryoneReadWriteAccess(1, FileSettingsSave.Live_Data.Game_Path);
                     default:
                         return false;
                 }
@@ -1003,8 +1003,8 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
                     }
                     /* Game */
-                    if (ButtonEnabler(2, 2) && !string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallationOld) &&
-                        FileSettingsSave.GameInstallationOld != FileSettingsSave.GameInstallation)
+                    if (ButtonEnabler(2, 2) && !string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Game_Path_Old) &&
+                        FileSettingsSave.Live_Data.Game_Path_Old != FileSettingsSave.Live_Data.Game_Path)
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
                         DisableButtonFRAG = DisableButtonFRRG = false;
@@ -1019,8 +1019,8 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame,
-                            (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallationOld) &&
-                            (FileSettingsSave.GameInstallationOld != FileSettingsSave.GameInstallation) ? 4 : 2), true);
+                            (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Game_Path_Old) &&
+                            (FileSettingsSave.Live_Data.Game_Path_Old != FileSettingsSave.Live_Data.Game_Path) ? 4 : 2), true);
                         DisableButtonFRAG = false;
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
                     }
@@ -1051,12 +1051,12 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 1, true);
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
                         DisableButtonFRRL = false;
-                        FileSettingsSave.FirewallLauncherStatus = "Excluded";
+                        FileSettingsSave.Live_Data.Firewall_Launcher = "Excluded";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
-                        FileSettingsSave.FirewallLauncherStatus = "Error";
+                        FileSettingsSave.Live_Data.Firewall_Launcher = "Error";
                     }
                     /* Game */
                     if (ButtonEnabler(2, 0))
@@ -1064,13 +1064,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2, true);
                         DisableButtonFRRG = false;
-                        FileSettingsSave.FirewallGameStatus = "Excluded";
+                        FileSettingsSave.Live_Data.Firewall_Game = "Excluded";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
-                        FileSettingsSave.FirewallGameStatus = "Error";
+                        FileSettingsSave.Live_Data.Firewall_Game = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1111,13 +1111,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 1, true);
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
                         DisableButtonFRRL = false;
-                        FileSettingsSave.FirewallLauncherStatus = "Excluded";
+                        FileSettingsSave.Live_Data.Firewall_Launcher = "Excluded";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
-                        FileSettingsSave.FirewallLauncherStatus = "Error";
+                        FileSettingsSave.Live_Data.Firewall_Launcher = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1140,15 +1140,15 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
 
                     /* Remove Old Game Path and Cache Location Just in Case for Windows Defender */
-                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallationOld))
+                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Game_Path_Old))
                     {
                         if (ButtonEnabler(3, 1))
                         {
                             if (string.IsNullOrWhiteSpace(CacheOldGameLocation))
                             {
-                                CacheOldGameLocation = FileSettingsSave.GameInstallationOld;
+                                CacheOldGameLocation = FileSettingsSave.Live_Data.Game_Path_Old;
                             }
-                            FileSettingsSave.GameInstallationOld = string.Empty;
+                            FileSettingsSave.Live_Data.Game_Path_Old = string.Empty;
                         }
                     }
 
@@ -1158,13 +1158,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2, true);
                         DisableButtonFRRG = false;
-                        FileSettingsSave.FirewallGameStatus = "Excluded";
+                        FileSettingsSave.Live_Data.Firewall_Game = "Excluded";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
-                        FileSettingsSave.FirewallGameStatus = "Error";
+                        FileSettingsSave.Live_Data.Firewall_Game = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1192,13 +1192,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
                         DisableButtonFRAL = true;
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 1, true);
-                        FileSettingsSave.FirewallLauncherStatus = "Removed";
+                        FileSettingsSave.Live_Data.Firewall_Launcher = "Removed";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
-                        FileSettingsSave.FirewallLauncherStatus = "Error";
+                        FileSettingsSave.Live_Data.Firewall_Launcher = "Error";
                     }
                     /* Game */
                     if (ButtonEnabler(2, 1))
@@ -1206,13 +1206,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
                         DisableButtonFRAG = true;
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 1, true);
-                        FileSettingsSave.FirewallGameStatus = "Removed";
+                        FileSettingsSave.Live_Data.Firewall_Game = "Removed";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
-                        FileSettingsSave.FirewallGameStatus = "Error";
+                        FileSettingsSave.Live_Data.Firewall_Game = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1252,13 +1252,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
                         DisableButtonFRAL = false;
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 1, true);
-                        FileSettingsSave.FirewallLauncherStatus = "Removed";
+                        FileSettingsSave.Live_Data.Firewall_Launcher = "Removed";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
-                        FileSettingsSave.FirewallLauncherStatus = "Error";
+                        FileSettingsSave.Live_Data.Firewall_Launcher = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1280,15 +1280,15 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                 {
                     ButtonsColorSet(ButtonFirewallRulesRemoveGame, 0, true);
                     /* Remove Old Game Path and Cache Location Just in Case for Windows Defender */
-                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallationOld))
+                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Game_Path_Old))
                     {
                         if (ButtonEnabler(3, 1))
                         {
                             if (string.IsNullOrWhiteSpace(CacheOldGameLocation))
                             {
-                                CacheOldGameLocation = FileSettingsSave.GameInstallationOld;
+                                CacheOldGameLocation = FileSettingsSave.Live_Data.Game_Path_Old;
                             }
-                            FileSettingsSave.GameInstallationOld = string.Empty;
+                            FileSettingsSave.Live_Data.Game_Path_Old = string.Empty;
                         }
                     }
 
@@ -1298,13 +1298,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
                         DisableButtonFRAG = false;
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 1, true);
-                        FileSettingsSave.FirewallGameStatus = "Removed";
+                        FileSettingsSave.Live_Data.Firewall_Game = "Removed";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
-                        FileSettingsSave.FirewallGameStatus = "Error";
+                        FileSettingsSave.Live_Data.Firewall_Game = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1370,7 +1370,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     }
                     /* Game */
                     if (ButtonEnabler(2, 5) && !string.IsNullOrWhiteSpace(CacheOldGameLocation) &&
-                        CacheOldGameLocation != FileSettingsSave.GameInstallation)
+                        CacheOldGameLocation != FileSettingsSave.Live_Data.Game_Path)
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddGame, 1, true);
                         DisableButtonDRAG = DisableButtonDRRG = false;
@@ -1386,7 +1386,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddGame,
                             (!string.IsNullOrWhiteSpace(CacheOldGameLocation) &&
-                            (CacheOldGameLocation != FileSettingsSave.GameInstallation) ? 4 : 2), true);
+                            (CacheOldGameLocation != FileSettingsSave.Live_Data.Game_Path) ? 4 : 2), true);
                         DisableButtonDRAG = false;
                         ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
                         DisableButtonDRRG = true;
@@ -1418,12 +1418,12 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 1, true);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 2, true);
                         DisableButtonDRRL = false;
-                        FileSettingsSave.DefenderLauncherStatus = "Excluded";
+                        FileSettingsSave.Live_Data.Defender_Launcher = "Excluded";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
-                        FileSettingsSave.DefenderLauncherStatus = "Error";
+                        FileSettingsSave.Live_Data.Defender_Launcher = "Error";
                     }
                     /* Game */
                     if (ButtonEnabler(2, 3))
@@ -1431,13 +1431,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonDefenderExclusionAddGame, 1, true);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 2, true);
                         DisableButtonDRRG = false;
-                        FileSettingsSave.DefenderGameStatus = "Excluded";
+                        FileSettingsSave.Live_Data.Defender_Game = "Excluded";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
-                        FileSettingsSave.DefenderGameStatus = "Error";
+                        FileSettingsSave.Live_Data.Defender_Game = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1478,13 +1478,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 1, true);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 2, true);
                         DisableButtonDRRL = false;
-                        FileSettingsSave.DefenderLauncherStatus = "Excluded";
+                        FileSettingsSave.Live_Data.Defender_Launcher = "Excluded";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 3, false);
-                        FileSettingsSave.DefenderLauncherStatus = "Error";
+                        FileSettingsSave.Live_Data.Defender_Launcher = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1520,13 +1520,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonDefenderExclusionAddGame, 1, true);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 2, true);
                         DisableButtonDRRG = false;
-                        FileSettingsSave.DefenderGameStatus = "Excluded";
+                        FileSettingsSave.Live_Data.Defender_Game = "Excluded";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
-                        FileSettingsSave.DefenderGameStatus = "Error";
+                        FileSettingsSave.Live_Data.Defender_Game = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1554,13 +1554,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 2, true);
                         DisableButtonDRAL = true;
                         ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 1, true);
-                        FileSettingsSave.DefenderLauncherStatus = "Removed";
+                        FileSettingsSave.Live_Data.Defender_Launcher = "Removed";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 3, false);
-                        FileSettingsSave.DefenderLauncherStatus = "Error";
+                        FileSettingsSave.Live_Data.Defender_Launcher = "Error";
                     }
                     /* Game */
                     if (ButtonEnabler(2, 4))
@@ -1568,13 +1568,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonDefenderExclusionAddGame, 2, true);
                         DisableButtonDRAG = true;
                         ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 1, true);
-                        FileSettingsSave.DefenderGameStatus = "Removed";
+                        FileSettingsSave.Live_Data.Defender_Game = "Removed";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
-                        FileSettingsSave.DefenderGameStatus = "Error";
+                        FileSettingsSave.Live_Data.Defender_Game = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1615,13 +1615,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 2, true);
                         DisableButtonDRAL = false;
                         ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 1, true);
-                        FileSettingsSave.DefenderLauncherStatus = "Removed";
+                        FileSettingsSave.Live_Data.Defender_Launcher = "Removed";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 3, false);
-                        FileSettingsSave.DefenderLauncherStatus = "Error";
+                        FileSettingsSave.Live_Data.Defender_Launcher = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1657,13 +1657,13 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                         ButtonsColorSet(ButtonDefenderExclusionAddGame, 2, true);
                         DisableButtonDRAG = false;
                         ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 1, true);
-                        FileSettingsSave.DefenderGameStatus = "Removed";
+                        FileSettingsSave.Live_Data.Defender_Game = "Removed";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
-                        FileSettingsSave.DefenderGameStatus = "Error";
+                        FileSettingsSave.Live_Data.Defender_Game = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();
@@ -1705,12 +1705,12 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     if (ButtonEnabler(0, 6))
                     {
                         ButtonsColorSet(ButtonFolderPermissonSet, 1, true);
-                        FileSettingsSave.FilePermissionStatus = "Set";
+                        FileSettingsSave.Live_Data.Write_Permissions = "Set";
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFolderPermissonSet, 3, false);
-                        FileSettingsSave.FilePermissionStatus = "Error";
+                        FileSettingsSave.Live_Data.Write_Permissions = "Error";
                     }
 
                     FileSettingsSave.SaveSettings();

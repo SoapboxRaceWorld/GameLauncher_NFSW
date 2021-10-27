@@ -23,7 +23,7 @@ jobs:
     - name: Download missing Libraries
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      run: mkdir ${{ github.workspace }}/GameLauncher/Resources/DLLs && cd ${{ github.workspace }}/GameLauncher/Resources/DLLs && C:\msys64\usr\bin\wget.exe http://f-sbrw.davidcarbon.download/Launcher/Libraries/Development/Latest/SBRWCore.dll && cd ${{ github.workspace }}
+      run: mkdir ${{ github.workspace }}/packages/SoapboxRaceWorld.Core && cd ${{ github.workspace }}/packages/SoapboxRaceWorld.Core && C:\msys64\usr\bin\wget.exe http://f-sbrw.davidcarbon.download/Launcher/Libraries/Development/Latest/SBRWCore.dll && cd ${{ github.workspace }}
     - name: Build with MSBuild
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'    

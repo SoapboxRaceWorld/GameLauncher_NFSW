@@ -101,15 +101,15 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
         public static int FileErrors = 0;
 
-        public static void CleanLinks(string LinksFile, string GamePath)
+        public static void CleanLinks(string Game_Path)
         {
             try
             {
-                if (File.Exists(LinksFile))
+                if (File.Exists(Path.Combine(Game_Path, Locations.NameModLinks)))
                 {
                     Log.Info("CLEANLINKS: Found Server Mod Files to remove {Process}");
-                    string dir = Strings.Encode(GamePath);
-                    string linksPath = Strings.Encode(Path.Combine(GamePath, ".links"));
+                    string dir = Strings.Encode(Game_Path);
+                    string linksPath = Strings.Encode(Path.Combine(Game_Path, Locations.NameModLinks));
                     foreach (var readLine in File.ReadLines(linksPath))
                     {
                         var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
@@ -210,7 +210,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
                     if (FileErrors > 0)
                     {
-                        FileSettingsSave.GameIntegrity = "Bad";
+                        FileSettingsSave.Live_Data.Game_Integrity = "Bad";
                         FileSettingsSave.SaveSettings();
                         FileErrors = 0;
                     }

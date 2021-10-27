@@ -66,7 +66,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     {
                         fileItems.Select(si =>
                         {
-                            si.ID = string.IsNullOrWhiteSpace(si.ID) ? Hash_Extention.Hashes(1, $"{si.Name}:{si.ID}:{si.IPAddress}") : si.ID;
+                            si.ID = string.IsNullOrWhiteSpace(si.ID) ? Hash_Extension.Hashes(1, $"{si.Name}:{si.ID}:{si.IPAddress}") : si.ID;
                             si.IsSpecial = false;
                             si.Category = string.IsNullOrWhiteSpace(si.Category) ? "CUSTOM" : si.Category;
 

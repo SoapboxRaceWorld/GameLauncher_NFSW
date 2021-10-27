@@ -115,8 +115,9 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
-    <Reference Include="SBRWCore">
-      <HintPath>Resources\DLLs\SBRWCore.dll</HintPath>
+    <Reference Include="SBRWCore, Version=0.0.0.5, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SoapboxRaceWorld.Core\SBRWCore.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -150,6 +151,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\Classes\LauncherCore\Global\Locations.cs" />
     <Compile Include="App\Classes\LauncherCore\Support\FormsControls.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\JSON\IsJSONValid.cs" />
     <Compile Include="App\UI_Forms\AddServer_Screen\AddServer.cs">

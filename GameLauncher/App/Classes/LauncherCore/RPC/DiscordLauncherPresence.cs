@@ -379,7 +379,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         {
             try
             {
-                if (FileSettingsSave.RPC == "0")
+                if (FileSettingsSave.Live_Data.Launcher_Discord_Presense == "0")
                 {
                     if (State == "Start Up")
                     {

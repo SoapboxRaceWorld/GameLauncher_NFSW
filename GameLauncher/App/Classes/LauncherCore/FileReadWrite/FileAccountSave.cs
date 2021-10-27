@@ -1,4 +1,7 @@
-﻿namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using SBRWCore.Classes.References;
+
+namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 {
     /// <summary>
     /// Global Account Save System
@@ -6,115 +9,131 @@
     /// <remarks>Used to set Values and Save them</remarks>
     class FileAccountSave
     {
+        /// <summary>Account Format Information In Live Memory</summary>
+        public static Format_Account Live_Data = new Format_Account();
         ///<value>Account File Information on Disk</value>
-        public static IniFile accountFile = new IniFile("Account.ini");
+        private static IniFile AccountFile;
         ///<value>Used to Save Login Information when Remember me is Checked Marked</value>
         public static bool SaveLoginInformation = false;
-
-        public static string UserRawEmail = accountFile.Read("AccountEmail");
-
-        public static string UserHashedEmail = accountFile.Read("AccountEmailHashed");
-
-        public static string UserHashedPassword = accountFile.Read("PasswordHashed");
-
-        public static string UserRawPassword = accountFile.Read("PasswordRaw");
-
-        public static string ChoosenGameServer = accountFile.Read("Server");
-
-        public static string SavedGameServerHash = accountFile.Read("Hash");
-
         /// <summary>
         /// Null Safe Values Checker
         /// </summary>
         /// <remarks>Used to create, update, or remove Values before Critical Launcher Checks</remarks>
-        public static void NullSafeAccount()
+        public static void NullSafe()
         {
-            if (!accountFile.KeyExists("Server"))
+            AccountFile = new IniFile(Locations.RoamingAppDataFolder_Launcher_Account);
+
+            if (!AccountFile.KeyExists("Server"))
             {
-                accountFile.Write("Server", string.Empty);
+                AccountFile.Write("Server", Live_Data.Saved_Server_Address);
+            }
+            else
+            {
+                Live_Data.Saved_Server_Address = AccountFile.Read("Server");
             }
 
-            if (!accountFile.KeyExists("Hash"))
+            if (!AccountFile.KeyExists("Hash"))
             {
-                accountFile.Write("Hash", string.Empty);
+                AccountFile.Write("Hash", Live_Data.Saved_Server_Hash_Version);
+            }
+            else
+            {
+                Live_Data.Saved_Server_Hash_Version = AccountFile.Read("Hash");
             }
 
-            if (!accountFile.KeyExists("AccountEmail"))
+            if (!AccountFile.KeyExists("AccountEmail"))
             {
-                accountFile.Write("AccountEmail", string.Empty);
+                AccountFile.Write("AccountEmail", Live_Data.User_Raw_Email);
+            }
+            else
+            {
+                Live_Data.User_Raw_Email = AccountFile.Read("AccountEmail");
             }
 
-            if (!accountFile.KeyExists("AccountEmailHashed"))
+            if (!AccountFile.KeyExists("AccountEmailHashed"))
             {
-                accountFile.Write("AccountEmailHashed", string.Empty);
+                AccountFile.Write("AccountEmailHashed", Live_Data.User_Hashed_Email);
+            }
+            else
+            {
+                Live_Data.User_Hashed_Email = AccountFile.Read("AccountEmailHashed");
             }
 
-            if (accountFile.KeyExists("Password"))
+            if (AccountFile.KeyExists("Password"))
             {
-                UserHashedPassword = accountFile.Read("Password");
-                accountFile.DeleteKey("Password");
+                Live_Data.User_Raw_Password = AccountFile.Read("Password");
+                AccountFile.DeleteKey("Password");
             }
 
-            if (!accountFile.KeyExists("PasswordHashed"))
+            if (!AccountFile.KeyExists("PasswordHashed"))
             {
-                accountFile.Write("PasswordHashed", string.Empty);
+                AccountFile.Write("PasswordHashed", Live_Data.User_Hashed_Password);
+            }
+            else
+            {
+                Live_Data.User_Hashed_Password = AccountFile.Read("PasswordHashed");
             }
 
-            if (!accountFile.KeyExists("PasswordRaw"))
+            if (!AccountFile.KeyExists("PasswordRaw"))
             {
-                accountFile.Write("PasswordRaw", string.Empty);
+                AccountFile.Write("PasswordRaw", Live_Data.User_Raw_Password);
+            }
+            else if (AccountFile.KeyExists("PasswordRaw"))
+            {
+                Live_Data.User_Raw_Password = AccountFile.Read("PasswordRaw");
             }
 
-            accountFile = new IniFile("Account.ini");
+            AccountFile = new IniFile(Locations.RoamingAppDataFolder_Launcher_Account);
         }
-
         /// <summary>
         /// Account Information Saver
         /// </summary>
         /// <remarks>Used to create, update, or remove Values after a successful login</remarks>
-        public static void SaveAccount()
+        public static void Save()
         {
-            if (!accountFile.KeyExists("Server") || accountFile.Read("Server") != ChoosenGameServer)
+            AccountFile = new IniFile(Locations.RoamingAppDataFolder_Launcher_Account);
+
+            if (!AccountFile.KeyExists("Server") || AccountFile.Read("Server") != Live_Data.Saved_Server_Address)
             {
-                accountFile.Write("Server", ChoosenGameServer);
+                AccountFile.Write("Server", Live_Data.Saved_Server_Address);
             }
 
-            if (!accountFile.KeyExists("Hash") || accountFile.Read("Hash") != SavedGameServerHash)
+            if (!AccountFile.KeyExists("Hash") || AccountFile.Read("Hash") != Live_Data.Saved_Server_Hash_Version)
             {
-                accountFile.Write("Hash", SavedGameServerHash);
+                AccountFile.Write("Hash", Live_Data.Saved_Server_Hash_Version);
             }
 
             if (SaveLoginInformation)
             {
-                if (!accountFile.KeyExists("AccountEmail") || accountFile.Read("AccountEmail") != UserRawEmail)
+                if (!AccountFile.KeyExists("AccountEmail") || AccountFile.Read("AccountEmail") != Live_Data.User_Raw_Email)
                 {
-                    accountFile.Write("AccountEmail", UserRawEmail);
+                    AccountFile.Write("AccountEmail", Live_Data.User_Raw_Email);
                 }
 
-                if (!accountFile.KeyExists("AccountEmailHashed") || accountFile.Read("AccountEmailHashed") != UserHashedEmail)
+                if (!AccountFile.KeyExists("AccountEmailHashed") || AccountFile.Read("AccountEmailHashed") != Live_Data.User_Hashed_Email)
                 {
-                    accountFile.Write("AccountEmailHashed", UserHashedEmail);
+                    AccountFile.Write("AccountEmailHashed", Live_Data.User_Hashed_Email);
                 }
 
-                if (!accountFile.KeyExists("PasswordHashed") || accountFile.Read("PasswordHashed") != UserHashedPassword)
+                if (!AccountFile.KeyExists("PasswordHashed") || AccountFile.Read("PasswordHashed") != Live_Data.User_Hashed_Password)
                 {
-                    accountFile.Write("PasswordHashed", UserHashedPassword);
+                    AccountFile.Write("PasswordHashed", Live_Data.User_Hashed_Password);
                 }
 
-                if (!accountFile.KeyExists("PasswordRaw") || accountFile.Read("PasswordRaw") != UserRawPassword)
+                if (!AccountFile.KeyExists("PasswordRaw") || AccountFile.Read("PasswordRaw") != Live_Data.User_Raw_Password)
                 {
-                    accountFile.Write("PasswordRaw", UserRawPassword);
+                    AccountFile.Write("PasswordRaw", Live_Data.User_Raw_Password);
                 }
             }
             else
             {
-                accountFile.Write("AccountEmail", string.Empty);
-                accountFile.Write("AccountEmailHashed", string.Empty);
-                accountFile.Write("PasswordHashed", string.Empty);
-                accountFile.Write("PasswordRaw", string.Empty);
+                AccountFile.Write("AccountEmail", string.Empty);
+                AccountFile.Write("AccountEmailHashed", string.Empty);
+                AccountFile.Write("PasswordHashed", string.Empty);
+                AccountFile.Write("PasswordRaw", string.Empty);
             }
 
-            accountFile = new IniFile("Account.ini");
+            AccountFile = new IniFile(Locations.RoamingAppDataFolder_Launcher_Account);
         }
     }
 }

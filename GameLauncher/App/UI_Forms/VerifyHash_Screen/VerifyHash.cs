@@ -102,7 +102,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
 
             if (!FunctionStatus.IsVerifyHashDisabled)
             {
-                Log_Verify.StartVerifyLogging();
+                Log_Verify.Start();
 
                 /* Clean up previous logs and start logging */
                 string[] filestocheck = new string[] { "checksums.dat", "validfiles.dat", "invalidfiles.dat", "Verify.log" };
@@ -122,15 +122,15 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 }
 
                 Log_Verify.Info("VERIFYHASH: Checking Characters in URL");
-                if (FileSettingsSave.CDN.EndsWith("/"))
+                if (FileSettingsSave.Live_Data.Launcher_CDN.EndsWith("/"))
                 {
                     char[] charsToTrim = { '/' };
-                    FinalCDNURL = FileSettingsSave.CDN.TrimEnd(charsToTrim);
+                    FinalCDNURL = FileSettingsSave.Live_Data.Launcher_CDN.TrimEnd(charsToTrim);
                     Log_Verify.Info("VERIFYHASH: Trimed end of CDN URL -> " + FinalCDNURL);
                 }
                 else
                 {
-                    FinalCDNURL = FileSettingsSave.CDN;
+                    FinalCDNURL = FileSettingsSave.Live_Data.Launcher_CDN;
                     Log_Verify.Info("VERIFYHASH: Choosen CDN URL -> " + FinalCDNURL);
                 }
             }
@@ -200,7 +200,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
 
             try
             {
-                DirectoryInfo InstallationDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
+                DirectoryInfo InstallationDirectory = new DirectoryInfo(FileSettingsSave.Live_Data.Game_Path);
 
                 foreach (DirectoryInfo FoldersWeFound in InstallationDirectory.GetDirectories())
                 {
@@ -346,9 +346,9 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                     }
                 }
 
-                if (Directory.Exists(Path.Combine(FileSettingsSave.GameInstallation, "scripts")) && !ForceStopScan)
+                if (Directory.Exists(Path.Combine(FileSettingsSave.Live_Data.Game_Path, "scripts")) && !ForceStopScan)
                 {
-                    DirectoryInfo ScriptsFolder = new DirectoryInfo(Path.Combine(FileSettingsSave.GameInstallation, "scripts"));
+                    DirectoryInfo ScriptsFolder = new DirectoryInfo(Path.Combine(FileSettingsSave.Live_Data.Game_Path, "scripts"));
 
                     if (ScriptsFolder.EnumerateFiles().Count() > 1)
                     {
@@ -495,7 +495,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                         {
                             String FileHash = file[0].Trim();
                             String FileName = file[1].Trim();
-                            String RealPathToFile = FileSettingsSave.GameInstallation + FileName;
+                            String RealPathToFile = FileSettingsSave.Live_Data.Game_Path + FileName;
 
                             if (!File.Exists(RealPathToFile))
                             {
@@ -504,7 +504,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                             }
                             else
                             {
-                                if (FileHash != Hash_Extention.HashesSHA(RealPathToFile).Trim())
+                                if (FileHash != Hash_Extension.HashesSHA(RealPathToFile).Trim())
                                 {
                                     InvalidFileList.Add(FileName);
                                     Log_Verify.Invalid("File: " + FileName);
@@ -563,7 +563,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
         private void Integrity()
         {
             DiscordLauncherPresence.Status("Verify Good", null);
-            FileSettingsSave.GameIntegrity = "Good";
+            FileSettingsSave.Live_Data.Game_Integrity = "Good";
             FileSettingsSave.SaveSettings();
         }
 
@@ -594,7 +594,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                             {
                                 currentCount = files.Count();
 
-                                string text2 = FileSettingsSave.GameInstallation + text;
+                                string text2 = FileSettingsSave.Live_Data.Game_Path + text;
                                 string address = FinalCDNURL + "/unpacked" + text.Replace("\\", "/");
                                 if (File.Exists(text2))
                                 {

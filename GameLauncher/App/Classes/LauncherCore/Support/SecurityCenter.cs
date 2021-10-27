@@ -15,54 +15,54 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             {
                 return SecurityCenterCodes.Unix;
             }
-            else if (FileSettingsSave.FirewallLauncherStatus == "Excluded" && FileSettingsSave.FirewallGameStatus == "Excluded")
+            else if (FileSettingsSave.Live_Data.Firewall_Launcher == "Excluded" && FileSettingsSave.Live_Data.Firewall_Game == "Excluded")
             {
                 return SecurityCenterCodes.Firewall_Updated;
             }
-            else if ((FileSettingsSave.FirewallLauncherStatus == "Excluded" && FileSettingsSave.FirewallGameStatus == "Not Excluded") ||
-                (FileSettingsSave.FirewallLauncherStatus == "Unknown" && FileSettingsSave.FirewallGameStatus == "Unknown") ||
-                (FileSettingsSave.FirewallLauncherStatus == "Removed" && FileSettingsSave.FirewallGameStatus == "Removed"))
+            else if ((FileSettingsSave.Live_Data.Firewall_Launcher == "Excluded" && FileSettingsSave.Live_Data.Firewall_Game == "Not Excluded") ||
+                (FileSettingsSave.Live_Data.Firewall_Launcher == "Unknown" && FileSettingsSave.Live_Data.Firewall_Game == "Unknown") ||
+                (FileSettingsSave.Live_Data.Firewall_Launcher == "Removed" && FileSettingsSave.Live_Data.Firewall_Game == "Removed"))
             {
                 return SecurityCenterCodes.Firewall_Outdated;
             }
-            else if ((FileSettingsSave.FirewallLauncherStatus == "Error" && FileSettingsSave.FirewallGameStatus == "Error") ||
-                (FileSettingsSave.FirewallLauncherStatus == "Not Supported" && FileSettingsSave.FirewallGameStatus == "Not Supported"))
+            else if ((FileSettingsSave.Live_Data.Firewall_Launcher == "Error" && FileSettingsSave.Live_Data.Firewall_Game == "Error") ||
+                (FileSettingsSave.Live_Data.Firewall_Launcher == "Not Supported" && FileSettingsSave.Live_Data.Firewall_Game == "Not Supported"))
             {
                 return SecurityCenterCodes.Firewall_Error;
             }
             else if ((WindowsProductVersion.GetWindowsNumber() >= 10) &&
-                FileSettingsSave.DefenderLauncherStatus == "Excluded" && FileSettingsSave.DefenderGameStatus == "Excluded")
+                FileSettingsSave.Live_Data.Defender_Launcher == "Excluded" && FileSettingsSave.Live_Data.Defender_Game == "Excluded")
             {
                 return SecurityCenterCodes.Defender_Updated;
             }
             else if ((WindowsProductVersion.GetWindowsNumber() >= 10) &&
-                ((FileSettingsSave.DefenderLauncherStatus == "Excluded" && FileSettingsSave.DefenderGameStatus == "Not Excluded") ||
-                (FileSettingsSave.DefenderLauncherStatus == "Unknown" && FileSettingsSave.DefenderGameStatus == "Unknown") ||
-                (FileSettingsSave.DefenderLauncherStatus == "Removed" && FileSettingsSave.DefenderGameStatus == "Removed")))
+                ((FileSettingsSave.Live_Data.Defender_Launcher == "Excluded" && FileSettingsSave.Live_Data.Defender_Game == "Not Excluded") ||
+                (FileSettingsSave.Live_Data.Defender_Launcher == "Unknown" && FileSettingsSave.Live_Data.Defender_Game == "Unknown") ||
+                (FileSettingsSave.Live_Data.Defender_Launcher == "Removed" && FileSettingsSave.Live_Data.Defender_Game == "Removed")))
             {
                 return SecurityCenterCodes.Defender_Outdated;
             }
             else if ((WindowsProductVersion.GetWindowsNumber() >= 10) &&
-                ((FileSettingsSave.DefenderLauncherStatus == "Error" && FileSettingsSave.DefenderGameStatus == "Error") ||
-                (FileSettingsSave.DefenderLauncherStatus == "Not Supported" && FileSettingsSave.DefenderGameStatus == "Not Supported")))
+                ((FileSettingsSave.Live_Data.Defender_Launcher == "Error" && FileSettingsSave.Live_Data.Defender_Game == "Error") ||
+                (FileSettingsSave.Live_Data.Defender_Launcher == "Not Supported" && FileSettingsSave.Live_Data.Defender_Game == "Not Supported")))
             {
                 return SecurityCenterCodes.Defender_Error;
             }
-            else if (FileSettingsSave.FilePermissionStatus == "Set")
+            else if (FileSettingsSave.Live_Data.Write_Permissions == "Set")
             {
                 return SecurityCenterCodes.Permissions_Updated;
             }
-            else if (FileSettingsSave.FilePermissionStatus == "Error")
+            else if (FileSettingsSave.Live_Data.Write_Permissions == "Error")
             {
                 return SecurityCenterCodes.Permissions_Error;
             }
-            else if (FileSettingsSave.FilePermissionStatus == "Not Set")
+            else if (FileSettingsSave.Live_Data.Write_Permissions == "Not Set")
             {
                 return SecurityCenterCodes.Permissions_Outdated;
             }
-            else if ((FileSettingsSave.FirewallLauncherStatus == "Not Excluded" && FileSettingsSave.FirewallGameStatus == "Not Excluded") ||
+            else if ((FileSettingsSave.Live_Data.Firewall_Launcher == "Not Excluded" && FileSettingsSave.Live_Data.Firewall_Game == "Not Excluded") ||
                 ((WindowsProductVersion.GetWindowsNumber() >= 10) &&
-                FileSettingsSave.DefenderLauncherStatus == "Not Excluded" && FileSettingsSave.DefenderGameStatus == "Not Excluded"))
+                FileSettingsSave.Live_Data.Defender_Launcher == "Not Excluded" && FileSettingsSave.Live_Data.Defender_Game == "Not Excluded"))
             {
                 return SecurityCenterCodes.Unknown;
             }

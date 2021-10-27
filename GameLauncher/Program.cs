@@ -417,7 +417,7 @@ namespace GameLauncher
                     SplashScreen.ThreadStatus("Start");
                 }
 
-                Log.StartLogging();
+                Log.Start();
                 LogToFile_Extensions.RemoveLogs();
 
                 Log.Info("CURRENT DATE: " + TimeDate.GetTime("Date"));
@@ -425,6 +425,10 @@ namespace GameLauncher
                 /* Deletes Folders that will Crash the Launcher (Cleanup Migration) */
                 try
                 {
+                    if (!Directory.Exists(Locations.RoamingAppDataFolder_Launcher))
+                    {
+                        Directory.CreateDirectory(Locations.RoamingAppDataFolder_Launcher);
+                    }
                     if (Directory.Exists(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World"))))
                     {
                         Directory.Delete(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World")), true);
@@ -566,188 +570,255 @@ namespace GameLauncher
                     }
                     else
                     {
-                        Log.Checking("WRITE TEST: Launcher Folder Test");
                         if (!FunctionStatus.HasWriteAccessToFolder(Locations.LauncherFolder))
                         {
-                            MessageBox.Show(Translations.Database("Program_TextBox_Folder_Write_Test"));
-                        }
-                        Log.Completed("WRITE TEST: Passed");
-
-                        Log.Checking("INI FILES: Doing Nullsafe");
-                        DiscordLauncherPresence.Status("Start Up", "Doing NullSafe ini Files");
-                        FileSettingsSave.NullSafeSettings();
-                        FileAccountSave.NullSafeAccount();
-                        Log.Completed("INI FILES: Done");
-                        /* Sets up Theming */
-                        Theming.CheckIfThemeExists();
-
-                        Log.Function("APPLICATION: Setting Language");
-                        CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Translations.UI(Translations.Application_Language = FileSettingsSave.Lang.ToLower(), true));
-                        Log.Completed("APPLICATION: Done Setting Language '" + Translations.UI(Translations.Application_Language) + "'");
-
-                        /* Windows 7 TLS Check */
-                        if (WindowsProductVersion.GetWindowsNumber() == 6.1)
-                        {
-                            Log.Checking("SSL/TLS: Windows 7 Detected");
-                            DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 SSL/TLS");
-
-                            try
-                            {
-                                String MessageBoxPopupTLS = String.Empty;
-                                string keyName = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client";
-                                string subKey = "DisabledByDefault";
-
-                                if (Registry.GetValue(keyName, subKey, null) == null)
-                                {
-                                    MessageBoxPopupTLS = Translations.Database("Program_TextBox_W7_TLS_P1") + "\n\n";
-
-                                    MessageBoxPopupTLS += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n  /SCHANNEL/Protocols/TLS 1.2/Client\n";
-                                    MessageBoxPopupTLS += "- Value: DisabledByDefault -> 0\n\n";
-
-                                    MessageBoxPopupTLS += Translations.Database("Program_TextBox_W7_TLS_P2") + "\n\n";
-                                    MessageBoxPopupTLS += Translations.Database("Program_TextBox_W7_TLS_P3");
-
-                                    /* There is only 'OK' Available because this IS Required */
-                                    if (MessageBox.Show(null, MessageBoxPopupTLS, "SBRW Launcher",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Warning) == DialogResult.OK)
-                                    {
-                                        Registry_Core.Write("DisabledByDefault", 0x0,
-                                            @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
-                                        MessageBox.Show(null, Translations.Database("Program_TextBox_W7_TLS_P4"),
-                                            "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                    }
-                                    Log.Completed("SSL/TLS: Added Registry Key");
-                                }
-                                else
-                                {
-                                    Log.Completed("SSL/TLS: Done");
-                                }
-                            }
-                            catch (Exception Error)
-                            {
-                                LogToFileAddons.OpenLog("SSL/TLS", null, Error, null, true);
-                            }
-                        }
-
-                        /* Windows 7 HotFix Check */
-                        if (WindowsProductVersion.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))
-                        {
-                            Log.Checking("HotFixes: Windows 7 Detected");
-                            DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 HotFixes");
-
-                            try
-                            {
-                                if (!ManagementSearcher.GetInstalledHotFix("KB3020369") || !ManagementSearcher.GetInstalledHotFix("KB3125574"))
-                                {
-                                    String MessageBoxPopupKB = String.Empty;
-                                    MessageBoxPopupKB = Translations.Database("Program_TextBox_W7_KB_P1") + "\n";
-                                    MessageBoxPopupKB += Translations.Database("Program_TextBox_W7_KB_P2") + "\n\n";
-
-                                    if (!ManagementSearcher.GetInstalledHotFix("KB3020369"))
-                                    {
-                                        MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_KB_P3") + " KB3020369\n";
-                                    }
-
-                                    if (!ManagementSearcher.GetInstalledHotFix("KB3125574"))
-                                    {
-                                        MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_KB_P3") + " KB3125574\n";
-                                    }
-                                    MessageBoxPopupKB += "\n" + Translations.Database("Program_TextBox_W7_KB_P4") + "\n";
-
-                                    if (MessageBox.Show(null, MessageBoxPopupKB, "SBRW Launcher",
-                                        MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
-                                    {
-                                        /* Since it's Informational we just need to know if they clicked 'OK' */
-                                        FileSettingsSave.Win7UpdatePatches = "1";
-                                    }
-                                    else
-                                    {
-                                        /* or if they clicked 'Cancel' */
-                                        FileSettingsSave.Win7UpdatePatches = "0";
-                                    }
-
-                                    FileSettingsSave.SaveSettings();
-                                }
-
-                                Log.Completed("HotFixes: Done");
-                            }
-                            catch (Exception Error)
-                            {
-                                LogToFileAddons.OpenLog("HotFixes", null, Error, null, true);
-                            }
-                        }
-                    }
-
-                    Log.Checking("JSON: Servers File");
-                    try
-                    {
-                        if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON))))
-                        {
-                            if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
-                            {
-                                File.Delete(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)));
-                            }
-
-                            File.Move(
-                                Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)),
-                                Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)));
-                            Log.Completed("JSON: Renaming Servers File");
-                        }
-                        else if (!File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
-                        {
-                            try
-                            {
-                                File.WriteAllText(
-                                    Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)), "[]");
-                                Log.Completed("JSON: Created Servers File");
-                            }
-                            catch (Exception Error)
-                            {
-                                LogToFileAddons.OpenLog("JSON SERVER FILE", null, Error, null, true);
-                            }
-                        }
-                    }
-                    catch (Exception Error)
-                    {
-                        LogToFileAddons.OpenLog("JSON SERVER FILE", null, Error, null, true);
-                    }
-                    Log.Checking("JSON: Done");
-
-                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
-                    {
-                        Log.Checking("CLEANLINKS: Game Path");
-                        if (File.Exists(Locations.GameLinksFile))
-                        {
-                            ModNetHandler.CleanLinks(Locations.GameLinksFile, FileSettingsSave.GameInstallation);
-                            Log.Completed("CLEANLINKS: Done");
+                            FunctionStatus.LauncherForceClose = true;
+                            FunctionStatus.LauncherForceCloseReason = Translations.Database("Program_TextBox_Folder_Write_Test");
+                            FunctionStatus.ErrorCloseLauncher("Closing From No Write Access", false);
                         }
                         else
                         {
-                            Log.Completed("CLEANLINKS: Not Present");
+                            Log.Completed("WRITE TEST: Passed");
+                            /* Location Migration */
+                            if (!UnixOS.Detected())
+                            {
+                                Log.Checking("INI FILES: Doing Migration");
+                                DiscordLauncherPresence.Status("Start Up", "Doing Ini File Migration");
+                                if (File.Exists(Locations.NameAccountIni))
+                                {
+                                    try
+                                    {
+
+                                        if (File.Exists(Locations.RoamingAppDataFolder_Launcher_Account))
+                                        {
+                                            File.Move(Locations.RoamingAppDataFolder_Launcher_Account, 
+                                                Path.Combine(Locations.RoamingAppDataFolder_Launcher, LogToFile_Extensions.DateAndTime() + "_" + Locations.NameAccountIni));
+                                        }
+
+                                        File.Move(Locations.NameAccountIni, Locations.RoamingAppDataFolder_Launcher_Account);
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        LogToFileAddons.OpenLog("Account File Migration", null, Error, null, true);
+                                        FunctionStatus.LauncherForceClose = true;
+                                    }
+                                }
+                                else
+                                {
+                                    Log.Completed("INI FILES: Account Already Migrated");
+                                }
+
+                                if (File.Exists(Locations.NameSettingsIni))
+                                {
+                                    try
+                                    {
+                                        if (File.Exists(Locations.RoamingAppDataFolder_Launcher_Settings))
+                                        {
+                                            File.Move(Locations.RoamingAppDataFolder_Launcher_Settings, 
+                                                Path.Combine(Locations.RoamingAppDataFolder_Launcher, LogToFile_Extensions.DateAndTime() + "_" + Locations.NameSettingsIni));
+                                        }
+
+                                        File.Move(Locations.NameSettingsIni, Locations.RoamingAppDataFolder_Launcher_Settings);
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        LogToFileAddons.OpenLog("Settings File Migration", null, Error, null, true);
+                                        FunctionStatus.LauncherForceClose = true;
+                                    }
+                                }
+                                else
+                                {
+                                    Log.Completed("INI FILES: Settings Already Migrated");
+                                }
+
+                                Log.Completed("INI FILES: Completed Migration");
+                            }
+
+                            if (FunctionStatus.LauncherForceClose)
+                            {
+                                ///@DavidCarbon or @Zacam - Remember to Translate This!
+                                FunctionStatus.LauncherForceCloseReason = "Failed to Successfully Migrate Ini File(s)";
+                                FunctionStatus.ErrorCloseLauncher("Closing Ini Migration", false);
+                            }
+                            else
+                            {
+                                Log.Checking("INI FILES: Doing Nullsafe");
+                                DiscordLauncherPresence.Status("Start Up", "Doing NullSafe ini Files");
+                                FileSettingsSave.NullSafe();
+                                FileAccountSave.NullSafe();
+                                Log.Completed("INI FILES: Done");
+                                /* Sets up Theming */
+                                Theming.CheckIfThemeExists();
+
+                                Log.Function("APPLICATION: Setting Language");
+                                CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Translations.UI(Translations.Application_Language = FileSettingsSave.Live_Data.Launcher_Language.ToLower(), true));
+                                Log.Completed("APPLICATION: Done Setting Language '" + Translations.UI(Translations.Application_Language) + "'");
+
+                                /* Windows 7 TLS Check */
+                                if (WindowsProductVersion.GetWindowsNumber() == 6.1)
+                                {
+                                    Log.Checking("SSL/TLS: Windows 7 Detected");
+                                    DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 SSL/TLS");
+
+                                    try
+                                    {
+                                        String MessageBoxPopupTLS = String.Empty;
+                                        string keyName = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client";
+                                        string subKey = "DisabledByDefault";
+
+                                        if (Registry.GetValue(keyName, subKey, null) == null)
+                                        {
+                                            MessageBoxPopupTLS = Translations.Database("Program_TextBox_W7_TLS_P1") + "\n\n";
+
+                                            MessageBoxPopupTLS += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n  /SCHANNEL/Protocols/TLS 1.2/Client\n";
+                                            MessageBoxPopupTLS += "- Value: DisabledByDefault -> 0\n\n";
+
+                                            MessageBoxPopupTLS += Translations.Database("Program_TextBox_W7_TLS_P2") + "\n\n";
+                                            MessageBoxPopupTLS += Translations.Database("Program_TextBox_W7_TLS_P3");
+
+                                            /* There is only 'OK' Available because this IS Required */
+                                            if (MessageBox.Show(null, MessageBoxPopupTLS, "SBRW Launcher",
+                                                MessageBoxButtons.OK, MessageBoxIcon.Warning) == DialogResult.OK)
+                                            {
+                                                Registry_Core.Write("DisabledByDefault", 0x0,
+                                                    @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
+                                                MessageBox.Show(null, Translations.Database("Program_TextBox_W7_TLS_P4"),
+                                                    "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                            }
+                                            Log.Completed("SSL/TLS: Added Registry Key");
+                                        }
+                                        else
+                                        {
+                                            Log.Completed("SSL/TLS: Done");
+                                        }
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        LogToFileAddons.OpenLog("SSL/TLS", null, Error, null, true);
+                                    }
+                                }
+
+                                /* Windows 7 HotFix Check */
+                                if (WindowsProductVersion.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Win_7_Patches))
+                                {
+                                    Log.Checking("HotFixes: Windows 7 Detected");
+                                    DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 HotFixes");
+
+                                    try
+                                    {
+                                        if (!ManagementSearcher.GetInstalledHotFix("KB3020369") || !ManagementSearcher.GetInstalledHotFix("KB3125574"))
+                                        {
+                                            String MessageBoxPopupKB = String.Empty;
+                                            MessageBoxPopupKB = Translations.Database("Program_TextBox_W7_KB_P1") + "\n";
+                                            MessageBoxPopupKB += Translations.Database("Program_TextBox_W7_KB_P2") + "\n\n";
+
+                                            if (!ManagementSearcher.GetInstalledHotFix("KB3020369"))
+                                            {
+                                                MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_KB_P3") + " KB3020369\n";
+                                            }
+
+                                            if (!ManagementSearcher.GetInstalledHotFix("KB3125574"))
+                                            {
+                                                MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_KB_P3") + " KB3125574\n";
+                                            }
+                                            MessageBoxPopupKB += "\n" + Translations.Database("Program_TextBox_W7_KB_P4") + "\n";
+
+                                            if (MessageBox.Show(null, MessageBoxPopupKB, "SBRW Launcher",
+                                                MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+                                            {
+                                                /* Since it's Informational we just need to know if they clicked 'OK' */
+                                                FileSettingsSave.Live_Data.Win_7_Patches = "1";
+                                            }
+                                            else
+                                            {
+                                                /* or if they clicked 'Cancel' */
+                                                FileSettingsSave.Live_Data.Win_7_Patches = "0";
+                                            }
+
+                                            FileSettingsSave.SaveSettings();
+                                        }
+
+                                        Log.Completed("HotFixes: Done");
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        LogToFileAddons.OpenLog("HotFixes", null, Error, null, true);
+                                    }
+                                }
+
+                                Log.Checking("JSON: Servers File");
+                                try
+                                {
+                                    if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON))))
+                                    {
+                                        if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
+                                        {
+                                            File.Delete(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)));
+                                        }
+
+                                        File.Move(
+                                            Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)),
+                                            Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)));
+                                        Log.Completed("JSON: Renaming Servers File");
+                                    }
+                                    else if (!File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
+                                    {
+                                        try
+                                        {
+                                            File.WriteAllText(
+                                                Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)), "[]");
+                                            Log.Completed("JSON: Created Servers File");
+                                        }
+                                        catch (Exception Error)
+                                        {
+                                            LogToFileAddons.OpenLog("JSON SERVER FILE", null, Error, null, true);
+                                        }
+                                    }
+                                }
+                                catch (Exception Error)
+                                {
+                                    LogToFileAddons.OpenLog("JSON SERVER FILE", null, Error, null, true);
+                                }
+                                Log.Checking("JSON: Done");
+
+                                if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Game_Path))
+                                {
+                                    Log.Checking("CLEANLINKS: Game Path");
+                                    if (File.Exists(Path.Combine(FileSettingsSave.Live_Data.Game_Path, Locations.NameModLinks)))
+                                    {
+                                        ModNetHandler.CleanLinks(FileSettingsSave.Live_Data.Game_Path);
+                                        Log.Completed("CLEANLINKS: Done");
+                                    }
+                                    else
+                                    {
+                                        Log.Completed("CLEANLINKS: Not Present");
+                                    }
+                                }
+
+                                Log.Checking("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + FileSettingsSave.Live_Data.Launcher_Proxy);
+                                if (FileSettingsSave.Live_Data.Launcher_Proxy == "0")
+                                {
+                                    Log.Core("PROXY: Starting Proxy (From Startup)");
+                                    ServerProxy.Instance.Start("Splash Screen [Program.cs]");
+                                    Log.Completed("PROXY: Started");
+                                }
+                                else
+                                {
+                                    Log.Completed("PROXY: Disabled");
+                                }
+
+                                Log.Checking("PRELOAD: Headers");
+                                CustomHeaders.Headers_WHC();
+                                Log.Completed("PRELOAD: Headers");
+                                DiscordLauncherPresence.Status("Start Up", "Checking Root Certificate Authority");
+                                Certificate_Store.Latest();
+
+                                Log.Info("REDISTRIBUTABLE: Moved to Function");
+                                /* (Starts Function Chain) Check if Redistributable Packages are Installed */
+                                Redistributable.Check();
+                            }
                         }
                     }
-
-                    Log.Checking("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + FileSettingsSave.Proxy);
-                    if (FileSettingsSave.Proxy == "0")
-                    {
-                        Log.Core("PROXY: Starting Proxy (From Startup)");
-                        ServerProxy.Instance.Start("Splash Screen [Program.cs]");
-                        Log.Completed("PROXY: Started");
-                    }
-                    else
-                    {
-                        Log.Completed("PROXY: Disabled");
-                    }
-
-                    Log.Checking("PRELOAD: Headers");
-                    CustomHeaders.Headers_WHC();
-                    Log.Completed("PRELOAD: Headers");
-                    DiscordLauncherPresence.Status("Start Up", "Checking Root Certificate Authority");
-                    Certificate_Store.Latest();
-
-                    Log.Info("REDISTRIBUTABLE: Moved to Function");
-                    /* (Starts Function Chain) Check if Redistributable Packages are Installed */
-                    Redistributable.Check();
                 }
             }
         }

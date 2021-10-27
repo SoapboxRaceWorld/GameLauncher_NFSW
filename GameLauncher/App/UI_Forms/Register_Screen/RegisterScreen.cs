@@ -120,27 +120,27 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                         break;
                     case AuthHash.H11:
                         Email = RegisterEmail.Text.ToString();
-                        Password = Hash_Extention.Hashes(0, RegisterPassword.Text.ToString()).ToLower();
+                        Password = Hash_Extension.Hashes(0, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H12:
                         Email = RegisterEmail.Text.ToString();
-                        Password = Hash_Extention.Hashes(1, RegisterPassword.Text.ToString()).ToLower();
+                        Password = Hash_Extension.Hashes(1, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H13:
                         Email = RegisterEmail.Text.ToString();
-                        Password = Hash_Extention.Hashes(2, RegisterPassword.Text.ToString()).ToLower();
+                        Password = Hash_Extension.Hashes(2, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H20:
-                        Email = Hash_Extention.Hashes(0, RegisterEmail.Text.ToString()).ToLower();
-                        Password = Hash_Extention.Hashes(0, RegisterPassword.Text.ToString()).ToLower();
+                        Email = Hash_Extension.Hashes(0, RegisterEmail.Text.ToString()).ToLower();
+                        Password = Hash_Extension.Hashes(0, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H21:
-                        Email = Hash_Extention.Hashes(1, RegisterEmail.Text.ToString()).ToLower();
-                        Password = Hash_Extention.Hashes(1, RegisterPassword.Text.ToString()).ToLower();
+                        Email = Hash_Extension.Hashes(1, RegisterEmail.Text.ToString()).ToLower();
+                        Password = Hash_Extension.Hashes(1, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H22:
-                        Email = Hash_Extention.Hashes(2, RegisterEmail.Text.ToString()).ToLower();
-                        Password = Hash_Extention.Hashes(2, RegisterPassword.Text.ToString()).ToLower();
+                        Email = Hash_Extension.Hashes(2, RegisterEmail.Text.ToString()).ToLower();
+                        Password = Hash_Extension.Hashes(2, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     default:
                         Log.Error("HASH TYPE: Unknown Hash Standard was Provided");

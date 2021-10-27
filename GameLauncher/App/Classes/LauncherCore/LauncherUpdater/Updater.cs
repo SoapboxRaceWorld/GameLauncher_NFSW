@@ -145,7 +145,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 {
                     Log.Info("LAUNCHER POPUP: Checking if Popup is Required");
 
-                    if (FileSettingsSave.IgnoreVersion != LatestLauncherBuild)
+                    if (FileSettingsSave.Live_Data.Update_Version_Skip != LatestLauncherBuild)
                     {
                         FunctionStatus.LoadingComplete = true;
                         SplashScreen.ThreadStatus("Stop");
@@ -224,9 +224,9 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     description.Text = Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Stable") + " " + LatestLauncherBuild +
                         "\n" + Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Current") + " " + Application.ProductVersion;
 
-                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.IgnoreVersion))
+                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Update_Version_Skip))
                     {
-                        FileSettingsSave.IgnoreVersion = String.Empty;
+                        FileSettingsSave.Live_Data.Update_Version_Skip = String.Empty;
                         FileSettingsSave.SaveSettings();
                         Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. " +
                             "You are currenly using a " + WhatBuildAmI + " Build!");
@@ -239,9 +239,9 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     text.ForeColor = Theming.Sucess;
                     description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Version") + " " + Application.ProductVersion;
 
-                    if (FileSettingsSave.IgnoreVersion == Application.ProductVersion)
+                    if (FileSettingsSave.Live_Data.Update_Version_Skip == Application.ProductVersion)
                     {
-                        FileSettingsSave.IgnoreVersion = String.Empty;
+                        FileSettingsSave.Live_Data.Update_Version_Skip = String.Empty;
                         FileSettingsSave.SaveSettings();
                         Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You're now on the Latest Game Launcher!");
                     }
@@ -256,7 +256,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     UpgradeAvailable = true;
                     if (SkipAvailableUpgrade)
                     {
-                        FileSettingsSave.IgnoreVersion = LatestLauncherBuild;
+                        FileSettingsSave.Live_Data.Update_Version_Skip = LatestLauncherBuild;
                         FileSettingsSave.SaveSettings();
                         Log.Info("IGNOREUPDATEVERSION: User had skipped latest Launcher Version!");
                     }

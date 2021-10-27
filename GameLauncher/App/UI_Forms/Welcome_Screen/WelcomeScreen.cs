@@ -234,7 +234,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
         {
             if (!string.IsNullOrWhiteSpace(((LangObject)GameLangSource.SelectedItem).INI_Value))
             {
-                FileSettingsSave.Lang = ((LangObject)GameLangSource.SelectedItem).INI_Value;
+                FileSettingsSave.Live_Data.Launcher_Language = ((LangObject)GameLangSource.SelectedItem).INI_Value;
                 FileGameSettingsData.Language = ((LangObject)GameLangSource.SelectedItem).XML_Value;
             }
 
@@ -243,21 +243,21 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
                 if (((LangObject)GameLangSource.SelectedItem).Category == "Custom")
                 {
                     /* Create Custom Settings.ini for LangPicker.asi module */
-                    if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts"))
+                    if (!Directory.Exists(FileSettingsSave.Live_Data.Game_Path + "/scripts"))
                     {
-                        Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
+                        Directory.CreateDirectory(FileSettingsSave.Live_Data.Game_Path + "/scripts");
                     }
 
-                    IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                    IniFile LanguagePickerFile = new IniFile(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini");
                     LanguagePickerFile.Write("Language", ((LangObject)GameLangSource.SelectedItem).INI_Value);
                     MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English instead.",
                         "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini"))
+                    if (File.Exists(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini"))
                     {
-                        File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                        File.Delete(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini");
                     }
                 }
             }

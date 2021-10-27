@@ -1,8 +1,9 @@
 ﻿using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.References;
 using SBRWCore.Classes.Required;
 using SBRWCore.Classes.System;
 using System;
@@ -11,260 +12,296 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 {
     class FileSettingsSave
     {
-        public static IniFile settingFile = new IniFile("Settings.ini");
-        ///<summary>Game Files Path</summary>
-        public static string GameInstallation = !string.IsNullOrWhiteSpace(settingFile.Read("InstallationDirectory")) ?
-            settingFile.Read("InstallationDirectory") : string.Empty;
-        ///<summary>Cache Old Game Files Path</summary>
-        ///<remarks>Used for Firewall and Defender Checks</remarks>
-        public static string GameInstallationOld = !string.IsNullOrWhiteSpace(settingFile.Read("OldInstallationDirectory")) ?
-            settingFile.Read("OldInstallationDirectory") : string.Empty;
-        ///<summary>CDN URL [Saved/Choosen]</summary>
-        public static string CDN = !string.IsNullOrWhiteSpace(settingFile.Read("CDN")) ? settingFile.Read("CDN") : "http://localhost/";
-        ///<summary>Language [Saved/Choosen]</summary>
-        public static string Lang = !string.IsNullOrWhiteSpace(settingFile.Read("Language")) ? settingFile.Read("Language") : "EN";
-        ///<summary>Launcher Proxy [Saved/Ticked]</summary>
-        public static string Proxy = (!string.IsNullOrWhiteSpace(settingFile.Read("DisableProxy"))
-                                      && (settingFile.Read("DisableProxy") == "1" || settingFile.Read("DisableProxy") == "0")) ?
-            settingFile.Read("DisableProxy") : "0";
-        ///<summary>Launcher Discord RPC [Saved/Ticked]</summary>
-        public static string RPC = (!string.IsNullOrWhiteSpace(settingFile.Read("DisableRPC"))
-                                    && (settingFile.Read("DisableRPC") == "1" || settingFile.Read("DisableRPC") == "0")) ?
-            settingFile.Read("DisableRPC") : "0";
-        ///<summary>Launcher Version to Ignore [Saved/Clicked]</summary>
-        public static string IgnoreVersion = !string.IsNullOrWhiteSpace(settingFile.Read("IgnoreUpdateVersion")) ?
-            settingFile.Read("IgnoreUpdateVersion") : string.Empty;
-        ///<summary>Firewall Status: Launcher [Saved/Ran]</summary>
-        public static string FirewallLauncherStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FirewallLauncher")) ?
-            settingFile.Read("FirewallLauncher") : "Unknown";
-        ///<summary>Firewall Status: Game [Saved/Ran]</summary>
-        public static string FirewallGameStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FirewallGame")) ?
-            settingFile.Read("FirewallGame") : "Unknown";
-        ///<summary>Defender Status: Launcher [Saved/Ran]</summary>
-        public static string DefenderLauncherStatus = !string.IsNullOrWhiteSpace(settingFile.Read("DefenderLauncher")) ?
-            settingFile.Read("DefenderLauncher") : "Unknown";
-        ///<summary>Defender Status: Game [Saved/Ran]</summary>
-        public static string DefenderGameStatus = !string.IsNullOrWhiteSpace(settingFile.Read("DefenderGame")) ?
-            settingFile.Read("DefenderGame") : "Unknown";
-        ///<summary>Windows 7: Specific KB Updates MessageBox [Saved/Clicked]</summary>
-        public static string Win7UpdatePatches = !string.IsNullOrWhiteSpace(settingFile.Read("PatchesApplied")) ?
-            settingFile.Read("PatchesApplied") : string.Empty;
-        ///<summary>Windows: Folder or File Permission Status [Saved/Ran]</summary>
-        public static string FilePermissionStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FilePermission")) ?
-            settingFile.Read("FilePermission") : "Not Set";
-        ///<summary>Game Files are Corrupt in someway and will need to be Verified [Saved]</summary>
-        public static string GameIntegrity = !string.IsNullOrWhiteSpace(settingFile.Read("GameIntegrity")) ?
-            settingFile.Read("GameIntegrity") : "Unknown";
-        ///<summary>Launcher WebCalls [Saved/Ticked]</summary>
-        ///<remarks>Does not affect Launcher Proxy</remarks>
-        public static string WebCallMethod = (!string.IsNullOrWhiteSpace(settingFile.Read("WebCallMethod")) &&
-            (settingFile.Read("WebCallMethod") == "WebClient" || settingFile.Read("WebCallMethod") == "WebClientWithTimeout")) ?
-            settingFile.Read("WebCallMethod") : "WebClient";
-        ///<summary>Launcher Theme Support [Saved/Ticked]</summary>
-        public static string ThemeSupport = (!string.IsNullOrWhiteSpace(settingFile.Read("ThemeSupport"))
-                                    && (settingFile.Read("ThemeSupport") == "1" || settingFile.Read("ThemeSupport") == "0")) ?
-            settingFile.Read("ThemeSupport") : "0";
-        ///<summary>Launcher Streaming Support [Saved/Ticked]</summary>
-        ///<remarks>Allows Video Capture Natively</remarks>
-        public static string StreamingSupport = (!string.IsNullOrWhiteSpace(settingFile.Read("StreamingSupport"))
-                                    && (settingFile.Read("StreamingSupport") == "1" || settingFile.Read("StreamingSupport") == "0")) ?
-            settingFile.Read("StreamingSupport") : "0";
+        /// <summary>Settings Format Information In Live Memory</summary>
+        public static Format_Settings Live_Data = new Format_Settings();
+        ///<value>Settings File Information on Disk</value>s
+        private static IniFile SettingFile;
         ///<summary>Launcher Streaming Support [Saved Live Value]</summary>
         ///<remarks>Allows Video Capture Natively</remarks>
         ///<returns>True or False</returns>
-        public static bool LiveStreamingSupport() => StreamingSupport == "1";
-        ///<summary>Launcher Beta Builds [Saved/Ticked]</summary>
-        ///<remarks>User Opt-In to Preview Builds</remarks>
-        public static string Insider = (!string.IsNullOrWhiteSpace(settingFile.Read("Insider"))
-                                    && (settingFile.Read("Insider") == "1" || settingFile.Read("Insider") == "0")) ?
-            settingFile.Read("Insider") : "0";
+        public static bool LiveStreamingSupport() => Live_Data.Launcher_Streaming_Support == "1";
         /// <summary>Creates all the NullSafe Values for Settings.ini</summary>
-        public static void NullSafeSettings()
+        public static void NullSafe()
         {
+            SettingFile = new IniFile(Locations.RoamingAppDataFolder_Launcher_Settings);
+
             /* Pervent Removal of Login Info Before Main Screen (Temporary Boolean) */
             FileAccountSave.SaveLoginInformation = true;
 
             /* Migrate old Key Entries */
-            if (settingFile.KeyExists("Server"))
+            if (SettingFile.KeyExists("Server"))
             {
-                FileAccountSave.ChoosenGameServer = settingFile.Read("Server");
-                settingFile.DeleteKey("Server");
-                FileAccountSave.SaveAccount();
+                FileAccountSave.Live_Data.Saved_Server_Address = SettingFile.Read("Server");
+                SettingFile.DeleteKey("Server");
+                FileAccountSave.Save();
             }
 
-            if (settingFile.KeyExists("AccountEmail"))
+            if (SettingFile.KeyExists("AccountEmail"))
             {
-                FileAccountSave.UserRawEmail = settingFile.Read("AccountEmail");
-                settingFile.DeleteKey("AccountEmail");
-                FileAccountSave.SaveAccount();
+                FileAccountSave.Live_Data.User_Raw_Email = SettingFile.Read("AccountEmail");
+                SettingFile.DeleteKey("AccountEmail");
+                FileAccountSave.Save();
             }
 
-            if (settingFile.KeyExists("Password"))
+            if (SettingFile.KeyExists("Password"))
             {
-                FileAccountSave.UserHashedPassword = settingFile.Read("Password");
-                settingFile.DeleteKey("Password");
-                FileAccountSave.SaveAccount();
+                FileAccountSave.Live_Data.User_Hashed_Password = SettingFile.Read("Password");
+                SettingFile.DeleteKey("Password");
+                FileAccountSave.Save();
             }
 
             /* Reset This Value as its now Safe to Do So */
             FileAccountSave.SaveLoginInformation = false;
 
-            if (settingFile.KeyExists("Firewall"))
+            if (SettingFile.KeyExists("Firewall"))
             {
-                FirewallLauncherStatus = settingFile.Read("Firewall");
-                FirewallGameStatus = FirewallLauncherStatus;
-                settingFile.DeleteKey("Firewall");
+                Live_Data.Firewall_Game = Live_Data.Firewall_Launcher = SettingFile.Read("Firewall");
+                SettingFile.DeleteKey("Firewall");
             }
 
-            if (settingFile.KeyExists("WindowsDefender"))
+            if (SettingFile.KeyExists("WindowsDefender"))
             {
-                DefenderLauncherStatus = settingFile.Read("WindowsDefender");
-                DefenderGameStatus = DefenderLauncherStatus;
-                settingFile.DeleteKey("WindowsDefender");
+                Live_Data.Defender_Game = Live_Data.Defender_Launcher = SettingFile.Read("WindowsDefender");
+                SettingFile.DeleteKey("WindowsDefender");
             }
 
             /* Check if any Entries are missing */
 
-            if (UnixOS.Detected() && !settingFile.KeyExists("InstallationDirectory"))
+            if (UnixOS.Detected() && !SettingFile.KeyExists("InstallationDirectory"))
             {
-                settingFile.Write("InstallationDirectory", "GameFiles");
+                SettingFile.Write("InstallationDirectory", "GameFiles");
             }
-            else if (!settingFile.KeyExists("InstallationDirectory"))
+            else if (!SettingFile.KeyExists("InstallationDirectory"))
             {
-                settingFile.Write("InstallationDirectory", GameInstallation);
+                SettingFile.Write("InstallationDirectory", Live_Data.Game_Path);
             }
-
-            if (UnixOS.Detected() && settingFile.KeyExists("OldInstallationDirectory"))
+            else
             {
-                settingFile.DeleteKey("OldInstallationDirectory");
-            }
-            else if (!UnixOS.Detected() && !settingFile.KeyExists("OldInstallationDirectory"))
-            {
-                settingFile.Write("OldInstallationDirectory", GameInstallationOld);
+                Live_Data.Game_Path = SettingFile.Read("InstallationDirectory");
             }
 
-            if (!settingFile.KeyExists("CDN"))
+            if (UnixOS.Detected() && SettingFile.KeyExists("OldInstallationDirectory"))
             {
-                settingFile.Write("CDN", CDN);
+                SettingFile.DeleteKey("OldInstallationDirectory");
             }
-            else if (settingFile.KeyExists("CDN"))
+            else if (!UnixOS.Detected() && !SettingFile.KeyExists("OldInstallationDirectory"))
             {
-                if (CDN.EndsWith("/"))
+                SettingFile.Write("OldInstallationDirectory", Live_Data.Game_Path_Old);
+            }
+            else
+            {
+                Live_Data.Game_Path_Old = SettingFile.Read("OldInstallationDirectory");
+            }
+
+            if (!SettingFile.KeyExists("CDN") || string.IsNullOrWhiteSpace(SettingFile.Read("CDN")))
+            {
+                SettingFile.Write("CDN", Live_Data.Launcher_CDN = "http://localhost");
+            }
+            else
+            {
+                if (SettingFile.Read("CDN").EndsWith("/"))
                 {
-                    char[] charsToTrim = { '/' };
-                    string FinalCDNURL = CDN.TrimEnd(charsToTrim);
-
-                    settingFile.Write("CDN", FinalCDNURL);
+                    SettingFile.Write("CDN", Live_Data.Launcher_CDN = SettingFile.Read("CDN").TrimEnd('/'));
+                }
+                else
+                {
+                    Live_Data.Launcher_CDN = SettingFile.Read("CDN");
                 }
             }
 
-            if (!settingFile.KeyExists("Language"))
+            if (!SettingFile.KeyExists("Language") || string.IsNullOrWhiteSpace(SettingFile.Read("Language")))
             {
-                settingFile.Write("Language", Lang);
+                SettingFile.Write("Language", Live_Data.Launcher_Language = "EN");
+            }
+            else
+            {
+                Live_Data.Launcher_Language = SettingFile.Read("Language");
             }
 
-            if (!settingFile.KeyExists("DisableProxy"))
+            if (!SettingFile.KeyExists("DisableProxy") || string.IsNullOrWhiteSpace(SettingFile.Read("DisableProxy")))
             {
-                settingFile.Write("DisableProxy", Proxy);
+                SettingFile.Write("DisableProxy", Live_Data.Launcher_Proxy = "0");
+            }
+            else if ((SettingFile.Read("DisableProxy") == "0") || (SettingFile.Read("DisableProxy") == "1"))
+            {
+                Live_Data.Launcher_Proxy = SettingFile.Read("DisableProxy");
+            }
+            else
+            {
+                SettingFile.Write("DisableProxy", Live_Data.Launcher_Proxy = "0");
             }
 
-            if (!settingFile.KeyExists("DisableRPC"))
+            if (!SettingFile.KeyExists("DisableRPC") || string.IsNullOrWhiteSpace(SettingFile.Read("DisableRPC")))
             {
-                settingFile.Write("DisableRPC", RPC);
+                SettingFile.Write("DisableRPC", Live_Data.Launcher_Discord_Presense = "0");
+            }
+            else if ((SettingFile.Read("DisableRPC") == "0") || (SettingFile.Read("DisableRPC") == "1"))
+            {
+                Live_Data.Launcher_Discord_Presense = SettingFile.Read("DisableRPC");
+            }
+            else
+            {
+                SettingFile.Write("DisableRPC", Live_Data.Launcher_Discord_Presense = "0");
             }
 
-            if (!settingFile.KeyExists("IgnoreUpdateVersion"))
+            if (!SettingFile.KeyExists("IgnoreUpdateVersion") || string.IsNullOrWhiteSpace(SettingFile.Read("IgnoreUpdateVersion")))
             {
-                settingFile.Write("IgnoreUpdateVersion", IgnoreVersion);
+                SettingFile.Write("IgnoreUpdateVersion", Live_Data.Update_Version_Skip);
+            }
+            else
+            {
+                Live_Data.Update_Version_Skip = SettingFile.Read("IgnoreUpdateVersion");
             }
 
-            if (!settingFile.KeyExists("FilePermission") && !UnixOS.Detected())
+            if (UnixOS.Detected() && SettingFile.KeyExists("FilePermission"))
             {
-                settingFile.Write("FilePermission", FilePermissionStatus);
+                SettingFile.DeleteKey("FilePermission");
             }
-            else if (settingFile.KeyExists("FilePermission") && UnixOS.Detected())
+            else if (!UnixOS.Detected() && (!SettingFile.KeyExists("FilePermission") || string.IsNullOrWhiteSpace(SettingFile.Read("FilePermission"))))
             {
-                settingFile.DeleteKey("FilePermission");
+                SettingFile.Write("FilePermission", Live_Data.Write_Permissions = "Unknown");
             }
-
-            if (!settingFile.KeyExists("GameIntegrity"))
+            else
             {
-                settingFile.Write("GameIntegrity", GameIntegrity);
-            }
-
-            if (!settingFile.KeyExists("ProxyPort"))
-            {
-                settingFile.Write("ProxyPort", string.Empty);
+                Live_Data.Write_Permissions = SettingFile.Read("FilePermission");
             }
 
-            if (!settingFile.KeyExists("WebCallMethod"))
+            if (!SettingFile.KeyExists("GameIntegrity") || string.IsNullOrWhiteSpace(SettingFile.Read("FilePermission")))
             {
-                settingFile.Write("WebCallMethod", WebCallMethod);
+                SettingFile.Write("GameIntegrity", Live_Data.Game_Integrity = "Unknown");
+            }
+            else
+            {
+                Live_Data.Game_Integrity = SettingFile.Read("GameIntegrity");
             }
 
-            if (!settingFile.KeyExists("ThemeSupport"))
+            if (!SettingFile.KeyExists("ProxyPort"))
             {
-                settingFile.Write("ThemeSupport", ThemeSupport);
+                SettingFile.Write("ProxyPort", Live_Data.Launcher_Proxy_Port);
+            }
+            else
+            {
+                Live_Data.Launcher_Proxy_Port = SettingFile.Read("ProxyPort");
             }
 
-            if (!settingFile.KeyExists("StreamingSupport"))
+            if (!SettingFile.KeyExists("WebCallMethod") || string.IsNullOrWhiteSpace(SettingFile.Read("WebCallMethod")))
             {
-                settingFile.Write("StreamingSupport", StreamingSupport);
+                SettingFile.Write("WebCallMethod", Live_Data.Launcher_WebClient_Method = "WebClient");
+            }
+            else if (SettingFile.Read("WebCallMethod") == "WebClient" || SettingFile.Read("WebCallMethod") == "WebClientWithTimeout")
+            {
+                Live_Data.Launcher_WebClient_Method = SettingFile.Read("WebCallMethod");
+            }
+            else
+            {
+                Live_Data.Launcher_WebClient_Method = "WebClient";
             }
 
-            if (!settingFile.KeyExists("Insider"))
+            if (!SettingFile.KeyExists("ThemeSupport") || string.IsNullOrWhiteSpace(SettingFile.Read("ThemeSupport")))
             {
-                settingFile.Write("Insider", Insider);
+                SettingFile.Write("ThemeSupport", Live_Data.Launcher_Theme_Support = "0");
             }
-            else if (settingFile.KeyExists("Insider") && !EnableInsiderBetaTester.Allowed())
+            else if ((SettingFile.Read("ThemeSupport") == "0") || (SettingFile.Read("ThemeSupport") == "1"))
             {
-                Log.Core("Insider Status: ".ToUpper() + "Opted Into the Beta Preview -> " + EnableInsiderBetaTester.Allowed(Insider == "1"));
+                Live_Data.Launcher_Theme_Support = SettingFile.Read("ThemeSupport");
+            }
+            else
+            {
+                SettingFile.Write("ThemeSupport", Live_Data.Launcher_Theme_Support = "0");
+            }
+
+            if (!SettingFile.KeyExists("StreamingSupport") || string.IsNullOrWhiteSpace(SettingFile.Read("StreamingSupport")))
+            {
+                SettingFile.Write("StreamingSupport", Live_Data.Launcher_Streaming_Support = "0");
+            }
+            else if ((SettingFile.Read("StreamingSupport") == "0") || (SettingFile.Read("StreamingSupport") == "1"))
+            {
+                Live_Data.Launcher_Streaming_Support = SettingFile.Read("StreamingSupport");
+            }
+            else
+            {
+                SettingFile.Write("StreamingSupport", Live_Data.Launcher_Streaming_Support = "0");
+            }
+
+            if (!SettingFile.KeyExists("Insider") || string.IsNullOrWhiteSpace(SettingFile.Read("Insider")))
+            {
+                SettingFile.Write("Insider", Live_Data.Launcher_Insider = "0");
+            }
+            else if (!EnableInsiderBetaTester.Allowed() && (SettingFile.Read("Insider") == "0") || (SettingFile.Read("Insider") == "1"))
+            {
+                Live_Data.Launcher_Insider = SettingFile.Read("StreamingSupport");
+                Log.Core("Insider Status: ".ToUpper() + "Opted Into the Beta Preview -> " + 
+                    EnableInsiderBetaTester.Allowed(Live_Data.Launcher_Insider == "1"));
+            }
+            else
+            {
+                SettingFile.Write("Insider", Live_Data.Launcher_Insider = "0");
             }
 
             if (!UnixOS.Detected())
             {
-                if (!settingFile.KeyExists("FirewallLauncher"))
+                if (!SettingFile.KeyExists("FirewallLauncher") || string.IsNullOrWhiteSpace(SettingFile.Read("FirewallLauncher")))
                 {
-                    settingFile.Write("FirewallLauncher", FirewallLauncherStatus);
+                    SettingFile.Write("FirewallLauncher", Live_Data.Firewall_Launcher = "Unknown");
+                }
+                else
+                {
+                    Live_Data.Firewall_Launcher = SettingFile.Read("FirewallLauncher");
                 }
 
-                if (!settingFile.KeyExists("FirewallGame"))
+                if (!SettingFile.KeyExists("FirewallGame") || string.IsNullOrWhiteSpace(SettingFile.Read("FirewallGame")))
                 {
-                    settingFile.Write("FirewallGame", FirewallGameStatus);
+                    SettingFile.Write("FirewallGame", Live_Data.Firewall_Game = "Unknown");
+                }
+                else
+                {
+                    Live_Data.Firewall_Game = SettingFile.Read("FirewallGame");
                 }
 
                 if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
                 {
-                    if (!settingFile.KeyExists("DefenderLauncher"))
+                    if (!SettingFile.KeyExists("DefenderLauncher") || string.IsNullOrWhiteSpace(SettingFile.Read("DefenderLauncher")))
                     {
-                        settingFile.Write("DefenderLauncher", DefenderLauncherStatus);
+                        SettingFile.Write("DefenderLauncher", Live_Data.Defender_Launcher = "Unknown");
+                    }
+                    else
+                    {
+                        Live_Data.Defender_Launcher = SettingFile.Read("DefenderLauncher");
                     }
 
-                    if (!settingFile.KeyExists("DefenderGame"))
+                    if (!SettingFile.KeyExists("DefenderGame") || string.IsNullOrWhiteSpace(SettingFile.Read("DefenderGame")))
                     {
-                        settingFile.Write("DefenderGame", DefenderGameStatus);
+                        SettingFile.Write("DefenderGame", Live_Data.Defender_Game = "Unknown");
+                    }
+                    else
+                    {
+                        Live_Data.Defender_Game = SettingFile.Read("DefenderGame");
                     }
                 }
                 else if (WindowsProductVersion.GetWindowsNumber() < 10.0)
                 {
-                    if (settingFile.KeyExists("DefenderLauncher") || !string.IsNullOrWhiteSpace(settingFile.Read("DefenderLauncher")))
+                    if (SettingFile.KeyExists("DefenderLauncher") || !string.IsNullOrWhiteSpace(SettingFile.Read("DefenderLauncher")))
                     {
-                        settingFile.DeleteKey("DefenderLauncher");
+                        SettingFile.DeleteKey("DefenderLauncher");
                     }
 
-                    if (settingFile.KeyExists("DefenderGame") || !string.IsNullOrWhiteSpace(settingFile.Read("DefenderGame")))
+                    if (SettingFile.KeyExists("DefenderGame") || !string.IsNullOrWhiteSpace(SettingFile.Read("DefenderGame")))
                     {
-                        settingFile.DeleteKey("DefenderGame");
+                        SettingFile.DeleteKey("DefenderGame");
                     }
                 }
 
-                if (WindowsProductVersion.GetWindowsNumber() == 6.1 && !settingFile.KeyExists("PatchesApplied"))
+                if (WindowsProductVersion.GetWindowsNumber() == 6.1 && !SettingFile.KeyExists("PatchesApplied"))
                 {
-                    settingFile.Write("PatchesApplied", Win7UpdatePatches);
+                    SettingFile.Write("PatchesApplied", Live_Data.Win_7_Patches);
                 }
-                else if ((UnixOS.Detected() || WindowsProductVersion.GetWindowsNumber() != 6.1) && settingFile.KeyExists("PatchesApplied"))
+                else if (WindowsProductVersion.GetWindowsNumber() == 6.1 && SettingFile.KeyExists("PatchesApplied"))
                 {
-                    settingFile.DeleteKey("PatchesApplied");
+                    Live_Data.Win_7_Patches = SettingFile.Read("PatchesApplied");
+                }
+                else if ((UnixOS.Detected() || WindowsProductVersion.GetWindowsNumber() != 6.1) && SettingFile.KeyExists("PatchesApplied"))
+                {
+                    SettingFile.DeleteKey("PatchesApplied");
                 }
             }
 
@@ -273,9 +310,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             /** Proxy Port Number **/
             bool UsingCustomProxyPort = false;
 
-            if (!string.IsNullOrWhiteSpace(settingFile.Read("ProxyPort")))
+            if (!string.IsNullOrWhiteSpace(Live_Data.Launcher_Proxy_Port))
             {
-                bool isNumeric = int.TryParse(settingFile.Read("ProxyPort"), out int Port);
+                bool isNumeric = int.TryParse(Live_Data.Launcher_Proxy_Port, out int Port);
 
                 if (isNumeric)
                 {
@@ -304,152 +341,151 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 Log.Info("SETTINGS FILE: Random Generated Default Port -> " + ServerProxy.ProxyPort);
             }
 
-            Live_Cache.Launcher_Alternative_Webcalls(WebCallMethod == "WebClient");
+            Live_Cache.Launcher_Alternative_Webcalls(Live_Data.Launcher_WebClient_Method == "WebClient");
 
             /* Key Entries to Remove (No Longer Needed) */
 
-            if (settingFile.KeyExists("LauncherPosX"))
+            if (SettingFile.KeyExists("LauncherPosX"))
             {
-                settingFile.DeleteKey("LauncherPosX");
+                SettingFile.DeleteKey("LauncherPosX");
             }
 
-            if (settingFile.KeyExists("LauncherPosY"))
+            if (SettingFile.KeyExists("LauncherPosY"))
             {
-                settingFile.DeleteKey("LauncherPosY");
+                SettingFile.DeleteKey("LauncherPosY");
             }
 
-            if (settingFile.KeyExists("DisableVerifyHash"))
+            if (SettingFile.KeyExists("DisableVerifyHash"))
             {
-                settingFile.DeleteKey("DisableVerifyHash");
+                SettingFile.DeleteKey("DisableVerifyHash");
             }
 
-            if (settingFile.KeyExists("TracksHigh"))
+            if (SettingFile.KeyExists("TracksHigh"))
             {
-                settingFile.DeleteKey("TracksHigh");
+                SettingFile.DeleteKey("TracksHigh");
             }
 
-            if (settingFile.KeyExists("ModNetDisabled"))
+            if (SettingFile.KeyExists("ModNetDisabled"))
             {
-                settingFile.DeleteKey("ModNetDisabled");
+                SettingFile.DeleteKey("ModNetDisabled");
             }
 
-            if (settingFile.KeyExists("ModNetZip"))
+            if (SettingFile.KeyExists("ModNetZip"))
             {
-                settingFile.DeleteKey("ModNetZip");
+                SettingFile.DeleteKey("ModNetZip");
             }
 
-            settingFile = new IniFile("Settings.ini");
+            SettingFile = new IniFile(Locations.RoamingAppDataFolder_Launcher_Settings);
         }
         /// <summary>Saves all Current Values</summary>
         public static void SaveSettings()
         {
-            if (settingFile.Read("CDN") != CDN)
-            {
-                if (CDN.EndsWith("/"))
-                {
-                    char[] charsToTrim = { '/' };
-                    string FinalCDNURL = CDN.TrimEnd(charsToTrim);
+            SettingFile = new IniFile(Locations.RoamingAppDataFolder_Launcher_Settings);
 
-                    settingFile.Write("CDN", FinalCDNURL);
+            if (SettingFile.Read("CDN") != Live_Data.Launcher_CDN)
+            {
+                if (Live_Data.Launcher_CDN.EndsWith("/"))
+                {
+                    SettingFile.Write("CDN", Live_Data.Launcher_CDN.TrimEnd('/'));
                 }
                 else
                 {
-                    settingFile.Write("CDN", CDN);
+                    SettingFile.Write("CDN", Live_Data.Launcher_CDN);
                 }
             }
 
-            if (settingFile.Read("Language") != Lang)
+            if (SettingFile.Read("Language") != Live_Data.Launcher_Language)
             {
-                settingFile.Write("Language", Lang);
+                SettingFile.Write("Language", Live_Data.Launcher_Language);
             }
 
-            if (settingFile.Read("DisableProxy") != Proxy)
+            if (SettingFile.Read("DisableProxy") != Live_Data.Launcher_Proxy)
             {
-                settingFile.Write("DisableProxy", Proxy);
+                SettingFile.Write("DisableProxy", Live_Data.Launcher_Proxy);
             }
 
-            if (settingFile.Read("DisableRPC") != RPC)
+            if (SettingFile.Read("DisableRPC") != Live_Data.Launcher_Discord_Presense)
             {
-                settingFile.Write("DisableRPC", RPC);
+                SettingFile.Write("DisableRPC", Live_Data.Launcher_Discord_Presense);
             }
 
-            if (settingFile.Read("InstallationDirectory") != GameInstallation)
+            if (SettingFile.Read("InstallationDirectory") != Live_Data.Game_Path)
             {
-                settingFile.Write("InstallationDirectory", GameInstallation);
+                SettingFile.Write("InstallationDirectory", Live_Data.Game_Path);
             }
 
-            if (!UnixOS.Detected() && settingFile.Read("OldInstallationDirectory") != GameInstallationOld)
+            if (!UnixOS.Detected() && SettingFile.Read("OldInstallationDirectory") != Live_Data.Game_Path_Old)
             {
-                settingFile.Write("OldInstallationDirectory", GameInstallationOld);
+                SettingFile.Write("OldInstallationDirectory", Live_Data.Game_Path_Old);
             }
 
-            if (settingFile.Read("IgnoreUpdateVersion") != IgnoreVersion)
+            if (SettingFile.Read("IgnoreUpdateVersion") != Live_Data.Update_Version_Skip)
             {
-                settingFile.Write("IgnoreUpdateVersion", IgnoreVersion);
+                SettingFile.Write("IgnoreUpdateVersion", Live_Data.Update_Version_Skip);
             }
 
-            if (settingFile.Read("GameIntegrity") != GameIntegrity)
+            if (SettingFile.Read("GameIntegrity") != Live_Data.Game_Integrity)
             {
-                settingFile.Write("GameIntegrity", GameIntegrity);
+                SettingFile.Write("GameIntegrity", Live_Data.Game_Integrity);
             }
 
-            if (settingFile.Read("WebCallMethod") != WebCallMethod)
+            if (SettingFile.Read("WebCallMethod") != Live_Data.Launcher_WebClient_Method)
             {
-                settingFile.Write("WebCallMethod", WebCallMethod);
+                SettingFile.Write("WebCallMethod", Live_Data.Launcher_WebClient_Method);
             }
 
-            if (settingFile.Read("ThemeSupport") != ThemeSupport)
+            if (SettingFile.Read("ThemeSupport") != Live_Data.Launcher_Theme_Support)
             {
-                settingFile.Write("ThemeSupport", ThemeSupport);
+                SettingFile.Write("ThemeSupport", Live_Data.Launcher_Theme_Support);
             }
 
-            if (settingFile.Read("StreamingSupport") != StreamingSupport)
+            if (SettingFile.Read("StreamingSupport") != Live_Data.Launcher_Streaming_Support)
             {
-                settingFile.Write("StreamingSupport", StreamingSupport);
+                SettingFile.Write("StreamingSupport", Live_Data.Launcher_Streaming_Support);
             }
 
-            if (settingFile.Read("Insider") != Insider)
+            if (SettingFile.Read("Insider") != Live_Data.Launcher_Insider)
             {
-                settingFile.Write("Insider", Insider);
+                SettingFile.Write("Insider", Live_Data.Launcher_Insider);
             }
 
             if (!UnixOS.Detected())
             {
-                if (settingFile.Read("FilePermission") != FilePermissionStatus)
+                if (SettingFile.Read("FilePermission") != Live_Data.Write_Permissions)
                 {
-                    settingFile.Write("FilePermission", FilePermissionStatus);
+                    SettingFile.Write("FilePermission", Live_Data.Write_Permissions);
                 }
 
-                if (settingFile.Read("FirewallLauncher") != FirewallLauncherStatus)
+                if (SettingFile.Read("FirewallLauncher") != Live_Data.Firewall_Launcher)
                 {
-                    settingFile.Write("FirewallLauncher", FirewallLauncherStatus);
+                    SettingFile.Write("FirewallLauncher", Live_Data.Firewall_Launcher);
                 }
 
-                if (settingFile.Read("FirewallGame") != FirewallGameStatus)
+                if (SettingFile.Read("FirewallGame") != Live_Data.Firewall_Game)
                 {
-                    settingFile.Write("FirewallGame", FirewallGameStatus);
+                    SettingFile.Write("FirewallGame", Live_Data.Firewall_Game);
                 }
 
                 if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
                 {
-                    if (settingFile.Read("DefenderLauncher") != DefenderLauncherStatus)
+                    if (SettingFile.Read("DefenderLauncher") != Live_Data.Defender_Launcher)
                     {
-                        settingFile.Write("DefenderLauncher", DefenderLauncherStatus);
+                        SettingFile.Write("DefenderLauncher", Live_Data.Defender_Launcher);
                     }
 
-                    if (settingFile.Read("DefenderGame") != DefenderGameStatus)
+                    if (SettingFile.Read("DefenderGame") != Live_Data.Defender_Game)
                     {
-                        settingFile.Write("DefenderGame", DefenderGameStatus);
+                        SettingFile.Write("DefenderGame", Live_Data.Defender_Game);
                     }
                 }
 
-                if ((settingFile.Read("PatchesApplied") != Win7UpdatePatches) && WindowsProductVersion.GetWindowsNumber() == 6.1)
+                if ((SettingFile.Read("PatchesApplied") != Live_Data.Win_7_Patches) && WindowsProductVersion.GetWindowsNumber() == 6.1)
                 {
-                    settingFile.Write("PatchesApplied", Win7UpdatePatches);
+                    SettingFile.Write("PatchesApplied", Live_Data.Win_7_Patches);
                 }
             }
 
-            settingFile = new IniFile("Settings.ini");
+            SettingFile = new IniFile(Locations.RoamingAppDataFolder_Launcher_Settings);
         }
     }
 }

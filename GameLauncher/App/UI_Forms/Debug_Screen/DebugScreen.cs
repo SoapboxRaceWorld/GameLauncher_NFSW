@@ -112,17 +112,17 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
             }
 
             string UpdateSkip;
-            if (FileSettingsSave.IgnoreVersion == Application.ProductVersion || FileSettingsSave.IgnoreVersion == String.Empty)
+            if (FileSettingsSave.Live_Data.Update_Version_Skip == Application.ProductVersion || FileSettingsSave.Live_Data.Update_Version_Skip == String.Empty)
             {
                 UpdateSkip = "False";
             }
             else
             {
-                UpdateSkip = FileSettingsSave.IgnoreVersion;
+                UpdateSkip = FileSettingsSave.Live_Data.Update_Version_Skip;
             }
 
             string StreamOpt;
-            if (FileSettingsSave.StreamingSupport == "0")
+            if (FileSettingsSave.Live_Data.Launcher_Streaming_Support == "0")
             {
                 StreamOpt = "Displaying Timer";
             }
@@ -132,7 +132,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
             }
 
             string ThemeOpt;
-            if (FileSettingsSave.ThemeSupport == "0")
+            if (FileSettingsSave.Live_Data.Launcher_Theme_Support == "0")
             {
                 ThemeOpt = "Disabled";
             }
@@ -142,7 +142,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
             }
 
             string InsiderOpt;
-            if (FileSettingsSave.Insider == "0")
+            if (FileSettingsSave.Live_Data.Launcher_Insider == "0")
             {
                 InsiderOpt = "Release Only";
             }
@@ -157,7 +157,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
             {
                 try
                 {
-                    Kernel32.GetDiskFreeSpaceEx(FileSettingsSave.GameInstallation,
+                    Kernel32.GetDiskFreeSpaceEx(FileSettingsSave.Live_Data.Game_Path,
                         out lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
                 }
                 catch (Exception Error)
@@ -172,10 +172,10 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
                 new ListType{ Name = "Environment Version", Value = Environment.OSVersion.Version.ToString() },
                 new ListType{ Name = "Screen Resolution", Value = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height + " (Primary Display)" },
                 new ListType{ Name = "", Value = "" },
-                new ListType{ Name = "InstallationDirectory", Value = FileSettingsSave.GameInstallation},
+                new ListType{ Name = "InstallationDirectory", Value = FileSettingsSave.Live_Data.Game_Path},
                 new ListType{ Name = "Launcher Version", Value = Application.ProductVersion},
-                new ListType{ Name = "Credentials Saved", Value = (!String.IsNullOrWhiteSpace(FileAccountSave.UserHashedPassword)) ? "True" : "False"},
-                new ListType{ Name = "Language", Value =  FileSettingsSave.Lang},
+                new ListType{ Name = "Credentials Saved", Value = (!String.IsNullOrWhiteSpace(FileAccountSave.Live_Data.User_Raw_Password)) ? "True" : "False"},
+                new ListType{ Name = "Language", Value =  FileSettingsSave.Live_Data.Launcher_Language},
                 new ListType{ Name = "Skipping Update", Value = UpdateSkip},
                 new ListType{ Name = "Proxy Enabled", Value = ServerProxy.Running().ToString()},
                 new ListType{ Name = "RPC Enabled", Value = DiscordLauncherPresence.Running().ToString()},
@@ -185,9 +185,9 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
                 new ListType{ Name = "", Value = "" },
                 new ListType{ Name = "Server Name", Value = ServerListUpdater.ServerName("Debug")},
                 new ListType{ Name = "Server Address", Value = InformationCache.SelectedServerData.IPAddress},
-                new ListType{ Name = "CDN Address", Value = FileSettingsSave.CDN},
+                new ListType{ Name = "CDN Address", Value = FileSettingsSave.Live_Data.Launcher_CDN},
                 new ListType{ Name = "ProxyPort", Value = ServerProxy.ProxyPort.ToString()},
-                new ListType{ Name = "Client Method", Value = FileSettingsSave.WebCallMethod},
+                new ListType{ Name = "Client Method", Value = FileSettingsSave.Live_Data.Launcher_WebClient_Method},
                 new ListType{ Name = "", Value = "" },
             };
 
@@ -197,8 +197,8 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
                 {
                     new ListType{ Name = "Antivirus", Value = Antivirus },
                     new ListType{ Name = "Firewall Application", Value = Firewall },
-                    new ListType{ Name = "Firewall Rule - Launcher", Value =  FileSettingsSave.FirewallLauncherStatus},
-                    new ListType{ Name = "Firewall Rule - Game", Value =  FileSettingsSave.FirewallGameStatus},
+                    new ListType{ Name = "Firewall Rule - Launcher", Value =  FileSettingsSave.Live_Data.Firewall_Launcher},
+                    new ListType{ Name = "Firewall Rule - Game", Value =  FileSettingsSave.Live_Data.Firewall_Game},
                     new ListType{ Name = "AntiSpyware", Value = AntiSpyware },
                     new ListType{ Name = "", Value = "" },
                     new ListType{ Name = "CPU", Value = HardwareInfo.CPU.CPUName() },

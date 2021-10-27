@@ -1,7 +1,7 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Logger;
-using IniParser;
+﻿using IniParser;
 using IniParser.Model;
 using SBRWCore.Classes.Required;
+using System;
 using System.IO;
 using System.Text;
 
@@ -12,66 +12,79 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         /* Moved 2 Public functions to Gist */
         /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/89c2e19c97be7ebc075203f3d998aa9e701892f6/IniFile.cs */
 
-        public string Path;
-        readonly string EXE = "GameLauncher";
-        public FileIniDataParser Parser;
-        public IniData Data;
+        public string File_Path;
+        readonly string Ini_Header = "GameLauncher";
+        public FileIniDataParser File_Parser;
+        public IniData File_Data;
         public UTF8Encoding UTF8 = new UTF8Encoding(false);
 
-        public IniFile(string IniPath = null)
+        public IniFile(string Ini_Path = null)
         {
-            Path = new FileInfo(IniPath ?? EXE + ".ini").FullName.ToString();
-            Parser = new FileIniDataParser();
-            if (File.Exists(Path))
+            File_Path = new FileInfo(Ini_Path ?? Ini_Header + ".ini").FullName.ToString();
+            File_Parser = new FileIniDataParser();
+            if (File.Exists(File_Path))
             {
-                Data = Parser.ReadFile(Path, UTF8);
+                File_Data = File_Parser.ReadFile(File_Path, UTF8);
             }
             else
             {
-                if (!File.Exists(Path))
+                if (!File.Exists(File_Path))
                 {
-                    File.Create(Path).Dispose();
+                    File.Create(File_Path).Dispose();
                 }
 
-                Data = new IniData();
+                File_Data = new IniData();
             }
         }
 
-        public string Read(string Key)
+        public string Read(string Key_Index)
         {
-            return Data[EXE][Key];
+            return File_Data[Ini_Header][Key_Index];
         }
 
-        public void Write(string Key, string Value)
+        public void Write(string Key_Index, string Index_Data)
         {
             try
             {
-                if (new FileInfo(Path).IsReadOnly)
+                if (new FileInfo(File_Path).IsReadOnly)
                 {
-                    Log.Warning("CORE: Ini File is Read-Only -> " + Path);
+                    Log.Warning("IniFile: ".ToUpper() + "[Key Write] Ini File is Read-Only -> " + Path.GetFileName(File_Path));
                 }
                 else
                 {
-                    Data[EXE][Key] = Value;
-                    Parser.WriteFile(Path, Data, UTF8);
+                    File_Data[Ini_Header][Key_Index] = Index_Data;
+                    File_Parser.WriteFile(File_Path, File_Data, UTF8);
                 }
             }
-            catch { }
+            finally
+            {
+                GC.Collect();
+            }
         }
 
-        public void DeleteKey(string Key)
+        public void DeleteKey(string Key_Index)
         {
             try
             {
-                Data[EXE].RemoveKey(Key);
-                Parser.WriteFile(Path, Data, UTF8);
+                if (new FileInfo(File_Path).IsReadOnly)
+                {
+                    Log.Warning("IniFile: ".ToUpper() + "[Key Remove] Ini File is Read-Only -> " + Path.GetFileName(File_Path));
+                }
+                else
+                {
+                    File_Data[Ini_Header].RemoveKey(Key_Index);
+                    File_Parser.WriteFile(File_Path, File_Data, UTF8);
+                }
             }
-            catch { }
+            finally
+            {
+                GC.Collect();
+            }
         }
 
-        public bool KeyExists(string Key)
+        public bool KeyExists(string Key_Index)
         {
-            return Data[EXE].ContainsKey(Key);
+            return File_Data[Ini_Header].ContainsKey(Key_Index);
         }
     }
 }
