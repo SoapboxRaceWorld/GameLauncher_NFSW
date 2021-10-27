@@ -115,15 +115,15 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             BtnAddServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
             BtnAddServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
 
-            BtnRemoveServer.ForeColor = Theming.BlueForeColorButton;
-            BtnRemoveServer.BackColor = Theming.BlueBackColorButton;
-            BtnRemoveServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            BtnRemoveServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+            BtnRemoveServer.ForeColor = CustomServersOnly ? Theming.BlueForeColorButton : Theming.GrayForeColorButton;
+            BtnRemoveServer.BackColor = CustomServersOnly ? Theming.BlueBackColorButton : Theming.GrayBackColorButton;
+            BtnRemoveServer.FlatAppearance.BorderColor = CustomServersOnly ? Theming.BlueBorderColorButton : Theming.GrayBorderColorButton;
+            BtnRemoveServer.FlatAppearance.MouseOverBackColor = CustomServersOnly ? Theming.BlueMouseOverBackColorButton : Theming.GrayMouseOverBackColorButton;
 
-            BtnSelectServer.ForeColor = Theming.BlueForeColorButton;
-            BtnSelectServer.BackColor = Theming.BlueBackColorButton;
-            BtnSelectServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            BtnSelectServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+            BtnSelectServer.ForeColor = !CustomServersOnly ? Theming.BlueForeColorButton : Theming.GrayForeColorButton;
+            BtnSelectServer.BackColor = !CustomServersOnly ? Theming.BlueBackColorButton : Theming.GrayBackColorButton;
+            BtnSelectServer.FlatAppearance.BorderColor = !CustomServersOnly ? Theming.BlueBorderColorButton : Theming.GrayBorderColorButton;
+            BtnSelectServer.FlatAppearance.MouseOverBackColor = !CustomServersOnly ? Theming.BlueMouseOverBackColorButton : Theming.GrayMouseOverBackColorButton;
 
             BtnClose.ForeColor = Theming.BlueForeColorButton;
             BtnClose.BackColor = Theming.BlueBackColorButton;
@@ -390,11 +390,24 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             {
                 SelectedGameServerToRemember();
             }
+            else
+            {
+                MessageBox.Show(null, "Click on a Server to Remove it from Your Custom Saved List",
+                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void BtnRemoveServer_Click(object sender, EventArgs e)
         {
-            SelectedGameServerToRemove();
+            if (CustomServersOnly)
+            {
+                SelectedGameServerToRemove();
+            }
+            else
+            {
+                MessageBox.Show(null, "This feature will Unlocked After This Screen",
+                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void BtnClose_Click(object sender, EventArgs e)
@@ -433,7 +446,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                 catch (Exception Error)
                 {
                     string LogMessage = "Failed to Remove Selected Server:";
-                    LogToFileAddons.OpenLog("Add Server", LogMessage, Error, null, false);
+                    LogToFileAddons.OpenLog("Remove Server", LogMessage, Error, null, false);
                 }
             }
         }

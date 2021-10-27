@@ -25,13 +25,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                     {
                         if (!Control_Form.IsDisposed || (Control_Form.IsHandleCreated && Control_Form.FindForm().IsHandleCreated))
                         {
-                            if (Control_Form.InvokeRequired)
+                            if (!Control_Form.Disposing)
                             {
-                                Control_Form.Invoke(Action_Refresh);
+                                if (Control_Form.InvokeRequired)
+                                {
+                                    Control_Form.Invoke(Action_Refresh);
+                                }
+                                else
+                                {
+                                    Action_Refresh();
+                                }
                             }
                             else
                             {
-                                Action_Refresh();
+                                Log.Function("SafeInvokeAction".ToUpper() + "Control: " + Control_Form.Name + " is being Disposed");
                             }
                         }
                         else if (!Application.OpenForms[Window_Name.Name].IsDisposed)
@@ -70,13 +77,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                 {
                     if (!Control_Form.IsDisposed || (Control_Form.IsHandleCreated && Control_Form.FindForm().IsHandleCreated))
                     {
-                        if (Control_Form.InvokeRequired)
+                        if (!Control_Form.Disposing)
                         {
-                            Control_Form.Invoke(Action_Refresh);
+                            if (Control_Form.InvokeRequired)
+                            {
+                                Control_Form.Invoke(Action_Refresh);
+                            }
+                            else
+                            {
+                                Action_Refresh();
+                            }
                         }
                         else
                         {
-                            Action_Refresh();
+                            Log.Function("SafeInvokeAction".ToUpper() + "Control: " + Control_Form.Name + " is being Disposed");
                         }
                     }
                     else if (!Control_Form.FindForm().IsDisposed)

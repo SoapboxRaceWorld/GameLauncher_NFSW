@@ -2477,73 +2477,56 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             ExtractingProgress.SafeInvokeAction(() =>
             ExtractingProgress.Width = 0, this);
 
-            string CopSoundSpeechFilePath = Strings.Encode(
-                Path.Combine(FileSettingsSave.GameInstallation, "Sound", "Speech", "copspeechhdr_" + FileSettingsSave.Lang.ToLower() + ".big"));
-            if (!File.Exists(CopSoundSpeechFilePath))
+            try
             {
-                try
-                {
-                    PlayProgressText.SafeInvokeAction(() =>
-                    PlayProgressText.Text = "Loading list of files to download...".ToUpper(), this);
+                PlayProgressText.SafeInvokeAction(() =>
+                PlayProgressText.Text = "Loading list of files to download...".ToUpper(), this);
 
-                    DriveInfo[] allDrives = DriveInfo.GetDrives();
-                    foreach (DriveInfo d in allDrives)
+                DriveInfo[] allDrives = DriveInfo.GetDrives();
+                foreach (DriveInfo d in allDrives)
+                {
+                    if (d.Name == Path.GetPathRoot(FileSettingsSave.GameInstallation))
                     {
-                        if (d.Name == Path.GetPathRoot(FileSettingsSave.GameInstallation))
+                        if (d.TotalFreeSpace < 8589934592 || !string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
                         {
+                            ExtractingProgress.SafeInvokeAction(() =>
+                            {
+                                ExtractingProgress.Value = 100;
+                                ExtractingProgress.Width = 519;
+                                ExtractingProgress.Image = Theming.ProgressBarWarning;
+                                ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
+                            }, this);
+
                             if (!string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                ExtractingProgress.SafeInvokeAction(() =>
-                                {
-                                    ExtractingProgress.Value = 100;
-                                    ExtractingProgress.Width = 519;
-                                    ExtractingProgress.Image = Theming.ProgressBarWarning;
-                                    ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
-                                }, this);
-
                                 PlayProgressTextTimer.SafeInvokeAction(() =>
                                 PlayProgressTextTimer.Text = ("Playing the game on a non-NTFS-formatted drive is not supported.").ToUpper(), this);
                                 PlayProgressText.SafeInvokeAction(() =>
                                 PlayProgressText.Text = ("Drive '" + d.Name + "' is formatted with: " + d.DriveFormat + " Type.").ToUpper(), this);
-
-                                FunctionStatus.IsVerifyHashDisabled = true;
-
-                                TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
-                                TaskbarProgress.SetValue(Handle, 100, 100);
-                            }
-                            else if (d.TotalFreeSpace < 8589934592)
-                            {
-                                ExtractingProgress.SafeInvokeAction(() =>
-                                {
-                                    ExtractingProgress.Value = 100;
-                                    ExtractingProgress.Width = 519;
-                                    ExtractingProgress.Image = Theming.ProgressBarWarning;
-                                    ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
-                                }, this);
-
-                                PlayProgressText.SafeInvokeAction(() =>
-                                PlayProgressText.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper(), this);
-
-                                FunctionStatus.IsVerifyHashDisabled = true;
-
-                                TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
-                                TaskbarProgress.SetValue(Handle, 100, 100);
                             }
                             else
                             {
-                                DownloadCoreFiles();
+                                PlayProgressText.SafeInvokeAction(() => 
+                                PlayProgressText.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper(), this);
                             }
+
+                            FunctionStatus.IsVerifyHashDisabled = true;
+
+                            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
+                            TaskbarProgress.SetValue(Handle, 100, 100);
                         }
+                        else
+                        {
+                            DownloadCoreFiles();
+                        }
+
+                        break;
                     }
                 }
-                catch
-                {
-                    DownloadCoreFiles();
-                }
             }
-            else
+            catch
             {
-                OnDownloadFinished();
+                DownloadCoreFiles();
             }
         }
 
@@ -2682,12 +2665,10 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 {
                     String response = Client.DownloadString(URLCall);
 
-                    response = response.Substring(3, response.Length - 3);
-
                     XmlDocument speechFileXml = new XmlDocument();
                     speechFileXml.LoadXml(response);
-                    XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
 
+                    XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
                     speechSize = Convert.ToInt32(speechSizeNode.InnerText);
                 }
                 catch
