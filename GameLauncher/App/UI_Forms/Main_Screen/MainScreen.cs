@@ -566,7 +566,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     return;
             }
 
-            Authentication.Client("Login", InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", Email, Password, null);
+            Authentication.Client("Login", InformationCache.SelectedServerJSON.modernAuthSupport, Email, Password, null);
 
             if (String.IsNullOrWhiteSpace(Tokens.Error))
             {
@@ -971,13 +971,26 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             }
                             catch { }
 
-                            try
+                            /* Check Selected Server Address for since nfsw currently requires being proxied for https */
+                            if (InformationCache.SelectedServerData.IPAddress.StartsWith("https"))
                             {
-                                bool.TryParse((InformationCache.SelectedServerJSON.enforceLauncherProxy != null) ? InformationCache.SelectedServerJSON.enforceLauncherProxy.ToString() :
-                                    InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", out bool Final_Result);
-                                InformationCache.SelectedServerEnforceProxy = !InformationCache.SelectedServerData.IPAddress.StartsWith("https") ? Final_Result : true;
+                                /* This is in case it is not listed in GSI at all || is present in GSI and is set to true */
+                                if ((!InformationCache.SelectedServerJSON.enforceLauncherProxy) || (InformationCache.SelectedServerJSON.enforceLauncherProxy != false))
+                                {   /* So we can force the Proxy On even if a User has Disabled it */
+                                    InformationCache.SelectedServerEnforceProxy = true;
+                                }
+                                /* but still allow that nfsw might get patched to do https raw? */
+                                else if (InformationCache.SelectedServerJSON.enforceLauncherProxy == false)
+                                {   /* In which case, respect the GSI set value */
+                                    InformationCache.SelectedServerEnforceProxy = false;
+                                }
                             }
-                            catch { }
+                            /* If it's an HTTP Server, check if Proxy is being requested as Enforced On */
+                            else if (InformationCache.SelectedServerJSON.enforceLauncherProxy != true)
+                            {   /* This is set so that it doesn't try to enforce Proxy On if user switches
+                                 * to a server that doesn't have enforceLauncherProxy set or true */
+                                InformationCache.SelectedServerEnforceProxy = false;
+                            }
 
                             if (InformationCache.SelectedServerJSON.maxOnlinePlayers != 0)
                             {

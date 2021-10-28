@@ -231,7 +231,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                     Tokens.IPAddress = InformationCache.SelectedServerData.IPAddress;
                     Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
-                    Authentication.Client("Register", InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", Email, Password, _ticketRequired ? RegisterTicket.Text : null);
+                    Authentication.Client("Register", InformationCache.SelectedServerJSON.modernAuthSupport, Email, Password, _ticketRequired ? RegisterTicket.Text : null);
 
                     if (!String.IsNullOrWhiteSpace(Tokens.Success))
                     {

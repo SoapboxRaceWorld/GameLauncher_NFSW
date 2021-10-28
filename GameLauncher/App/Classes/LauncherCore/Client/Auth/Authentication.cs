@@ -29,10 +29,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
         /// <returns>Receives UserId and Auth Key for Login. Sends Email and Password to Server</returns>
         /// <param name="ConnectionProtocol">Connection Protocol: Check AuthProtocol</param>
         /// <param name="Method">Form Type: "Login" or "Register"</param>
-        public static void Client(string Method, string Modern_Auth_String, String Email, String Password, String Token)
+        public static void Client(string Method, bool Modern_Auth, String Email, String Password, String Token)
         {
-            bool.TryParse(Modern_Auth_String, out bool Modern_Auth);
-
             try
             {
                 if (!Modern_Auth)
@@ -385,7 +383,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
             else
             {
-                return (bool.TryParse(InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", out bool Final_Result) && Final_Result) ? AuthHash.H10 : AuthHash.H12;
+                return InformationCache.SelectedServerJSON.modernAuthSupport ? AuthHash.H10 : AuthHash.H12;
             }
         }
     }
