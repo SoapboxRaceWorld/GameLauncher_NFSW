@@ -607,30 +607,6 @@ namespace GameLauncher
                                 {
                                     Log.Completed("INI FILES: Account Already Migrated");
                                 }
-
-                                if (File.Exists(Locations.NameSettingsIni))
-                                {
-                                    try
-                                    {
-                                        if (File.Exists(Locations.RoamingAppDataFolder_Launcher_Settings))
-                                        {
-                                            File.Move(Locations.RoamingAppDataFolder_Launcher_Settings, 
-                                                Path.Combine(Locations.RoamingAppDataFolder_Launcher, LogToFile_Extensions.DateAndTime() + "_" + Locations.NameSettingsIni));
-                                        }
-
-                                        File.Move(Locations.NameSettingsIni, Locations.RoamingAppDataFolder_Launcher_Settings);
-                                    }
-                                    catch (Exception Error)
-                                    {
-                                        LogToFileAddons.OpenLog("Settings File Migration", null, Error, null, true);
-                                        FunctionStatus.LauncherForceClose = true;
-                                    }
-                                }
-                                else
-                                {
-                                    Log.Completed("INI FILES: Settings Already Migrated");
-                                }
-
                                 Log.Completed("INI FILES: Completed Migration");
                             }
 
@@ -751,22 +727,30 @@ namespace GameLauncher
                                 {
                                     if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON))))
                                     {
-                                        if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
+                                        if (File.Exists(Locations.LauncherCustomServers))
                                         {
-                                            File.Delete(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)));
+                                            File.Delete(Locations.LauncherCustomServers);
                                         }
 
                                         File.Move(
                                             Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)),
-                                            Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)));
+                                            Locations.LauncherCustomServers);
                                         Log.Completed("JSON: Renaming Servers File");
                                     }
-                                    else if (!File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
+                                    else if (!UnixOS.Detected())
+                                    {
+                                        if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
+                                        {
+                                            File.Move(
+                                                Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)),
+                                                Locations.LauncherCustomServers);
+                                        }
+                                    }
+                                    else if (!File.Exists(Locations.LauncherCustomServers))
                                     {
                                         try
                                         {
-                                            File.WriteAllText(
-                                                Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)), "[]");
+                                            File.WriteAllText(Locations.LauncherCustomServers, "[]");
                                             Log.Completed("JSON: Created Servers File");
                                         }
                                         catch (Exception Error)

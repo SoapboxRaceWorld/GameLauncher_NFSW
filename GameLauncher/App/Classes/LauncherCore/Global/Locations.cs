@@ -16,15 +16,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         public static readonly string NameModLinks = ".links";
 
         public static readonly string LauncherFolder = AppDomain.CurrentDomain.BaseDirectory;
+        public static readonly string Launcher_Settings = UnixOS.Detected() ? NameSettingsIni : Path.Combine(LauncherFolder, NameSettingsIni);
         public static readonly string LauncherThemeFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Theme");
-
-        public static readonly string LauncherCustomServers = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, NameNewServersJSON);
 
         public static readonly string LocalAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         public static readonly string RoamingAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         public static readonly string RoamingAppDataFolder_Launcher = Path.Combine(RoamingAppDataFolder, "Soapbox Race World", "Launcher");
         public static readonly string RoamingAppDataFolder_Launcher_Account = UnixOS.Detected() ? NameAccountIni : Path.Combine(RoamingAppDataFolder_Launcher, NameAccountIni);
-        public static readonly string RoamingAppDataFolder_Launcher_Settings = UnixOS.Detected() ? NameSettingsIni : Path.Combine(RoamingAppDataFolder_Launcher, NameSettingsIni);
+
+        public static readonly string LauncherCustomServers = UnixOS.Detected() ? NameNewServersJSON : Path.Combine(RoamingAppDataFolder_Launcher, NameNewServersJSON);
 
         public static readonly string UserSettingsFolder = Path.Combine(RoamingAppDataFolder, "Need for Speed World", "Settings");
         public static readonly string UserSettingsXML = Path.Combine(UserSettingsFolder, "UserSettings.xml");
