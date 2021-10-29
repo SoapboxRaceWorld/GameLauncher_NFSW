@@ -13,6 +13,7 @@ using GameLauncher.App.UI_Forms.Splash_Screen;
 using GameLauncher.App.UI_Forms.Welcome_Screen;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using SBRWCore.Classes.Extensions;
+using SBRWCore.Classes.References.Jsons.Newtonsoft;
 using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,6 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -44,10 +44,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         public static string SelectedServerCategory;
 
         /* Selected Server List Key Information */
-        public static ServerList SelectedServerData;
+        public static Json_List_Server SelectedServerData;
 
         /* Selected Server JSON (GetServerInformation) */
-        public static GetServerInformation SelectedServerJSON = new GetServerInformation();
+        public static Json_Server_Info SelectedServerJSON = new Json_Server_Info();
 
         /* Holds a collection of Server Status of Servers */
         public static Dictionary<string, int> ServerStatusBook = new Dictionary<string, int>();

@@ -1,12 +1,11 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.UI_Forms.AddServer_Screen;
 using GameLauncher.App.UI_Forms.Register_Screen;
 using GameLauncher.App.UI_Forms.SelectServer_Screen;
 using SBRWCore.Classes.Extensions.Validator;
 using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.References.Jsons.Newtonsoft;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -35,9 +34,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         {
             if (FunctionStatus.AllowRegistration)
             {
-                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webSignupUrl))
+                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Registration_Page))
                 {
-                    Process.Start(InformationCache.SelectedServerJSON.webSignupUrl);
+                    Process.Start(InformationCache.SelectedServerJSON.Server_Registration_Page);
                     MessageBox.Show(null, "A browser window has been opened to complete registration on " +
                         ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -61,37 +60,37 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void DiscordInviteLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl))
-                Process.Start(InformationCache.SelectedServerJSON.discordUrl);
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Social_Discord))
+                Process.Start(InformationCache.SelectedServerJSON.Server_Social_Discord);
         }
 
         public static void HomePageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl))
-                Process.Start(InformationCache.SelectedServerJSON.homePageUrl);
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Social_Home))
+                Process.Start(InformationCache.SelectedServerJSON.Server_Social_Home);
         }
 
         public static void FacebookGroupLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.facebookUrl))
-                Process.Start(InformationCache.SelectedServerJSON.facebookUrl);
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Social_Facebook))
+                Process.Start(InformationCache.SelectedServerJSON.Server_Social_Facebook);
         }
 
         public static void TwitterAccountLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.facebookUrl))
-                Process.Start(InformationCache.SelectedServerJSON.twitterUrl);
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Social_Twitter))
+                Process.Start(InformationCache.SelectedServerJSON.Server_Social_Twitter);
         }
 
         public static void ForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (InformationCache.SelectedServerJSON != null)
             {
-                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webRecoveryUrl))
+                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Account_Recovery_Page))
                 {
-                    Process.Start(InformationCache.SelectedServerJSON.webRecoveryUrl);
+                    Process.Start(InformationCache.SelectedServerJSON.Server_Account_Recovery_Page);
                     MessageBox.Show(null, "A browser window has been opened to complete password recovery on " +
-                        InformationCache.SelectedServerJSON.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        InformationCache.SelectedServerJSON.Server_Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -195,7 +194,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 {
                     if (e.Index != -1 && cb.Items != null)
                     {
-                        if (cb.Items[e.Index] is ServerList si)
+                        if (cb.Items[e.Index] is Json_List_Server si)
                         {
                             serverListText = si.Name;
                             onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.ID) ? InformationCache.ServerStatusBook[si.ID] : 2;

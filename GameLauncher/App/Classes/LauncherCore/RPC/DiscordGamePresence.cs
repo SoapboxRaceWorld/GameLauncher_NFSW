@@ -68,9 +68,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 var SBRW_XML = new XmlDocument();
                 string[] splitted_uri = uri.Split('/');
 
-                String _serverPanelLink = InformationCache.SelectedServerJSON.webPanelUrl;
-                String _serverWebsiteLink = InformationCache.SelectedServerJSON.homePageUrl;
-                String _serverDiscordLink = InformationCache.SelectedServerJSON.discordUrl;
+                String _serverPanelLink = InformationCache.SelectedServerJSON.Server_Social_Home;
+                String _serverWebsiteLink = InformationCache.SelectedServerJSON.Server_Social_Home;
+                String _serverDiscordLink = InformationCache.SelectedServerJSON.Server_Social_Discord;
                 if (!String.IsNullOrWhiteSpace(_serverWebsiteLink) || !String.IsNullOrWhiteSpace(_serverDiscordLink) || !String.IsNullOrWhiteSpace(_serverPanelLink))
                 {
                     DiscordLauncherPresence.ButtonsList.Clear();

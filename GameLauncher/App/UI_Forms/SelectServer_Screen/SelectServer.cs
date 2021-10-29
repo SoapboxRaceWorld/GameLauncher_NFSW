@@ -9,6 +9,7 @@ using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.UI_Forms.AddServer_Screen;
 using Newtonsoft.Json;
 using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.References.Jsons.Newtonsoft;
 using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
@@ -27,13 +28,13 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
         private static bool IsSelectServerOpen = false;
         private static bool CustomServersOnly = false;
         private static int ID = 1;
-        private static readonly Dictionary<int, ServerList> ServerListBook = new Dictionary<int, ServerList>();
+        private static readonly Dictionary<int, Json_List_Server> ServerListBook = new Dictionary<int, Json_List_Server>();
 
         /* Used to ping the Server in ms */
         public static Queue<string> ServersToPing = new Queue<string>();
 
         public static string ServerName;
-        public static GetServerInformation ServerJsonData;
+        public static Json_Server_Info ServerJsonData;
 
         public static void OpenScreen(bool CSO)
         {
@@ -181,7 +182,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             ServerListRenderer.Columns[5].Width = 60;
             ServerListRenderer.Columns[5].TextAlign = HorizontalAlignment.Center;
 
-            foreach (ServerList substring in CustomServersOnly ? ServerListUpdater.NoCategoryList_CSO : ServerListUpdater.NoCategoryList)
+            foreach (Json_List_Server substring in CustomServersOnly ? ServerListUpdater.NoCategoryList_CSO : ServerListUpdater.NoCategoryList)
             {
                 try
                 {
@@ -274,15 +275,15 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                             }
                             else
                             {
-                                ServerJsonData = JsonConvert.DeserializeObject<GetServerInformation>(ServerJson);
+                                ServerJsonData = JsonConvert.DeserializeObject<Json_Server_Info>(ServerJson);
 
                                 ServerListRenderer.SafeInvokeAction(() =>
                                 {
-                                    ServerListRenderer.Items[serverid].SubItems[1].Text = (!string.IsNullOrWhiteSpace(ServerJsonData.serverName)) ?
-                                        ServerJsonData.serverName : ServerName;
-                                    ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(ServerJsonData.country.ToString());
-                                    ServerListRenderer.Items[serverid].SubItems[3].Text = ServerJsonData.onlineNumber.ToString();
-                                    ServerListRenderer.Items[serverid].SubItems[4].Text = ServerJsonData.numberOfRegistered.ToString();
+                                    ServerListRenderer.Items[serverid].SubItems[1].Text = (!string.IsNullOrWhiteSpace(ServerJsonData.Server_Name)) ?
+                                        ServerJsonData.Server_Name : ServerName;
+                                    ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(ServerJsonData.Server_Allowed_Countries);
+                                    ServerListRenderer.Items[serverid].SubItems[3].Text = ServerJsonData.Server_User_Online.ToString();
+                                    ServerListRenderer.Items[serverid].SubItems[4].Text = ServerJsonData.Server_User_Registered.ToString();
                                 }, this);
 
                                 Ping CheckMate = null;

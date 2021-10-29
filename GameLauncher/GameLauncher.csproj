@@ -140,6 +140,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
@@ -174,11 +175,6 @@
     <Compile Include="App\Classes\LauncherCore\Global\URLs.cs" />
     <Compile Include="App\Classes\LauncherCore\Languages\Visual_Forms\Translations.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterExecutable.cs" />
-    <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonCDNList.cs" />
-    <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonLanguage.cs" />
-    <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonResolutions.cs" />
-    <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonRootCA.cs" />
-    <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonServerInfo.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonServerList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\LanguageListUpdater.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\ResolutionsListUpdater.cs" />
@@ -215,7 +211,6 @@
     <Compile Include="App\Classes\LauncherCore\RPC\CarList.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\EventList.cs" />
-    <Compile Include="App\Classes\SystemPlatform\Windows\ScreenResolutions.cs" />
     <Compile Include="App\Languages\English_Texts.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

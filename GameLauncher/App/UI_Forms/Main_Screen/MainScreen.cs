@@ -31,6 +31,7 @@ using SBRWCore.Classes.Extensions;
 using SBRWCore.Classes.Extensions.Validator;
 using SBRWCore.Classes.Game_Client;
 using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.References.Jsons.Newtonsoft;
 using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
@@ -196,8 +197,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 {
                     if (string.IsNullOrWhiteSpace(FileAccountSave.Live_Data.Saved_Server_Address))
                     {
-                        Log.Warning("SERVERLIST: Failed to find anything... assuming " + ((ServerList)ServerPick.SelectedItem).IPAddress);
-                        FileAccountSave.Live_Data.Saved_Server_Address = ((ServerList)ServerPick.SelectedItem).IPAddress;
+                        Log.Warning("SERVERLIST: Failed to find anything... assuming " + ((Json_List_Server)ServerPick.SelectedItem).IPAddress);
+                        FileAccountSave.Live_Data.Saved_Server_Address = ((Json_List_Server)ServerPick.SelectedItem).IPAddress;
                         FileAccountSave.Save();
                     }
                 }
@@ -531,7 +532,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             Tokens.IPAddress = InformationCache.SelectedServerData.IPAddress;
             Tokens.ServerName = ServerListUpdater.ServerName("Login");
 
-            switch (Authentication.HashType(InformationCache.SelectedServerJSON.authHash ?? string.Empty))
+            switch (Authentication.HashType(InformationCache.SelectedServerJSON.Server_Authentication_Version ?? string.Empty))
             {
                 case AuthHash.H10:
                     Email = MainEmail.Text.ToString();
@@ -566,13 +567,13 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     return;
             }
 
-            Authentication.Client("Login", InformationCache.SelectedServerJSON.modernAuthSupport, Email, Password, null);
+            Authentication.Client("Login", InformationCache.SelectedServerJSON.Server_Authentication_Post, Email, Password, null);
 
             if (String.IsNullOrWhiteSpace(Tokens.Error))
             {
                 try
                 {
-                    if (!(ServerPick.SelectedItem is ServerList server)) return;
+                    if (!(ServerPick.SelectedItem is Json_List_Server server)) return;
                     FileAccountSave.Live_Data.Saved_Server_Address = server.IPAddress;
                 }
                 catch { }
@@ -586,7 +587,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 FileAccountSave.Live_Data.User_Raw_Email = MainEmail.Text.ToString();
                 FileAccountSave.Live_Data.User_Raw_Password = MainPassword.Text.ToString();
 
-                switch (Authentication.HashType(InformationCache.SelectedServerJSON.authHash ?? string.Empty))
+                switch (Authentication.HashType(InformationCache.SelectedServerJSON.Server_Authentication_Version ?? string.Empty))
                 {
                     case AuthHash.H10:
                         FileAccountSave.Live_Data.Saved_Server_Hash_Version = "1.0";
@@ -709,7 +710,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 return;
             }
 
-            InformationCache.SelectedServerData = (ServerList)ServerPick.SelectedItem;
+            InformationCache.SelectedServerData = (Json_List_Server)ServerPick.SelectedItem;
 
             if (InformationCache.SelectedServerData.IsSpecial)
             {
@@ -819,7 +820,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     {
                         try
                         {
-                            InformationCache.SelectedServerJSON = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
+                            InformationCache.SelectedServerJSON = JsonConvert.DeserializeObject<Json_Server_Info>(e2.Result);
                         }
                         catch (Exception Error)
                         {
@@ -851,18 +852,18 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         {
                             try
                             {
-                                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.bannerUrl))
+                                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Banner))
                                 {
                                     bool ServerBannerResult;
 
                                     try
                                     {
-                                        ServerBannerResult = Uri.TryCreate(InformationCache.SelectedServerJSON.bannerUrl, UriKind.Absolute, out Uri uriResult) &&
+                                        ServerBannerResult = Uri.TryCreate(InformationCache.SelectedServerJSON.Server_Banner, UriKind.Absolute, out Uri uriResult) &&
                                         (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                     }
                                     catch { ServerBannerResult = false; }
 
-                                    ImageUrl = ServerBannerResult ? InformationCache.SelectedServerJSON.bannerUrl : string.Empty;
+                                    ImageUrl = ServerBannerResult ? InformationCache.SelectedServerJSON.Server_Banner : string.Empty;
                                 }
                                 else
                                 {
@@ -879,7 +880,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 bool ServerDiscordLink;
                                 try
                                 {
-                                    ServerDiscordLink = Uri.TryCreate(InformationCache.SelectedServerJSON.discordUrl, UriKind.Absolute, out Uri uriResult) &&
+                                    ServerDiscordLink = Uri.TryCreate(InformationCache.SelectedServerJSON.Server_Social_Discord, UriKind.Absolute, out Uri uriResult) &&
                                                              (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
                                 catch { ServerDiscordLink = false; }
@@ -895,7 +896,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 bool ServerWebsiteLink;
                                 try
                                 {
-                                    ServerWebsiteLink = Uri.TryCreate(InformationCache.SelectedServerJSON.homePageUrl, UriKind.Absolute, out Uri uriResult) &&
+                                    ServerWebsiteLink = Uri.TryCreate(InformationCache.SelectedServerJSON.Server_Social_Home, UriKind.Absolute, out Uri uriResult) &&
                                               (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
                                 catch { ServerWebsiteLink = false; }
@@ -911,7 +912,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 bool ServerFacebookLink;
                                 try
                                 {
-                                    ServerFacebookLink = Uri.TryCreate(InformationCache.SelectedServerJSON.facebookUrl, UriKind.Absolute, out Uri uriResult) &&
+                                    ServerFacebookLink = Uri.TryCreate(InformationCache.SelectedServerJSON.Server_Social_Facebook, UriKind.Absolute, out Uri uriResult) &&
                                                          (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
                                 catch { ServerFacebookLink = false; }
@@ -924,7 +925,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             /* Twitter Account Display */
                             try
                             {
-                                bool ServerTwitterLink = Uri.TryCreate(InformationCache.SelectedServerJSON.twitterUrl, UriKind.Absolute, out Uri uriResult) &&
+                                bool ServerTwitterLink = Uri.TryCreate(InformationCache.SelectedServerJSON.Server_Social_Twitter, UriKind.Absolute, out Uri uriResult) &&
                                                          (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 TwitterIcon.BackgroundImage = ServerTwitterLink ? Theming.TwitterIcon : Theming.TwitterIconDisabled;
                                 TwitterAccountLink.Enabled = ServerTwitterLink;
@@ -936,7 +937,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             try
                             {
                                 serverSecondsToShutDown =
-                                (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 7200;
+                                (InformationCache.SelectedServerJSON.Server_Session_Timer != 0) ? InformationCache.SelectedServerJSON.Server_Session_Timer : 7200;
                                 ServerShutDown.Text = string.Format(Translations.Database("MainScreen_Text_ServerShutDown") +
                                     " " + TimeConversion.RelativeTime(serverSecondsToShutDown));
                             }
@@ -946,7 +947,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             {
                                 /* Scenery Group Display */
                                 string SceneryStatus;
-                                switch (String.Join("", InformationCache.SelectedServerJSON.activatedHolidaySceneryGroups))
+                                switch (String.Join("", InformationCache.SelectedServerJSON.Server_Active_Scenery))
                                 {
                                     case "SCENERY_GROUP_NEWYEARS":
                                         SceneryStatus = "Scenery: New Years";
@@ -974,38 +975,54 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             /* Check Selected Server Address for since nfsw currently requires being proxied for https */
                             if (InformationCache.SelectedServerData.IPAddress.StartsWith("https"))
                             {
+                                if (EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed())
+                                {
+                                    Log.Debug("Server is Https");
+                                }
                                 /* This is in case it is not listed in GSI at all || is present in GSI and is set to true */
-                                if ((!InformationCache.SelectedServerJSON.enforceLauncherProxy) || (InformationCache.SelectedServerJSON.enforceLauncherProxy != false))
+                                if ((!InformationCache.SelectedServerJSON.Server_Proxy_Forced) || (InformationCache.SelectedServerJSON.Server_Proxy_Forced != false))
                                 {   /* So we can force the Proxy On even if a User has Disabled it */
                                     InformationCache.SelectedServerEnforceProxy = true;
+                                    if (EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed())
+                                    {
+                                        Log.Debug("Server is Https: Case 1");
+                                    }
                                 }
                                 /* but still allow that nfsw might get patched to do https raw? */
-                                else if (InformationCache.SelectedServerJSON.enforceLauncherProxy == false)
+                                else if (InformationCache.SelectedServerJSON.Server_Proxy_Forced == false)
                                 {   /* In which case, respect the GSI set value */
                                     InformationCache.SelectedServerEnforceProxy = false;
+                                    if (EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed())
+                                    {
+                                        Log.Debug("Server is Https: Case 2 (Never Gets Touched Because of First If Statement)");
+                                    }
                                 }
                             }
                             /* If it's an HTTP Server, check if Proxy is being requested as Enforced On */
-                            else if (InformationCache.SelectedServerJSON.enforceLauncherProxy != true)
+                            else if (InformationCache.SelectedServerJSON.Server_Proxy_Forced != true)
                             {   /* This is set so that it doesn't try to enforce Proxy On if user switches
                                  * to a server that doesn't have enforceLauncherProxy set or true */
                                 InformationCache.SelectedServerEnforceProxy = false;
+                                if (EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed())
+                                {
+                                    Log.Debug("Server is not Https: Case 3");
+                                }
                             }
 
-                            if (InformationCache.SelectedServerJSON.maxOnlinePlayers != 0)
+                            if (InformationCache.SelectedServerJSON.Server_User_Online_Peak != 0)
                             {
-                                numPlayers = string.Format("{0} / {1}", InformationCache.SelectedServerJSON.onlineNumber, InformationCache.SelectedServerJSON.maxOnlinePlayers.ToString());
-                                numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
+                                numPlayers = string.Format("{0} / {1}", InformationCache.SelectedServerJSON.Server_User_Online, InformationCache.SelectedServerJSON.Server_User_Online_Peak);
+                                numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.Server_User_Registered);
                             }
-                            else if (InformationCache.SelectedServerJSON.maxUsersAllowed != 0)
+                            else if (InformationCache.SelectedServerJSON.Server_User_Online_Max != 0)
                             {
-                                numPlayers = string.Format("{0} / {1}", InformationCache.SelectedServerJSON.onlineNumber, InformationCache.SelectedServerJSON.maxUsersAllowed.ToString());
-                                numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
+                                numPlayers = string.Format("{0} / {1}", InformationCache.SelectedServerJSON.Server_User_Online, InformationCache.SelectedServerJSON.Server_User_Online_Max);
+                                numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.Server_User_Registered);
                             }
-                            else if ((InformationCache.SelectedServerJSON.maxUsersAllowed == 0) || (InformationCache.SelectedServerJSON.maxOnlinePlayers == 0))
+                            else if ((InformationCache.SelectedServerJSON.Server_User_Online_Max == 0) || (InformationCache.SelectedServerJSON.Server_User_Online_Peak == 0))
                             {
-                                numPlayers = string.Format("{0}", InformationCache.SelectedServerJSON.onlineNumber);
-                                numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
+                                numPlayers = string.Format("{0}", InformationCache.SelectedServerJSON.Server_User_Online);
+                                numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.Server_User_Registered);
                             }
 
                             FunctionStatus.AllowRegistration = true;
@@ -1035,8 +1052,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             LoginButton.ForeColor = Theming.FivithTextForeColor;
                             LoginButton.Enabled = true;
                             RegisterText.Enabled = true;
-                            InformationCache.SelectedServerCategory = ((ServerList)ServerPick.SelectedItem).Category;
-                            Session_Timer.Remaining = (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
+                            InformationCache.SelectedServerCategory = ((Json_List_Server)ServerPick.SelectedItem).Category;
+                            Session_Timer.Remaining = (InformationCache.SelectedServerJSON.Server_Session_Timer != 0) ? InformationCache.SelectedServerJSON.Server_Session_Timer : 2 * 60 * 60;
 
                             if ((InformationCache.SelectedServerCategory ?? string.Empty).ToUpper() == "DEV" ||
                             (InformationCache.SelectedServerCategory ?? string.Empty).ToUpper() == "OFFLINE")
@@ -1202,7 +1219,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                                             Banner.Image = Image.FromStream(_serverRawBanner);
 
-                                            if (Bitmap_Handler.GetFileExtension(ImageUrl) == "gif")
+                                            if (Strings.GetExtension(ImageUrl) == "gif")
                                             {
                                                 Image.FromStream(_serverRawBanner).Save(BannerCache);
                                             }
@@ -3285,7 +3302,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                     if (ServerListUpdater.NoCategoryList != null && ServerListUpdater.NoCategoryList.Any())
                     {
-                        foreach (ServerList Servers in ServerListUpdater.NoCategoryList)
+                        foreach (Json_List_Server Servers in ServerListUpdater.NoCategoryList)
                         {
                             if (_nfswstarted == null)
                             {

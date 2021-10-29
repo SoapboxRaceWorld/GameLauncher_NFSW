@@ -1,11 +1,11 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using SBRWCore.Classes.References.Jsons.Newtonsoft;
 using SBRWCore.Classes.Required;
 using SBRWCore.Classes.System;
 using System;
@@ -328,9 +328,9 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             if (!FileReadOnly) { SettingsSave.Text = "SAVING"; }
 
             FileGameSettingsData.ScreenWidth = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
-                                               numericResWidth.Value : Convert.ToDecimal(((JsonResolutions)comboResolutions.SelectedItem).Width));
+                                               numericResWidth.Value : Convert.ToDecimal(((Json_List_Resolutions)comboResolutions.SelectedItem).Width));
             FileGameSettingsData.ScreenHeight = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
-                                                numericResHeight.Value : Convert.ToDecimal(((JsonResolutions)comboResolutions.SelectedItem).Height));
+                                                numericResHeight.Value : Convert.ToDecimal(((Json_List_Resolutions)comboResolutions.SelectedItem).Height));
             FileGameSettingsData.Brightness = ValidWholeNumberRange("Brightness", numericBrightness.Value);
             FileGameSettingsData.MasterAudio = ValidDecimalNumberRange(numericMVol.Value);
             FileGameSettingsData.SFXAudio = ValidDecimalNumberRange(numericSFxVol.Value);

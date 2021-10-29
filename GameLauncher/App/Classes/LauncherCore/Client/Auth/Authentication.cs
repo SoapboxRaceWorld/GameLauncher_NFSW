@@ -235,15 +235,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                                     string MessageSuccess;
                                     string MessageServerWelcome = string.Empty;
 
-                                    if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.messageSrv))
+                                    if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Message))
                                     {
-                                        if (InformationCache.SelectedServerJSON.messageSrv.ToLower().Contains("welcome"))
+                                        if (InformationCache.SelectedServerJSON.Server_Message.ToLower().Contains("welcome"))
                                         {
-                                            MessageServerWelcome = InformationCache.SelectedServerJSON.messageSrv + "\n";
+                                            MessageServerWelcome = InformationCache.SelectedServerJSON.Server_Message + "\n";
                                         }
                                         else
                                         {
-                                            MessageServerWelcome = "Welcome: " + InformationCache.SelectedServerJSON.messageSrv + "\n";
+                                            MessageServerWelcome = "Welcome: " + InformationCache.SelectedServerJSON.Server_Message + "\n";
                                         }
                                     }
 
@@ -318,15 +318,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                             string MessageSuccess;
                             string MessageServerWelcome = string.Empty;
 
-                            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.messageSrv))
+                            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Message))
                             {
-                                if (InformationCache.SelectedServerJSON.messageSrv.ToLower().Contains("welcome"))
+                                if (InformationCache.SelectedServerJSON.Server_Message.ToLower().Contains("welcome"))
                                 {
-                                    MessageServerWelcome = InformationCache.SelectedServerJSON.messageSrv + "\n";
+                                    MessageServerWelcome = InformationCache.SelectedServerJSON.Server_Message + "\n";
                                 }
                                 else
                                 {
-                                    MessageServerWelcome = "Welcome: " + InformationCache.SelectedServerJSON.messageSrv + "\n";
+                                    MessageServerWelcome = "Welcome: " + InformationCache.SelectedServerJSON.Server_Message + "\n";
                                 }
                             }
 
@@ -383,7 +383,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
             else
             {
-                return InformationCache.SelectedServerJSON.modernAuthSupport ? AuthHash.H10 : AuthHash.H12;
+                return InformationCache.SelectedServerJSON.Server_Authentication_Post ? AuthHash.H10 : AuthHash.H12;
             }
         }
     }

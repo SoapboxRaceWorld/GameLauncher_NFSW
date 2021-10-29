@@ -1,11 +1,11 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.UI_Forms.SelectServer_Screen;
 using Newtonsoft.Json;
 using SBRWCore.Classes.Extensions;
+using SBRWCore.Classes.References.Jsons.Newtonsoft;
 using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
@@ -20,11 +20,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
     {
         public static bool LoadedList = false;
 
-        public static List<ServerList> NoCategoryList = new List<ServerList>();
+        public static List<Json_List_Server> NoCategoryList = new List<Json_List_Server>();
 
-        public static List<ServerList> NoCategoryList_CSO = new List<ServerList>();
+        public static List<Json_List_Server> NoCategoryList_CSO = new List<Json_List_Server>();
 
-        public static List<ServerList> CleanList = new List<ServerList>();
+        public static List<Json_List_Server> CleanList = new List<Json_List_Server>();
 
         public static string CachedJSONList;
 
@@ -33,13 +33,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
             Log.Checking("SERVER LIST CORE: Creating Server List");
             DiscordLauncherPresence.Status("Start Up", "Creating Server List");
 
-            List<ServerList> serverInfos = new List<ServerList>();
+            List<Json_List_Server> serverInfos = new List<Json_List_Server>();
 
-            List<ServerList> CustomServerInfos = new List<ServerList>();
+            List<Json_List_Server> CustomServerInfos = new List<Json_List_Server>();
 
             try
             {
-                serverInfos.AddRange(JsonConvert.DeserializeObject<List<ServerList>>(CachedJSONList));
+                serverInfos.AddRange(JsonConvert.DeserializeObject<List<Json_List_Server>>(CachedJSONList));
                 LoadedList = true;
             }
             catch (Exception Error)
@@ -59,8 +59,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
             {
                 try
                 {
-                    var fileItems = JsonConvert.DeserializeObject<List<ServerList>>
-                    (Strings.Encode(File.ReadAllText(Locations.LauncherCustomServers))) ?? new List<ServerList>();
+                    var fileItems = JsonConvert.DeserializeObject<List<Json_List_Server>>
+                    (Strings.Encode(File.ReadAllText(Locations.LauncherCustomServers))) ?? new List<Json_List_Server>();
 
                     if (fileItems.Count > 0)
                     {
@@ -84,7 +84,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
             if (File.Exists("libOfflineServer.dll"))
             {
-                serverInfos.Add(new ServerList
+                serverInfos.Add(new Json_List_Server
                 {
                     Name = "Offline Built-In Server",
                     Category = "OFFLINE",
@@ -96,7 +96,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
             if (Debugger.IsAttached)
             {
-                serverInfos.Add(new ServerList
+                serverInfos.Add(new Json_List_Server
                 {
                     Name = "Local Debug Server",
                     Category = "DEBUG",
@@ -113,7 +113,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     if (serverInfos.Any())
                     {
                         /* Create Final Server List without Categories (All Servers) */
-                        foreach (ServerList NoCatList in serverInfos)
+                        foreach (Json_List_Server NoCatList in serverInfos)
                         {
                             if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
                             {
@@ -124,7 +124,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                         if (CustomServerInfos.Count >= 1)
                         {
                             /* Create Final Server List without Categories (Custom Servers Only) */
-                            foreach (ServerList NoCatList in CustomServerInfos)
+                            foreach (Json_List_Server NoCatList in CustomServerInfos)
                             {
                                 if (NoCategoryList_CSO.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
                                 {
@@ -134,13 +134,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                         }
 
                         /* Create Rough Draft Server List with Categories */
-                        List<ServerList> RawList = new List<ServerList>();
+                        List<Json_List_Server> RawList = new List<Json_List_Server>();
 
                         foreach (var serverItemGroup in serverInfos.GroupBy(s => s.Category))
                         {
                             if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
                             {
-                                RawList.Add(new ServerList
+                                RawList.Add(new Json_List_Server
                                 {
                                     ID = $"__category-{serverItemGroup.Key}__",
                                     Name = $"<GROUP>{serverItemGroup.Key} Servers",
@@ -151,7 +151,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                         }
 
                         /* Create Final Server List with Categories */
-                        foreach (ServerList CList in RawList)
+                        foreach (Json_List_Server CList in RawList)
                         {
                             if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
                             {
@@ -214,9 +214,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
             try
             {
                 if (InformationCache.SelectedServerJSON != null &&
-                    !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.serverName))
+                    !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Name))
                 {
-                    return InformationCache.SelectedServerJSON.serverName;
+                    return InformationCache.SelectedServerJSON.Server_Name;
                 }
                 else if (InformationCache.SelectedServerData != null &&
                     !string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.Name))
@@ -234,9 +234,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                             return "The Selected Server";
                         case "Select Server":
                             if (SelectServer.ServerJsonData != null &&
-                                !string.IsNullOrWhiteSpace(SelectServer.ServerJsonData.serverName))
+                                !string.IsNullOrWhiteSpace(SelectServer.ServerJsonData.Server_Name))
                             {
-                                return SelectServer.ServerJsonData.serverName;
+                                return SelectServer.ServerJsonData.Server_Name;
                             }
                             else
                             {

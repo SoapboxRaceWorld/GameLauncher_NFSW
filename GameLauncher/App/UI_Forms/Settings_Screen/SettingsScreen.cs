@@ -19,6 +19,7 @@ using GameLauncher.App.UI_Forms.VerifyHash_Screen;
 using SBRWCore.Classes.Extensions;
 using SBRWCore.Classes.Extensions.API;
 using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.References.Jsons.Newtonsoft;
 using SBRWCore.Classes.Required;
 using SBRWCore.Classes.System;
 using System;
@@ -442,7 +443,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 {
                     if (e.Index != -1 && cb.Items != null)
                     {
-                        if (cb.Items[e.Index] is CDNList si)
+                        if (cb.Items[e.Index] is Json_List_CDN si)
                         {
                             cdnListText = si.Name;
                         }
@@ -498,7 +499,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 {
                     if (e.Index != -1 && cb.Items != null)
                     {
-                        if (cb.Items[e.Index] is LangObject si)
+                        if (cb.Items[e.Index] is Json_List_Language si)
                         {
                             langListText = si.Name;
                         }
@@ -565,9 +566,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
             _newGameFilesPath = FileSettingsSave.Live_Data.Game_Path;
             _newLauncherPath = Locations.LauncherFolder;
-
+            Log.Debug(FileSettingsSave.Live_Data.Launcher_Discord_Presence);
             _disableProxy = (FileSettingsSave.Live_Data.Launcher_Proxy == "1");
-            _disableDiscordRPC = (FileSettingsSave.Live_Data.Launcher_Discord_Presense == "1");
+            _disableDiscordRPC = (FileSettingsSave.Live_Data.Launcher_Discord_Presence == "1");
             _enableAltWebCalls = (FileSettingsSave.Live_Data.Launcher_WebClient_Method == "WebClientWithTimeout");
             _enableInsiderPreview = FileSettingsSave.Live_Data.Launcher_Insider == "1";
             _enableThemeSupport = FileSettingsSave.Live_Data.Launcher_Theme_Support == "1";
@@ -731,13 +732,13 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         {
             SettingsSave.Text = "SAVING";
             /* TODO null check */
-            if (SettingsLanguage.SelectedItem != null && !string.IsNullOrWhiteSpace(((LangObject)SettingsLanguage.SelectedItem).INI_Value))
+            if (SettingsLanguage.SelectedItem != null && !string.IsNullOrWhiteSpace(((Json_List_Language)SettingsLanguage.SelectedItem).Value_Ini))
             {
-                FileSettingsSave.Live_Data.Launcher_Language = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
-                FileGameSettingsData.Language = ((LangObject)SettingsLanguage.SelectedItem).XML_Value;
+                FileSettingsSave.Live_Data.Launcher_Language = ((Json_List_Language)SettingsLanguage.SelectedItem).Value_Ini;
+                FileGameSettingsData.Language = ((Json_List_Language)SettingsLanguage.SelectedItem).Value_XML;
 
                 /* TODO: Inform player about custom languagepack used. */
-                if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom")
+                if (((Json_List_Language)SettingsLanguage.SelectedItem).Category == "Custom")
                 {
                     MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English Language Pack instead.",
                         "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -757,7 +758,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                     try
                     {
                         IniFile LanguagePickerFile = new IniFile(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini");
-                        LanguagePickerFile.Write("Language", ((LangObject)SettingsLanguage.SelectedItem).INI_Value);
+                        LanguagePickerFile.Write("Language", ((Json_List_Language)SettingsLanguage.SelectedItem).Value_Ini);
                     }
                     catch { }
                 }
@@ -801,9 +802,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 }
             }
 
-            if (SettingsCDNPick.SelectedItem != null && !string.IsNullOrWhiteSpace(((CDNList)SettingsCDNPick.SelectedItem).Url))
+            if (SettingsCDNPick.SelectedItem != null && !string.IsNullOrWhiteSpace(((Json_List_CDN)SettingsCDNPick.SelectedItem).Url))
             {
-                string SelectedCDNFromList = ((CDNList)SettingsCDNPick.SelectedItem).Url;
+                string SelectedCDNFromList = ((Json_List_CDN)SettingsCDNPick.SelectedItem).Url;
                 string LocalFinalCDNURL;
 
                 if (SelectedCDNFromList.EndsWith("/"))
@@ -813,7 +814,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 }
                 else
                 {
-                    LocalFinalCDNURL = ((CDNList)SettingsCDNPick.SelectedItem).Url;
+                    LocalFinalCDNURL = ((Json_List_CDN)SettingsCDNPick.SelectedItem).Url;
                 }
 
                 if (FileSettingsSave.Live_Data.Launcher_CDN != LocalFinalCDNURL)
@@ -880,11 +881,11 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 }
             }
 
-            if (FileSettingsSave.Live_Data.Launcher_Discord_Presense != (SettingsDiscordRPCCheckbox.Checked ? "1" : "0"))
+            if (FileSettingsSave.Live_Data.Launcher_Discord_Presence != (SettingsDiscordRPCCheckbox.Checked ? "1" : "0"))
             {
-                FileSettingsSave.Live_Data.Launcher_Discord_Presense = SettingsDiscordRPCCheckbox.Checked ? "1" : "0";
+                FileSettingsSave.Live_Data.Launcher_Discord_Presence = SettingsDiscordRPCCheckbox.Checked ? "1" : "0";
 
-                if (FileSettingsSave.Live_Data.Launcher_Discord_Presense == "1")
+                if (FileSettingsSave.Live_Data.Launcher_Discord_Presence == "1")
                 {
                     if (DiscordLauncherPresence.Running())
                     {
@@ -1169,11 +1170,11 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             {
                 if (SettingsCDNPick.SelectedItem != null)
                 {
-                    if (((CDNList)SettingsCDNPick.SelectedItem).IsSpecial)
+                    if (((Json_List_CDN)SettingsCDNPick.SelectedItem).IsSpecial)
                     {
                         SettingsCDNPick.SelectedIndex = _lastSelectedCdnId;
                     }
-                    else if (!string.IsNullOrWhiteSpace(((CDNList)SettingsCDNPick.SelectedItem).Url ?? string.Empty))
+                    else if (!string.IsNullOrWhiteSpace(((Json_List_CDN)SettingsCDNPick.SelectedItem).Url ?? string.Empty))
                     {
                         IsChangedCDNDown();
 
@@ -1198,9 +1199,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         {
             try
             {
-                if (bool.TryParse(((LangObject)SettingsLanguage.SelectedItem).IsSpecial.ToString(), out bool Result))
+                if (bool.TryParse(((Json_List_Language)SettingsLanguage.SelectedItem).IsSpecial.ToString(), out bool Result))
                 {
-                    if (((LangObject)SettingsLanguage.SelectedItem).IsSpecial)
+                    if (((Json_List_Language)SettingsLanguage.SelectedItem).IsSpecial)
                     {
                         SettingsLanguage.SelectedIndex = _lastSelectedLanguage;
                     }
@@ -1225,7 +1226,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 ThreadChangedCDN = null;
             }
 
-            if (!string.IsNullOrWhiteSpace(((CDNList)SettingsCDNPick.SelectedItem).Url))
+            if (!string.IsNullOrWhiteSpace(((Json_List_CDN)SettingsCDNPick.SelectedItem).Url))
             {
                 SettingsCDNText.Text = "CDN: PINGING";
                 SettingsCDNText.ForeColor = Theming.SecondaryTextForeColor;
@@ -1235,7 +1236,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 {
                     if (!Application.OpenForms[this.Name].IsDisposed)
                     {
-                        switch (API_Core.StatusCheck(((CDNList)SettingsCDNPick.SelectedItem).Url + "/index.xml", 10))
+                        switch (API_Core.StatusCheck(((Json_List_CDN)SettingsCDNPick.SelectedItem).Url + "/index.xml", 10))
                         {
                             case APIStatus.Online:
                                 SettingsCDNText.SafeInvokeAction(() =>
@@ -1243,7 +1244,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                                     SettingsCDNText.Text = "CDN: ONLINE";
                                     SettingsCDNText.ForeColor = Theming.Sucess;
                                 });
-                                Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNList)SettingsCDNPick.SelectedItem).Url + " Is Online!");
+                                Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((Json_List_CDN)SettingsCDNPick.SelectedItem).Url + " Is Online!");
                                 break;
                             default:
                                 SettingsCDNText.SafeInvokeAction(() =>
@@ -1251,7 +1252,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                                     SettingsCDNText.Text = "CDN: OFFLINE";
                                     SettingsCDNText.ForeColor = Theming.Error;
                                 });
-                                Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNList)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
+                                Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((Json_List_CDN)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
                                 break;
                         }
                     }
@@ -1526,10 +1527,10 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                     Log.Core("SETTINGS LANGLIST: Found something!");
                     Log.Core("SETTINGS LANGLIST: Checking if Language exists on our database");
 
-                    if (LanguageListUpdater.CleanList.FindIndex(i => string.Equals(i.INI_Value, SavedLang)) != 0)
+                    if (LanguageListUpdater.CleanList.FindIndex(i => string.Equals(i.Value_Ini, SavedLang)) != 0)
                     {
                         Log.Core("SETTINGS LANGLIST: Language found! Checking its Value");
-                        var index = LanguageListUpdater.CleanList.FindIndex(i => string.Equals(i.INI_Value, SavedLang));
+                        var index = LanguageListUpdater.CleanList.FindIndex(i => string.Equals(i.Value_Ini, SavedLang));
 
                         Log.Core("SETTINGS LANGLIST: ID is " + index);
                         if (index >= 0)

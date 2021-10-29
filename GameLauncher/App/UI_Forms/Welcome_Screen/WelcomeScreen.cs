@@ -1,10 +1,10 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using SBRWCore.Classes.References.Jsons.Newtonsoft;
 using SBRWCore.Classes.Required;
 using System;
 using System.Drawing;
@@ -159,7 +159,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
         {
             try
             {
-                if (((CDNList)CDNSource.SelectedItem).IsSpecial)
+                if (((Json_List_CDN)CDNSource.SelectedItem).IsSpecial)
                 {
                     CDNSource.SelectedIndex = 1;
                     return;
@@ -172,7 +172,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
         {
             try
             {
-                if (((LangObject)GameLangSource.SelectedItem).IsSpecial)
+                if (((Json_List_Language)GameLangSource.SelectedItem).IsSpecial)
                 {
                     GameLangSource.SelectedIndex = 1;
                     return;
@@ -232,15 +232,15 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(((LangObject)GameLangSource.SelectedItem).INI_Value))
+            if (!string.IsNullOrWhiteSpace(((Json_List_Language)GameLangSource.SelectedItem).Value_Ini))
             {
-                FileSettingsSave.Live_Data.Launcher_Language = ((LangObject)GameLangSource.SelectedItem).INI_Value;
-                FileGameSettingsData.Language = ((LangObject)GameLangSource.SelectedItem).XML_Value;
+                FileSettingsSave.Live_Data.Launcher_Language = ((Json_List_Language)GameLangSource.SelectedItem).Value_Ini;
+                FileGameSettingsData.Language = ((Json_List_Language)GameLangSource.SelectedItem).Value_XML;
             }
 
             try
             {
-                if (((LangObject)GameLangSource.SelectedItem).Category == "Custom")
+                if (((Json_List_Language)GameLangSource.SelectedItem).Category == "Custom")
                 {
                     /* Create Custom Settings.ini for LangPicker.asi module */
                     if (!Directory.Exists(FileSettingsSave.Live_Data.Game_Path + "/scripts"))
@@ -249,7 +249,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
                     }
 
                     IniFile LanguagePickerFile = new IniFile(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini");
-                    LanguagePickerFile.Write("Language", ((LangObject)GameLangSource.SelectedItem).INI_Value);
+                    LanguagePickerFile.Write("Language", ((Json_List_Language)GameLangSource.SelectedItem).Value_Ini);
                     MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English instead.",
                         "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -266,9 +266,9 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
                 LogToFileAddons.OpenLog("WELCOME SCREEN", null, Error, null, true);
             }
 
-            if (!string.IsNullOrWhiteSpace(((CDNList)CDNSource.SelectedItem).Url))
+            if (!string.IsNullOrWhiteSpace(((Json_List_CDN)CDNSource.SelectedItem).Url))
             {
-                string ChoosenCDN = ((CDNList)CDNSource.SelectedItem).Url;
+                string ChoosenCDN = ((Json_List_CDN)CDNSource.SelectedItem).Url;
                 string FinalCDNURL;
 
                 if (ChoosenCDN.EndsWith("/"))
@@ -278,7 +278,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
                 }
                 else
                 {
-                    FinalCDNURL = ((CDNList)CDNSource.SelectedItem).Url;
+                    FinalCDNURL = ((Json_List_CDN)CDNSource.SelectedItem).Url;
                 }
 
                 SelectedCDN.CDNUrl = FinalCDNURL;
@@ -335,7 +335,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
                 {
                     if (e.Index != -1 && cb.Items != null)
                     {
-                        if (cb.Items[e.Index] is CDNList si)
+                        if (cb.Items[e.Index] is Json_List_CDN si)
                         {
                             cdnListText = si.Name;
                         }
@@ -387,7 +387,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
                 {
                     if (e.Index != -1 && cb.Items != null)
                     {
-                        if (cb.Items[e.Index] is LangObject si)
+                        if (cb.Items[e.Index] is Json_List_Language si)
                         {
                             langListText = si.Name;
                         }

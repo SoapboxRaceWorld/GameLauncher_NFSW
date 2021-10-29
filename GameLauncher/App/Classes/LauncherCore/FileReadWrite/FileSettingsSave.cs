@@ -1,9 +1,10 @@
 ﻿using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.References;
+using SBRWCore.Classes.References.Inis;
 using SBRWCore.Classes.Required;
 using SBRWCore.Classes.System;
 using System;
@@ -133,15 +134,20 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
             if (!SettingFile.KeyExists("DisableRPC") || string.IsNullOrWhiteSpace(SettingFile.Read("DisableRPC")))
             {
-                SettingFile.Write("DisableRPC", Live_Data.Launcher_Discord_Presense = "0");
+                SettingFile.Write("DisableRPC", Live_Data.Launcher_Discord_Presence = "0");
             }
             else if ((SettingFile.Read("DisableRPC") == "0") || (SettingFile.Read("DisableRPC") == "1"))
             {
-                Live_Data.Launcher_Discord_Presense = SettingFile.Read("DisableRPC");
+                Live_Data.Launcher_Discord_Presence = SettingFile.Read("DisableRPC");
+                if (Live_Data.Launcher_Discord_Presence == "1")
+                {
+                    /* Now that Settings has been Loaded, Lets Stop RPC */
+                    DiscordLauncherPresence.Stop("Close");
+                }
             }
             else
             {
-                SettingFile.Write("DisableRPC", Live_Data.Launcher_Discord_Presense = "0");
+                SettingFile.Write("DisableRPC", Live_Data.Launcher_Discord_Presence = "0");
             }
 
             if (!SettingFile.KeyExists("IgnoreUpdateVersion") || string.IsNullOrWhiteSpace(SettingFile.Read("IgnoreUpdateVersion")))
@@ -404,9 +410,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 SettingFile.Write("DisableProxy", Live_Data.Launcher_Proxy);
             }
 
-            if (SettingFile.Read("DisableRPC") != Live_Data.Launcher_Discord_Presense)
+            if (SettingFile.Read("DisableRPC") != Live_Data.Launcher_Discord_Presence)
             {
-                SettingFile.Write("DisableRPC", Live_Data.Launcher_Discord_Presense);
+                SettingFile.Write("DisableRPC", Live_Data.Launcher_Discord_Presence);
             }
 
             if (SettingFile.Read("InstallationDirectory") != Live_Data.Game_Path)

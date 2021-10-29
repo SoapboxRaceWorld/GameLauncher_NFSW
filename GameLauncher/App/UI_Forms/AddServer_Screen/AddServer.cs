@@ -1,5 +1,4 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
@@ -8,6 +7,7 @@ using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Newtonsoft.Json;
 using SBRWCore.Classes.Extensions;
 using SBRWCore.Classes.Launcher;
+using SBRWCore.Classes.References.Jsons.Newtonsoft;
 using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
@@ -270,11 +270,11 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
                 }
                 else
                 {
-                    GetServerInformation ServerInformationData = null;
+                    Json_Server_Info ServerInformationData = null;
 
                     try
                     {
-                        ServerInformationData = JsonConvert.DeserializeObject<GetServerInformation>(ServerInfomationJSON);
+                        ServerInformationData = JsonConvert.DeserializeObject<Json_Server_Info>(ServerInfomationJSON);
                     }
                     catch (Exception Error)
                     {
@@ -334,9 +334,9 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
                                 oldcontent = "[]";
                             }
 
-                            var Servers = JsonConvert.DeserializeObject<List<ServerList>>(oldcontent);
+                            var Servers = JsonConvert.DeserializeObject<List<Json_List_Server>>(oldcontent);
 
-                            Servers.Add(new ServerList
+                            Servers.Add(new Json_List_Server
                             {
                                 Name = Strings.Encode(ServerName.Text),
                                 IPAddress = FormattedURL,

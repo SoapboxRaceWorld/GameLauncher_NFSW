@@ -1,18 +1,18 @@
 ﻿using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using Newtonsoft.Json;
+using SBRWCore.Classes.References.Jsons.Newtonsoft;
 using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
-using static GameLauncher.App.Classes.SystemPlatform.Windows.ScreenResolutions;
+using static SBRWCore.Classes.Extensions.Screens.Resolution_Results;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
     class ResolutionsListUpdater
     {
-        public static List<JsonResolutions> List = new List<JsonResolutions>();
+        public static List<Json_List_Resolutions> List = new List<Json_List_Resolutions>();
 
         public static void Get()
         {
@@ -21,7 +21,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 int AmountOfRes = 0;
                 string JSONResolutions = string.Empty;
 
-                List<JsonResolutions> LocalResolutionsList = new List<JsonResolutions>();
+                List<Json_List_Resolutions> LocalResolutionsList = new List<Json_List_Resolutions>();
                 DEVMODE vDevMode = new DEVMODE();
 
                 JSONResolutions += "[";
@@ -51,7 +51,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
                 try
                 {
-                    LocalResolutionsList.AddRange(JsonConvert.DeserializeObject<List<JsonResolutions>>(JSONResolutions));
+                    LocalResolutionsList.AddRange(JsonConvert.DeserializeObject<List<Json_List_Resolutions>>(JSONResolutions));
                 }
                 catch (Exception Error)
                 {
@@ -60,7 +60,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
                 try
                 {
-                    foreach (JsonResolutions CList in LocalResolutionsList)
+                    foreach (Json_List_Resolutions CList in LocalResolutionsList)
                     {
                         if (List.FindIndex(i => string.Equals(i.Resolution, CList.Resolution)) == -1)
                         {

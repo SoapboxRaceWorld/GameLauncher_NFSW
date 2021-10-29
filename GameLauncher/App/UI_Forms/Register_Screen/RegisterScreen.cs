@@ -112,7 +112,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                 String Email;
                 String Password;
 
-                switch (Authentication.HashType(InformationCache.SelectedServerJSON.authHash ?? string.Empty))
+                switch (Authentication.HashType(InformationCache.SelectedServerJSON.Server_Authentication_Version ?? string.Empty))
                 {
                     case AuthHash.H10:
                         Email = RegisterEmail.Text.ToString();
@@ -231,7 +231,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                     Tokens.IPAddress = InformationCache.SelectedServerData.IPAddress;
                     Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
-                    Authentication.Client("Register", InformationCache.SelectedServerJSON.modernAuthSupport, Email, Password, _ticketRequired ? RegisterTicket.Text : null);
+                    Authentication.Client("Register", InformationCache.SelectedServerJSON.Server_Authentication_Post, Email, Password, _ticketRequired ? RegisterTicket.Text : null);
 
                     if (!String.IsNullOrWhiteSpace(Tokens.Success))
                     {
@@ -427,20 +427,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
             /********************************/
 
             CurrentWindowInfo.Text = "REGISTER ON \n" + ServerListUpdater.ServerName("Register").ToUpper();
-
-            try
-            {
-                if (InformationCache.SelectedServerJSON.requireTicket != null && !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.requireTicket))
-                {
-                    _ticketRequired = InformationCache.SelectedServerJSON.requireTicket.ToLower() == "true";
-                }
-                else
-                {
-                    _ticketRequired = false;
-                }
-            }
-            catch { }
-
+            _ticketRequired = InformationCache.SelectedServerJSON.Server_Registration_Token;
             /* Show Ticket Box if its Required  */
             RegisterTicket.Visible = _ticketRequired;
             RegisterTicketBorder.Visible = _ticketRequired;

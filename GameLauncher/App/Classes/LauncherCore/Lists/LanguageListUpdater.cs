@@ -1,8 +1,8 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using Newtonsoft.Json;
+using SBRWCore.Classes.References.Jsons.Newtonsoft;
 using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
@@ -12,16 +12,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
     public class LanguageListUpdater
     {
-        public static List<LangObject> NoCategoryList = new List<LangObject>();
+        public static List<Json_List_Language> NoCategoryList = new List<Json_List_Language>();
 
-        public static List<LangObject> CleanList = new List<LangObject>();
+        public static List<Json_List_Language> CleanList = new List<Json_List_Language>();
 
         public static void GetList()
         {
             Log.Checking("LIST CORE: Creating Language List");
             DiscordLauncherPresence.Status("Start Up", "Creating Language List");
 
-            List<LangObject> langInfos = new List<LangObject>();
+            List<Json_List_Language> langInfos = new List<Json_List_Language>();
 
             String json_language = String.Empty;
 
@@ -49,7 +49,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
             try
             {
-                langInfos.AddRange(JsonConvert.DeserializeObject<List<LangObject>>(json_language));
+                langInfos.AddRange(JsonConvert.DeserializeObject<List<Json_List_Language>>(json_language));
             }
             catch (Exception Error)
             {
@@ -58,7 +58,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
             try
             {
-                foreach (LangObject NoCatList in langInfos)
+                foreach (Json_List_Language NoCatList in langInfos)
                 {
                     if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
                     {
@@ -66,13 +66,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     }
                 }
 
-                List<LangObject> RawList = new List<LangObject>();
+                List<Json_List_Language> RawList = new List<Json_List_Language>();
 
                 foreach (var langItemGroup in langInfos.GroupBy(s => s.Category))
                 {
                     if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{langItemGroup.Key} Mirrors")) == -1)
                     {
-                        RawList.Add(new LangObject
+                        RawList.Add(new Json_List_Language
                         {
                             Name = $"<GROUP>{langItemGroup.Key} Languages",
                             IsSpecial = true
@@ -81,7 +81,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     RawList.AddRange(langItemGroup.ToList());
                 }
 
-                foreach (LangObject CList in RawList)
+                foreach (Json_List_Language CList in RawList)
                 {
                     if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
                     {

@@ -323,37 +323,37 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                             SmallImageKey = "ingame"
                         };
 
-                        if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl) ||
-                            !String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl) ||
-                            !String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webPanelUrl))
+                        if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Social_Home) ||
+                            !String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Social_Discord) ||
+                            !String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Panel))
                         {
                             ButtonsList.Clear();
 
-                            if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webPanelUrl))
+                            if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Panel))
                             {
                                 /* Let's format it now, if possible */
                                 ButtonsList.Add(new DiscordButton()
                                 {
                                     Label = "View Panel",
-                                    Url = InformationCache.SelectedServerJSON.webPanelUrl.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
+                                    Url = InformationCache.SelectedServerJSON.Server_Panel.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
                                 });
                             }
-                            else if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl) &&
-                                InformationCache.SelectedServerJSON.homePageUrl != InformationCache.SelectedServerJSON.discordUrl)
+                            else if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Social_Home) &&
+                                InformationCache.SelectedServerJSON.Server_Social_Home != InformationCache.SelectedServerJSON.Server_Social_Discord)
                             {
                                 ButtonsList.Add(new DiscordButton()
                                 {
                                     Label = "Website",
-                                    Url = InformationCache.SelectedServerJSON.homePageUrl
+                                    Url = InformationCache.SelectedServerJSON.Server_Social_Home
                                 });
                             }
 
-                            if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl))
+                            if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Social_Discord))
                             {
                                 ButtonsList.Add(new DiscordButton()
                                 {
                                     Label = "Discord",
-                                    Url = InformationCache.SelectedServerJSON.discordUrl
+                                    Url = InformationCache.SelectedServerJSON.Server_Social_Discord
                                 });
                             }
                         }
@@ -370,7 +370,6 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 LogToFileAddons.OpenLog("DISCORD", null, Error, null, true);
             }
         }
-
         /// <summary>
         /// Starts Game Launcher's RPC Status. If a Discord Client is Running on the Machine, it will Display the status on the User's Profile.
         /// </summary>
@@ -379,7 +378,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         {
             try
             {
-                if (FileSettingsSave.Live_Data.Launcher_Discord_Presense == "0")
+                if (FileSettingsSave.Live_Data.Launcher_Discord_Presence != "1")
                 {
                     if (State == "Start Up")
                     {
@@ -479,9 +478,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         /// <remarks>Server's Discord Application ID</remarks>
         public static string ApplicationID()
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordApplicationID ?? string.Empty))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Discord_ID ?? string.Empty))
             {
-                return InformationCache.SelectedServerJSON.discordApplicationID;
+                return InformationCache.SelectedServerJSON.Server_Discord_ID;
             }
             else if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.DiscordAppID ?? string.Empty))
             {
