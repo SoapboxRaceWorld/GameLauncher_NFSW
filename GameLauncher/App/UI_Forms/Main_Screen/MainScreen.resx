@@ -335,7 +335,7 @@
     <value>5</value>
   </data>
   <data name="LauncherStatusDesc.Text" xml:space="preserve">
-    <value>Version: vX.X.X.XX</value>
+    <value>Version: vXX.XX.XX.XXXX</value>
   </data>
   <data name="&gt;&gt;LauncherStatusDesc.Name" xml:space="preserve">
     <value>LauncherStatusDesc</value>

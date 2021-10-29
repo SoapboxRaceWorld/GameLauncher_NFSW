@@ -12,6 +12,7 @@ using SBRWCore.Classes.Required;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Management;
 using System.Windows.Forms;
 
@@ -193,6 +194,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
 
             if (!UnixOS.Detected())
             {
+                DriveInfo driveInfo = new DriveInfo(FileSettingsSave.Live_Data.Game_Path);
                 settings.AddRange(new[]
                 {
                     new ListType{ Name = "Antivirus", Value = Antivirus },
@@ -206,6 +208,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
                     new ListType{ Name = "GPU", Value = HardwareInfo.GPU.CardName() },
                     new ListType{ Name = "GPU Driver", Value = HardwareInfo.GPU.DriverVersion() },
                     new ListType{ Name = "Disk Space Left", Value = FormatFileSize(lpFreeBytesAvailable) },
+                    new ListType{ Name = "Disk Type", Value = driveInfo.DriveFormat },
                     new ListType{ Name = "", Value = ""}
                 });
             }
