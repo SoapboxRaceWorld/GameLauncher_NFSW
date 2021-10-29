@@ -146,33 +146,6 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
 
         private void OkButton_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON))))
-                {
-                    File.Move(
-                        Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)),
-                        Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)));
-                }
-                else if (!File.Exists(
-                    Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
-                {
-                    try
-                    {
-                        File.WriteAllText(
-                            Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)), "[]");
-                    }
-                    catch (Exception Error)
-                    {
-                        LogToFileAddons.OpenLog("JSON SERVER FILE", null, Error, null, true);
-                    }
-                }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("JSON SERVER FILE", null, Error, null, true);
-            }
-
             Error.Visible = false;
             this.Refresh();
             if (IsNullOrWhiteSpace(ServerAddress.Text) || IsNullOrWhiteSpace(Strings.Encode(ServerName.Text)))

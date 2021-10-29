@@ -24,7 +24,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         /// <summary>Creates all the NullSafe Values for Settings.ini</summary>
         public static void NullSafe()
         {
-            SettingFile = new IniFile(Locations.RoamingAppDataFolder_Launcher_Settings);
+            SettingFile = new IniFile(Locations.Launcher_Settings);
 
             /* Pervent Removal of Login Info Before Main Screen (Temporary Boolean) */
             FileAccountSave.SaveLoginInformation = true;
@@ -381,12 +381,12 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 SettingFile.DeleteKey("ModNetZip");
             }
 
-            SettingFile = new IniFile(Locations.RoamingAppDataFolder_Launcher_Settings);
+            SettingFile = new IniFile(Locations.Launcher_Settings);
         }
         /// <summary>Saves all Current Values</summary>
         public static void SaveSettings()
         {
-            SettingFile = new IniFile(Locations.RoamingAppDataFolder_Launcher_Settings);
+            SettingFile = new IniFile(Locations.Launcher_Settings);
 
             if (SettingFile.Read("CDN") != Live_Data.Launcher_CDN)
             {
@@ -491,7 +491,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 }
             }
 
-            SettingFile = new IniFile(Locations.RoamingAppDataFolder_Launcher_Settings);
+            SettingFile = new IniFile(Locations.Launcher_Settings);
         }
     }
 }

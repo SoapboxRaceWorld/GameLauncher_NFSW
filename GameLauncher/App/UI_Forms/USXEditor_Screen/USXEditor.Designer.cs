@@ -2086,6 +2086,7 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             ((System.ComponentModel.ISupportInitialize)(this.ingameVideoOptions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericResWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericResHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pixelAspectFloat)).EndInit();
             this.panelSpeedUnits.ResumeLayout(false);
             this.panelVisualDamage.ResumeLayout(false);
             this.panelAudioQuality.ResumeLayout(false);
@@ -2095,7 +2096,6 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             this.panelWindowedControl.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.PresetPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pixelAspectFloat)).EndInit();
             this.ResumeLayout(false);
 
         }

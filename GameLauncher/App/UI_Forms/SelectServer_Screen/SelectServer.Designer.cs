@@ -60,7 +60,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             // Loading
             // 
             this.Loading.BackColor = System.Drawing.Color.Transparent;
-            this.Loading.Font = new System.Drawing.Font("DejaVu Sans", 9F);
+            this.Loading.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Loading.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.Loading.Location = new System.Drawing.Point(234, 242);
             this.Loading.Name = "Loading";
@@ -118,7 +118,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             // Version
             // 
             this.Version.BackColor = System.Drawing.Color.Transparent;
-            this.Version.Font = new System.Drawing.Font("DejaVu Sans", 9F);
+            this.Version.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Version.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Version.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.Version.Location = new System.Drawing.Point(213, 260);
