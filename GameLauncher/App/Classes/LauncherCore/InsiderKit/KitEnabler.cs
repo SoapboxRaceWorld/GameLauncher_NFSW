@@ -7,7 +7,7 @@ namespace GameLauncher.App.Classes.InsiderKit
     {
         /* Current month, day, year (2 digits), and letter! Ex: 12-15-20-A */
         /* If a second build gets release within the same day bump letter version up (No R2 or D2)*/
-        public static string InsiderBuildNumber = "10-10-21-B";
+        public static string InsiderBuildNumber = "10-29-21-D";
 
         public static string BuildNumberOnly()
         {
@@ -32,7 +32,7 @@ namespace GameLauncher.App.Classes.InsiderKit
     /* This is only used for Developers (Bypasses Most Checks) */
     class EnableInsiderDeveloper
     {
-        public static bool Enabled = false;
+        private static bool Enabled = false;
 
         public static bool Allowed()
         {
@@ -43,11 +43,20 @@ namespace GameLauncher.App.Classes.InsiderKit
     /* This is only used for Beta Testers (Treated like a Public Release) */
     class EnableInsiderBetaTester
     {
-        public static bool Enabled = false;
+        private static bool Enabled = true;
 
         public static bool Allowed()
         {
             return Enabled;
+        }
+        /// <summary>
+        /// User had Opt-In to Use Beta Builds
+        /// </summary>
+        /// <param name="Opt_In">Takes in Boolean Values</param>
+        /// <returns>New Conditional Status</returns>
+        public static bool Allowed(bool Opt_In)
+        {
+            return Enabled = Opt_In;
         }
     }
 }

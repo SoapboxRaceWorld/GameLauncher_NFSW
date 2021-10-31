@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using GameLauncher.App.Classes.LauncherCore.Global;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
@@ -114,7 +114,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         private static string CallMethod(CommunicationLogEntryType Type)
         {
-            switch (Type) 
+            switch (Type)
             {
                 case CommunicationLogEntryType.Error:
                     return "ERROR";

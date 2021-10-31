@@ -25,7 +25,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                 }
             }
             catch
-			{
+            {
                 return false;
             }
             finally
@@ -94,7 +94,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                 case 69:
                     return "AllocationAssistant encountered an 'Out of Memory' condition";
                 case 2137:
-                    return "Launcher Forced Closed your Game. \nYou are Required to Restart the Game After " + 
+                    return "Launcher Forced Closed your Game. \nYou are Required to Restart the Game After " +
                         TimeConversions.RelativeTime((InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 7200);
                 case 2017:
                     return "Server replied with Code: " + Tokens.UserId + " (0x" + Exit_Code.ToString("X") + ")";

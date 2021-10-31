@@ -107,6 +107,7 @@
             // translatedBy
             // 
             this.translatedBy.BackColor = System.Drawing.Color.Transparent;
+            this.translatedBy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             resources.ApplyResources(this.translatedBy, "translatedBy");
             this.translatedBy.ForeColor = System.Drawing.Color.DarkGray;
             this.translatedBy.Name = "translatedBy";
@@ -563,10 +564,12 @@
             this.Name = "MainScreen";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.ShowPlayPanel.ResumeLayout(false);
+            this.ShowPlayPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).EndInit();
             this.ServerInfoPanel.ResumeLayout(false);
+            this.ServerInfoPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HomePageIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FacebookIcon)).EndInit();
@@ -580,7 +583,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.Banner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ButtonSecurityCenter)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

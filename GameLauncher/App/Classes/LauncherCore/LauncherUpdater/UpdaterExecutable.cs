@@ -32,7 +32,6 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             try
             {
                 bool IsGithubOnline = false;
-                FunctionStatus.TLS();
                 Uri URLCall = new Uri(URLs.GitHub_Updater);
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 var Client = new WebClient
@@ -125,8 +124,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 Log.Info("LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");
                 try
                 {
-                    FunctionStatus.TLS();
-                    Uri URLCall = 
+                    Uri URLCall =
                         new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
@@ -206,8 +204,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         Log.Info("LAUNCHER UPDATER: Downloading New " + Locations.NameUpdater);
                         File.Delete(Locations.NameUpdater);
 
-                        FunctionStatus.TLS();
-                        Uri URLCall = 
+                        Uri URLCall =
                             new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var Client = new WebClient

@@ -54,7 +54,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             {
                 if (WebCalls.Alternative())
                 {
-                    using (WebClient webClient = new WebClient { Encoding = Encoding.UTF8 })
+                    using (WebClient webClient = new WebClient())
                     {
                         webClient.Headers.Add("user-agent", "SBRW Launcher " +
                         Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
@@ -131,7 +131,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                 }
                 else
                 {
-                    using (WebClientWithTimeout webClient = new WebClientWithTimeout { Encoding = Encoding.UTF8 })
+                    using (WebClientWithTimeout webClient = new WebClientWithTimeout())
                     {
                         webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.DownloadManager_DownloadDataCompleted);
                         webClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);

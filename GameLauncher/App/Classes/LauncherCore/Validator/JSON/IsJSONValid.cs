@@ -15,9 +15,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.JSON
 
         public static bool ValidJson(string strInput)
         {
-            if (string.IsNullOrWhiteSpace(strInput)) 
-            { 
-                return false; 
+            if (string.IsNullOrWhiteSpace(strInput))
+            {
+                return false;
             }
             else
             {

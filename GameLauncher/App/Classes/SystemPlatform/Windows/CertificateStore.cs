@@ -51,7 +51,6 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
                 try
                 {
-                    FunctionStatus.TLS();
                     Uri URLCall = new Uri("http://crl.carboncrew.org/RCA-Info.json");
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
@@ -195,7 +194,6 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     {
                         if (!IsROOTCAInstalled)
                         {
-                            FunctionStatus.TLS();
                             Uri URLCall = new Uri(RootCAFileURL);
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var Client = new WebClient

@@ -4,7 +4,6 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using System;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -46,7 +45,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         public static string VSyncOn = "0";
         /* VideoConfig Addons */
         public static string BaseTextureFilter = "0";
-        public static string BaseTextureLODBias= "0";
+        public static string BaseTextureLODBias = "0";
         public static string BaseTextureMaxAni = "0";
         public static string CarEnvironmentMapEnable = "0";
         public static string CarLODLevel = "0";
@@ -92,7 +91,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 return;
             }
 
-            if(FileReadStatus == "Language Only")
+            if (FileReadStatus == "Language Only")
             {
                 /* Language */
                 FileGameSettingsData.Language = (NodeReader("InnerText", "Settings/UI/Language", null) != "ERROR") ?
@@ -376,7 +375,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             {
                 if (InsiderKit.EnableInsiderDeveloper.Allowed() || InsiderKit.EnableInsiderBetaTester.Allowed())
                 {
-                    Log.Debug("USX File: Comparing Values for '" + FullNodePath + "' CURRENT: '" + UserSettingsFile.SelectSingleNode(FullNodePath).InnerText + 
+                    Log.Debug("USX File: Comparing Values for '" + FullNodePath + "' CURRENT: '" + UserSettingsFile.SelectSingleNode(FullNodePath).InnerText +
                               "' COMPARING NEW: '" + ValueComparison + "'");
                 }
 

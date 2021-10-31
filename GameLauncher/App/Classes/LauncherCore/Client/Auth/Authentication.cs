@@ -32,18 +32,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
         /// <returns>Receives UserId and Auth Key for Login. Sends Email and Password to Server</returns>
         /// <param name="ConnectionProtocol">Connection Protocol: Check AuthProtocol</param>
         /// <param name="Method">Form Type: "Login" or "Register"</param>
-        public static void Client(string Method, string Modern_Auth_String, String Email, String Password, String Token)
+        public static void Client(string Method, bool Modern_Auth, String Email, String Password, String Token)
         {
-            bool.TryParse(Modern_Auth_String, out bool Modern_Auth);
-
             try
             {
                 if (!Modern_Auth)
                 {
-                    FunctionStatus.TLS();
-                    Uri URLCall = 
-                        new Uri((Method == "Login")? Tokens.IPAddress + "/User/authenticateUser?email=" + Email + "&password=" + Password : 
-                        Tokens.IPAddress + "/User/createUser?email=" + Email + "&password=" + Password + 
+                    Uri URLCall =
+                        new Uri((Method == "Login") ? Tokens.IPAddress + "/User/authenticateUser?email=" + Email + "&password=" + Password :
+                        Tokens.IPAddress + "/User/createUser?email=" + Email + "&password=" + Password +
                         (!String.IsNullOrWhiteSpace(Token) ? "&inviteTicket=" + Token : ""));
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
@@ -58,7 +55,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                         Client.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
                         Client.Headers["X-HiddenHWID"] = HardwareID.FingerPrint.ValueAlt();
-                        Client.Headers["X-UserAgent"] = "GameLauncherReborn " + 
+                        Client.Headers["X-UserAgent"] = "GameLauncherReborn " +
                             Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
                         Client.Headers["X-GameLauncherHash"] = WebHelpers.Value();
                         Client.Headers["X-GameLauncherCertificate"] = CertificateStore.LauncherSerial;
@@ -90,7 +87,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 }
                 else
                 {
-                    FunctionStatus.TLS();
                     string ServerUrl = Tokens.IPAddress + "/User/modernAuth";
                     if (Method == "Register")
                     {
@@ -166,6 +162,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
 
                     try
                     {
+                        if (EnableInsiderDeveloper.Allowed())
+                        {
+                            Log.Info("Authentication: Received XML -> " + LoginResponse);
+                        }
+
                         sbrwXml.LoadXml(LoginResponse);
 
                         if (EnableInsiderDeveloper.Allowed())
@@ -399,7 +400,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
             else
             {
-                return (bool.TryParse(InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", out bool Final_Result) && Final_Result) ? AuthHash.H10 : AuthHash.H12;
+                return InformationCache.SelectedServerJSON.modernAuthSupport ? AuthHash.H10 : AuthHash.H12;
             }
         }
     }
@@ -416,7 +417,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 }
                 if (Type == "InnerText")
                 {
-                    if (string.IsNullOrWhiteSpace(LocationData.SelectSingleNode(FullNodePath) != null ? 
+                    if (string.IsNullOrWhiteSpace(LocationData.SelectSingleNode(FullNodePath) != null ?
                         LocationData.SelectSingleNode(FullNodePath).InnerText : string.Empty))
                     {
                         if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())

@@ -18,19 +18,26 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(Window_Name.Name)) 
+                if (!string.IsNullOrWhiteSpace(Window_Name.Name))
                 {
                     if (!(Application.OpenForms[Window_Name.Name] != null ? Application.OpenForms[Window_Name.Name].Disposing : true) && !Application.OpenForms[Window_Name.Name].IsDisposed)
                     {
                         if (!Control_Form.IsDisposed || (Control_Form.IsHandleCreated && Control_Form.FindForm().IsHandleCreated))
                         {
-                            if (Control_Form.InvokeRequired)
+                            if (!Control_Form.Disposing)
                             {
-                                Control_Form.Invoke(Action_Refresh);
+                                if (Control_Form.InvokeRequired)
+                                {
+                                    Control_Form.Invoke(Action_Refresh);
+                                }
+                                else
+                                {
+                                    Action_Refresh();
+                                }
                             }
                             else
                             {
-                                Action_Refresh();
+                                Log.Function("SafeInvokeAction".ToUpper() + "Control: " + Control_Form.Name + " is being Disposed");
                             }
                         }
                         else if (!Application.OpenForms[Window_Name.Name].IsDisposed)
@@ -78,7 +85,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                             Action_Refresh();
                         }
                     }
-                    else if(!Control_Form.FindForm().IsDisposed)
+                    else if (!Control_Form.FindForm().IsDisposed)
                     {
                         Control_Form.FindForm().Controls.Add(Control_Form);
                         SafeInvokeAction(Control_Form, Action_Refresh);

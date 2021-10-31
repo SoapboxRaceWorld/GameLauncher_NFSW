@@ -1,18 +1,17 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.Windows.Forms;
-using GameLauncher.App.Classes.LauncherCore.APICheckers;
+﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Microsoft.Win32;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Windows.Forms;
 
 // based on https://github.com/bitbeans/RedistributableChecker/blob/master/RedistributableChecker/RedistributablePackage.cs
 namespace GameLauncher.App.Classes.SystemPlatform.Windows
@@ -130,15 +129,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     {
                         try
                         {
-                            FunctionStatus.TLS();
                             Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x86.exe");
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                            var Client = new WebClient
-                            {
-                                Encoding = Encoding.UTF8
-                            };
+                            var Client = new WebClient();
 
-                            if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout(); }
                             else
                             {
                                 Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -186,7 +181,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                 if (proc == null)
                                 {
                                     ErrorFree = false;
-                                    MessageBox.Show(Translations.Database("Redistributable_VC_P6"), 
+                                    MessageBox.Show(Translations.Database("Redistributable_VC_P6"),
                                         Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                         MessageBoxIcon.Error);
                                 }
@@ -205,7 +200,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                             " HEX: (0x" + proc.ExitCode.ToString("X") + ")");
                                         MessageBox.Show(Translations.Database("Redistributable_VC_P7") + " " + proc.ExitCode.ToString() +
                                             " (0x" + proc.ExitCode.ToString("X") + ")" +
-                                            "\n" + Translations.Database("Redistributable_VC_P8"), 
+                                            "\n" + Translations.Database("Redistributable_VC_P8"),
                                             Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                             MessageBoxIcon.Error);
                                     }
@@ -217,7 +212,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             {
                                 LogToFileAddons.OpenLog("REDISTRIBUTABLE x86 Process", null, Error, null, true);
                                 ErrorFree = false;
-                                MessageBox.Show(Translations.Database("Redistributable_VC_P9"), 
+                                MessageBox.Show(Translations.Database("Redistributable_VC_P9"),
                                     Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
                             }
@@ -225,7 +220,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         else
                         {
                             ErrorFree = false;
-                            MessageBox.Show(Translations.Database("Redistributable_VC_P10"), 
+                            MessageBox.Show(Translations.Database("Redistributable_VC_P10"),
                                 Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
                         }
@@ -255,15 +250,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         {
                             try
                             {
-                                FunctionStatus.TLS();
                                 Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x64.exe");
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                                var Client = new WebClient
-                                {
-                                    Encoding = Encoding.UTF8
-                                };
+                                var Client = new WebClient();
 
-                                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout(); }
                                 else
                                 {
                                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -312,7 +303,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                     if (proc == null)
                                     {
                                         ErrorFree = false;
-                                        MessageBox.Show(Translations.Database("Redistributable_VC_P6"), 
+                                        MessageBox.Show(Translations.Database("Redistributable_VC_P6"),
                                             Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                             MessageBoxIcon.Error);
                                     }
@@ -331,7 +322,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                                 " HEX: (0x" + proc.ExitCode.ToString("X") + ")");
                                             MessageBox.Show(Translations.Database("Redistributable_VC_P7") + " " + proc.ExitCode.ToString() +
                                                 " (0x" + proc.ExitCode.ToString("X") + ")" +
-                                                "\n" + Translations.Database("Redistributable_VC_P8"), 
+                                                "\n" + Translations.Database("Redistributable_VC_P8"),
                                                 Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                                 MessageBoxIcon.Error);
                                         }
@@ -359,7 +350,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         else
                         {
                             ErrorFree = false;
-                            MessageBox.Show(Translations.Database("Redistributable_VC_P8"), 
+                            MessageBox.Show(Translations.Database("Redistributable_VC_P8"),
                                 Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
                         }

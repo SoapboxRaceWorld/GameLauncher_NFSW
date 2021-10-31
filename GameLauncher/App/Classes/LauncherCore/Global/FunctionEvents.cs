@@ -38,14 +38,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webSignupUrl))
                 {
                     Process.Start(InformationCache.SelectedServerJSON.webSignupUrl);
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + 
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on " +
                         ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if (InformationCache.SelectedServerData.Name.ToUpper() == "WORLDUNITED OFFICIAL")
                 {
                     Process.Start("https://signup.worldunited.gg/" + ((!string.IsNullOrWhiteSpace(DiscordLauncherPresence.UserID) &&
                         DiscordLauncherPresence.UserID != "0") ? "?discordid=" + DiscordLauncherPresence.UserID : string.Empty));
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + 
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on " +
                         InformationCache.SelectedServerData.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
@@ -108,7 +108,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         {
                             try
                             {
-                                FunctionStatus.TLS();
                                 Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IPAddress + "/RecoveryPassword/forgotPassword");
                                 ServicePointManager.FindServicePoint(resetPasswordUrl).ConnectionLeaseTimeout =
                                     (int)TimeSpan.FromSeconds(30).TotalMilliseconds;

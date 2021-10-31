@@ -1,21 +1,21 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Net;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
-using static System.String;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using System.Text;
 using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Windows.Forms;
+using static System.String;
 
 namespace GameLauncher.App.UI_Forms.AddServer_Screen
 {
@@ -136,10 +136,10 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
             ServerCategory.GotFocus += new EventHandler(ServerCategory_RemovePlaceHolderText);
             ServerCategory.LostFocus += new EventHandler(ServerCategory_ShowPlaceHolderText);
 
-            Shown += (x, y) => 
+            Shown += (x, y) =>
             {
                 Application.OpenForms["AddServer"].Activate();
-                this.BringToFront(); 
+                this.BringToFront();
             };
         }
 
@@ -216,7 +216,6 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
                 string ServerInfomationJSON = Empty;
                 try
                 {
-                    FunctionStatus.TLS();
                     Uri StringToUri = new Uri(FormattedURL + "/GetServerInformation");
                     ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
@@ -291,7 +290,6 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
                     else
                     {
                         string ServerID = Empty;
-                        FunctionStatus.TLS();
                         Uri newModNetUri = new Uri(FormattedURL + "/Modding/GetModInfo");
                         ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var Client = new WebClient

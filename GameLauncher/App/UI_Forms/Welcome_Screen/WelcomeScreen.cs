@@ -1,14 +1,14 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.APICheckers;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using System.IO;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.UI_Forms.Welcome_Screen
 {
@@ -202,7 +202,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
 
             if (StatusCheck)
             {
-                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. " +
+                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs.\n" +
                     "Clicking 'Manual Bypass' will allow you to continue with the Error";
                 APIErrorFormElements();
             }
@@ -210,8 +210,9 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             {
                 APIErrorFormElements(false);
                 SettingsFormElements(true);
-                WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. " +
-                    "Please specify where you want to download all required game files";
+                WelcomeText.Text = "Howdy!\n" +
+                    "Looks like this is the first time this launcher has been started.\n" +
+                    "Please select from the options below in order to continue this setup.";
             }
         }
 
@@ -248,7 +249,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
 
                     IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
                     LanguagePickerFile.Write("Language", ((LangObject)GameLangSource.SelectedItem).INI_Value);
-                    MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English instead.", 
+                    MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English instead.",
                         "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
@@ -298,8 +299,9 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
         {
             APIErrorFormElements(false);
             SettingsFormElements();
-            WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. " +
-                "Please specify where you want to download all required game files";
+            WelcomeText.Text = "Howdy!\n" +
+                "Looks like this is the first time this launcher has been started.\n" +
+                "Please select from the options below in order to continue this setup.";
         }
 
         private void APIErrorFormElements(bool hideElements = true)

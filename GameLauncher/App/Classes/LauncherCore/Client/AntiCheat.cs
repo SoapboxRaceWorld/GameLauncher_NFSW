@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Windows.Forms;
-using GameLauncher.App.Classes.InsiderKit;
+﻿using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
@@ -15,6 +7,14 @@ using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client
 {
@@ -33,16 +33,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
         public static int SpeedTicket = 0;
 
         /* INTERNAL */
-        public static bool detect_MULTIHACK     = false;
+        public static bool detect_MULTIHACK = false;
         public static bool detect_FAST_POWERUPS = false;
-        public static bool detect_SPEEDHACK     = false;
-        public static bool detect_SMOOTH_WALLS  = false;
-        public static bool detect_TANK_MODE     = false;
-        public static bool detect_WALLHACK      = false;
-        public static bool detect_DRIFTMOD      = false;
-        public static bool detect_PURSUITBOT    = false;
-        public static bool detect_PMASKER       = false;
-        public static bool detect_GHOSTING      = false;
+        public static bool detect_SPEEDHACK = false;
+        public static bool detect_SMOOTH_WALLS = false;
+        public static bool detect_TANK_MODE = false;
+        public static bool detect_WALLHACK = false;
+        public static bool detect_DRIFTMOD = false;
+        public static bool detect_PURSUITBOT = false;
+        public static bool detect_GHOSTING = false;
 
         public static List<int> addresses = new List<int>
         {
@@ -54,7 +53,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
             4587060, /* WALLHACK */
             4486168, /* DRIFTMOD/MULTIHACK */
             4820249, /* PURSUITBOT (NO COPS VARIATION) */
-            8972152, /* PROFILEMASKER */
             4573882  /* GHOSTING */
         };
 
@@ -96,26 +94,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                             if (
                             detect_MULTIHACK == true || detect_FAST_POWERUPS == true || detect_SPEEDHACK == true ||
                             detect_SMOOTH_WALLS == true || detect_TANK_MODE == true || detect_WALLHACK == true ||
-                            detect_DRIFTMOD == true || detect_PURSUITBOT == true || detect_PMASKER == true || 
-                            detect_GHOSTING == true)
+                            detect_DRIFTMOD == true || detect_PURSUITBOT == true || detect_GHOSTING == true)
                             {
                                 FunctionStatus.ExternalToolsWasUsed = true;
-                            }
-                        }
-                        else if (ServerProxy.Running())
-                        {
-                            /* ProfileMasker */
-                            if (oneAddress == 8972152)
-                            {
-                                byte[] buffer16 = new byte[16];
-
-                                Kernel32.ReadProcessMemory((int)processHandle, (int)(BitConverter.ToUInt32(buffer, 0) + 0x89), buffer16, buffer16.Length, ref bytesRead);
-                                String MemoryUsername = Encoding.UTF8.GetString(buffer16, 0, buffer16.Length);
-
-                                if (MemoryUsername.Substring(0, DiscordGamePresence.PersonaName.Length).ToLower() != DiscordGamePresence.PersonaName.ToLower() && detect_PMASKER == false)
-                                {
-                                    detect_PMASKER = true;
-                                }
                             }
                         }
                     }
@@ -128,21 +109,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
 
         public static void DisableChecks(bool CompletedEvent)
         {
-            if (detect_MULTIHACK == true)       cheats_detected |= 1;
-            if (detect_FAST_POWERUPS == true)   cheats_detected |= 2;
-            if (detect_SPEEDHACK == true)       cheats_detected |= 4;
-            if (detect_SMOOTH_WALLS == true)    cheats_detected |= 8;
-            if (detect_TANK_MODE == true)       cheats_detected |= 16;
-            if (detect_WALLHACK == true)        cheats_detected |= 32;
-            if (detect_DRIFTMOD == true)        cheats_detected |= 64;
-            if (detect_PURSUITBOT == true)      cheats_detected |= 128;
-            if (detect_PMASKER == true)         cheats_detected |= 256;
-            if (detect_GHOSTING == true)        cheats_detected |= 512;
+            if (detect_MULTIHACK == true) cheats_detected |= 1;
+            if (detect_FAST_POWERUPS == true) cheats_detected |= 2;
+            if (detect_SPEEDHACK == true) cheats_detected |= 4;
+            if (detect_SMOOTH_WALLS == true) cheats_detected |= 8;
+            if (detect_TANK_MODE == true) cheats_detected |= 16;
+            if (detect_WALLHACK == true) cheats_detected |= 32;
+            if (detect_DRIFTMOD == true) cheats_detected |= 64;
+            if (detect_PURSUITBOT == true) cheats_detected |= 128;
+            if (detect_GHOSTING == true) cheats_detected |= 512;
 
             if (cheats_detected != 0)
             {
-                if (cheats_detected == 64 && !CompletedEvent) 
-                { 
+                if (cheats_detected == 64 && !CompletedEvent)
+                {
                     /* You Know the Rules and So Do I */
                 }
                 else
@@ -161,7 +141,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                             {
                                 try
                                 {
-                                    FunctionStatus.TLS();
                                     Uri sendReport = new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebHelpers.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt() + "&car_used=" + DiscordGamePresence.PersonaCarName + "&os_platform=" + InformationCache.OSName + "&event_status=" + CompletedEvent);
                                     ServicePointManager.FindServicePoint(sendReport).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
@@ -191,7 +170,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                             {
                                 try
                                 {
-                                    FunctionStatus.TLS();
                                     Uri sendReport = new Uri(report_url);
                                     ServicePointManager.FindServicePoint(sendReport).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
@@ -227,7 +205,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                                 {
                                     try
                                     {
-                                        FunctionStatus.TLS();
                                         Uri sendReport = new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&launcher_hash=" + WebHelpers.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt() + "&os_platform=" + InformationCache.OSName);
                                         ServicePointManager.FindServicePoint(sendReport).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
@@ -261,7 +238,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                 }
             }
 
-            detect_MULTIHACK = detect_FAST_POWERUPS = detect_SPEEDHACK = detect_SMOOTH_WALLS = detect_TANK_MODE = detect_WALLHACK = detect_DRIFTMOD = detect_PURSUITBOT = detect_PMASKER = false;
+            detect_MULTIHACK = detect_FAST_POWERUPS = detect_SPEEDHACK = detect_SMOOTH_WALLS = detect_TANK_MODE = detect_WALLHACK = detect_DRIFTMOD = detect_PURSUITBOT = false;
             cheats_detected = 0;
             Secret.Abort();
         }

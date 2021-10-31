@@ -1,8 +1,8 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Client;
-using System;
-using GameLauncher.App.Classes.LauncherCore.Proxy;
+﻿using GameLauncher.App.Classes.LauncherCore.Client;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
+using System;
 
 namespace GameLauncher.App.Classes.LauncherCore.Support
 {
@@ -57,36 +57,36 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             }
         }
 
-        public static String RelativeTime(int TimeSeconds) 
+        public static String RelativeTime(int TimeSeconds)
         {
             int NoCalculus;
             if (TimeSeconds >= 2592000)
-            { 
-                NoCalculus = TimeSeconds / 2592000; 
-                return NoCalculus == 1 ? "1 Month" : NoCalculus + " Months"; 
+            {
+                NoCalculus = TimeSeconds / 2592000;
+                return NoCalculus == 1 ? "1 Month" : NoCalculus + " Months";
             }
             else if (TimeSeconds >= 86400)
-            { 
-                NoCalculus = TimeSeconds / 86400; 
-                return NoCalculus == 1 ? "1 Day" : NoCalculus + " Days"; 
+            {
+                NoCalculus = TimeSeconds / 86400;
+                return NoCalculus == 1 ? "1 Day" : NoCalculus + " Days";
             }
             else if (TimeSeconds >= 3600)
-            { 
+            {
                 NoCalculus = TimeSeconds / 3600;
-                return NoCalculus == 1 ? "1 Hour" : NoCalculus + " Hours"; 
+                return NoCalculus == 1 ? "1 Hour" : NoCalculus + " Hours";
             }
             else if (TimeSeconds >= 60)
-            { 
-                NoCalculus = TimeSeconds / 60; 
-                return NoCalculus == 1 ? "1 Minute" : NoCalculus + " Minute"; 
+            {
+                NoCalculus = TimeSeconds / 60;
+                return NoCalculus == 1 ? "1 Minute" : NoCalculus + " Minute";
             }
             else if (TimeSeconds >= 0)
-            { 
-                return TimeSeconds == 1 ? "1 Second" : TimeSeconds + " Seconds"; 
+            {
+                return TimeSeconds == 1 ? "1 Second" : TimeSeconds + " Seconds";
             }
-            else 
-            { 
-                return "Outta Time"; 
+            else
+            {
+                return "Outta Time";
             }
         }
 

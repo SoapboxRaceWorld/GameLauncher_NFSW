@@ -1,4 +1,8 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.SystemPlatform;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -8,11 +12,6 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.Classes.SystemPlatform;
 
 namespace GameLauncher.App.Classes.LauncherCore.Downloader
 {
@@ -158,15 +157,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                 }
                 else
                 {
-                    FunctionStatus.TLS();
                     Uri URLCall = new Uri(url);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    var Client = new WebClient
-                    {
-                        Encoding = Encoding.UTF8
-                    };
+                    var Client = new WebClient();
 
-                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout(); }
                     else
                     {
                         Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -255,12 +250,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         num4 = (long)num;
                     }
                     long num5 = 0L;
-                    var Client = new WebClient
-                    {
-                        Encoding = Encoding.UTF8
-                    };
+                    var Client = new WebClient();
 
-                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout(); }
                     else
                     {
                         Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -721,12 +713,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                 {
                     long num = long.Parse(indexFile.SelectSingleNode("/index/header/length").InnerText);
 
-                    var Client = new WebClient
-                    {
-                        Encoding = Encoding.UTF8
-                    };
+                    var Client = new WebClient();
 
-                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout(); }
                     else
                     {
                         Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -871,15 +860,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
 
         public static byte[] GetData(string url)
         {
-            FunctionStatus.TLS();
             Uri URLCall = new Uri(url);
             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-            var Client = new WebClient
-            {
-                Encoding = Encoding.UTF8
-            };
+            var Client = new WebClient();
 
-            if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+            if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout(); }
             else
             {
                 Client.Headers.Add("user-agent", "SBRW Launcher " +

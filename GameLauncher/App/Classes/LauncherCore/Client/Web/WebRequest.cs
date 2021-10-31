@@ -1,17 +1,17 @@
-﻿using System;
-using System.Windows.Forms;
-using GameLauncher.App.Classes.SystemPlatform.Components;
-using GameLauncher.App.Classes.Hash;
-using GameLauncher.App.Classes.LauncherCore.RPC;
-using System.Net;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Support;
-using System.IO;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+﻿using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
+using System;
+using System.IO;
+using System.Net;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 {
@@ -50,7 +50,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 
             if (!address.AbsolutePath.Contains("auth"))
             {
-                if(!(address.OriginalString.Contains("section") && address.OriginalString.Contains(".dat")))
+                if (!(address.OriginalString.Contains("section") && address.OriginalString.Contains(".dat")))
                 {
                     if (!FunctionStatus.ExternalToolsWasUsed)
                     {
@@ -59,21 +59,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
                 }
             }
 
-            FunctionStatus.TLS();
-            ServicePointManager.FindServicePoint(address).ConnectionLeaseTimeout = 
+            ServicePointManager.FindServicePoint(address).ConnectionLeaseTimeout =
                 (int)((FunctionStatus.ExternalToolsWasUsed) ? TimeSpan.FromSeconds(30).TotalMilliseconds : TimeSpan.FromSeconds(5).TotalMilliseconds);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
-            request.UserAgent = "SBRW Launcher " + Application.ProductVersion + 
-                (FunctionStatus.ExternalToolsWasUsed ? " - (" + InsiderInfo.BuildNumberOnly() + ")" : 
+            request.UserAgent = "SBRW Launcher " + Application.ProductVersion +
+                (FunctionStatus.ExternalToolsWasUsed ? " - (" + InsiderInfo.BuildNumberOnly() + ")" :
                 " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
             request.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
             request.Headers["X-HiddenHWID"] = HardwareID.FingerPrint.ValueAlt();
-            request.Headers["X-UserAgent"] = "GameLauncherReborn " + 
+            request.Headers["X-UserAgent"] = "GameLauncherReborn " +
                 Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = WebHelpers.Value();
             request.Headers["X-GameLauncherCertificate"] = CertificateStore.LauncherSerial;
             request.Headers["X-DiscordID"] = DiscordLauncherPresence.UserID;
-            request.Timeout = (int)(FunctionStatus.ExternalToolsWasUsed ? 
+            request.Timeout = (int)(FunctionStatus.ExternalToolsWasUsed ?
                 TimeSpan.FromSeconds(30).TotalMilliseconds : TimeSpan.FromSeconds(5).TotalMilliseconds);
             request.KeepAlive = false;
 

@@ -12,7 +12,6 @@ using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.UI_Forms.Main_Screen;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using GameLauncher.App.UI_Forms.Welcome_Screen;
-using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -21,9 +20,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Net.Security;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -142,7 +139,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             if (FolderName.Contains("C:\\Program Files")) return FolderType.IsProgramFilesFolder;
             if (FolderName.Contains("C:\\Windows")) return FolderType.IsWindowsFolder;
             if (FolderName.Length == 3) return FolderType.IsRootFolder;
-            if (FolderName + "\\" == Locations.LauncherFolder || 
+            if (FolderName + "\\" == Locations.LauncherFolder ||
                 FolderName == Locations.LauncherFolder) return FolderType.IsSameAsLauncherFolder;
 
             return FolderType.Unknown;
@@ -154,56 +151,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             IPHostEntry iphost = Dns.GetHostEntry(hostname);
             IPAddress[] addresses = iphost.AddressList;
             return addresses[0].ToString();
-        }
-
-        public static void TLS()
-        {
-            ServicePointManager.DnsRefreshTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-            ServicePointManager.Expect100Continue = true;
-            try
-            {
-                /* TLS 1.3 */
-                ServicePointManager.SecurityProtocol |= (SecurityProtocolType)12288 | SecurityProtocolType.Tls12;
-            }
-            catch (NotSupportedException Error)
-            {
-                Log.Error("SecurityProtocol: Tls13 -> " + Error.Message);
-
-                try
-                {
-                    /* TLS 1.2 */
-                    ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
-                }
-                catch (NotSupportedException ErrorTls12)
-                {
-                    Log.Error("SecurityProtocol: Tls12 -> " + ErrorTls12.Message);
-                }
-            }
-            ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) =>
-            {
-                bool isOk = true;
-                if (sslPolicyErrors != SslPolicyErrors.None)
-                {
-                    for (int i = 0; i < chain.ChainStatus.Length; i++)
-                    {
-                        if (chain.ChainStatus[i].Status == X509ChainStatusFlags.RevocationStatusUnknown)
-                        {
-                            continue;
-                        }
-                        chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
-                        chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
-                        chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 0, 15);
-                        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
-                        bool chainIsValid = chain.Build((X509Certificate2)certificate);
-                        if (!chainIsValid)
-                        {
-                            isOk = false;
-                            break;
-                        }
-                    }
-                }
-                return isOk;
-            };
         }
 
         /// <summary>
@@ -224,12 +171,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             {
                 ServerProxy.Instance.Stop("Force Close");
             }
-            
+
             Log.Warning("LAUNCHER: Exiting (" + Notes + ")");
             if (!string.IsNullOrWhiteSpace(LauncherForceCloseReason))
             {
                 DialogResult OpenLogFile = MessageBox.Show(null, "The GameLauncher has ecountered an Error and it must Close. " +
-                    "Below is a Summary of the Error:" + "\n" + LauncherForceCloseReason + "\n\n" + 
+                    "Below is a Summary of the Error:" + "\n" + LauncherForceCloseReason + "\n\n" +
                     LogToFileAddons.OpenLogMessage, "GameLauncher",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
@@ -347,7 +294,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                             Directory.CreateDirectory("Game Files");
                                             Log.Warning("FOLDER SELECT DIALOG: Installing NFSW in root of the harddisk is not allowed.");
                                             MessageBox.Show(null, string.Format("Installing NFSW in root of the harddisk is not allowed. " +
-                                                "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath), 
+                                                "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
                                                 "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                             FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
                                             FileSettingsSave.SaveSettings();
@@ -358,7 +305,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                             Directory.CreateDirectory("Game Files");
                                             Log.Warning("FOLDER SELECT DIALOG: Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
                                             MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n " +
-                                                "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath), 
+                                                "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
                                                 "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                             FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
                                             FileSettingsSave.SaveSettings();
@@ -444,7 +391,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                             Directory.CreateDirectory("Game Files");
                             Log.Error("LAUNCHER: Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
                             MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n" +
-                                "Instead, we will install it at {0}.", Locations.GameFilesFailSafePath), 
+                                "Instead, we will install it at {0}.", Locations.GameFilesFailSafePath),
                                 "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
                             break;
@@ -470,7 +417,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                     Directory.CreateDirectory(Locations.GameFilesFailSafePath);
                                 }
                             }
-                            catch {}
+                            catch { }
                             MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             Log.Error("LAUNCHER: Installing NFSW in a Restricted Location is not allowed.");
                             FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
@@ -535,7 +482,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         public static readonly string LauncherFolder = Strings.Encode(AppDomain.CurrentDomain.BaseDirectory);
 
         public static readonly string LauncherCustomServers = Strings.Encode(Path.Combine(LauncherFolder, NameNewServersJSON));
-        
+
         public static readonly string LocalAppDataFolder = Strings.Encode(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
         public static readonly string RoamingAppDataFolder = Strings.Encode(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
 

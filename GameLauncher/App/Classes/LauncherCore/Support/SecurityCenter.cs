@@ -30,7 +30,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             {
                 return SecurityCenterCodes.Firewall_Error;
             }
-            else if ((WindowsProductVersion.GetWindowsNumber() >= 10) && 
+            else if ((WindowsProductVersion.GetWindowsNumber() >= 10) &&
                 FileSettingsSave.DefenderLauncherStatus == "Excluded" && FileSettingsSave.DefenderGameStatus == "Excluded")
             {
                 return SecurityCenterCodes.Defender_Updated;

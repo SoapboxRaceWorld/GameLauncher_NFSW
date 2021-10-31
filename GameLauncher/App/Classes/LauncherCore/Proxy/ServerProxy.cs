@@ -1,6 +1,6 @@
-﻿using System;
-using GameLauncher.App.Classes.LauncherCore.Logger;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using Nancy.Hosting.Self;
+using System;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {

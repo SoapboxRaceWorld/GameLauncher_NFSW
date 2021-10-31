@@ -1,5 +1,5 @@
-﻿using System.Resources;
-using System.Reflection;
+﻿using System.Reflection;
+using System.Resources;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("GameLauncher")]
@@ -14,6 +14,6 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 [assembly: Guid("0a114c5c-3566-4a62-b05d-cba311988d8a")]
 
-[assembly: AssemblyVersion("2.1.9.00")]
-[assembly: AssemblyFileVersion("2.1.9.00")]
+[assembly: AssemblyVersion("2.1.9.0001")]
+[assembly: AssemblyFileVersion("2.1.9.0001")]
 [assembly: NeutralResourcesLanguage("en-US")]

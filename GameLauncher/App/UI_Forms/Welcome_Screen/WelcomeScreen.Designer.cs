@@ -43,23 +43,24 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             // 
             // WelcomeText
             // 
+            this.WelcomeText.BackColor = System.Drawing.Color.Transparent;
             this.WelcomeText.Font = new System.Drawing.Font("DejaVu Sans", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.WelcomeText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.WelcomeText.Location = new System.Drawing.Point(9, 6);
             this.WelcomeText.Name = "WelcomeText";
-            this.WelcomeText.Size = new System.Drawing.Size(392, 69);
+            this.WelcomeText.Size = new System.Drawing.Size(392, 80);
             this.WelcomeText.TabIndex = 0;
             this.WelcomeText.Text = "Checking API Status";
             this.WelcomeText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // DownloadSourceText
             // 
-            this.DownloadSourceText.AutoSize = true;
+            this.DownloadSourceText.BackColor = System.Drawing.Color.Transparent;
             this.DownloadSourceText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DownloadSourceText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.DownloadSourceText.Location = new System.Drawing.Point(111, 177);
+            this.DownloadSourceText.Location = new System.Drawing.Point(116, 187);
             this.DownloadSourceText.Name = "DownloadSourceText";
-            this.DownloadSourceText.Size = new System.Drawing.Size(180, 14);
+            this.DownloadSourceText.Size = new System.Drawing.Size(177, 14);
             this.DownloadSourceText.TabIndex = 2;
             this.DownloadSourceText.Text = "CDN / Download Source:";
             this.DownloadSourceText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -74,7 +75,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             this.CDNSource.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.CDNSource.FormattingEnabled = true;
             this.CDNSource.ItemHeight = 13;
-            this.CDNSource.Location = new System.Drawing.Point(94, 203);
+            this.CDNSource.Location = new System.Drawing.Point(95, 210);
             this.CDNSource.MaxDropDownItems = 21;
             this.CDNSource.Name = "CDNSource";
             this.CDNSource.Size = new System.Drawing.Size(220, 19);
@@ -82,7 +83,6 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             // 
             // ButtonSave
             // 
-            this.ButtonSave.AutoSize = true;
             this.ButtonSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
             this.ButtonSave.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.ButtonSave.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
@@ -90,9 +90,9 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             this.ButtonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonSave.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonSave.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ButtonSave.Location = new System.Drawing.Point(5, 290);
+            this.ButtonSave.Location = new System.Drawing.Point(5, 287);
             this.ButtonSave.Name = "ButtonSave";
-            this.ButtonSave.Size = new System.Drawing.Size(399, 32);
+            this.ButtonSave.Size = new System.Drawing.Size(400, 32);
             this.ButtonSave.TabIndex = 5;
             this.ButtonSave.Text = "Save Settings and Select Download / Install Location";
             this.ButtonSave.UseVisualStyleBackColor = false;
@@ -100,10 +100,10 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             // 
             // ListStatusText
             // 
-            this.ListStatusText.AutoSize = true;
+            this.ListStatusText.BackColor = System.Drawing.Color.Transparent;
             this.ListStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ListStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ListStatusText.Location = new System.Drawing.Point(131, 84);
+            this.ListStatusText.Location = new System.Drawing.Point(140, 95);
             this.ListStatusText.Name = "ListStatusText";
             this.ListStatusText.Size = new System.Drawing.Size(129, 14);
             this.ListStatusText.TabIndex = 7;
@@ -112,14 +112,13 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             // 
             // ButtonAPIError
             // 
-            this.ButtonAPIError.AutoSize = true;
             this.ButtonAPIError.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
             this.ButtonAPIError.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.ButtonAPIError.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.ButtonAPIError.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonAPIError.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonAPIError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ButtonAPIError.Location = new System.Drawing.Point(143, 258);
+            this.ButtonAPIError.Location = new System.Drawing.Point(143, 255);
             this.ButtonAPIError.Name = "ButtonAPIError";
             this.ButtonAPIError.Size = new System.Drawing.Size(126, 26);
             this.ButtonAPIError.TabIndex = 8;
@@ -129,14 +128,14 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             // 
             // VersionLabel
             // 
-            this.VersionLabel.AutoSize = true;
+            this.VersionLabel.BackColor = System.Drawing.Color.Transparent;
             this.VersionLabel.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VersionLabel.Location = new System.Drawing.Point(157, 338);
+            this.VersionLabel.Location = new System.Drawing.Point(123, 337);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(103, 13);
+            this.VersionLabel.Size = new System.Drawing.Size(164, 14);
             this.VersionLabel.TabIndex = 9;
-            this.VersionLabel.Text = "Version: vX.X.X.X";
-            this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.VersionLabel.Text = "Version: vXX.XX.XX.XXXX";
+            this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // GameLangSource
             // 
@@ -148,7 +147,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             this.GameLangSource.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.GameLangSource.FormattingEnabled = true;
             this.GameLangSource.ItemHeight = 13;
-            this.GameLangSource.Location = new System.Drawing.Point(94, 139);
+            this.GameLangSource.Location = new System.Drawing.Point(95, 150);
             this.GameLangSource.MaxDropDownItems = 21;
             this.GameLangSource.Name = "GameLangSource";
             this.GameLangSource.Size = new System.Drawing.Size(220, 19);
@@ -156,12 +155,12 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             // 
             // GameLangText
             // 
-            this.GameLangText.AutoSize = true;
+            this.GameLangText.BackColor = System.Drawing.Color.Transparent;
             this.GameLangText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GameLangText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.GameLangText.Location = new System.Drawing.Point(111, 112);
+            this.GameLangText.Location = new System.Drawing.Point(117, 127);
             this.GameLangText.Name = "GameLangText";
-            this.GameLangText.Size = new System.Drawing.Size(177, 14);
+            this.GameLangText.Size = new System.Drawing.Size(175, 14);
             this.GameLangText.TabIndex = 10;
             this.GameLangText.Text = "Select Game Language:";
             this.GameLangText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -193,7 +192,6 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
             this.Text = "Welcome - SBRW Laucher";
             this.Load += new System.EventHandler(this.WelcomeScreen_Load);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

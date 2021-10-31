@@ -1,6 +1,12 @@
 ﻿using Flurl;
 using Flurl.Http;
 using Flurl.Http.Content;
+using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.Client;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Extensions;
@@ -11,12 +17,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UrlFlurl = Flurl.Url;
-using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Client;
-using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.InsiderKit;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {

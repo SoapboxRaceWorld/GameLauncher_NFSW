@@ -1,17 +1,17 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
+using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
-using System.Diagnostics;
-using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App.UI_Forms.USXEditor_Screen
 {
@@ -71,7 +71,7 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             {
                 DiscordLauncherPresence.Status("Settings", null);
                 if (IsUSXEditorOpen) { IsUSXEditorOpen = false; }
-
+                /* This is for Mono Support */
                 if (Hover.Active)
                 {
                     Hover.RemoveAll();
@@ -326,7 +326,7 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
         {
             if (!FileReadOnly) { SettingsSave.Text = "SAVING"; }
 
-            FileGameSettingsData.ScreenWidth = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ? 
+            FileGameSettingsData.ScreenWidth = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
                                                numericResWidth.Value : Convert.ToDecimal(((JsonResolutions)comboResolutions.SelectedItem).Width));
             FileGameSettingsData.ScreenHeight = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
                                                 numericResHeight.Value : Convert.ToDecimal(((JsonResolutions)comboResolutions.SelectedItem).Height));
@@ -388,7 +388,7 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             {
                 ConvertedValue = Convert.ToInt32(Value);
             }
-            catch 
+            catch
             {
                 ConvertedValue = 0;
             }
@@ -932,7 +932,7 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             /********************************/
 
             SettingsSave.Text = FileReadOnly ? "READ-ONLY" : "SAVE";
-            SettingsSave.ForeColor = FileReadOnly ? Theming.WinFormErrorTextForeColor :  Theming.SeventhTextForeColor;
+            SettingsSave.ForeColor = FileReadOnly ? Theming.WinFormErrorTextForeColor : Theming.SeventhTextForeColor;
             SettingsSave.Image = Theming.GreenButton;
             SettingsCancel.Image = Theming.GrayButton;
             SettingsCancel.ForeColor = Theming.FivithTextForeColor;
@@ -1395,6 +1395,7 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             Hover.SetToolTip(PresetButtonHigh, "Preset: High Graphics");
             Hover.SetToolTip(PresetButtonMax, "Preset: Max Graphics");
             Hover.SetToolTip(PresetButtonCustom, "Preset: Saved Graphics");
+            Hover.SetToolTip(labelGPOTrans, "Only Applies to \"Drag\" Event control");
 
             Shown += (x, y) =>
             {

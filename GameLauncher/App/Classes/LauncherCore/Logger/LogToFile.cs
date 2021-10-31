@@ -145,7 +145,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
         public static void Deleted(string text) => ToFile(text, "       DELETED");
         public static void Missing(string text) => ToFile(text, "       MISSING");
         public static void Downloaded(string text) => ToFile(text, "      REPLACED");
- 
+
         private static async void VerifyTaskKernel()
         {
             while (true)

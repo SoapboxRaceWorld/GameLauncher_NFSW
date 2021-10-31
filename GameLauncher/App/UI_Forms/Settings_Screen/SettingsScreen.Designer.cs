@@ -29,6 +29,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsScreen));
             this.SettingsClearServerModCacheButton = new System.Windows.Forms.Button();
             this.SettingsLauncherVersion = new System.Windows.Forms.Label();
@@ -64,6 +65,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.ButtonSecurityPanel = new System.Windows.Forms.Button();
             this.SettingsClearLauncherLogsButton = new System.Windows.Forms.Button();
             this.SettingsAltWebCallsheckbox = new System.Windows.Forms.CheckBox();
+            this.SettingsOptInsiderCheckBox = new System.Windows.Forms.CheckBox();
+            this.Hover = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // SettingsClearServerModCacheButton
@@ -89,9 +92,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsLauncherVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsLauncherVersion.Location = new System.Drawing.Point(36, 480);
             this.SettingsLauncherVersion.Name = "SettingsLauncherVersion";
-            this.SettingsLauncherVersion.Size = new System.Drawing.Size(114, 14);
+            this.SettingsLauncherVersion.Size = new System.Drawing.Size(164, 14);
             this.SettingsLauncherVersion.TabIndex = 118;
-            this.SettingsLauncherVersion.Text = "Version: vX.X.X.X";
+            this.SettingsLauncherVersion.Text = "Version: vXX.XX.XX.XXXX";
             this.SettingsLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SettingsAboutButton
@@ -207,11 +210,10 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsCDNPick.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.SettingsCDNPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SettingsCDNPick.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsCDNPick.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsCDNPick.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.SettingsCDNPick.FormattingEnabled = true;
             this.SettingsCDNPick.Location = new System.Drawing.Point(38, 132);
-            this.SettingsCDNPick.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.SettingsCDNPick.Name = "SettingsCDNPick";
             this.SettingsCDNPick.Size = new System.Drawing.Size(287, 21);
             this.SettingsCDNPick.TabIndex = 101;
@@ -254,7 +256,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsWordFilterCheck.Name = "SettingsWordFilterCheck";
             this.SettingsWordFilterCheck.Size = new System.Drawing.Size(264, 18);
             this.SettingsWordFilterCheck.TabIndex = 108;
-            this.SettingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
+            this.SettingsWordFilterCheck.Text = "Disable Chat Word Filtering";
             this.SettingsWordFilterCheck.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.SettingsWordFilterCheck.UseVisualStyleBackColor = false;
             // 
@@ -433,7 +435,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             // ThemeAuthor
             // 
             this.ThemeAuthor.BackColor = System.Drawing.Color.Transparent;
-            this.ThemeAuthor.Font = new System.Drawing.Font("DejaVu Sans", 9F);
+            this.ThemeAuthor.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ThemeAuthor.Location = new System.Drawing.Point(35, 460);
             this.ThemeAuthor.Name = "ThemeAuthor";
             this.ThemeAuthor.Size = new System.Drawing.Size(323, 14);
@@ -444,7 +446,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             // ThemeName
             // 
             this.ThemeName.BackColor = System.Drawing.Color.Transparent;
-            this.ThemeName.Font = new System.Drawing.Font("DejaVu Sans", 9F);
+            this.ThemeName.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ThemeName.Location = new System.Drawing.Point(35, 440);
             this.ThemeName.Name = "ThemeName";
             this.ThemeName.Size = new System.Drawing.Size(323, 14);
@@ -458,11 +460,10 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsLanguage.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.SettingsLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SettingsLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsLanguage.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsLanguage.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.SettingsLanguage.FormattingEnabled = true;
             this.SettingsLanguage.Location = new System.Drawing.Point(38, 180);
-            this.SettingsLanguage.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.SettingsLanguage.Name = "SettingsLanguage";
             this.SettingsLanguage.Size = new System.Drawing.Size(164, 21);
             this.SettingsLanguage.TabIndex = 102;
@@ -546,12 +547,27 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsAltWebCallsheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.SettingsAltWebCallsheckbox.UseVisualStyleBackColor = false;
             // 
+            // SettingsOptInsiderCheckBox
+            // 
+            this.SettingsOptInsiderCheckBox.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsOptInsiderCheckBox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsOptInsiderCheckBox.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.SettingsOptInsiderCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SettingsOptInsiderCheckBox.Location = new System.Drawing.Point(421, 343);
+            this.SettingsOptInsiderCheckBox.Name = "SettingsOptInsiderCheckBox";
+            this.SettingsOptInsiderCheckBox.Size = new System.Drawing.Size(361, 18);
+            this.SettingsOptInsiderCheckBox.TabIndex = 196;
+            this.SettingsOptInsiderCheckBox.Text = "Opt Into Beta Launcher Builds";
+            this.SettingsOptInsiderCheckBox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.SettingsOptInsiderCheckBox.UseVisualStyleBackColor = false;
+            // 
             // SettingsScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.SettingsOptInsiderCheckBox);
             this.Controls.Add(this.SettingsAltWebCallsheckbox);
             this.Controls.Add(this.SettingsClearLauncherLogsButton);
             this.Controls.Add(this.ButtonSecurityPanel);
@@ -587,7 +603,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.Controls.Add(this.SettingsBkupSrvText);
             this.Controls.Add(this.SettingsBkupCDNText);
             this.DoubleBuffered = true;
-            this.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -637,5 +653,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         private System.Windows.Forms.Button ButtonSecurityPanel;
         private System.Windows.Forms.Button SettingsClearLauncherLogsButton;
         private System.Windows.Forms.CheckBox SettingsAltWebCallsheckbox;
+        private System.Windows.Forms.CheckBox SettingsOptInsiderCheckBox;
+        private System.Windows.Forms.ToolTip Hover;
     }
 }

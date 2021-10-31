@@ -3,6 +3,7 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using System;
 using System.Reflection;
 using System.Resources;
+using System.Text.RegularExpressions;
 
 namespace GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms
 {
@@ -20,7 +21,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms
             {
                 Log.Function("DATABASE: Requested: " + Text_Request + " Lang: " + Application_Language);
             }
-            
+
             try
             {
                 if (Lang_Launcher == null || ResetCache)
@@ -39,7 +40,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms
                 {
                     if (!string.IsNullOrWhiteSpace(Text_Request) && Lang_Launcher != null)
                     {
-                        return Lang_Launcher.GetString(Text_Request);
+                        return Regex.Unescape(Lang_Launcher.GetString(Text_Request));
                     }
                     else
                     {

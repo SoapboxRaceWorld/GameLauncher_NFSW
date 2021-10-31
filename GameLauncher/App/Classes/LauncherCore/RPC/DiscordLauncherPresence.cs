@@ -471,7 +471,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     }
                 }
                 catch { }
-                Log.Core("DISCORD: Client RPC Service has been Closed.");
+                Log.Core("DISCORD: Client RPC Service has been " + State + "d.");
                 Client.Dispose();
                 Client = null;
             }

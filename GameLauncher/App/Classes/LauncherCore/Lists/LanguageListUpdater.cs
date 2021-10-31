@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.APICheckers;
-using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
@@ -46,11 +46,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
             }
 
-            try 
+            try
             {
                 langInfos.AddRange(JsonConvert.DeserializeObject<List<LangObject>>(json_language));
             }
-            catch (Exception Error) 
+            catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
             }

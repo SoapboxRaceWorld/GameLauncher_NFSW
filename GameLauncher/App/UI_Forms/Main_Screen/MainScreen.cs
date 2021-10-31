@@ -1,51 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.Net;
-using System.Security.Cryptography;
-using System.IO;
-using System.Xml;
-using System.Diagnostics;
-using System.Threading;
-using System.Reflection;
-using System.Net.NetworkInformation;
-using Newtonsoft.Json;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.IO.Compression;
-using System.Threading.Tasks;
-using GameLauncher.App.Classes.Auth;
-using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.ModNet;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.APICheckers;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
-using GameLauncher.App.Classes.LauncherCore.Validator.Email;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.LauncherCore.Downloader;
-using GameLauncher.App.Classes.LauncherCore.Proxy;
+﻿using GameLauncher.App.Classes.Auth;
 using GameLauncher.App.Classes.Hash;
-using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.SystemPlatform;
-using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
+using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
-using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.SystemPlatform.Unix;
-using GameLauncher.App.UI_Forms.SelectServer_Screen;
-using GameLauncher.App.UI_Forms.SecurityCenter_Screen;
-using GameLauncher.App.UI_Forms.Settings_Screen;
-using GameLauncher.App.UI_Forms.About_Screen;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Downloader;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
+using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
+using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.ModNet;
+using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Validator.Email;
+using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.SystemPlatform;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
+using GameLauncher.App.UI_Forms.About_Screen;
+using GameLauncher.App.UI_Forms.SecurityCenter_Screen;
+using GameLauncher.App.UI_Forms.SelectServer_Screen;
+using GameLauncher.App.UI_Forms.Settings_Screen;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Xml;
 
 namespace GameLauncher.App.UI_Forms.Main_Screen
 {
@@ -150,7 +150,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 LoginButton.ForeColor = Theming.SixTextForeColor;
             }
 
-            if (!string.IsNullOrWhiteSpace(FileAccountSave.UserRawEmail) && 
+            if (!string.IsNullOrWhiteSpace(FileAccountSave.UserRawEmail) &&
                 (!string.IsNullOrWhiteSpace(FileAccountSave.UserHashedPassword) || !string.IsNullOrWhiteSpace(FileAccountSave.UserRawPassword)))
             {
                 Log.Core("LAUNCHER: Restoring last saved email and password");
@@ -267,7 +267,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
                         FileSettingsSave.SaveSettings();
                         string Display_Message = Translations.Database("MainScreen_TextBox_GameFiles_Invalid_Location");
-                        Log.Error(string.Format("LAUNCHER: Drive {0} was not found. Your actual installation directory is set to {1} now.", 
+                        Log.Error(string.Format("LAUNCHER: Drive {0} was not found. Your actual installation directory is set to {1} now.",
                             Drive, Locations.GameFilesFailSafePath));
 
                         string TempEmailCache = string.Empty;
@@ -276,8 +276,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             TempEmailCache = MainEmail.Text;
                             MainEmail.Text = "EMAIL IS HIDDEN";
                         }
-                        MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", 
-                            Drive, Locations.GameFilesFailSafePath), 
+                        MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.",
+                            Drive, Locations.GameFilesFailSafePath),
                             "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         if (!string.IsNullOrWhiteSpace(TempEmailCache))
                         {
@@ -348,8 +348,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             try
             {
                 if (FunctionStatus.LauncherBattlePass)
-                { 
-                    Process.GetProcessById(_nfswPid).Kill(); 
+                {
+                    Process.GetProcessById(_nfswPid).Kill();
                 }
                 else
                 {
@@ -562,7 +562,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     return;
             }
 
-            Authentication.Client("Login", InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", Email, Password, null);
+            Authentication.Client("Login", InformationCache.SelectedServerJSON.modernAuthSupport, Email, Password, null);
 
             if (String.IsNullOrWhiteSpace(Tokens.Error))
             {
@@ -748,7 +748,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 ServerInfoPanel.Visible = false;
             }
 
-            FunctionStatus.TLS();
             Uri ServerURI = new Uri(InformationCache.SelectedServerData.IPAddress + "/GetServerInformation");
             ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
             var Client = new WebClient
@@ -783,8 +782,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     ServerStatusIcon.BackgroundImage = Theming.ServerIconOffline;
                     ServerStatusText.Text = "Server Status:\n - Offline ( OFF )";
                     ServerStatusText.ForeColor = Theming.Error;
-                    ServerStatusDesc.Text = (e2.Error != null) ? 
-                    Strings.Truncate(e2.Error.Message??"Server Seems to be Offline", 36) : "Failed to Connect to Server";
+                    ServerStatusDesc.Text = (e2.Error != null) ?
+                    Strings.Truncate(e2.Error.Message ?? "Server Seems to be Offline", 36) : "Failed to Connect to Server";
 
                     if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.ID))
                     {
@@ -938,7 +937,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             {
                                 serverSecondsToShutDown =
                                 (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 7200;
-                                ServerShutDown.Text = string.Format(Translations.Database("MainScreen_Text_ServerShutDown") + 
+                                ServerShutDown.Text = string.Format(Translations.Database("MainScreen_Text_ServerShutDown") +
                                     " " + TimeConversions.RelativeTime(serverSecondsToShutDown));
                             }
                             catch { }
@@ -972,13 +971,26 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             }
                             catch { }
 
-                            try
+                            /* Check Selected Server Address for since nfsw currently requires being proxied for https */
+                            if (InformationCache.SelectedServerData.IPAddress.StartsWith("https"))
                             {
-                                bool.TryParse((InformationCache.SelectedServerJSON.enforceLauncherProxy != null) ? InformationCache.SelectedServerJSON.enforceLauncherProxy.ToString() : 
-                                    InformationCache.SelectedServerJSON.modernAuthSupport ?? "false", out bool Final_Result);
-                                    InformationCache.SelectedServerEnforceProxy = !InformationCache.SelectedServerData.IPAddress.StartsWith("https") ? Final_Result : true;
+                                /* This is in case it is not listed in GSI at all || is present in GSI and is set to true */
+                                if ((!InformationCache.SelectedServerJSON.enforceLauncherProxy) || (InformationCache.SelectedServerJSON.enforceLauncherProxy != false))
+                                {   /* So we can force the Proxy On even if a User has Disabled it */
+                                    InformationCache.SelectedServerEnforceProxy = true;
+                                }
+                                /* but still allow that nfsw might get patched to do https raw? */
+                                else if (InformationCache.SelectedServerJSON.enforceLauncherProxy == false)
+                                {   /* In which case, respect the GSI set value */
+                                    InformationCache.SelectedServerEnforceProxy = false;
+                                }
                             }
-                            catch { }
+                            /* If it's an HTTP Server, check if Proxy is being requested as Enforced On */
+                            else if ((!InformationCache.SelectedServerJSON.enforceLauncherProxy) || (InformationCache.SelectedServerJSON.enforceLauncherProxy != true))
+                            {   /* This is set so that it doesn't try to enforce Proxy On if user switches
+                                 * to a server that doesn't have enforceLauncherProxy set or true */
+                                InformationCache.SelectedServerEnforceProxy = false;
+                            }
 
                             if (InformationCache.SelectedServerJSON.maxOnlinePlayers != 0)
                             {
@@ -1020,19 +1032,19 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             ServerStatusIcon.BackgroundImage = Theming.ServerIconSuccess;
                             /* Enable Login & Register Button */
                             _loginEnabled = true;
-                            LoginButton.ForeColor = Theming.FivithTextForeColor; 
+                            LoginButton.ForeColor = Theming.FivithTextForeColor;
                             LoginButton.Enabled = true;
                             RegisterText.Enabled = true;
                             InformationCache.SelectedServerCategory = ((ServerList)ServerPick.SelectedItem).Category;
                             InformationCache.RestartTimer = (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
 
-                            if ((InformationCache.SelectedServerCategory ?? string.Empty).ToUpper() == "DEV" || 
+                            if ((InformationCache.SelectedServerCategory ?? string.Empty).ToUpper() == "DEV" ||
                             (InformationCache.SelectedServerCategory ?? string.Empty).ToUpper() == "OFFLINE")
                             {
                                 /* Disable Social Panel */
                                 DisableSocialPanelandClearIt();
                             }
-                            else 
+                            else
                             {
                                 /* Enable Social Panel  */
                                 ServerInfoPanel.Visible = true;
@@ -1060,7 +1072,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         {
                             ServerPingStatusText.Text = string.Empty;
                             CheckMate = new Ping();
-                            CheckMate.PingCompleted += (_sender, _e) => 
+                            CheckMate.PingCompleted += (_sender, _e) =>
                             {
                                 if (_e.Cancelled)
                                 {
@@ -1116,8 +1128,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                             if (!string.IsNullOrWhiteSpace(ImageUrl))
                             {
-
-                                FunctionStatus.TLS();
                                 Uri URICall_A = new Uri(ImageUrl);
                                 ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 var Client_A = new WebClient
@@ -1170,7 +1180,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                             Client_A.Dispose();
                                         }
                                     }
-                                    else if(!ServerChangeTriggered && Events_A.Result != null)
+                                    else if (!ServerChangeTriggered && Events_A.Result != null)
                                     {
                                         try
                                         {
@@ -1342,7 +1352,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             MainPasswordBorder.Visible = hideElements;
             MainPasswordBorder.Image = Theming.BorderPassword;
         }
-		
+
         private void LogoutButton_Click(object sender, EventArgs e)
         {
             if (_disableLogout == true)
@@ -1457,7 +1467,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         Match match = Regex.Match(convert.Host, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
                         if (!match.Success)
                         {
-                            InformationCache.SelectedServerData.IPAddress = 
+                            InformationCache.SelectedServerData.IPAddress =
                             InformationCache.SelectedServerData.IPAddress.Replace(convert.Host, FunctionStatus.HostName2IP(convert.Host));
                         }
                     }
@@ -1508,7 +1518,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
         private void LaunchGame(string UserID, string LoginToken, string ServerIP, Form x)
         {
-            ProcessStartInfo TirePSI = new ProcessStartInfo() 
+            ProcessStartInfo TirePSI = new ProcessStartInfo()
             {
                 WorkingDirectory = FileSettingsSave.GameInstallation,
                 FileName = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe")),
@@ -1586,7 +1596,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     {
                         GC.Collect();
                     }
-                }                
+                }
                 else if (InformationCache.RestartTimer <= 0)
                 {
                     if (FunctionStatus.CanCloseGame)
@@ -1668,7 +1678,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         if (FunctionStatus.ExternalToolsWasUsed) exitCode = 2017;
                         else exitCode = 2137;
                     }
-                    
+
                     if (exitCode == 0 && !FunctionStatus.GameKilledBySpeedBugCheck)
                     {
                         if (AntiCheat.Secret != null)
@@ -1749,7 +1759,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                 ModNetFileNameInUse = FileName;
 
-                FunctionStatus.TLS();
                 ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 var Client = new WebClient
                 {
@@ -1873,7 +1882,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 {
                     DiscordLauncherPresence.Status("Checking ModNet", null);
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
-                    FunctionStatus.TLS();
                     Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
                     ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var ModNetJsonURI = new WebClient
@@ -1949,7 +1957,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                                     DiscordLauncherPresence.Status("Download ModNet", ModNetList);
 
-                                    FunctionStatus.TLS();
                                     Uri URLCall = new Uri(URLs.ModNet + "/launcher-modules/" + ModNetList);
                                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                     var newModNetFilesDownload = new WebClient
@@ -1992,7 +1999,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             }
                         }
 
-                        FunctionStatus.TLS();
                         Uri newModNetUri = new Uri(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo");
                         ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var ModInfoJson = new WebClient
@@ -2045,7 +2051,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             ServerModInfo = null;
 
                             /* Set and Get for RemoteRPC Files */
-                            FunctionStatus.TLS();
                             Uri URLCall_A = new Uri(json2.basePath + "/cars.json");
                             ServicePointManager.FindServicePoint(URLCall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var CarsJson = new WebClient
@@ -2065,7 +2070,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 remoteCarsFile = CarsJson.DownloadString(URLCall_A);
                             }
                             catch { }
-                            finally 
+                            finally
                             {
                                 if (CarsJson != null)
                                 {
@@ -2073,7 +2078,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 }
                             }
 
-                            FunctionStatus.TLS();
                             Uri URLCall_B = new Uri(json2.basePath + "/events.json");
                             ServicePointManager.FindServicePoint(URLCall_B).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var EventsJson = new WebClient
@@ -2128,7 +2132,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                             Log.Core("CORE: Loading Server Mods List");
                             /* Get Server Mod Index */
-                            FunctionStatus.TLS();
                             Uri newIndexFile = new Uri(json2.basePath + "/index.json");
                             ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var ServerModsList = new WebClient
@@ -2403,19 +2406,19 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         Refresh();
 
                         Notification.Text = "SBRW Launcher";
-                        Notification.ContextMenu = ContextMenu;                        
+                        Notification.ContextMenu = ContextMenu;
                     }
                 }
                 else if (!File.Exists(GameExePath))
                 {
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                    MessageBox.Show(null, "You do not have the Game Downloaded. Please Verify Game Files installation path.", "GameLauncher", 
+                    MessageBox.Show(null, "You do not have the Game Downloaded. Please Verify Game Files installation path.", "GameLauncher",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                    MessageBox.Show(null, "Your NFSW.exe is Modified. Please Verify Game Files.", "GameLauncher", 
+                    MessageBox.Show(null, "Your NFSW.exe is Modified. Please Verify Game Files.", "GameLauncher",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -2468,10 +2471,10 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
         private void LaunchNfsw()
         {
-            PlayButton.SafeInvokeAction(() => 
+            PlayButton.SafeInvokeAction(() =>
             {
                 PlayButton.BackgroundImage = Theming.PlayButton;
-                PlayButton.ForeColor = Theming.ThirdTextForeColor;  
+                PlayButton.ForeColor = Theming.ThirdTextForeColor;
             }, this);
 
             PlayProgressText.SafeInvokeAction(() =>
@@ -2483,53 +2486,56 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             ExtractingProgress.SafeInvokeAction(() =>
             ExtractingProgress.Width = 0, this);
 
-            string CopSoundSpeechFilePath = Strings.Encode(
-                Path.Combine(FileSettingsSave.GameInstallation,"Sound","Speech","copspeechhdr_" + FileSettingsSave.Lang.ToLower() + ".big"));
-            if (!File.Exists(CopSoundSpeechFilePath))
+            try
             {
-                try
+                PlayProgressText.SafeInvokeAction(() =>
+                PlayProgressText.Text = "Loading list of files to download...".ToUpper(), this);
+
+                DriveInfo[] allDrives = DriveInfo.GetDrives();
+                foreach (DriveInfo d in allDrives)
                 {
-                    PlayProgressText.SafeInvokeAction(() =>
-                    PlayProgressText.Text = "Loading list of files to download...".ToUpper(), this);
-
-                    DriveInfo[] allDrives = DriveInfo.GetDrives();
-                    foreach (DriveInfo d in allDrives)
+                    if (d.Name == Path.GetPathRoot(FileSettingsSave.GameInstallation))
                     {
-                        if (d.Name == Path.GetPathRoot(FileSettingsSave.GameInstallation))
+                        if (d.TotalFreeSpace < 8589934592 || !string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            if (d.TotalFreeSpace < 8589934592)
+                            ExtractingProgress.SafeInvokeAction(() =>
                             {
-                                ExtractingProgress.SafeInvokeAction(() =>
-                                {
-                                    ExtractingProgress.Value = 100;
-                                    ExtractingProgress.Width = 519;
-                                    ExtractingProgress.Image = Theming.ProgressBarWarning;
-                                    ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
-                                }, this);
+                                ExtractingProgress.Value = 100;
+                                ExtractingProgress.Width = 519;
+                                ExtractingProgress.Image = Theming.ProgressBarWarning;
+                                ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
+                            }, this);
 
+                            if (!string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                PlayProgressTextTimer.SafeInvokeAction(() =>
+                                PlayProgressTextTimer.Text = ("Playing the game on a non-NTFS-formatted drive is not supported.").ToUpper(), this);
                                 PlayProgressText.SafeInvokeAction(() =>
-                                PlayProgressText.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper(), this);
-
-                                FunctionStatus.IsVerifyHashDisabled = true;
-
-                                TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
-                                TaskbarProgress.SetValue(Handle, 100, 100);
+                                PlayProgressText.Text = ("Drive '" + d.Name + "' is formatted with: " + d.DriveFormat + " Type.").ToUpper(), this);
                             }
                             else
                             {
-                                DownloadCoreFiles();
+                                PlayProgressText.SafeInvokeAction(() => 
+                                PlayProgressText.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper(), this);
                             }
+
+                            FunctionStatus.IsVerifyHashDisabled = true;
+
+                            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
+                            TaskbarProgress.SetValue(Handle, 100, 100);
                         }
+                        else
+                        {
+                            DownloadCoreFiles();
+                        }
+
+                        break;
                     }
                 }
-                catch
-                {
-                    DownloadCoreFiles();
-                }
             }
-            else
+            catch
             {
-                OnDownloadFinished();
+                DownloadCoreFiles();
             }
         }
 
@@ -2650,7 +2656,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             {
                 speechFile = DownloaderAddons.SpeechFiles(FileSettingsSave.Lang);
 
-                FunctionStatus.TLS();
                 Uri URLCall = new Uri(FileSettingsSave.CDN + "/" + speechFile + "/index.xml");
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 var Client = new WebClient
@@ -2669,12 +2674,10 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 {
                     String response = Client.DownloadString(URLCall);
 
-                    response = response.Substring(3, response.Length - 3);
-
                     XmlDocument speechFileXml = new XmlDocument();
                     speechFileXml.LoadXml(response);
-                    XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
 
+                    XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
                     speechSize = Convert.ToInt32(speechSizeNode.InnerText);
                 }
                 catch
@@ -2699,7 +2702,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             PlayProgressText.SafeInvokeAction(() =>
             PlayProgressText.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper(), this);
 
-            string SoundSpeechPath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation,"Sound","Speech","copspeechsth_" + speechFile + ".big"));
+            string SoundSpeechPath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "Sound", "Speech", "copspeechsth_" + speechFile + ".big"));
             if (!File.Exists(SoundSpeechPath))
             {
                 _downloadStartTime = DateTime.Now;
@@ -2738,7 +2741,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
         /* That's right the Protype Extractor from 2.1.5.x, now back from the dead - DavidCarbon */
         public void GoForUnpack(string filename_pack)
         {
-            Thread unpacker = new Thread(() => 
+            Thread unpacker = new Thread(() =>
             {
                 if (Application.OpenForms["MainScreen"] != null)
                 {
@@ -2918,7 +2921,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
             try
             {
-                File.WriteAllBytes(Path.Combine(FileSettingsSave.GameInstallation, "GFX", "BootFlow.gfx"), 
+                File.WriteAllBytes(Path.Combine(FileSettingsSave.GameInstallation, "GFX", "BootFlow.gfx"),
                     ExtractResource.AsByte("GameLauncher.Resources.Bootscreen.BootFlow.gfx"));
             }
             catch { }
@@ -3285,7 +3288,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 try
                                 {
                                     while (StillCheckingLastServer) { }
-                                    FunctionStatus.TLS();
                                     Uri URLCall = new Uri(Servers.IPAddress + "/GetServerInformation");
                                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                     var Client = new WebClient
@@ -3366,7 +3368,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     File.WriteAllBytes(CursorFile, ExtractResource.AsByte("GameLauncher.Resources.Cursors.Cursor.ani"));
                     Cursor mycursor = new Cursor(Cursor.Current.Handle);
                     IntPtr colorcursorhandle = User32.LoadCursorFromFile(CursorFile);
-                    mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, 
+                    mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField,
                         null, mycursor, new object[] { colorcursorhandle });
                     Cursor = mycursor;
                     File.Delete(CursorFile);

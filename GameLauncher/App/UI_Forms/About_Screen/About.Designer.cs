@@ -247,9 +247,13 @@
             this.Load += new System.EventHandler(this.PatchNotes_Load);
             this.PatchContainerPanel.ResumeLayout(false);
             this.PatchPanel2.ResumeLayout(false);
+            this.PatchPanel2.PerformLayout();
             this.PatchPanel1.ResumeLayout(false);
+            this.PatchPanel1.PerformLayout();
             this.PatchPanel3.ResumeLayout(false);
+            this.PatchPanel3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

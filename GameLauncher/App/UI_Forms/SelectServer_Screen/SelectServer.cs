@@ -1,22 +1,21 @@
-﻿using Newtonsoft.Json;
+﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.UI_Forms.AddServer_Screen;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Net;
 using System.Net.NetworkInformation;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using System.Text;
-using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
-using System.Net;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.SystemPlatform.Unix;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.UI_Forms.AddServer_Screen;
-using GameLauncher.App.Classes.LauncherCore.Support;
 
 namespace GameLauncher.App.UI_Forms.SelectServer_Screen
 {
@@ -201,8 +200,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                         {
                             try
                             {
-                                FunctionStatus.TLS();
-                                Uri URLCall = new Uri(URLs.GitHub_Launcher);
+                                Uri URLCall = new Uri(serverurl);
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 var Client = new WebClient
                                 {
@@ -273,7 +271,8 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                                     Uri StringToUri = new Uri(serverurl);
                                     ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                     CheckMate = new Ping();
-                                    CheckMate.PingCompleted += (sender3, e3) => {
+                                    CheckMate.PingCompleted += (sender3, e3) =>
+                                    {
                                         if (e3.Reply != null)
                                         {
                                             if (e3.Reply.Status == IPStatus.Success && ServerName != "Offline Built-In Server")

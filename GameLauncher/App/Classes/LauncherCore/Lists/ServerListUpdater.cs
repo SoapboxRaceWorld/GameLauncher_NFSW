@@ -1,18 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
+using GameLauncher.App.UI_Forms.SelectServer_Screen;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using System.Globalization;
-using GameLauncher.App.Classes.Hash;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
-using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.UI_Forms.SelectServer_Screen;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {

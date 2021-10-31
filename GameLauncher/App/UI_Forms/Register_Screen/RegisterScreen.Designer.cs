@@ -231,7 +231,6 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
             ((System.ComponentModel.ISupportInitialize)(this.RegisterConfirmPasswordBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterTicketBorder)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

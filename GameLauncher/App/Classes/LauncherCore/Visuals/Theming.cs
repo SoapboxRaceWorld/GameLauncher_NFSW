@@ -1,11 +1,11 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.UI_Forms.Splash_Screen;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.UI_Forms.Splash_Screen;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
@@ -280,7 +280,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Color RedBorderColorButton = Color.FromArgb(168, 0, 0);
 
-        public static Color RedForeColorButton = Color.FromArgb(210, 4, 45); 
+        public static Color RedForeColorButton = Color.FromArgb(210, 4, 45);
 
         public static Color RedMouseOverBackColorButton = Color.FromArgb(44, 58, 76);
 

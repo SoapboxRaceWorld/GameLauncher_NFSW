@@ -1,29 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using System.Windows.Forms;
-using Microsoft.Win32;
-using System.Globalization;
-using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.ModNet;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
+﻿using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.SystemPlatform.Components;
-using GameLauncher.App.Classes.LauncherCore.Client;
+using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
-using System.Text;
-using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
+using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
-using System.ComponentModel;
-using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace GameLauncher
 {
@@ -35,7 +37,7 @@ namespace GameLauncher
         {
             try
             {
-                LogToFileAddons.OpenLog("Thread Exception", Translations.Database("Application_Exception_Thread") + ": ", 
+                LogToFileAddons.OpenLog("Thread Exception", Translations.Database("Application_Exception_Thread") + ": ",
                     Error.Exception, "Error", false);
 
                 try
@@ -61,7 +63,7 @@ namespace GameLauncher
         {
             try
             {
-                LogToFileAddons.OpenLog("Unhandled Exception", Translations.Database("Application_Exception_Unhandled") + ": ", 
+                LogToFileAddons.OpenLog("Unhandled Exception", Translations.Database("Application_Exception_Unhandled") + ": ",
                     (Exception)Error.ExceptionObject, "Error", false);
 
                 try
@@ -92,6 +94,36 @@ namespace GameLauncher
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.ThreadException += Application_ThreadException;
             Application.EnableVisualStyles();
+            /* We need to set these once and Forget about it (Unless there is a bug such as HttpWebClient) */
+            AppContext.SetSwitch("Switch.System.Net.DontEnableSchUseStrongCrypto", false);
+            AppContext.SetSwitch("Switch.System.Net.DontEnableSystemDefaultTlsVersions", false);
+            ServicePointManager.DnsRefreshTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) =>
+            {
+                bool isOk = true;
+                if (sslPolicyErrors != SslPolicyErrors.None)
+                {
+                    for (int i = 0; i < chain.ChainStatus.Length; i++)
+                    {
+                        if (chain.ChainStatus[i].Status == X509ChainStatusFlags.RevocationStatusUnknown)
+                        {
+                            continue;
+                        }
+                        chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
+                        chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
+                        chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 0, 15);
+                        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
+                        bool chainIsValid = chain.Build((X509Certificate2)certificate);
+                        if (!chainIsValid)
+                        {
+                            isOk = false;
+                            break;
+                        }
+                    }
+                }
+                return isOk;
+            };
 
             if (Debugger.IsAttached && !NFSW.IsRunning())
             {
@@ -144,7 +176,6 @@ namespace GameLauncher
                     {
                         try
                         {
-                            FunctionStatus.TLS();
                             Uri URLCall = new Uri(URLs.File + "/LZMA.dll");
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             WebClient Client = new WebClient
@@ -163,7 +194,7 @@ namespace GameLauncher
                                         {
                                             File.Delete(LZMAPath);
                                         }
-                                    } 
+                                    }
                                     catch { }
                                 }
                             };
@@ -174,8 +205,8 @@ namespace GameLauncher
                             {
                                 Client.DownloadFile(URLCall, LZMAPath);
 
-                                if (MessageBox.Show(null, Translations.Database("Program_TextBox_LZMA_Redownloaded"), 
-                                    "GameLauncher Restart Required", 
+                                if (MessageBox.Show(null, Translations.Database("Program_TextBox_LZMA_Redownloaded"),
+                                    "GameLauncher Restart Required",
                                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                                 {
                                     LauncherMustRestart = true;
@@ -301,7 +332,7 @@ namespace GameLauncher
                             }
                             else
                             {
-                                MessageBox.Show(null, Translations.Database("Program_TextBox_SBRWIsRunning"), 
+                                MessageBox.Show(null, Translations.Database("Program_TextBox_SBRWIsRunning"),
                                     "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
@@ -548,61 +579,95 @@ namespace GameLauncher
                         CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Translations.UI(Translations.Application_Language = FileSettingsSave.Lang.ToLower(), true));
                         Log.Completed("APPLICATION: Done Setting Language '" + Translations.UI(Translations.Application_Language) + "'");
 
-                        /* Windows 7 Fix */
-                        if (WindowsProductVersion.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))
+                        /* Windows 7 TLS Check */
+                        if (WindowsProductVersion.GetWindowsNumber() == 6.1)
                         {
                             Log.Checking("SSL/TLS: Windows 7 Detected");
-                            DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 TLS/SSL Update");
+                            DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 SSL/TLS");
+
+                            try
+                            {
+                                String MessageBoxPopupTLS = String.Empty;
+                                string keyName = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client";
+                                string subKey = "DisabledByDefault";
+
+                                if (Registry.GetValue(keyName, subKey, null) == null)
+                                {
+                                    MessageBoxPopupTLS = Translations.Database("Program_TextBox_W7_TLS_P1") + "\n\n";
+
+                                    MessageBoxPopupTLS += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n  /SCHANNEL/Protocols/TLS 1.2/Client\n";
+                                    MessageBoxPopupTLS += "- Value: DisabledByDefault -> 0\n\n";
+
+                                    MessageBoxPopupTLS += Translations.Database("Program_TextBox_W7_TLS_P2") + "\n\n";
+                                    MessageBoxPopupTLS += Translations.Database("Program_TextBox_W7_TLS_P3");
+
+                                    /* There is only 'OK' Available because this IS Required */
+                                    if (MessageBox.Show(null, MessageBoxPopupTLS, "SBRW Launcher",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Warning) == DialogResult.OK)
+                                    {
+                                        RegistryCore.Write("DisabledByDefault", 0x0,
+                                            @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
+                                        MessageBox.Show(null, Translations.Database("Program_TextBox_W7_TLS_P4"),
+                                            "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    }
+                                    Log.Completed("SSL/TLS: Added Registry Key");
+                                }
+                                else
+                                {
+                                    Log.Completed("SSL/TLS: Done");
+                                }
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("SSL/TLS", null, Error, null, true);
+                            }
+                        }
+
+                        /* Windows 7 HotFix Check */
+                        if (WindowsProductVersion.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))
+                        {
+                            Log.Checking("HotFixes: Windows 7 Detected");
+                            DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 HotFixes");
 
                             try
                             {
                                 if (!ManagementSearcher.GetInstalledHotFix("KB3020369") || !ManagementSearcher.GetInstalledHotFix("KB3125574"))
                                 {
                                     String MessageBoxPopupKB = String.Empty;
-                                    MessageBoxPopupKB = Translations.Database("Program_TextBox_W7_TLS") + "\n";
-                                    MessageBoxPopupKB += Translations.Database("Program_TextBox_W7_TLS_P2") + "\n\n";
+                                    MessageBoxPopupKB = Translations.Database("Program_TextBox_W7_KB_P1") + "\n";
+                                    MessageBoxPopupKB += Translations.Database("Program_TextBox_W7_KB_P2") + "\n\n";
 
                                     if (!ManagementSearcher.GetInstalledHotFix("KB3020369"))
                                     {
-                                        MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_TLS_P3") + " KB3020369\n";
+                                        MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_KB_P3") + " KB3020369\n";
                                     }
 
                                     if (!ManagementSearcher.GetInstalledHotFix("KB3125574"))
                                     {
-                                        MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_TLS_P3") + " KB3125574\n";
+                                        MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_KB_P3") + " KB3125574\n";
                                     }
+                                    MessageBoxPopupKB += "\n" + Translations.Database("Program_TextBox_W7_KB_P4") + "\n";
 
-                                    MessageBoxPopupKB += "\n" + Translations.Database("Program_TextBox_W7_TLS_P4") + "\n";
-
-                                    MessageBoxPopupKB += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n/SCHANNEL/Protocols/TLS 1.2/Client\n";
-                                    MessageBoxPopupKB += "- Value: DisabledByDefault -> 0\n\n";
-
-                                    MessageBoxPopupKB += Translations.Database("Program_TextBox_W7_TLS_P5");
-
-                                    if (MessageBox.Show(null, MessageBoxPopupKB, "SBRW Launcher", 
-                                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                                    if (MessageBox.Show(null, MessageBoxPopupKB, "SBRW Launcher",
+                                        MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
                                     {
-                                        RegistryCore.Write("DisabledByDefault", 0x0, 
-                                            @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
-                                        MessageBox.Show(null, Translations.Database("Program_TextBox_W7_TLS_P6"),
-                                            "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                        /* Since it's Informational we just need to know if they clicked 'OK' */
                                         FileSettingsSave.Win7UpdatePatches = "1";
                                     }
                                     else
                                     {
-                                        MessageBox.Show(null, Translations.Database("Program_TextBox_W7_TLS_P7"),
-                                            "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                        /* or if they clicked 'Cancel' */
                                         FileSettingsSave.Win7UpdatePatches = "0";
                                     }
 
                                     FileSettingsSave.SaveSettings();
                                 }
 
-                                Log.Completed("SSL/TLS: Done");
+                                Log.Completed("HotFixes: Done");
                             }
                             catch (Exception Error)
                             {
-                                LogToFileAddons.OpenLog("SSL/TLS", null, Error, null, true);
+                                LogToFileAddons.OpenLog("HotFixes", null, Error, null, true);
                             }
                         }
                     }
@@ -653,7 +718,7 @@ namespace GameLauncher
                         else
                         {
                             Log.Completed("CLEANLINKS: Not Present");
-                        }                        
+                        }
                     }
 
                     Log.Checking("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + FileSettingsSave.Proxy);
@@ -673,6 +738,6 @@ namespace GameLauncher
                     Redistributable.Check();
                 }
             }
-        }            
+        }
     }
 }
