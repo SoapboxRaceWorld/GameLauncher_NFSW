@@ -2,17 +2,17 @@
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using Newtonsoft.Json;
-using SBRWCore.Classes.References.Jsons.Newtonsoft;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
 using System;
 using System.Collections.Generic;
-using static SBRWCore.Classes.Extensions.Screens.Resolution_Results;
+using SBRW.Launcher.Core.Classes.Required.DLL.User32_;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
     class ResolutionsListUpdater
     {
-        public static List<Json_List_Resolutions> List = new List<Json_List_Resolutions>();
+        public static List<Json_List_Resolution> List = new List<Json_List_Resolution>();
 
         public static void Get()
         {
@@ -21,11 +21,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 int AmountOfRes = 0;
                 string JSONResolutions = string.Empty;
 
-                List<Json_List_Resolutions> LocalResolutionsList = new List<Json_List_Resolutions>();
-                DEVMODE vDevMode = new DEVMODE();
+                List<Json_List_Resolution> LocalResolutionsList = new List<Json_List_Resolution>();
+                Resolution_Results.DEVMODE vDevMode = new Resolution_Results.DEVMODE();
 
                 JSONResolutions += "[";
-                while (EnumDisplaySettings(null, AmountOfRes, ref vDevMode))
+                while (Resolution_Results.EnumDisplaySettings(null, AmountOfRes, ref vDevMode))
                 {
                     JSONResolutions += "{\"resolution\": \"" + vDevMode.dmPelsWidth + "x" + vDevMode.dmPelsHeight + "\", \"dmPelsWidth\": \"" +
                         vDevMode.dmPelsWidth + "\", \"dmPelsHeight\": \"" + vDevMode.dmPelsHeight + "\"},";
@@ -51,7 +51,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
                 try
                 {
-                    LocalResolutionsList.AddRange(JsonConvert.DeserializeObject<List<Json_List_Resolutions>>(JSONResolutions));
+                    LocalResolutionsList.AddRange(JsonConvert.DeserializeObject<List<Json_List_Resolution>>(JSONResolutions));
                 }
                 catch (Exception Error)
                 {
@@ -60,7 +60,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
                 try
                 {
-                    foreach (Json_List_Resolutions CList in LocalResolutionsList)
+                    foreach (Json_List_Resolution CList in LocalResolutionsList)
                     {
                         if (List.FindIndex(i => string.Equals(i.Resolution, CList.Resolution)) == -1)
                         {

@@ -6,9 +6,8 @@ using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using NetFwTypeLib;
-using SBRWCore.Classes.Extensions;
-using SBRWCore.Classes.Required;
-using SBRWCore.Classes.System;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Required.System.Windows_;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -164,7 +163,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
         /// <returns><code>True or False</code></returns>
         private bool GetDefenderStatus(string Query)
         {
-            if (!UnixOS.Detected() && WindowsProductVersion.GetWindowsNumber() >= 10)
+            if (!UnixOS.Detected() && Product_Version.GetWindowsNumber() >= 10)
             {
                 ManagementObjectSearcher ObjectPath = null;
                 ManagementObjectCollection ObjectCollection = null;
@@ -309,7 +308,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     /* Remove current Exclusion and Add new location for Exclusion (Game Files Only!) */
                     using (PowerShell AddScript = PowerShell.Create())
                     {
-                        AddScript.AddScript($"Add-MpPreference -ExclusionPath \"{Strings.Encode(AppPath)}\"");
+                        AddScript.AddScript($"Add-MpPreference -ExclusionPath \"{AppPath}\"");
                         AddScript.Invoke();
                     }
 
@@ -343,7 +342,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     /* Remove current Exclusion and Add new location for Exclusion (Game Files Only!) */
                     using (PowerShell RemovalScript = PowerShell.Create())
                     {
-                        RemovalScript.AddScript($"Remove-MpPreference -ExclusionPath \"{Strings.Encode(AppPath)}\"");
+                        RemovalScript.AddScript($"Remove-MpPreference -ExclusionPath \"{AppPath}\"");
                         RemovalScript.Invoke();
                     }
 
@@ -784,14 +783,14 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     Description = "Soapbox Race World";
                     if (ModeAPI >= 0 && ModeAPI <= 2)
                     {
-                        AppPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher));
+                        AppPath = Path.Combine(Locations.LauncherFolder, Locations.NameLauncher);
                     }
                     else { AppPath = Locations.LauncherFolder; }
                     break;
                 /* Updater */
                 case 1:
                     AppName = "SBRW - Game Launcher Updater";
-                    AppPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater));
+                    AppPath = Path.Combine(Locations.LauncherFolder, Locations.NameUpdater);
                     GroupKey = "Game Launcher for Windows";
                     Description = "Soapbox Race World";
                     break;
@@ -805,11 +804,11 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
                     {
                         if (ModeType == 2)
                         {
-                            AppPath = Strings.Encode(Path.Combine(FileSettingsSave.Live_Data.Game_Path, "nfsw.exe"));
+                            AppPath = Path.Combine(FileSettingsSave.Live_Data.Game_Path, "nfsw.exe");
                         }
                         else
                         {
-                            AppPath = Strings.Encode(Path.Combine(FileSettingsSave.Live_Data.Game_Path_Old, "nfsw.exe"));
+                            AppPath = Path.Combine(FileSettingsSave.Live_Data.Game_Path_Old, "nfsw.exe");
                         }
                     }
                     else
@@ -1320,7 +1319,7 @@ namespace GameLauncher.App.UI_Forms.SecurityCenter_Screen
         {
             if (!DisableButtonDRAPI)
             {
-                if (EnableInsiderDeveloper.Allowed() || (WindowsProductVersion.GetWindowsNumber() >= 10 &&
+                if (EnableInsiderDeveloper.Allowed() || (Product_Version.GetWindowsNumber() >= 10 &&
                     (MessageBox.Show(null, "There has been reports that some users are not able to run Windows Defender Checks." +
                     "\nThis ranges from the Built-In to Third-Party Anti-Virus Software." +
                     "\n\nIf this Window Closes or the Launcher Crashes with an Error Message" +

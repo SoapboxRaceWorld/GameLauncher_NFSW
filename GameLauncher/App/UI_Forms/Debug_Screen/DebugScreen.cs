@@ -8,7 +8,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Required.System;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

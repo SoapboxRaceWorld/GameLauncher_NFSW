@@ -3,7 +3,6 @@ using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
@@ -16,12 +15,12 @@ using GameLauncher.App.UI_Forms.Debug_Screen;
 using GameLauncher.App.UI_Forms.SecurityCenter_Screen;
 using GameLauncher.App.UI_Forms.USXEditor_Screen;
 using GameLauncher.App.UI_Forms.VerifyHash_Screen;
-using SBRWCore.Classes.Extensions;
-using SBRWCore.Classes.Extensions.API;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.References.Jsons.Newtonsoft;
-using SBRWCore.Classes.Required;
-using SBRWCore.Classes.System;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Api_;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Extension.String_;
+using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Classes.Required.System.Windows_;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -566,7 +565,6 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
             _newGameFilesPath = FileSettingsSave.Live_Data.Game_Path;
             _newLauncherPath = Locations.LauncherFolder;
-            Log.Debug(FileSettingsSave.Live_Data.Launcher_Discord_Presence);
             _disableProxy = (FileSettingsSave.Live_Data.Launcher_Proxy == "1");
             _disableDiscordRPC = (FileSettingsSave.Live_Data.Launcher_Discord_Presence == "1");
             _enableAltWebCalls = (FileSettingsSave.Live_Data.Launcher_WebClient_Method == "WebClientWithTimeout");
@@ -585,7 +583,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             /* Enable/Disable Visuals       /
             /*******************************/
 
-            if (File.Exists(Strings.Encode(Path.Combine(FileSettingsSave.Live_Data.Game_Path, "NFSWO_COMMUNICATION_LOG.txt"))))
+            if (File.Exists(Path.Combine(FileSettingsSave.Live_Data.Game_Path, "NFSWO_COMMUNICATION_LOG.txt")))
             {
                 ButtonsColorSet(SettingsClearCommunicationLogButton, 2, true);
             }
@@ -628,7 +626,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
             try
             {
-                DirectoryInfo LauncherLogFilesDirectory = new DirectoryInfo(LogToFile_Extensions.LogFolder);
+                DirectoryInfo LauncherLogFilesDirectory = new DirectoryInfo(Log_Location.LogFolder);
 
                 if (LauncherLogFilesDirectory.EnumerateDirectories().Count() != 1)
                 {
@@ -772,7 +770,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
             if (!string.IsNullOrWhiteSpace(_newGameFilesPath))
             {
-                if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.Live_Data.Game_Path != _newGameFilesPath) && !UnixOS.Detected())
+                if (Product_Version.GetWindowsNumber() >= 10.0 && (FileSettingsSave.Live_Data.Game_Path != _newGameFilesPath) && !UnixOS.Detected())
                 {
                     WindowsDefenderGameFilesDirctoryChange();
                 }
@@ -916,7 +914,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             if (FileSettingsSave.Live_Data.Launcher_WebClient_Method != (SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient"))
             {
                 FileSettingsSave.Live_Data.Launcher_WebClient_Method = SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient";
-                Live_Cache.Launcher_Alternative_Webcalls(FileSettingsSave.Live_Data.Launcher_WebClient_Method == "WebClient");
+                Launcher_Value.Launcher_Alternative_Webcalls(FileSettingsSave.Live_Data.Launcher_WebClient_Method == "WebClient");
             }
 
             if (FileSettingsSave.Live_Data.Launcher_Streaming_Support != (SettingsStreanCheckbox.Checked ? "1" : "0"))
@@ -1065,13 +1063,13 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         {
             try
             {
-                DirectoryInfo InstallationDirectory = new DirectoryInfo(LogToFile_Extensions.LogFolder);
+                DirectoryInfo InstallationDirectory = new DirectoryInfo(Log_Location.LogFolder);
 
                 foreach (var Folder in InstallationDirectory.EnumerateDirectories())
                 {
                     if (Directory.Exists(Folder.FullName))
                     {
-                        if (Folder.FullName != LogToFile_Extensions.LogCurrentFolder)
+                        if (Folder.FullName != Log_Location.LogCurrentFolder)
                         {
                             Directory.Delete(Folder.FullName, true);
                         }
@@ -1105,7 +1103,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
                 if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
                 {
-                    _newGameFilesPath = Strings.Encode(Path.GetDirectoryName(Strings.Encode(changeGameFilesPath.FileName)));
+                    _newGameFilesPath = Path.GetDirectoryName(changeGameFilesPath.FileName);
                     SettingsGameFilesCurrentText.Text = "NEW DIRECTORY";
                     SettingsGameFilesCurrent.Text = _newGameFilesPath;
                 }
@@ -1118,7 +1116,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
                 if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
                 {
-                    _newGameFilesPath = Strings.Encode(Path.GetFullPath(Strings.Encode(changeGameFilesPath.SelectedPath)));
+                    _newGameFilesPath = Path.GetFullPath(changeGameFilesPath.SelectedPath);
                     SettingsGameFilesCurrentText.Text = "NEW DIRECTORY";
                     SettingsGameFilesCurrent.Text = _newGameFilesPath;
                 }

@@ -4,15 +4,13 @@ using Flurl.Http.Content;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Extensions;
 using Nancy.Responses;
-using SBRWCore.Classes.Extensions;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
 using System;
 using System.Linq;
 using System.Text;
@@ -47,8 +45,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         private async Task<Response> ProxyRequest(NancyContext context, CancellationToken cancellationToken)
         {
-            string path = Strings.Encode(context.Request.Path);
-            string method = Strings.Encode(context.Request.Method.ToUpperInvariant());
+            string path = context.Request.Path;
+            string method = context.Request.Method.ToUpperInvariant();
 
             if (!path.StartsWith("/nfsw/Engine.svc"))
             {
@@ -90,14 +88,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
                 if (path == "/event/arbitration" && !string.IsNullOrWhiteSpace(requestBody))
                 {
-                    requestBody = Strings.Encode(
-                    requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Live_Cache.Game_AC() + "</Konami>"));
+                    requestBody = requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Launcher_Value.Game_AC() + "</Konami>");
                     foreach (var header in context.Request.Headers)
                     {
                         if (header.Key.ToLowerInvariant() == "content-length")
                         {
                             int KonamiCode = Convert.ToInt32(header.Value.First()) +
-                                ("<Konami>" + Live_Cache.Game_AC() + "</Konami>").Length;
+                                ("<Konami>" + Launcher_Value.Game_AC() + "</Konami>").Length;
                             request = request.WithHeader(header.Key, KonamiCode);
                         }
                     }
@@ -125,7 +122,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                         break;
                 }
 
-                string responseBody = Strings.Encode(await responseMessage.GetStringAsync());
+                string responseBody = await responseMessage.GetStringAsync();
 
                 int statusCode = responseMessage.StatusCode;
 

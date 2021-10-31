@@ -1,10 +1,10 @@
 ﻿using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
 using System;
 using System.Reflection;
 using System.Resources;
 using System.Text.RegularExpressions;
-using SBRWCore.Classes.Required;
 
 namespace GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms
 {

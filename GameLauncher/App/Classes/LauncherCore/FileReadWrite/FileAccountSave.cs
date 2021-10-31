@@ -1,5 +1,5 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
-using SBRWCore.Classes.References.Inis;
+using SBRW.Launcher.Core.Classes.Reference.Ini_;
 
 namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 {

@@ -1,9 +1,9 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using SBRWCore.Classes.Required;
 
 namespace GameLauncher.App.Classes.LauncherCore.Logger
 {
@@ -16,7 +16,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
         {
             if (File.Exists(Path.Combine(Locations.LauncherFolder, "SBRWCore.dll")))
             {
-                LogToFile_Extensions.OpenLog(From, MessageDetails, Error, Icon, Suppress, OpenLogMessage);
+                Log_Detail.OpenLog(From, MessageDetails, Error, Icon, Suppress, OpenLogMessage);
             }
             else
             {

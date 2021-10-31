@@ -3,9 +3,9 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.UI_Forms.Register_Screen;
 using GameLauncher.App.UI_Forms.SelectServer_Screen;
-using SBRWCore.Classes.Extensions.Validator;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.References.Jsons.Newtonsoft;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Validation_;
+using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -42,8 +42,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
                 else if (InformationCache.SelectedServerData.Name.ToUpper() == "WORLDUNITED OFFICIAL")
                 {
-                    Process.Start("https://signup.worldunited.gg/" + ((!string.IsNullOrWhiteSpace(Live_Cache.Launcher_Discord_UserID) &&
-                        Live_Cache.Launcher_Discord_UserID != "0") ? "?discordid=" + Live_Cache.Launcher_Discord_UserID : string.Empty));
+                    Process.Start("https://signup.worldunited.gg/" + ((!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Discord_UserID) &&
+                        Launcher_Value.Launcher_Discord_UserID != "0") ? "?discordid=" + Launcher_Value.Launcher_Discord_UserID : string.Empty));
                     MessageBox.Show(null, "A browser window has been opened to complete registration on " +
                         InformationCache.SelectedServerData.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -98,7 +98,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                     if (!string.IsNullOrWhiteSpace(send))
                     {
-                        if (!IsEmailValid.Validate(send))
+                        if (!Is_Email.Valid(send))
                         {
                             MessageBox.Show(null, "Email Address is not Valid. Please Check and Try Again", "GameLauncher",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);

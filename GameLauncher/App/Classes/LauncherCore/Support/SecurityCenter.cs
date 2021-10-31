@@ -2,7 +2,7 @@
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRWCore.Classes.System;
+using SBRW.Launcher.Core.Classes.Required.System.Windows_;
 using System.Drawing;
 
 namespace GameLauncher.App.Classes.LauncherCore.Support
@@ -30,19 +30,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             {
                 return SecurityCenterCodes.Firewall_Error;
             }
-            else if ((WindowsProductVersion.GetWindowsNumber() >= 10) &&
+            else if ((Product_Version.GetWindowsNumber() >= 10) &&
                 FileSettingsSave.Live_Data.Defender_Launcher == "Excluded" && FileSettingsSave.Live_Data.Defender_Game == "Excluded")
             {
                 return SecurityCenterCodes.Defender_Updated;
             }
-            else if ((WindowsProductVersion.GetWindowsNumber() >= 10) &&
+            else if ((Product_Version.GetWindowsNumber() >= 10) &&
                 ((FileSettingsSave.Live_Data.Defender_Launcher == "Excluded" && FileSettingsSave.Live_Data.Defender_Game == "Not Excluded") ||
                 (FileSettingsSave.Live_Data.Defender_Launcher == "Unknown" && FileSettingsSave.Live_Data.Defender_Game == "Unknown") ||
                 (FileSettingsSave.Live_Data.Defender_Launcher == "Removed" && FileSettingsSave.Live_Data.Defender_Game == "Removed")))
             {
                 return SecurityCenterCodes.Defender_Outdated;
             }
-            else if ((WindowsProductVersion.GetWindowsNumber() >= 10) &&
+            else if ((Product_Version.GetWindowsNumber() >= 10) &&
                 ((FileSettingsSave.Live_Data.Defender_Launcher == "Error" && FileSettingsSave.Live_Data.Defender_Game == "Error") ||
                 (FileSettingsSave.Live_Data.Defender_Launcher == "Not Supported" && FileSettingsSave.Live_Data.Defender_Game == "Not Supported")))
             {
@@ -61,7 +61,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                 return SecurityCenterCodes.Permissions_Outdated;
             }
             else if ((FileSettingsSave.Live_Data.Firewall_Launcher == "Not Excluded" && FileSettingsSave.Live_Data.Firewall_Game == "Not Excluded") ||
-                ((WindowsProductVersion.GetWindowsNumber() >= 10) &&
+                ((Product_Version.GetWindowsNumber() >= 10) &&
                 FileSettingsSave.Live_Data.Defender_Launcher == "Not Excluded" && FileSettingsSave.Live_Data.Defender_Game == "Not Excluded"))
             {
                 return SecurityCenterCodes.Unknown;

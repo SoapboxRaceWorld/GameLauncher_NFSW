@@ -3,9 +3,8 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using SBRWCore.Classes.Anti_Cheat;
-using SBRWCore.Classes.Game_Client;
-using SBRWCore.Classes.Launcher;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Required.Anti_Cheat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,7 +77,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     if (!String.IsNullOrWhiteSpace(_serverPanelLink))
                     {
                         /* Let's format it now, if possible */
-                        if (Live_Cache.Game_Persona_ID == String.Empty || Live_Cache.Game_Persona_Name == String.Empty)
+                        if (Launcher_Value.Game_Persona_ID == String.Empty || Launcher_Value.Game_Persona_Name == String.Empty)
                         {
                             DiscordLauncherPresence.ButtonsList.Add(new DiscordButton()
                             {
@@ -88,13 +87,13 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         }
                         else
                         {
-                            _serverPanelLink = _serverPanelLink.Replace("{personaid}", Live_Cache.Game_Persona_ID);
-                            _serverPanelLink = _serverPanelLink.Replace("{personaname}", Live_Cache.Game_Persona_Name);
+                            _serverPanelLink = _serverPanelLink.Replace("{personaid}", Launcher_Value.Game_Persona_ID);
+                            _serverPanelLink = _serverPanelLink.Replace("{personaname}", Launcher_Value.Game_Persona_Name);
                             _serverPanelLink = _serverPanelLink.Replace("{sep}", String.Empty);
 
                             DiscordLauncherPresence.ButtonsList.Add(new DiscordButton()
                             {
-                                Label = "Check " + Live_Cache.Game_Persona_Name + " on Panel",
+                                Label = "Check " + Launcher_Value.Game_Persona_Name + " on Panel",
                                 Url = _serverPanelLink
                             });
                         }
@@ -127,10 +126,10 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 if (uri == "/User/SecureLogoutPersona")
                 {
                     PersonaId = String.Empty;
-                    Live_Cache.Game_Persona_Name_Live = String.Empty;
+                    Launcher_Value.Game_Persona_Name_Live = String.Empty;
                     PersonaLevel = String.Empty;
                     PersonaAvatarId = String.Empty;
-                    Live_Cache.Game_Car_Name = String.Empty;
+                    Launcher_Value.Game_Car_Name = String.Empty;
                     LauncherRPC = String.Empty;
                     PersonaTreasure = 0;
                 }
@@ -143,7 +142,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                     SBRW_XML.LoadXml(serverreply);
 
-                    Live_Cache.Game_Persona_Name_Live = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/Name").InnerText.Replace("¤", "[S]");
+                    Launcher_Value.Game_Persona_Name_Live = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/Name").InnerText.Replace("¤", "[S]");
                     PersonaLevel = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/Level").InnerText;
                     PersonaAvatarId = "avatar_" + SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/IconIndex").InnerText;
                     PersonaId = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/PersonaId").InnerText;
@@ -170,13 +169,13 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     if (LoggedPersonaId == GETContent.Split(';').Last().Split('=').Last())
                     {
                         SBRW_XML.LoadXml(serverreply);
-                        Live_Cache.Game_Persona_Name_Live = SBRW_XML.SelectSingleNode("ProfileData/Name").InnerText.Replace("¤", "[S]");
+                        Launcher_Value.Game_Persona_Name_Live = SBRW_XML.SelectSingleNode("ProfileData/Name").InnerText.Replace("¤", "[S]");
                         PersonaLevel = SBRW_XML.SelectSingleNode("ProfileData/Level").InnerText;
                         PersonaAvatarId = "avatar_" + SBRW_XML.SelectSingleNode("ProfileData/IconIndex").InnerText;
                         PersonaId = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
 
-                        Live_Cache.Game_Persona_ID = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
-                        Live_Cache.Game_Persona_Name = SBRW_XML.SelectSingleNode("ProfileData/Name").InnerText.Replace("¤", "[S]");
+                        Launcher_Value.Game_Persona_ID = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
+                        Launcher_Value.Game_Persona_Name = SBRW_XML.SelectSingleNode("ProfileData/Name").InnerText.Replace("¤", "[S]");
                     }
                 }
 
@@ -217,7 +216,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.State = LauncherRPC;
                     _presence.Assets = new Assets
                     {
-                        LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
+                        LargeImageText = Launcher_Value.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
                         SmallImageText = "Treasure Hunt - Day: " + THDay,
                         SmallImageKey = "gamemode_treasure"
@@ -234,7 +233,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.Assets = new Assets();
                     if (UpdatePersonaPresenceParam == "1")
                     {
-                        _presence.Details = "Driving " + Live_Cache.Game_Car_Name;
+                        _presence.Details = "Driving " + Launcher_Value.Game_Car_Name;
                         _presence.Assets.SmallImageText = "In-Freeroam";
                         _presence.Assets.SmallImageKey = "gamemode_freeroam";
                         _presence.State = LauncherRPC;
@@ -251,7 +250,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         inSafeHouse = true;
                     }
 
-                    _presence.Assets.LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel;
+                    _presence.Assets.LargeImageText = Launcher_Value.Game_Persona_Name_Live + " - Level: " + PersonaLevel;
                     _presence.Assets.LargeImageKey = PersonaAvatarId;
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
@@ -261,11 +260,11 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 if (uri == "/matchmaking/leavelobby" || uri == "/matchmaking/declineinvite")
                 {
                     /* Display Current Car in Freeroam */
-                    _presence.Details = "Driving " + Live_Cache.Game_Car_Name;
+                    _presence.Details = "Driving " + Launcher_Value.Game_Car_Name;
                     _presence.State = LauncherRPC;
                     _presence.Assets = new Assets
                     {
-                        LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
+                        LargeImageText = Launcher_Value.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
                         SmallImageText = "In-Freeroam",
                         SmallImageKey = "gamemode_freeroam"
@@ -298,7 +297,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         _presence.State = serverName;
                         _presence.Assets = new Assets
                         {
-                            LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
+                            LargeImageText = Launcher_Value.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                             LargeImageKey = PersonaAvatarId,
                             SmallImageText = LauncherRPC,
                             SmallImageKey = EventsList.GetEventType(Convert.ToInt32(EventID))
@@ -317,7 +316,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.State = LauncherRPC;
                     _presence.Assets = new Assets
                     {
-                        LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
+                        LargeImageText = Launcher_Value.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
                         SmallImageText = "In-Freeroam",
                         SmallImageKey = "gamemode_freeroam"
@@ -339,7 +338,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.State = serverName;
                     _presence.Assets = new Assets
                     {
-                        LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
+                        LargeImageText = Launcher_Value.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
                         SmallImageText = LauncherRPC,
                         SmallImageKey = EventsList.GetEventType(EventID)
@@ -355,7 +354,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.State = serverName;
                     _presence.Assets = new Assets
                     {
-                        LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
+                        LargeImageText = Launcher_Value.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
                         SmallImageText = LauncherRPC,
                         SmallImageKey = EventsList.GetEventType(EventID)
@@ -363,7 +362,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
 
-                    Live_Cache.Game_Event_ID = EventID;
+                    Launcher_Value.Game_Event_ID = EventID;
                     AC_Core.Start();
 
                     if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
@@ -377,7 +376,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.State = serverName;
                     _presence.Assets = new Assets
                     {
-                        LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
+                        LargeImageText = Launcher_Value.Game_Persona_Name_Live + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
                         SmallImageText = LauncherRPC,
                         SmallImageKey = EventsList.GetEventType(EventID)
@@ -405,7 +404,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         SmallImageKey = "gamemode_safehouse"
                     };
                     _presence.State = serverName;
-                    _presence.Assets.LargeImageText = Live_Cache.Game_Persona_Name_Live + " - Level: " + PersonaLevel;
+                    _presence.Assets.LargeImageText = Launcher_Value.Game_Persona_Name_Live + " - Level: " + PersonaLevel;
                     _presence.Assets.LargeImageKey = PersonaAvatarId;
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
@@ -431,7 +430,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         {
                             if (DefaultID == current)
                             {
-                                Live_Cache.Game_Car_Name = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes
+                                Launcher_Value.Game_Car_Name = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes
                                     (CarsList.GetCarName(node.SelectSingleNode("CustomCar/Name").InnerText)));
                             }
                             current++;
@@ -451,7 +450,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                             {
                                 if (receivedId == node.SelectSingleNode("Id").InnerText)
                                 {
-                                    Live_Cache.Game_Car_Name = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(
+                                    Launcher_Value.Game_Car_Name = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(
                                         CarsList.GetCarName(node.SelectSingleNode("CustomCar/Name").InnerText)));
                                 }
                             }

@@ -1,7 +1,7 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using Nancy.Hosting.Self;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
 using System;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
@@ -18,7 +18,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         /// Boolean Value on Launcher Proxy if its Running
         /// </summary>
         /// <returns>True or False</returns>
-        public static bool Running() => Live_Cache.Launcher_Proxy = Host != null;
+        public static bool Running() => Launcher_Value.Launcher_Proxy = Host != null;
 
         public string GetServerUrl() => _serverUrl;
         public void SetServerUrl(string serverUrl)

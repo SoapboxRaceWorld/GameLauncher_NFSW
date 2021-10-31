@@ -7,9 +7,11 @@ using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRWCore.Classes.Extensions;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Hash_;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Extension.Time_;
+using SBRW.Launcher.Core.Classes.Extension.Web_;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -174,10 +176,10 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                     if (MessageBox.Show("Verify Hash has encountered Download Errors.\n" +
                         "Would you like to Open Verify.Log", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        if (File.Exists(LogToFile_Extensions.LogVerify))
+                        if (File.Exists(Log_Location.LogVerify))
                         {
-                            Process.Start(LogToFile_Extensions.LogCurrentFolder);
-                            Process.Start(LogToFile_Extensions.LogVerify);
+                            Process.Start(Log_Location.LogCurrentFolder);
+                            Process.Start(Log_Location.LogVerify);
                         }
                     }
                 }
@@ -392,10 +394,10 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 if (MessageBox.Show("Verify Hash has encountered File or Folder Deletion Errors.\n" +
                 "Would you like to Open Verify.Log and Stop the Scanner?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    if (File.Exists(LogToFile_Extensions.LogVerify))
+                    if (File.Exists(Log_Location.LogVerify))
                     {
-                        Process.Start(LogToFile_Extensions.LogCurrentFolder);
-                        Process.Start(LogToFile_Extensions.LogVerify);
+                        Process.Start(Log_Location.LogCurrentFolder);
+                        Process.Start(Log_Location.LogVerify);
                     }
 
                     StopScanner_Click(null, null);
@@ -430,7 +432,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                         {
                             Encoding = Encoding.UTF8
                         };
-                        if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                         else
                         {
                             Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -504,7 +506,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                             }
                             else
                             {
-                                if (FileHash != Hash_Extension.HashesSHA(RealPathToFile).Trim())
+                                if (FileHash != Hashes.Hash_SHA(RealPathToFile).Trim())
                                 {
                                     InvalidFileList.Add(FileName);
                                     Log_Verify.Invalid("File: " + FileName);
@@ -635,7 +637,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = Timeout;
 
                                 var Client = new WebClient();
-                                if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout(); }
+                                if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout(); }
                                 else
                                 {
                                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -648,8 +650,8 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                                     {
                                         DownloadProgressText.SafeInvokeAction(() =>
                                         DownloadProgressText.Text = "Downloading File [ " + redownloadedCount + " / " +
-                                        currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + TimeConversion.FormatFileSize(RecevingData.BytesReceived) +
-                                        " of " + TimeConversion.FormatFileSize(RecevingData.TotalBytesToReceive));
+                                        currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + Time_Conversion.FormatFileSize(RecevingData.BytesReceived) +
+                                        " of " + Time_Conversion.FormatFileSize(RecevingData.TotalBytesToReceive));
                                     }
                                     else if (ForceStopScan)
                                     {

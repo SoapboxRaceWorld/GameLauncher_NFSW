@@ -11,11 +11,10 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using GameLauncher.App.UI_Forms.UpdatePopup_Screen;
 using Newtonsoft.Json;
-using SBRWCore.Classes.Extensions;
-using SBRWCore.Classes.Extensions.API;
-using SBRWCore.Classes.Extensions.Validator;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Api_;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Extension.Web_;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -62,7 +61,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     Encoding = Encoding.UTF8
                 };
 
-                if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                 else
                 {
                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -156,7 +155,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         if (UserResult == DialogResult.OK)
                         {
                             StatusUpdate = true;
-                            string UpdaterPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater));
+                            string UpdaterPath = Path.Combine(Locations.LauncherFolder, Locations.NameUpdater);
                             if (File.Exists(UpdaterPath))
                             {
                                 Process.Start(UpdaterPath, Process.GetCurrentProcess().Id.ToString() + " " +

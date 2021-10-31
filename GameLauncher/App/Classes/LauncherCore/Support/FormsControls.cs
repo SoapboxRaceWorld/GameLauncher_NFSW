@@ -1,6 +1,6 @@
 ﻿using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
 using System;
 using System.Windows.Forms;
 

@@ -13,9 +13,13 @@ using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using Microsoft.Win32;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.Required;
-using SBRWCore.Classes.System;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Extension.Registry_;
+using SBRW.Launcher.Core.Classes.Extension.Time_;
+using SBRW.Launcher.Core.Classes.Extension.Web_;
+using SBRW.Launcher.Core.Classes.Required.Certificate;
+using SBRW.Launcher.Core.Classes.Required.System.Windows_;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,7 +33,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using SBRWCore.Classes.Extensions;
 
 namespace GameLauncher
 {
@@ -160,7 +163,7 @@ namespace GameLauncher
                 else
                 {
                     /* Check if File needs to be Downloaded */
-                    string LZMAPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLZMA));
+                    string LZMAPath = Path.Combine(Locations.LauncherFolder, Locations.NameLZMA);
 
                     if (File.Exists(LZMAPath))
                     {
@@ -363,7 +366,7 @@ namespace GameLauncher
                     if (int.TryParse(Registry_Core.Read("Release", @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\"), out int NetFrame_Version))
                     {
                         /* For now, allow edge case of Windows 8.0 to run .NET 4.6.1 where upgrading to 8.1 is not possible */
-                        if (WindowsProductVersion.GetWindowsNumber() == 6.2 && NetFrame_Version <= 394254)
+                        if (Product_Version.GetWindowsNumber() == 6.2 && NetFrame_Version <= 394254)
                         {
                             if (MessageBox.Show(null, Translations.Database("Program_TextBox_NetFrame_P1") +
                             " .NETFramework, Version=v4.6.1 \n\n" + Translations.Database("Program_TextBox_NetFrame_P2"),
@@ -418,9 +421,9 @@ namespace GameLauncher
                 }
 
                 Log.Start();
-                LogToFile_Extensions.RemoveLogs();
+                Log_Location.RemoveLegacyLogs();
 
-                Log.Info("CURRENT DATE: " + TimeDate.GetTime("Date"));
+                Log.Info("CURRENT DATE: " + Time_Clock.GetTime("Date"));
                 Log.Checking("LAUNCHER MIGRATION: Appdata and/or Roaming Folders");
                 /* Deletes Folders that will Crash the Launcher (Cleanup Migration) */
                 try
@@ -429,29 +432,29 @@ namespace GameLauncher
                     {
                         Directory.CreateDirectory(Locations.RoamingAppDataFolder_Launcher);
                     }
-                    if (Directory.Exists(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World"))))
+                    if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World")))
                     {
-                        Directory.Delete(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World")), true);
+                        Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World"), true);
                     }
-                    if (Directory.Exists(Strings.Encode(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World"))))
+                    if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World")))
                     {
-                        Directory.Delete(Strings.Encode(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World")), true);
+                        Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World"), true);
                     }
-                    if (Directory.Exists(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld"))))
+                    if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld")))
                     {
-                        Directory.Delete(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld")), true);
+                        Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld"), true);
                     }
-                    if (Directory.Exists(Strings.Encode(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld"))))
+                    if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld")))
                     {
-                        Directory.Delete(Strings.Encode(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld")), true);
+                        Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld"), true);
                     }
-                    if (Directory.Exists(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg"))))
+                    if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg")))
                     {
-                        Directory.Delete(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg")), true);
+                        Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg"), true);
                     }
-                    if (Directory.Exists(Strings.Encode(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg"))))
+                    if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg")))
                     {
-                        Directory.Delete(Strings.Encode(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg")), true);
+                        Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg"), true);
                     }
                 }
                 catch (Exception Error)
@@ -499,14 +502,14 @@ namespace GameLauncher
                 {
                     if (UnixOS.Detected())
                     {
-                        Live_Cache.System_OS_Name = UnixOS.FullName();
-                        Log.System("SYSTEM: Detected OS: " + Live_Cache.System_OS_Name);
+                        Launcher_Value.System_OS_Name = UnixOS.FullName();
+                        Log.System("SYSTEM: Detected OS: " + Launcher_Value.System_OS_Name);
                     }
                     else
                     {
-                        Live_Cache.System_OS_Name = WindowsProductVersion.ConvertWindowsNumberToName();
-                        Log.System("SYSTEM: Detected OS: " + Live_Cache.System_OS_Name);
-                        Log.System("SYSTEM: Windows Build: " + WindowsProductVersion.GetWindowsBuildNumber());
+                        Launcher_Value.System_OS_Name = Product_Version.ConvertWindowsNumberToName();
+                        Log.System("SYSTEM: Detected OS: " + Launcher_Value.System_OS_Name);
+                        Log.System("SYSTEM: Windows Build: " + Product_Version.GetWindowsBuildNumber());
                         Log.System("SYSTEM: NT Version: " + Environment.OSVersion.VersionString);
                         Log.System("SYSTEM: Video Card: " + HardwareInfo.GPU.CardName());
                         Log.System("SYSTEM: Driver Version: " + HardwareInfo.GPU.DriverVersion());
@@ -592,7 +595,7 @@ namespace GameLauncher
                                         if (File.Exists(Locations.RoamingAppDataFolder_Launcher_Account))
                                         {
                                             File.Move(Locations.RoamingAppDataFolder_Launcher_Account, 
-                                                Path.Combine(Locations.RoamingAppDataFolder_Launcher, LogToFile_Extensions.DateAndTime() + "_" + Locations.NameAccountIni));
+                                                Path.Combine(Locations.RoamingAppDataFolder_Launcher, Time_Folder.DateAndTime() + "_" + Locations.NameAccountIni));
                                         }
 
                                         File.Move(Locations.NameAccountIni, Locations.RoamingAppDataFolder_Launcher_Account);
@@ -631,7 +634,7 @@ namespace GameLauncher
                                 Log.Completed("APPLICATION: Done Setting Language '" + Translations.UI(Translations.Application_Language) + "'");
 
                                 /* Windows 7 TLS Check */
-                                if (WindowsProductVersion.GetWindowsNumber() == 6.1)
+                                if (Product_Version.GetWindowsNumber() == 6.1)
                                 {
                                     Log.Checking("SSL/TLS: Windows 7 Detected");
                                     DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 SSL/TLS");
@@ -675,7 +678,7 @@ namespace GameLauncher
                                 }
 
                                 /* Windows 7 HotFix Check */
-                                if (WindowsProductVersion.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Win_7_Patches))
+                                if (Product_Version.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Win_7_Patches))
                                 {
                                     Log.Checking("HotFixes: Windows 7 Detected");
                                     DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 HotFixes");
@@ -725,25 +728,22 @@ namespace GameLauncher
                                 Log.Checking("JSON: Servers File");
                                 try
                                 {
-                                    if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON))))
+                                    if (File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)))
                                     {
                                         if (File.Exists(Locations.LauncherCustomServers))
                                         {
                                             File.Delete(Locations.LauncherCustomServers);
                                         }
 
-                                        File.Move(
-                                            Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)),
+                                        File.Move(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON),
                                             Locations.LauncherCustomServers);
                                         Log.Completed("JSON: Renaming Servers File");
                                     }
                                     else if (!UnixOS.Detected())
                                     {
-                                        if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
+                                        if (File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)))
                                         {
-                                            File.Move(
-                                                Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)),
-                                                Locations.LauncherCustomServers);
+                                            File.Move(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON),Locations.LauncherCustomServers);
                                         }
                                     }
                                     else if (!File.Exists(Locations.LauncherCustomServers))
@@ -792,7 +792,7 @@ namespace GameLauncher
                                 }
 
                                 Log.Checking("PRELOAD: Headers");
-                                CustomHeaders.Headers_WHC();
+                                Custom_Header.Headers_WHC();
                                 Log.Completed("PRELOAD: Headers");
                                 DiscordLauncherPresence.Status("Start Up", "Checking Root Certificate Authority");
                                 Certificate_Store.Latest();

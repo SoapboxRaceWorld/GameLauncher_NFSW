@@ -4,8 +4,9 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using Nancy.Json;
 using Newtonsoft.Json;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Extension.Web_;
 using System;
 using System.IO;
 using System.Net;
@@ -43,13 +44,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8,
-                        Headers = CustomHeaders.Headers_WHC()
+                        Headers = Custom_Header.Headers_WHC()
                     };
 
-                    if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                     else
                     {
-                        Client.Headers.Add(HttpRequestHeader.UserAgent, CustomHeaders.Primary);
+                        Client.Headers.Add(HttpRequestHeader.UserAgent, Custom_Header.Primary);
                     }
 
                     try

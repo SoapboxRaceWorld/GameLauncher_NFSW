@@ -4,9 +4,9 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.UI_Forms.SelectServer_Screen;
 using Newtonsoft.Json;
-using SBRWCore.Classes.Extensions;
-using SBRWCore.Classes.References.Jsons.Newtonsoft;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Extension.Hash_;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -60,13 +60,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 try
                 {
                     var fileItems = JsonConvert.DeserializeObject<List<Json_List_Server>>
-                    (Strings.Encode(File.ReadAllText(Locations.LauncherCustomServers))) ?? new List<Json_List_Server>();
+                    (File.ReadAllText(Locations.LauncherCustomServers)) ?? new List<Json_List_Server>();
 
                     if (fileItems.Count > 0)
                     {
                         fileItems.Select(si =>
                         {
-                            si.ID = string.IsNullOrWhiteSpace(si.ID) ? Hash_Extension.Hashes(1, $"{si.Name}:{si.ID}:{si.IPAddress}") : si.ID;
+                            si.ID = string.IsNullOrWhiteSpace(si.ID) ? Hashes.Hash_String(1, $"{si.Name}:{si.ID}:{si.IPAddress}") : si.ID;
                             si.IsSpecial = false;
                             si.Category = string.IsNullOrWhiteSpace(si.Category) ? "CUSTOM" : si.Category;
 

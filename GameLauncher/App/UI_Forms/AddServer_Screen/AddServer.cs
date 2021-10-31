@@ -5,10 +5,10 @@ using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Newtonsoft.Json;
-using SBRWCore.Classes.Extensions;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.References.Jsons.Newtonsoft;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.String_;
+using SBRW.Launcher.Core.Classes.Extension.Web_;
+using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -197,7 +197,7 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
                         Encoding = Encoding.UTF8
                     };
 
-                    if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                     else
                     {
                         Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -271,7 +271,7 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
                             Encoding = Encoding.UTF8
                         };
 
-                        if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                         else
                         {
                             Client.Headers.Add("user-agent", "SBRW Launcher " +

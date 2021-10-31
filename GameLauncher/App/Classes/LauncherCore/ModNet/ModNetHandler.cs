@@ -2,10 +2,8 @@
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Support;
-using SBRWCore.Classes.Extensions;
-using SBRWCore.Classes.Extensions.API;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Extension.Api_;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
 using System;
 using System.IO;
 
@@ -108,8 +106,8 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                 if (File.Exists(Path.Combine(Game_Path, Locations.NameModLinks)))
                 {
                     Log.Info("CLEANLINKS: Found Server Mod Files to remove {Process}");
-                    string dir = Strings.Encode(Game_Path);
-                    string linksPath = Strings.Encode(Path.Combine(Game_Path, Locations.NameModLinks));
+                    string dir = Game_Path;
+                    string linksPath = Path.Combine(Game_Path, Locations.NameModLinks);
                     foreach (var readLine in File.ReadLines(linksPath))
                     {
                         var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);

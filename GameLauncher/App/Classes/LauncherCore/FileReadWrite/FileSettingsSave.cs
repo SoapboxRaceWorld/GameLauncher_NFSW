@@ -3,10 +3,10 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.References.Inis;
-using SBRWCore.Classes.Required;
-using SBRWCore.Classes.System;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Reference.Ini_;
+using SBRW.Launcher.Core.Classes.Required.System.Windows_;
 using System;
 
 namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
@@ -264,7 +264,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     Live_Data.Firewall_Game = SettingFile.Read("FirewallGame");
                 }
 
-                if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
+                if (Product_Version.GetWindowsNumber() >= 10.0)
                 {
                     if (!SettingFile.KeyExists("DefenderLauncher") || string.IsNullOrWhiteSpace(SettingFile.Read("DefenderLauncher")))
                     {
@@ -284,7 +284,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                         Live_Data.Defender_Game = SettingFile.Read("DefenderGame");
                     }
                 }
-                else if (WindowsProductVersion.GetWindowsNumber() < 10.0)
+                else if (Product_Version.GetWindowsNumber() < 10.0)
                 {
                     if (SettingFile.KeyExists("DefenderLauncher") || !string.IsNullOrWhiteSpace(SettingFile.Read("DefenderLauncher")))
                     {
@@ -297,15 +297,15 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     }
                 }
 
-                if (WindowsProductVersion.GetWindowsNumber() == 6.1 && !SettingFile.KeyExists("PatchesApplied"))
+                if (Product_Version.GetWindowsNumber() == 6.1 && !SettingFile.KeyExists("PatchesApplied"))
                 {
                     SettingFile.Write("PatchesApplied", Live_Data.Win_7_Patches);
                 }
-                else if (WindowsProductVersion.GetWindowsNumber() == 6.1 && SettingFile.KeyExists("PatchesApplied"))
+                else if (Product_Version.GetWindowsNumber() == 6.1 && SettingFile.KeyExists("PatchesApplied"))
                 {
                     Live_Data.Win_7_Patches = SettingFile.Read("PatchesApplied");
                 }
-                else if ((UnixOS.Detected() || WindowsProductVersion.GetWindowsNumber() != 6.1) && SettingFile.KeyExists("PatchesApplied"))
+                else if ((UnixOS.Detected() || Product_Version.GetWindowsNumber() != 6.1) && SettingFile.KeyExists("PatchesApplied"))
                 {
                     SettingFile.DeleteKey("PatchesApplied");
                 }
@@ -347,7 +347,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 Log.Info("SETTINGS FILE: Random Generated Default Port -> " + ServerProxy.ProxyPort);
             }
 
-            Live_Cache.Launcher_Alternative_Webcalls(Live_Data.Launcher_WebClient_Method == "WebClient");
+            Launcher_Value.Launcher_Alternative_Webcalls(Live_Data.Launcher_WebClient_Method == "WebClient");
 
             /* Key Entries to Remove (No Longer Needed) */
 
@@ -472,7 +472,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     SettingFile.Write("FirewallGame", Live_Data.Firewall_Game);
                 }
 
-                if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
+                if (Product_Version.GetWindowsNumber() >= 10.0)
                 {
                     if (SettingFile.Read("DefenderLauncher") != Live_Data.Defender_Launcher)
                     {
@@ -485,7 +485,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     }
                 }
 
-                if ((SettingFile.Read("PatchesApplied") != Live_Data.Win_7_Patches) && WindowsProductVersion.GetWindowsNumber() == 6.1)
+                if ((SettingFile.Read("PatchesApplied") != Live_Data.Win_7_Patches) && Product_Version.GetWindowsNumber() == 6.1)
                 {
                     SettingFile.Write("PatchesApplied", Live_Data.Win_7_Patches);
                 }

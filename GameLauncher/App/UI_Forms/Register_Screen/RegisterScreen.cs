@@ -6,11 +6,12 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRWCore.Classes.Extensions;
-using SBRWCore.Classes.Extensions.API;
-using SBRWCore.Classes.Extensions.Validator;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Api_;
+using SBRW.Launcher.Core.Classes.Extension.Hash_;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Extension.Validation_;
+using SBRW.Launcher.Core.Classes.Extension.Web_;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -69,7 +70,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                 RegisterEmailBorder.Image = Theming.BorderEmailError;
 
             }
-            else if (!IsEmailValid.Validate(RegisterEmail.Text))
+            else if (!Is_Email.Valid(RegisterEmail.Text))
             {
                 registerErrors.Add("Please enter a valid e-mail address.");
                 RegisterEmailBorder.Image = Theming.BorderEmailError;
@@ -120,27 +121,27 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                         break;
                     case AuthHash.H11:
                         Email = RegisterEmail.Text.ToString();
-                        Password = Hash_Extension.Hashes(0, RegisterPassword.Text.ToString()).ToLower();
+                        Password = Hashes.Hash_String(0, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H12:
                         Email = RegisterEmail.Text.ToString();
-                        Password = Hash_Extension.Hashes(1, RegisterPassword.Text.ToString()).ToLower();
+                        Password = Hashes.Hash_String(1, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H13:
                         Email = RegisterEmail.Text.ToString();
-                        Password = Hash_Extension.Hashes(2, RegisterPassword.Text.ToString()).ToLower();
+                        Password = Hashes.Hash_String(2, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H20:
-                        Email = Hash_Extension.Hashes(0, RegisterEmail.Text.ToString()).ToLower();
-                        Password = Hash_Extension.Hashes(0, RegisterPassword.Text.ToString()).ToLower();
+                        Email = Hashes.Hash_String(0, RegisterEmail.Text.ToString()).ToLower();
+                        Password = Hashes.Hash_String(0, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H21:
-                        Email = Hash_Extension.Hashes(1, RegisterEmail.Text.ToString()).ToLower();
-                        Password = Hash_Extension.Hashes(1, RegisterPassword.Text.ToString()).ToLower();
+                        Email = Hashes.Hash_String(1, RegisterEmail.Text.ToString()).ToLower();
+                        Password = Hashes.Hash_String(1, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H22:
-                        Email = Hash_Extension.Hashes(2, RegisterEmail.Text.ToString()).ToLower();
-                        Password = Hash_Extension.Hashes(2, RegisterPassword.Text.ToString()).ToLower();
+                        Email = Hashes.Hash_String(2, RegisterEmail.Text.ToString()).ToLower();
+                        Password = Hashes.Hash_String(2, RegisterPassword.Text.ToString()).ToLower();
                         break;
                     default:
                         Log.Error("HASH TYPE: Unknown Hash Standard was Provided");
@@ -157,7 +158,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                     {
                         Encoding = Encoding.UTF8
                     };
-                    if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                     else
                     {
                         Client.Headers.Add("user-agent", "SBRW Launcher " +

@@ -12,9 +12,8 @@ using GameLauncher.App.UI_Forms.Main_Screen;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using GameLauncher.App.UI_Forms.Welcome_Screen;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using SBRWCore.Classes.Extensions;
-using SBRWCore.Classes.References.Jsons.Newtonsoft;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -127,15 +126,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* Let's actually make it cleaner and nicer - MeTonaTOR */
         public static FolderType CheckFolder(string FolderName)
         {
-            if (FolderName.Contains("C:\\Users") && FolderName.Contains("Temp")) return FolderType.IsTempFolder;
-            if (FolderName.Contains("C:\\Users")) return FolderType.IsUsersFolders;
-            if (FolderName.Contains("C:\\Program Files")) return FolderType.IsProgramFilesFolder;
-            if (FolderName.Contains("C:\\Windows")) return FolderType.IsWindowsFolder;
-            if (FolderName.Length == 3) return FolderType.IsRootFolder;
-            if (FolderName + "\\" == Locations.LauncherFolder ||
-                FolderName == Locations.LauncherFolder) return FolderType.IsSameAsLauncherFolder;
-
-            return FolderType.Unknown;
+            if (FolderName.Contains(Path.Combine("C:", "Users")) && FolderName.Contains("Temp")) { return FolderType.IsTempFolder; }
+            else if (FolderName.Contains(Path.Combine("C:", "Users"))) { return FolderType.IsUsersFolders; }
+            else if (FolderName.Contains(Path.Combine("C:", "Program Files"))) { return FolderType.IsProgramFilesFolder; }
+            else if (FolderName.Contains(Path.Combine("C:", "Windows"))) { return FolderType.IsWindowsFolder; }
+            else if (FolderName.Length == 3) { return FolderType.IsRootFolder; }
+            else if (Path.Combine(FolderName, "\\") == Locations.LauncherFolder ||
+                FolderName == Locations.LauncherFolder) { return FolderType.IsSameAsLauncherFolder; }
+            else
+            {
+                return FolderType.Unknown;
+            }
         }
 
         /* Converts Host Name to a IP (ex. http://localhost -> 192.168.1.69 */
@@ -175,8 +176,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                 if (OpenLogFile == DialogResult.Yes)
                 {
-                    Process.Start(LogToFile_Extensions.LogCurrentFolder);
-                    Process.Start(LogToFile_Extensions.LogLauncher);
+                    Process.Start(Log_Location.LogCurrentFolder);
+                    Process.Start(Log_Location.LogLauncher);
                 }
             }
 
@@ -260,9 +261,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                                 if (FolderDialog.ShowDialog() == CommonFileDialogResult.Ok)
                                 {
-                                    if (!string.IsNullOrWhiteSpace(Strings.Encode(FolderDialog.FileName)))
+                                    if (!string.IsNullOrWhiteSpace(FolderDialog.FileName))
                                     {
-                                        GameFolderPath = Strings.Encode(FolderDialog.FileName);
+                                        GameFolderPath = FolderDialog.FileName;
                                     }
                                 }
 
@@ -325,7 +326,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                 {
                                     try
                                     {
-                                        FileSettingsSave.Live_Data.Game_Path = Strings.Encode(Path.GetFullPath("GameFiles"));
+                                        FileSettingsSave.Live_Data.Game_Path = Path.GetFullPath("GameFiles");
                                     }
                                     catch
                                     {

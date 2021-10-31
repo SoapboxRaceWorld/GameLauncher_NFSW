@@ -1,6 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using Newtonsoft.Json;
-using SBRWCore.Classes.Extensions;
+using SBRW.Launcher.Core.Classes.Extension.String_;
 using System;
 
 namespace GameLauncher.App.Classes.LauncherCore.RPC

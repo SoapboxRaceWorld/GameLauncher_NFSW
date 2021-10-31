@@ -1,6 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using SBRWCore.Classes.Launcher;
+using SBRW.Launcher.Core.Classes.Cache;
 using System;
 using System.IO;
 
@@ -75,7 +75,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Unix
             }
         }
 
-        public static bool Detected() => Live_Cache.System_Unix = AmI();
+        public static bool Detected() => File.Exists("SBRW.Launcher.Core.dll") ? Launcher_Value.System_Unix = AmI() : AmI();
 
         private static string PlatformOSName()
         {

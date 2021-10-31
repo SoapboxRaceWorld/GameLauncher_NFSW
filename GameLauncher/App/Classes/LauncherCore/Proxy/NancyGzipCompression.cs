@@ -6,7 +6,7 @@ using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Responses;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

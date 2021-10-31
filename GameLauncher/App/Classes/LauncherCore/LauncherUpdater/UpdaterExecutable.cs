@@ -3,10 +3,10 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using Newtonsoft.Json;
-using SBRWCore.Classes.Extensions;
-using SBRWCore.Classes.Extensions.API;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Api_;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Extension.Web_;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -39,7 +39,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 {
                     Encoding = Encoding.UTF8
                 };
-                if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                 else
                 {
                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -118,7 +118,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             }
 
             /* Check if File needs to be Downloaded or Require an Update */
-            string UpdaterPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater));
+            string UpdaterPath = Path.Combine(Locations.LauncherFolder, Locations.NameUpdater);
 
             if (!File.Exists(UpdaterPath))
             {
@@ -132,7 +132,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     {
                         Encoding = Encoding.UTF8
                     };
-                    if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                     else
                     {
                         Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -212,7 +212,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         {
                             Encoding = Encoding.UTF8
                         };
-                        if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                         else
                         {
                             Client.Headers.Add("user-agent", "SBRW Launcher " +

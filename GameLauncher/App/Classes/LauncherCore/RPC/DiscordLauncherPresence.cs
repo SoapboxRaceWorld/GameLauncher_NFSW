@@ -5,9 +5,9 @@ using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using SBRWCore.Classes.Extensions.Validator;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Required.Certificate;
 using System;
 using System.Collections.Generic;
 using DiscordButton = DiscordRPC.Button;
@@ -130,7 +130,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         LargeImageText = "Launcher",
                         LargeImageKey = "nfsw",
                         SmallImageText = string.Empty,
-                        SmallImageKey = Check_Signature.Signed() ? "official" : "unofficial"
+                        SmallImageKey = Certificate_Signature_Validation.Signed() ? "official" : "unofficial"
                     };
                     Presence.Buttons = ButtonsList.ToArray();
                 }
@@ -389,7 +389,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         Client.OnReady += (sender, e) =>
                         {
                             Log.Info("DISCORD: Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
-                            Live_Cache.Launcher_Discord_UserID = e.User.ID.ToString();
+                            Launcher_Value.Launcher_Discord_UserID = e.User.ID.ToString();
                         };
 
                         Client.OnError += (sender, Error) =>

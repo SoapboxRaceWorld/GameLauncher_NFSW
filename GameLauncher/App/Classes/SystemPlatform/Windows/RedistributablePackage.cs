@@ -4,14 +4,14 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Microsoft.Win32;
-using SBRWCore.Classes.Extensions.API;
-using SBRWCore.Classes.Launcher;
-using SBRWCore.Classes.Required;
+using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Api_;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Extension.Web_;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Windows.Forms;
 
 // based on https://github.com/bitbeans/RedistributableChecker/blob/master/RedistributableChecker/RedistributablePackage.cs
@@ -134,7 +134,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var Client = new WebClient();
 
-                            if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout(); }
+                            if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout(); }
                             else
                             {
                                 Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -255,7 +255,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 var Client = new WebClient();
 
-                                if (!Live_Cache.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout(); }
+                                if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout(); }
                                 else
                                 {
                                     Client.Headers.Add("user-agent", "SBRW Launcher " +

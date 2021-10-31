@@ -5,9 +5,9 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRWCore.Classes.References.Jsons.Newtonsoft;
-using SBRWCore.Classes.Required;
-using SBRWCore.Classes.System;
+using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Classes.Required.System.Windows_;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -279,7 +279,7 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
 
                 if (comboBoxPerformanceLevel.SelectedIndex == 5)
                 {
-                    if (WindowsProductVersion.GetWindowsNumber() >= 10)
+                    if (Product_Version.GetWindowsNumber() >= 10)
                     {
                         Size = new Size(562, 726);
                     }
@@ -297,7 +297,7 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
                 }
                 else
                 {
-                    if (WindowsProductVersion.GetWindowsNumber() >= 10)
+                    if (Product_Version.GetWindowsNumber() >= 10)
                     {
                         Size = new Size(292, 726);
                     }
@@ -328,9 +328,9 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             if (!FileReadOnly) { SettingsSave.Text = "SAVING"; }
 
             FileGameSettingsData.ScreenWidth = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
-                                               numericResWidth.Value : Convert.ToDecimal(((Json_List_Resolutions)comboResolutions.SelectedItem).Width));
+                                               numericResWidth.Value : Convert.ToDecimal(((Json_List_Resolution)comboResolutions.SelectedItem).Width));
             FileGameSettingsData.ScreenHeight = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
-                                                numericResHeight.Value : Convert.ToDecimal(((Json_List_Resolutions)comboResolutions.SelectedItem).Height));
+                                                numericResHeight.Value : Convert.ToDecimal(((Json_List_Resolution)comboResolutions.SelectedItem).Height));
             FileGameSettingsData.Brightness = ValidWholeNumberRange("Brightness", numericBrightness.Value);
             FileGameSettingsData.MasterAudio = ValidDecimalNumberRange(numericMVol.Value);
             FileGameSettingsData.SFXAudio = ValidDecimalNumberRange(numericSFxVol.Value);
@@ -1274,7 +1274,7 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             /*********************************************************************/
 
             /* Bugfix: Set the Size Ahead of Time and it will change after setting the PerformanceLevel Index */
-            if (WindowsProductVersion.GetWindowsNumber() >= 10)
+            if (Product_Version.GetWindowsNumber() >= 10)
             {
                 Size = new Size(292, 726);
             }
