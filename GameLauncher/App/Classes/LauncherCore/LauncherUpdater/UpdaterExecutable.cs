@@ -1,11 +1,11 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using Newtonsoft.Json;
 using SBRW.Launcher.Core.Classes.Cache;
 using SBRW.Launcher.Core.Classes.Extension.Api_;
 using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Extension.Validation_.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Classes.Extension.Web_;
 using System;
 using System.ComponentModel;
@@ -72,7 +72,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
                 try
                 {
-                    if (IsJSONValid.ValidJson(VersionJSON) && IsGithubOnline)
+                    if (Is_Json.Valid(VersionJSON) && IsGithubOnline)
                     {
                         GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON);
 

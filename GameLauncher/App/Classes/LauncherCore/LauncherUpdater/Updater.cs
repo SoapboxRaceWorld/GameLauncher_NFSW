@@ -6,7 +6,6 @@ using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using GameLauncher.App.UI_Forms.UpdatePopup_Screen;
@@ -14,6 +13,7 @@ using Newtonsoft.Json;
 using SBRW.Launcher.Core.Classes.Cache;
 using SBRW.Launcher.Core.Classes.Extension.Api_;
 using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Extension.Validation_.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Classes.Extension.Web_;
 using System;
 using System.Collections.Generic;
@@ -90,7 +90,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     }
                 }
 
-                if (IsJSONValid.ValidJson(VersionJSON) && VisualsAPIChecker.GitHubAPI)
+                if (Is_Json.Valid(VersionJSON) && VisualsAPIChecker.GitHubAPI)
                 {
                     LatestLauncherBuild = (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed()) ?
                         JsonConvert.DeserializeObject<List<GitHubRelease>>(VersionJSON)[0].TagName :

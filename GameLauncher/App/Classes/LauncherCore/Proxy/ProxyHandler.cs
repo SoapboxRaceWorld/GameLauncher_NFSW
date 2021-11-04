@@ -89,13 +89,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
                 if (path == "/event/arbitration" && !string.IsNullOrWhiteSpace(requestBody))
                 {
-                    requestBody = requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + AC_Core.Get_Cheat_Status() + "</Konami>");
+                    requestBody = requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + AC_Core.Status_Convert() + "</Konami>");
                     foreach (var header in context.Request.Headers)
                     {
                         if (header.Key.ToLowerInvariant() == "content-length")
                         {
                             int KonamiCode = Convert.ToInt32(header.Value.First()) +
-                                ("<Konami>" + AC_Core.Get_Cheat_Status() + "</Konami>").Length;
+                                ("<Konami>" + AC_Core.Status_Convert() + "</Konami>").Length;
                             request = request.WithHeader(header.Key, KonamiCode);
                         }
                     }

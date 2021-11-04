@@ -3,12 +3,12 @@ using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.UI_Forms.AddServer_Screen;
 using Newtonsoft.Json;
 using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Classes.Extension.Validation_.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Classes.Extension.Web_;
 using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
 using System;
@@ -262,7 +262,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                                     ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
                                 }, this);
                             }
-                            else if (!IsJSONValid.ValidJson(ServerJson))
+                            else if (!Is_Json.Valid(ServerJson))
                             {
                                 ServerListRenderer.SafeInvokeAction(() =>
                                 {

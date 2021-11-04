@@ -23,6 +23,9 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             public string Url { get; set; }
         }
 
+        [JsonProperty("zipball_url")]
+        public string Url_Zipball { get; set; }
+
         [JsonProperty("body")]
         public string Body { get; set; }
     }

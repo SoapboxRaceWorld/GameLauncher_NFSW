@@ -3,10 +3,10 @@ using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using SBRW.Launcher.Core.Classes.Cache;
 using SBRW.Launcher.Core.Classes.Extension.Api_;
 using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Extension.Validation_.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Classes.Extension.Web_;
 using System;
 using System.Net;
@@ -276,7 +276,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     }
                 }
 
-                if (IsJSONValid.ValidJson(OnlineListJson))
+                if (Is_Json.Valid(OnlineListJson))
                 {
                     switch (Function)
                     {

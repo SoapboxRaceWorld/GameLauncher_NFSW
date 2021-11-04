@@ -1,12 +1,12 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
-using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Newtonsoft.Json;
 using SBRW.Launcher.Core.Classes.Cache;
 using SBRW.Launcher.Core.Classes.Extension.String_;
+using SBRW.Launcher.Core.Classes.Extension.Validation_.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Classes.Extension.Web_;
 using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
 using System;
@@ -232,7 +232,7 @@ namespace GameLauncher.App.UI_Forms.AddServer_Screen
                     ButtonControls(true);
                     return;
                 }
-                else if (!IsJSONValid.ValidJson(ServerInfomationJSON))
+                else if (!Is_Json.Valid(ServerInfomationJSON))
                 {
                     Error.Text = "Unstable Connection";
                     DrawErrorAroundTextBox(ServerAddress);

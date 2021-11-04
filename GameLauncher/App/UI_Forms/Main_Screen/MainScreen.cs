@@ -16,7 +16,6 @@ using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
@@ -33,6 +32,7 @@ using SBRW.Launcher.Core.Classes.Extension.Logging_;
 using SBRW.Launcher.Core.Classes.Extension.String_;
 using SBRW.Launcher.Core.Classes.Extension.Time_;
 using SBRW.Launcher.Core.Classes.Extension.Validation_;
+using SBRW.Launcher.Core.Classes.Extension.Validation_.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Classes.Extension.Web_;
 using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Classes.Required.Anti_Cheat;
@@ -1011,6 +1011,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 }
                             }
 
+                            Launcher_Value.Launcher_Server_Crew_Tags = InformationCache.SelectedServerJSON.Server_Enable_Crew_Tags;
+
                             if (InformationCache.SelectedServerJSON.Server_User_Online_Peak != 0)
                             {
                                 numPlayers = string.Format("{0} / {1}", InformationCache.SelectedServerJSON.Server_User_Online, InformationCache.SelectedServerJSON.Server_User_Online_Peak);
@@ -1592,7 +1594,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         AC_Core.Start();
                     }
 
-                    if (AC_Core.Good_Status() && ProcessID == 2)
+                    if (AC_Core.Status && ProcessID == 2)
                     {
                         ProcessID++;
                         AC_Core.Stop(true);
@@ -1708,7 +1710,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                     if (FunctionStatus.GameKilledBySpeedBugCheck)
                     {
-                        if (AC_Core.Good_Status()) exitCode = 2017;
+                        if (AC_Core.Status) exitCode = 2017;
                         else exitCode = 2137;
                     }
 
@@ -1942,7 +1944,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         Application.DoEvents();
                     }
 
-                    if (string.IsNullOrWhiteSpace(ModulesJSON) || !IsJSONValid.ValidJson(ModulesJSON))
+                    if (string.IsNullOrWhiteSpace(ModulesJSON) || !Is_Json.Valid(ModulesJSON))
                     {
                         PlayProgressText.Text = ("JSON: Invalid ModNet Files Information").ToUpper();
                         DiscordLauncherPresence.Status("ModNet Files Information Error", null);
@@ -2059,7 +2061,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             Application.DoEvents();
                         }
 
-                        if (string.IsNullOrWhiteSpace(ServerModInfo) || !IsJSONValid.ValidJson(ServerModInfo))
+                        if (string.IsNullOrWhiteSpace(ServerModInfo) || !Is_Json.Valid(ServerModInfo))
                         {
                             PlayProgressText.Text = ("JSON: Invalid Server Mod Information").ToUpper();
                             DiscordLauncherPresence.Status("Server Mods Get Information Error", null);
@@ -2129,7 +2131,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             }
 
                             /* Version 1.3 @metonator - DavidCarbon */
-                            if (IsJSONValid.ValidJson(remoteCarsFile))
+                            if (Is_Json.Valid(remoteCarsFile))
                             {
                                 Log.Info("DISCORD: Found RemoteRPC List for cars.json");
                                 CarsList.remoteCarsList = remoteCarsFile;
@@ -2141,7 +2143,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 CarsList.remoteCarsList = string.Empty;
                             }
 
-                            if (IsJSONValid.ValidJson(remoteEventsFile))
+                            if (Is_Json.Valid(remoteEventsFile))
                             {
                                 Log.Info("DISCORD: Found RemoteRPC List for events.json");
                                 EventsList.remoteEventsList = remoteEventsFile;
@@ -2193,7 +2195,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 Application.DoEvents();
                             }
 
-                            if (string.IsNullOrWhiteSpace(ServerModListJSON) || !IsJSONValid.ValidJson(ServerModListJSON))
+                            if (string.IsNullOrWhiteSpace(ServerModListJSON) || !Is_Json.Valid(ServerModListJSON))
                             {
                                 PlayProgressText.Text = ("JSON: Invalid Server Mod List Information").ToUpper();
                                 DiscordLauncherPresence.Status("Server Mods Get Information Error", null);
@@ -3334,7 +3336,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                         StillCheckingLastServer = true;
                                         bool GSIErrorFree = true;
 
-                                        if (!IsJSONValid.ValidJson(JsonGSI))
+                                        if (!Is_Json.Valid(JsonGSI))
                                         {
                                             GSIErrorFree = false;
                                             if (EnableInsiderBetaTester.Allowed() || EnableInsiderBetaTester.Allowed())
