@@ -11,6 +11,7 @@ using Nancy.Extensions;
 using Nancy.Responses;
 using SBRW.Launcher.Core.Classes.Cache;
 using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Classes.Required.Anti_Cheat;
 using System;
 using System.Linq;
 using System.Text;
@@ -88,13 +89,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
                 if (path == "/event/arbitration" && !string.IsNullOrWhiteSpace(requestBody))
                 {
-                    requestBody = requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Launcher_Value.Game_AC() + "</Konami>");
+                    requestBody = requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + AC_Core.Get_Cheat_Status() + "</Konami>");
                     foreach (var header in context.Request.Headers)
                     {
                         if (header.Key.ToLowerInvariant() == "content-length")
                         {
                             int KonamiCode = Convert.ToInt32(header.Value.First()) +
-                                ("<Konami>" + Launcher_Value.Game_AC() + "</Konami>").Length;
+                                ("<Konami>" + AC_Core.Get_Cheat_Status() + "</Konami>").Length;
                             request = request.WithHeader(header.Key, KonamiCode);
                         }
                     }
