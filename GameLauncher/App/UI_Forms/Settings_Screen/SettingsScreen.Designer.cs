@@ -66,6 +66,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsClearLauncherLogsButton = new System.Windows.Forms.Button();
             this.SettingsAltWebCallsheckbox = new System.Windows.Forms.CheckBox();
             this.SettingsOptInsiderCheckBox = new System.Windows.Forms.CheckBox();
+            this.SettingsThemeSupportCheckbox = new System.Windows.Forms.CheckBox();
+            this.SettingsStreanCheckbox = new System.Windows.Forms.CheckBox();
             this.Hover = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
@@ -76,9 +78,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsClearServerModCacheButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsClearServerModCacheButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsClearServerModCacheButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsClearServerModCacheButton.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsClearServerModCacheButton.ForeColor = System.Drawing.Color.Silver;
-            this.SettingsClearServerModCacheButton.Location = new System.Drawing.Point(204, 258);
+            this.SettingsClearServerModCacheButton.Location = new System.Drawing.Point(202, 255);
             this.SettingsClearServerModCacheButton.Name = "SettingsClearServerModCacheButton";
             this.SettingsClearServerModCacheButton.Size = new System.Drawing.Size(154, 25);
             this.SettingsClearServerModCacheButton.TabIndex = 107;
@@ -90,7 +92,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsLauncherVersion.BackColor = System.Drawing.Color.Transparent;
             this.SettingsLauncherVersion.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsLauncherVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsLauncherVersion.Location = new System.Drawing.Point(36, 480);
+            this.SettingsLauncherVersion.Location = new System.Drawing.Point(36, 483);
             this.SettingsLauncherVersion.Name = "SettingsLauncherVersion";
             this.SettingsLauncherVersion.Size = new System.Drawing.Size(164, 14);
             this.SettingsLauncherVersion.TabIndex = 118;
@@ -135,9 +137,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsClearCommunicationLogButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.SettingsClearCommunicationLogButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsClearCommunicationLogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsClearCommunicationLogButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsClearCommunicationLogButton.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsClearCommunicationLogButton.ForeColor = System.Drawing.Color.Silver;
-            this.SettingsClearCommunicationLogButton.Location = new System.Drawing.Point(204, 222);
+            this.SettingsClearCommunicationLogButton.Location = new System.Drawing.Point(202, 220);
             this.SettingsClearCommunicationLogButton.Name = "SettingsClearCommunicationLogButton";
             this.SettingsClearCommunicationLogButton.Size = new System.Drawing.Size(154, 25);
             this.SettingsClearCommunicationLogButton.TabIndex = 106;
@@ -151,9 +153,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsClearCrashLogsButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.SettingsClearCrashLogsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsClearCrashLogsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsClearCrashLogsButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsClearCrashLogsButton.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsClearCrashLogsButton.ForeColor = System.Drawing.Color.Silver;
-            this.SettingsClearCrashLogsButton.Location = new System.Drawing.Point(38, 222);
+            this.SettingsClearCrashLogsButton.Location = new System.Drawing.Point(38, 220);
             this.SettingsClearCrashLogsButton.Name = "SettingsClearCrashLogsButton";
             this.SettingsClearCrashLogsButton.Size = new System.Drawing.Size(154, 25);
             this.SettingsClearCrashLogsButton.TabIndex = 105;
@@ -170,7 +172,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsVFilesButton.ForeColor = System.Drawing.Color.Silver;
             this.SettingsVFilesButton.Location = new System.Drawing.Point(234, 80);
             this.SettingsVFilesButton.Name = "SettingsVFilesButton";
-            this.SettingsVFilesButton.Size = new System.Drawing.Size(124, 25);
+            this.SettingsVFilesButton.Size = new System.Drawing.Size(122, 25);
             this.SettingsVFilesButton.TabIndex = 100;
             this.SettingsVFilesButton.Text = "Verify GameFiles";
             this.SettingsVFilesButton.UseVisualStyleBackColor = false;
@@ -183,7 +185,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsGamePathText.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsGamePathText.Location = new System.Drawing.Point(36, 61);
             this.SettingsGamePathText.Name = "SettingsGamePathText";
-            this.SettingsGamePathText.Size = new System.Drawing.Size(100, 14);
+            this.SettingsGamePathText.Size = new System.Drawing.Size(320, 14);
             this.SettingsGamePathText.TabIndex = 169;
             this.SettingsGamePathText.Text = "GAMEFILES:";
             this.SettingsGamePathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -199,7 +201,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsCDNText.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsCDNText.Location = new System.Drawing.Point(36, 113);
             this.SettingsCDNText.Name = "SettingsCDNText";
-            this.SettingsCDNText.Size = new System.Drawing.Size(124, 14);
+            this.SettingsCDNText.Size = new System.Drawing.Size(320, 14);
             this.SettingsCDNText.TabIndex = 172;
             this.SettingsCDNText.Text = "CDN: PINGING";
             this.SettingsCDNText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -213,9 +215,10 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsCDNPick.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.SettingsCDNPick.FormattingEnabled = true;
+            this.SettingsCDNPick.ItemHeight = 14;
             this.SettingsCDNPick.Location = new System.Drawing.Point(38, 132);
             this.SettingsCDNPick.Name = "SettingsCDNPick";
-            this.SettingsCDNPick.Size = new System.Drawing.Size(287, 21);
+            this.SettingsCDNPick.Size = new System.Drawing.Size(287, 20);
             this.SettingsCDNPick.TabIndex = 101;
             // 
             // SettingsLanguageText
@@ -226,9 +229,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsLanguageText.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsLanguageText.Location = new System.Drawing.Point(36, 161);
             this.SettingsLanguageText.Name = "SettingsLanguageText";
-            this.SettingsLanguageText.Size = new System.Drawing.Size(135, 14);
+            this.SettingsLanguageText.Size = new System.Drawing.Size(320, 14);
             this.SettingsLanguageText.TabIndex = 163;
-            this.SettingsLanguageText.Text = "GAME LANGUAGE";
+            this.SettingsLanguageText.Text = "GAME SETTINGS:";
             this.SettingsLanguageText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // SettingsUEditorButton
@@ -241,7 +244,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsUEditorButton.ForeColor = System.Drawing.Color.Silver;
             this.SettingsUEditorButton.Location = new System.Drawing.Point(213, 180);
             this.SettingsUEditorButton.Name = "SettingsUEditorButton";
-            this.SettingsUEditorButton.Size = new System.Drawing.Size(145, 25);
+            this.SettingsUEditorButton.Size = new System.Drawing.Size(143, 25);
             this.SettingsUEditorButton.TabIndex = 103;
             this.SettingsUEditorButton.Text = "Edit UserSettings";
             this.SettingsUEditorButton.UseVisualStyleBackColor = false;
@@ -252,9 +255,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsWordFilterCheck.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsWordFilterCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsWordFilterCheck.Location = new System.Drawing.Point(39, 343);
+            this.SettingsWordFilterCheck.Location = new System.Drawing.Point(38, 335);
             this.SettingsWordFilterCheck.Name = "SettingsWordFilterCheck";
-            this.SettingsWordFilterCheck.Size = new System.Drawing.Size(264, 18);
+            this.SettingsWordFilterCheck.Size = new System.Drawing.Size(222, 18);
             this.SettingsWordFilterCheck.TabIndex = 108;
             this.SettingsWordFilterCheck.Text = "Disable Chat Word Filtering";
             this.SettingsWordFilterCheck.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -266,9 +269,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsProxyCheckbox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsProxyCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsProxyCheckbox.Location = new System.Drawing.Point(39, 365);
+            this.SettingsProxyCheckbox.Location = new System.Drawing.Point(38, 357);
             this.SettingsProxyCheckbox.Name = "SettingsProxyCheckbox";
-            this.SettingsProxyCheckbox.Size = new System.Drawing.Size(264, 18);
+            this.SettingsProxyCheckbox.Size = new System.Drawing.Size(222, 18);
             this.SettingsProxyCheckbox.TabIndex = 109;
             this.SettingsProxyCheckbox.Text = "Disable Proxy";
             this.SettingsProxyCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -280,9 +283,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsDiscordRPCCheckbox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsDiscordRPCCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsDiscordRPCCheckbox.Location = new System.Drawing.Point(39, 387);
+            this.SettingsDiscordRPCCheckbox.Location = new System.Drawing.Point(38, 379);
             this.SettingsDiscordRPCCheckbox.Name = "SettingsDiscordRPCCheckbox";
-            this.SettingsDiscordRPCCheckbox.Size = new System.Drawing.Size(264, 18);
+            this.SettingsDiscordRPCCheckbox.Size = new System.Drawing.Size(222, 18);
             this.SettingsDiscordRPCCheckbox.TabIndex = 110;
             this.SettingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.SettingsDiscordRPCCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -293,9 +296,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsGameFilesCurrentText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsGameFilesCurrentText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsGameFilesCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsGameFilesCurrentText.Location = new System.Drawing.Point(418, 62);
+            this.SettingsGameFilesCurrentText.Location = new System.Drawing.Point(418, 61);
             this.SettingsGameFilesCurrentText.Name = "SettingsGameFilesCurrentText";
-            this.SettingsGameFilesCurrentText.Size = new System.Drawing.Size(164, 14);
+            this.SettingsGameFilesCurrentText.Size = new System.Drawing.Size(359, 14);
             this.SettingsGameFilesCurrentText.TabIndex = 183;
             this.SettingsGameFilesCurrentText.Text = "CURRENT DIRECTORY:";
             this.SettingsGameFilesCurrentText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -307,9 +310,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsGameFilesCurrent.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsGameFilesCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.SettingsGameFilesCurrent.LinkColor = System.Drawing.Color.LawnGreen;
-            this.SettingsGameFilesCurrent.Location = new System.Drawing.Point(419, 77);
+            this.SettingsGameFilesCurrent.Location = new System.Drawing.Point(418, 76);
             this.SettingsGameFilesCurrent.Name = "SettingsGameFilesCurrent";
-            this.SettingsGameFilesCurrent.Size = new System.Drawing.Size(360, 30);
+            this.SettingsGameFilesCurrent.Size = new System.Drawing.Size(360, 32);
             this.SettingsGameFilesCurrent.TabIndex = 111;
             this.SettingsGameFilesCurrent.TabStop = true;
             this.SettingsGameFilesCurrent.Text = "C:\\Soapbox Race World\\Game Files";
@@ -321,9 +324,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsCDNCurrentText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsCDNCurrentText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsCDNCurrentText.Location = new System.Drawing.Point(418, 118);
+            this.SettingsCDNCurrentText.Location = new System.Drawing.Point(418, 120);
             this.SettingsCDNCurrentText.Name = "SettingsCDNCurrentText";
-            this.SettingsCDNCurrentText.Size = new System.Drawing.Size(112, 14);
+            this.SettingsCDNCurrentText.Size = new System.Drawing.Size(360, 14);
             this.SettingsCDNCurrentText.TabIndex = 184;
             this.SettingsCDNCurrentText.Text = "CURRENT CDN:";
             this.SettingsCDNCurrentText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -335,7 +338,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsCDNCurrent.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.SettingsCDNCurrent.LinkColor = System.Drawing.Color.LawnGreen;
-            this.SettingsCDNCurrent.Location = new System.Drawing.Point(419, 134);
+            this.SettingsCDNCurrent.Location = new System.Drawing.Point(418, 135);
             this.SettingsCDNCurrent.Name = "SettingsCDNCurrent";
             this.SettingsCDNCurrent.Size = new System.Drawing.Size(360, 14);
             this.SettingsCDNCurrent.TabIndex = 112;
@@ -352,7 +355,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsLauncherPathText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsLauncherPathText.Location = new System.Drawing.Point(418, 161);
             this.SettingsLauncherPathText.Name = "SettingsLauncherPathText";
-            this.SettingsLauncherPathText.Size = new System.Drawing.Size(150, 14);
+            this.SettingsLauncherPathText.Size = new System.Drawing.Size(360, 14);
             this.SettingsLauncherPathText.TabIndex = 171;
             this.SettingsLauncherPathText.Text = "LAUNCHER FOLDER:";
             this.SettingsLauncherPathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -364,9 +367,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsLauncherPathCurrent.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsLauncherPathCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.SettingsLauncherPathCurrent.LinkColor = System.Drawing.Color.LawnGreen;
-            this.SettingsLauncherPathCurrent.Location = new System.Drawing.Point(419, 176);
+            this.SettingsLauncherPathCurrent.Location = new System.Drawing.Point(418, 176);
             this.SettingsLauncherPathCurrent.Name = "SettingsLauncherPathCurrent";
-            this.SettingsLauncherPathCurrent.Size = new System.Drawing.Size(360, 30);
+            this.SettingsLauncherPathCurrent.Size = new System.Drawing.Size(360, 32);
             this.SettingsLauncherPathCurrent.TabIndex = 113;
             this.SettingsLauncherPathCurrent.TabStop = true;
             this.SettingsLauncherPathCurrent.Text = "C:\\Soapbox Race World\\Launcher";
@@ -378,9 +381,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsNetworkText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsNetworkText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsNetworkText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsNetworkText.Location = new System.Drawing.Point(418, 222);
+            this.SettingsNetworkText.Location = new System.Drawing.Point(418, 220);
             this.SettingsNetworkText.Name = "SettingsNetworkText";
-            this.SettingsNetworkText.Size = new System.Drawing.Size(210, 14);
+            this.SettingsNetworkText.Size = new System.Drawing.Size(360, 14);
             this.SettingsNetworkText.TabIndex = 178;
             this.SettingsNetworkText.Text = "API CONNECTION STATUS:";
             this.SettingsNetworkText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -390,9 +393,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsMainSrvText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsMainSrvText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsMainSrvText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SettingsMainSrvText.Location = new System.Drawing.Point(418, 238);
+            this.SettingsMainSrvText.Location = new System.Drawing.Point(418, 235);
             this.SettingsMainSrvText.Name = "SettingsMainSrvText";
-            this.SettingsMainSrvText.Size = new System.Drawing.Size(210, 14);
+            this.SettingsMainSrvText.Size = new System.Drawing.Size(360, 14);
             this.SettingsMainSrvText.TabIndex = 179;
             this.SettingsMainSrvText.Text = "Main Server List API: PINGING";
             // 
@@ -401,9 +404,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsMainCDNText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsMainCDNText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsMainCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SettingsMainCDNText.Location = new System.Drawing.Point(418, 258);
+            this.SettingsMainCDNText.Location = new System.Drawing.Point(418, 253);
             this.SettingsMainCDNText.Name = "SettingsMainCDNText";
-            this.SettingsMainCDNText.Size = new System.Drawing.Size(210, 14);
+            this.SettingsMainCDNText.Size = new System.Drawing.Size(360, 14);
             this.SettingsMainCDNText.TabIndex = 182;
             this.SettingsMainCDNText.Text = "Main CDN List API: PINGING";
             this.SettingsMainCDNText.Visible = false;
@@ -413,9 +416,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsBkupSrvText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsBkupSrvText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsBkupSrvText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SettingsBkupSrvText.Location = new System.Drawing.Point(418, 278);
+            this.SettingsBkupSrvText.Location = new System.Drawing.Point(418, 271);
             this.SettingsBkupSrvText.Name = "SettingsBkupSrvText";
-            this.SettingsBkupSrvText.Size = new System.Drawing.Size(210, 14);
+            this.SettingsBkupSrvText.Size = new System.Drawing.Size(360, 14);
             this.SettingsBkupSrvText.TabIndex = 180;
             this.SettingsBkupSrvText.Text = "Backup Server List API: PINGING";
             this.SettingsBkupSrvText.Visible = false;
@@ -425,9 +428,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsBkupCDNText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsBkupCDNText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsBkupCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SettingsBkupCDNText.Location = new System.Drawing.Point(418, 298);
+            this.SettingsBkupCDNText.Location = new System.Drawing.Point(418, 289);
             this.SettingsBkupCDNText.Name = "SettingsBkupCDNText";
-            this.SettingsBkupCDNText.Size = new System.Drawing.Size(210, 14);
+            this.SettingsBkupCDNText.Size = new System.Drawing.Size(360, 14);
             this.SettingsBkupCDNText.TabIndex = 181;
             this.SettingsBkupCDNText.Text = "Backup CDN List API: PINGING";
             this.SettingsBkupCDNText.Visible = false;
@@ -436,9 +439,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             // 
             this.ThemeAuthor.BackColor = System.Drawing.Color.Transparent;
             this.ThemeAuthor.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ThemeAuthor.Location = new System.Drawing.Point(35, 460);
+            this.ThemeAuthor.Location = new System.Drawing.Point(36, 465);
             this.ThemeAuthor.Name = "ThemeAuthor";
-            this.ThemeAuthor.Size = new System.Drawing.Size(323, 14);
+            this.ThemeAuthor.Size = new System.Drawing.Size(330, 14);
             this.ThemeAuthor.TabIndex = 190;
             this.ThemeAuthor.Text = "Theme Author: What a Long Theme Name :0 Wow!";
             this.ThemeAuthor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -447,9 +450,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             // 
             this.ThemeName.BackColor = System.Drawing.Color.Transparent;
             this.ThemeName.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ThemeName.Location = new System.Drawing.Point(35, 440);
+            this.ThemeName.Location = new System.Drawing.Point(36, 447);
             this.ThemeName.Name = "ThemeName";
-            this.ThemeName.Size = new System.Drawing.Size(323, 14);
+            this.ThemeName.Size = new System.Drawing.Size(330, 14);
             this.ThemeName.TabIndex = 191;
             this.ThemeName.Text = "Theme Name: Soapbox Race World - Launcher Gen";
             this.ThemeName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -463,9 +466,10 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsLanguage.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.SettingsLanguage.FormattingEnabled = true;
+            this.SettingsLanguage.ItemHeight = 14;
             this.SettingsLanguage.Location = new System.Drawing.Point(38, 180);
             this.SettingsLanguage.Name = "SettingsLanguage";
-            this.SettingsLanguage.Size = new System.Drawing.Size(164, 21);
+            this.SettingsLanguage.Size = new System.Drawing.Size(164, 20);
             this.SettingsLanguage.TabIndex = 102;
             this.SettingsLanguage.SelectedIndexChanged += new System.EventHandler(this.SettingsLanguage_SelectedIndexChanged);
             // 
@@ -509,9 +513,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.ButtonSecurityPanel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.ButtonSecurityPanel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.ButtonSecurityPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ButtonSecurityPanel.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonSecurityPanel.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonSecurityPanel.ForeColor = System.Drawing.Color.Silver;
-            this.ButtonSecurityPanel.Location = new System.Drawing.Point(38, 294);
+            this.ButtonSecurityPanel.Location = new System.Drawing.Point(38, 290);
             this.ButtonSecurityPanel.Name = "ButtonSecurityPanel";
             this.ButtonSecurityPanel.Size = new System.Drawing.Size(154, 25);
             this.ButtonSecurityPanel.TabIndex = 193;
@@ -524,9 +528,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsClearLauncherLogsButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.SettingsClearLauncherLogsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsClearLauncherLogsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsClearLauncherLogsButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsClearLauncherLogsButton.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsClearLauncherLogsButton.ForeColor = System.Drawing.Color.Silver;
-            this.SettingsClearLauncherLogsButton.Location = new System.Drawing.Point(38, 258);
+            this.SettingsClearLauncherLogsButton.Location = new System.Drawing.Point(38, 255);
             this.SettingsClearLauncherLogsButton.Name = "SettingsClearLauncherLogsButton";
             this.SettingsClearLauncherLogsButton.Size = new System.Drawing.Size(154, 25);
             this.SettingsClearLauncherLogsButton.TabIndex = 194;
@@ -539,9 +543,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsAltWebCallsheckbox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsAltWebCallsheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsAltWebCallsheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsAltWebCallsheckbox.Location = new System.Drawing.Point(39, 409);
+            this.SettingsAltWebCallsheckbox.Location = new System.Drawing.Point(335, 401);
             this.SettingsAltWebCallsheckbox.Name = "SettingsAltWebCallsheckbox";
-            this.SettingsAltWebCallsheckbox.Size = new System.Drawing.Size(264, 18);
+            this.SettingsAltWebCallsheckbox.Size = new System.Drawing.Size(222, 18);
             this.SettingsAltWebCallsheckbox.TabIndex = 195;
             this.SettingsAltWebCallsheckbox.Text = "Enable Alternative WebCalls";
             this.SettingsAltWebCallsheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -553,13 +557,41 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.SettingsOptInsiderCheckBox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsOptInsiderCheckBox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsOptInsiderCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsOptInsiderCheckBox.Location = new System.Drawing.Point(421, 343);
+            this.SettingsOptInsiderCheckBox.Location = new System.Drawing.Point(335, 335);
             this.SettingsOptInsiderCheckBox.Name = "SettingsOptInsiderCheckBox";
-            this.SettingsOptInsiderCheckBox.Size = new System.Drawing.Size(361, 18);
+            this.SettingsOptInsiderCheckBox.Size = new System.Drawing.Size(222, 18);
             this.SettingsOptInsiderCheckBox.TabIndex = 196;
             this.SettingsOptInsiderCheckBox.Text = "Opt Into Beta Launcher Builds";
             this.SettingsOptInsiderCheckBox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.SettingsOptInsiderCheckBox.UseVisualStyleBackColor = false;
+            // 
+            // SettingsThemeSupportCheckbox
+            // 
+            this.SettingsThemeSupportCheckbox.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsThemeSupportCheckbox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsThemeSupportCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.SettingsThemeSupportCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SettingsThemeSupportCheckbox.Location = new System.Drawing.Point(335, 357);
+            this.SettingsThemeSupportCheckbox.Name = "SettingsThemeSupportCheckbox";
+            this.SettingsThemeSupportCheckbox.Size = new System.Drawing.Size(222, 18);
+            this.SettingsThemeSupportCheckbox.TabIndex = 197;
+            this.SettingsThemeSupportCheckbox.Text = "Enable Custom Theme Support";
+            this.SettingsThemeSupportCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.SettingsThemeSupportCheckbox.UseVisualStyleBackColor = false;
+            // 
+            // SettingsStreanCheckbox
+            // 
+            this.SettingsStreanCheckbox.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsStreanCheckbox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsStreanCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.SettingsStreanCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SettingsStreanCheckbox.Location = new System.Drawing.Point(335, 379);
+            this.SettingsStreanCheckbox.Name = "SettingsStreanCheckbox";
+            this.SettingsStreanCheckbox.Size = new System.Drawing.Size(222, 18);
+            this.SettingsStreanCheckbox.TabIndex = 198;
+            this.SettingsStreanCheckbox.Text = "Enable Capture Support";
+            this.SettingsStreanCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.SettingsStreanCheckbox.UseVisualStyleBackColor = false;
             // 
             // SettingsScreen
             // 
@@ -568,6 +600,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.SettingsOptInsiderCheckBox);
+            this.Controls.Add(this.SettingsThemeSupportCheckbox);
+            this.Controls.Add(this.SettingsStreanCheckbox);
             this.Controls.Add(this.SettingsAltWebCallsheckbox);
             this.Controls.Add(this.SettingsClearLauncherLogsButton);
             this.Controls.Add(this.ButtonSecurityPanel);
@@ -654,6 +688,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         private System.Windows.Forms.Button SettingsClearLauncherLogsButton;
         private System.Windows.Forms.CheckBox SettingsAltWebCallsheckbox;
         private System.Windows.Forms.CheckBox SettingsOptInsiderCheckBox;
+        private System.Windows.Forms.CheckBox SettingsThemeSupportCheckbox;
+        private System.Windows.Forms.CheckBox SettingsStreanCheckbox;
         private System.Windows.Forms.ToolTip Hover;
     }
 }

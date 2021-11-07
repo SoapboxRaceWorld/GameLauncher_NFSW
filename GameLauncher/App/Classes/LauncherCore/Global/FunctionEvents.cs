@@ -4,7 +4,6 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.UI_Forms.AddServer_Screen;
 using GameLauncher.App.UI_Forms.Register_Screen;
 using GameLauncher.App.UI_Forms.SelectServer_Screen;
 using System;
@@ -23,12 +22,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* ServerList Load Checks */
         public static void SelectServerBtn_Click(object sender, EventArgs e)
         {
-            SelectServer.OpenScreen();
+            SelectServer.OpenScreen(false);
         }
 
         public static void AddServer_Click(object sender, EventArgs e)
         {
-            AddServer.OpenScreen();
+            SelectServer.OpenScreen(true);
         }
 
         public static void RegisterText_LinkClicked(object sender, EventArgs e)

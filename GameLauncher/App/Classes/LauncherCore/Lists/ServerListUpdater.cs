@@ -22,6 +22,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
         public static List<ServerList> NoCategoryList = new List<ServerList>();
 
+        public static List<ServerList> NoCategoryList_CSO = new List<ServerList>();
+
         public static List<ServerList> CleanList = new List<ServerList>();
 
         public static string CachedJSONList;
@@ -32,6 +34,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
             DiscordLauncherPresence.Status("Start Up", "Creating Server List");
 
             List<ServerList> serverInfos = new List<ServerList>();
+
+            List<ServerList> CustomServerInfos = new List<ServerList>();
 
             try
             {
@@ -67,7 +71,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                             si.Category = string.IsNullOrWhiteSpace(si.Category) ? "CUSTOM" : si.Category;
 
                             return si;
-                        }).ToList().ForEach(si => serverInfos.Add(si));
+                        }).ToList().ForEach(si => CustomServerInfos.Add(si));
+                        serverInfos.AddRange(CustomServerInfos);
                         LoadedList = true;
                     }
                 }
@@ -107,12 +112,24 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 {
                     if (serverInfos.Any())
                     {
-                        /* Create Final Server List without Categories */
+                        /* Create Final Server List without Categories (All Servers) */
                         foreach (ServerList NoCatList in serverInfos)
                         {
                             if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
                             {
                                 NoCategoryList.Add(NoCatList);
+                            }
+                        }
+
+                        if (CustomServerInfos.Count >= 1)
+                        {
+                            /* Create Final Server List without Categories (Custom Servers Only) */
+                            foreach (ServerList NoCatList in CustomServerInfos)
+                            {
+                                if (NoCategoryList_CSO.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
+                                {
+                                    NoCategoryList_CSO.Add(NoCatList);
+                                }
                             }
                         }
 

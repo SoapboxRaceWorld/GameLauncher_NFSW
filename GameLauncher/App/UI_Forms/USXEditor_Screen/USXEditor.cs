@@ -801,8 +801,8 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Bold);
 
             labelVideoOptions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -1396,6 +1396,10 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             Hover.SetToolTip(PresetButtonMax, "Preset: Max Graphics");
             Hover.SetToolTip(PresetButtonCustom, "Preset: Saved Graphics");
             Hover.SetToolTip(labelGPOTrans, "Only Applies to \"Drag\" Event control");
+            Hover.SetToolTip(labelPixelAspect, "Control Aspect Ratio:\n" +
+                "0: Default POV Ratio\n" +
+                "0 -> 100 : Condense POV to Center\n" +
+                "0 -> -100 : Stretch POV from Center");
 
             Shown += (x, y) =>
             {

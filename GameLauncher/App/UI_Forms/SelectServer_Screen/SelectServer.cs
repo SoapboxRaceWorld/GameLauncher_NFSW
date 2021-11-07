@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
@@ -11,6 +12,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -22,6 +24,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
     public partial class SelectServer : Form
     {
         private static bool IsSelectServerOpen = false;
+        private static bool CustomServersOnly = false;
         private static int ID = 1;
         private static readonly Dictionary<int, ServerList> ServerListBook = new Dictionary<int, ServerList>();
 
@@ -31,7 +34,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
         public static string ServerName;
         public static GetServerInformation ServerJsonData;
 
-        public static void OpenScreen()
+        public static void OpenScreen(bool CSO)
         {
             if (IsSelectServerOpen || Application.OpenForms["SelectServer"] != null)
             {
@@ -39,7 +42,11 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             }
             else
             {
-                try { new SelectServer().ShowDialog(); }
+                try
+                {
+                    CustomServersOnly = CSO;
+                    new SelectServer().ShowDialog();
+                }
                 catch (Exception Error)
                 {
                     string ErrorMessage = "Select Server Screen Encountered an Error";
@@ -60,7 +67,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                 ServersToPing.Clear();
                 ServerName = null;
                 ServerJsonData = null;
-                IsSelectServerOpen = false;
+                CustomServersOnly = false;
                 GC.Collect();
             };
         }
@@ -74,7 +81,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
+            var MainFontSize = 9f * 96f / CreateGraphics().DpiY;
 
             if (UnixOS.Detected())
             {
@@ -85,6 +92,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             ServerListRenderer.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             Loading.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             BtnAddServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            BtnRemoveServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             BtnSelectServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             BtnClose.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             Version.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
@@ -106,10 +114,15 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             BtnAddServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
             BtnAddServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
 
-            BtnSelectServer.ForeColor = Theming.BlueForeColorButton;
-            BtnSelectServer.BackColor = Theming.BlueBackColorButton;
-            BtnSelectServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            BtnSelectServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+            BtnRemoveServer.ForeColor = CustomServersOnly ? Theming.BlueForeColorButton : Theming.GrayForeColorButton;
+            BtnRemoveServer.BackColor = CustomServersOnly ? Theming.BlueBackColorButton : Theming.GrayBackColorButton;
+            BtnRemoveServer.FlatAppearance.BorderColor = CustomServersOnly ? Theming.BlueBorderColorButton : Theming.GrayBorderColorButton;
+            BtnRemoveServer.FlatAppearance.MouseOverBackColor = CustomServersOnly ? Theming.BlueMouseOverBackColorButton : Theming.GrayMouseOverBackColorButton;
+
+            BtnSelectServer.ForeColor = !CustomServersOnly ? Theming.BlueForeColorButton : Theming.GrayForeColorButton;
+            BtnSelectServer.BackColor = !CustomServersOnly ? Theming.BlueBackColorButton : Theming.GrayBackColorButton;
+            BtnSelectServer.FlatAppearance.BorderColor = !CustomServersOnly ? Theming.BlueBorderColorButton : Theming.GrayBorderColorButton;
+            BtnSelectServer.FlatAppearance.MouseOverBackColor = !CustomServersOnly ? Theming.BlueMouseOverBackColorButton : Theming.GrayMouseOverBackColorButton;
 
             BtnClose.ForeColor = Theming.BlueForeColorButton;
             BtnClose.BackColor = Theming.BlueBackColorButton;
@@ -119,6 +132,23 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             /********************************/
             /* Functions                     /
             /********************************/
+
+            Name = (CustomServersOnly ? "Saved Custom Servers" : "Please Select a Server") + " - SBRW Launcher";
+            ServerListRenderer.AllowColumnReorder = false;
+            ServerListRenderer.ColumnWidthChanging += (handler, args) =>
+            {
+                args.Cancel = true;
+                args.NewWidth = ServerListRenderer.Columns[args.ColumnIndex].Width;
+            };
+            ServerListRenderer.DoubleClick += new EventHandler((handler, args) =>
+            {
+                if (!CustomServersOnly)
+                {
+                    SelectedGameServerToRemember();
+                }
+            });
+            BtnSelectServer.Click += new EventHandler(BtnSelectServer_Click);
+            BtnRemoveServer.Click += new EventHandler(BtnRemoveServer_Click);
 
             Version.Text = "Version: v" + Application.ProductVersion;
 
@@ -148,7 +178,7 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             ServerListRenderer.Columns[5].Width = 60;
             ServerListRenderer.Columns[5].TextAlign = HorizontalAlignment.Center;
 
-            foreach (var substring in ServerListUpdater.NoCategoryList)
+            foreach (ServerList substring in CustomServersOnly ? ServerListUpdater.NoCategoryList_CSO : ServerListUpdater.NoCategoryList)
             {
                 try
                 {
@@ -166,18 +196,6 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                 }
                 catch { }
             }
-
-            ServerListRenderer.AllowColumnReorder = false;
-            ServerListRenderer.ColumnWidthChanging += (handler, args) =>
-            {
-                args.Cancel = true;
-                args.NewWidth = ServerListRenderer.Columns[args.ColumnIndex].Width;
-            };
-
-            ServerListRenderer.DoubleClick += new EventHandler((handler, args) =>
-            {
-                SelectedGameServerToRemember();
-            });
 
             Shown += (x, y) =>
             {
@@ -347,16 +365,13 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
                             GC.Collect();
                         }
 
-                        if (ServersToPing.Count == 0)
-                        {
-                            Loading.SafeInvokeAction(() =>
-                            {
-                                Loading.Text = string.Empty;
-                            }, this);
-                        }
-
                         Application.DoEvents();
                     }
+
+                    Loading.SafeInvokeAction(() =>
+                    {
+                        Loading.Text = string.Empty;
+                    }, this);
                 }).Start();
             };
         }
@@ -368,7 +383,15 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
 
         private void BtnSelectServer_Click(object sender, EventArgs e)
         {
-            SelectedGameServerToRemember();
+            if (!CustomServersOnly)
+            {
+                SelectedGameServerToRemember();
+            }
+        }
+
+        private void BtnRemoveServer_Click(object sender, EventArgs e)
+        {
+            SelectedGameServerToRemove();
         }
 
         private void BtnClose_Click(object sender, EventArgs e)
@@ -382,6 +405,33 @@ namespace GameLauncher.App.UI_Forms.SelectServer_Screen
             {
                 SelectedServer.Data = ServerListBook[ServerListRenderer.SelectedIndices[0] + 1];
                 this.Close();
+            }
+        }
+
+        private void SelectedGameServerToRemove()
+        {
+            if (ServerListRenderer.SelectedItems.Count == 1)
+            {
+                try
+                {
+                    if (ServerListUpdater.NoCategoryList_CSO.Count > 0)
+                    {
+                        if (MessageBox.Show(null, "Confirm to Remove " + ServerListBook[ServerListRenderer.SelectedIndices[0] + 1].Name + " from Saved Custom Servers",
+                            "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                        {
+                            ServerListUpdater.NoCategoryList_CSO.RemoveAt(ServerListRenderer.SelectedIndices[0]);
+                            ServerListRenderer.Items.Remove(ServerListRenderer.SelectedItems[0]);
+                            File.WriteAllText(Locations.LauncherCustomServers, JsonConvert.SerializeObject(ServerListUpdater.NoCategoryList_CSO));
+                            Application.DoEvents();
+                            GC.Collect();
+                        }
+                    }
+                }
+                catch (Exception Error)
+                {
+                    string LogMessage = "Failed to Remove Selected Server:";
+                    LogToFileAddons.OpenLog("Add Server", LogMessage, Error, null, false);
+                }
             }
         }
     }

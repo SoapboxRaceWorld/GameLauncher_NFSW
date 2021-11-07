@@ -138,8 +138,6 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             {
                 Revisions = CurrentLauncherBuild.CompareTo(LatestLauncherBuild);
 
-                Log.Debug(Revisions.ToString());
-
                 if (Revisions < 0)
                 {
                     Log.Info("LAUNCHER POPUP: Checking if Popup is Required");

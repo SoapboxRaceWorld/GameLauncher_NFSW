@@ -27,7 +27,6 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
     {
         private static bool IsVerifyHashOpen = false;
         /* VerifyHash */
-        string[] filestocheck;
         string[][] scannedHashes;
         public int filesToScan;
         public int badFiles;
@@ -105,15 +104,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 LogVerify.StartVerifyLogging();
 
                 /* Clean up previous logs and start logging */
-                if (!EnableInsiderDeveloper.Allowed())
-                {
-                    filestocheck = new string[] { "validfiles.dat", "invalidfiles.dat" };
-                }
-                else
-                {
-                    filestocheck = new string[] { "checksums.dat", "validfiles.dat", "invalidfiles.dat" };
-                }
-
+                string[] filestocheck = new string[] { "checksums.dat", "validfiles.dat", "invalidfiles.dat", "Verify.log" };
                 foreach (String file in filestocheck)
                 {
                     if (File.Exists(file))
@@ -175,8 +166,6 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 ForceStopScan = true;
                 isScanning = false;
                 Log.Info("VERIFY HASH: Stopped Scanner");
-                StartScan.Abort();
-
                 if (DownloadErrorEncountered)
                 {
                     DownloadErrorEncountered = false;
@@ -356,7 +345,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                     }
                 }
 
-                if (Directory.Exists(Path.Combine(FileSettingsSave.GameInstallation, "scripts"))  && !ForceStopScan)
+                if (Directory.Exists(Path.Combine(FileSettingsSave.GameInstallation, "scripts")) && !ForceStopScan)
                 {
                     DirectoryInfo ScriptsFolder = new DirectoryInfo(Path.Combine(FileSettingsSave.GameInstallation, "scripts"));
 
@@ -725,10 +714,10 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + redownloadErrorCount + " out of " + currentCount);
 
                 DownloadProgressText.SafeInvokeAction(() =>
-                DownloadProgressText.Text = "Failed To Download File [ " + 
+                    DownloadProgressText.Text = "Failed To Download File [ " +
                     redownloadedCount + redownloadErrorCount + " / " + currentCount + " ]:" + "\n" + CurrentDownloadingFile);
-                
-                DownloadProgressBar.SafeInvokeAction(() => 
+
+                DownloadProgressBar.SafeInvokeAction(() =>
                     DownloadProgressBar.Value = redownloadedCount + redownloadErrorCount * 100 / currentCount);
 
                 LogVerify.Error("Download for [" + CurrentDownloadingFile + "] - " +
@@ -761,14 +750,14 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
 
                 DownloadProgressText.SafeInvokeAction(() =>
                     DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + CurrentDownloadingFile);
-                DownloadProgressBar.SafeInvokeAction(() => 
+                DownloadProgressBar.SafeInvokeAction(() =>
                     DownloadProgressBar.Value = redownloadedCount * 100 / currentCount);
 
                 if (redownloadedCount == currentCount)
                 {
                     Integrity();
                     Log.Info("VERIFY HASH: Re-downloaded Count: " + redownloadedCount + " Current File Count: " + currentCount);
-                    DownloadProgressText.SafeInvokeAction(() => 
+                    DownloadProgressText.SafeInvokeAction(() =>
                         DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were downloaded");
 
                     VerifyHashText.SafeInvokeAction(() =>
@@ -784,7 +773,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 }
                 else if (redownloadedCount + redownloadErrorCount == currentCount)
                 {
-                    DownloadProgressText.SafeInvokeAction(() => 
+                    DownloadProgressText.SafeInvokeAction(() =>
                         DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were downloaded");
 
                     VerifyHashText.SafeInvokeAction(() =>
@@ -806,7 +795,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + " out of " + currentCount);
 
                 DownloadProgressText.SafeInvokeAction(() =>
-                    DownloadProgressText.Text = "Download Stopped on File [ " + 
+                    DownloadProgressText.Text = "Download Stopped on File [ " +
                     redownloadedCount + " / " + currentCount + " ]:" + "\n" + CurrentDownloadingFile);
 
                 DownloadProgressBar.SafeInvokeAction(() => DownloadProgressBar.Value = redownloadedCount * 100 / currentCount);
@@ -852,7 +841,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             VerifyHashWelcome.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);

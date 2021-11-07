@@ -38,7 +38,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
             /*******************************/
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            float MainFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
+            float MainFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             /********************************/
@@ -121,6 +121,25 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
                 UpdateSkip = FileSettingsSave.IgnoreVersion;
             }
 
+            string StreamOpt;
+            if (FileSettingsSave.StreamingSupport == "0")
+            {
+                StreamOpt = "Displaying Timer";
+            }
+            else
+            {
+                StreamOpt = "Native (Timer Removed)";
+            }
+            string ThemeOpt;
+            if (FileSettingsSave.ThemeSupport == "0")
+            {
+                ThemeOpt = "Disabled";
+            }
+            else
+            {
+                ThemeOpt = "Enabled";
+            }
+
             string InsiderOpt;
             if (FileSettingsSave.Insider == "0")
             {
@@ -159,6 +178,8 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
                 new ListType{ Name = "Skipping Update", Value = UpdateSkip},
                 new ListType{ Name = "Proxy Enabled", Value = ServerProxy.Running().ToString()},
                 new ListType{ Name = "RPC Enabled", Value = DiscordLauncherPresence.Running().ToString()},
+                new ListType{ Name = "Catpure Support", Value = StreamOpt},
+                new ListType{ Name = "Theme Support", Value = ThemeOpt},
                 new ListType{ Name = "Insider State", Value = InsiderOpt},
                 new ListType{ Name = "", Value = "" },
                 new ListType{ Name = "Server Name", Value = ServerListUpdater.ServerName("Debug")},

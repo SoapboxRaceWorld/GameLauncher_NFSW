@@ -56,9 +56,9 @@ namespace GameLauncher.App.UI_Forms.About_Screen
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            float MainFontSize = UnixOS.Detected() ? 10f : 10f * 100f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected() ? 15f : 15f * 100f / CreateGraphics().DpiY;
-            float ThirdFontSize = UnixOS.Detected() ? 26f : 26f * 100f / CreateGraphics().DpiY;
+            float MainFontSize = UnixOS.Detected() ? 10f : 10f * 96f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 15f : 15f * 96f / CreateGraphics().DpiY;
+            float ThirdFontSize = UnixOS.Detected() ? 26f : 26f * 96f / CreateGraphics().DpiY;
 
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             AboutText.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);

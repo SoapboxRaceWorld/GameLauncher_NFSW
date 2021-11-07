@@ -69,6 +69,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
         private static bool StillCheckingLastServer = false;
         private static bool ServerChangeTriggered = false;
         private static int ProcessID = 0;
+        private static int ProcessWID = 0;
 
         private static DateTime _downloadStartTime;
         private static Downloader _downloader;
@@ -166,7 +167,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             /* Display Server List Dialog if Server IP Doesn't Exist */
             if (string.IsNullOrWhiteSpace(FileAccountSave.ChoosenGameServer))
             {
-                SelectServer.OpenScreen();
+                SelectServer.OpenScreen(false);
 
                 if (SelectedServer.Data != null)
                 {
@@ -1615,42 +1616,50 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                 /* change title */
 
-                foreach (var oneProcess in allOfThem)
+                foreach (Process oneProcess in allOfThem)
                 {
                     try
                     {
-                        long p = oneProcess.MainWindowHandle.ToInt64();
-                        TimeSpan t = TimeSpan.FromSeconds(InformationCache.RestartTimer);
-
-                        String secondsToShutDownNamed = String.Empty;
-
-                        /* Proper Formatting */
-                        List<string> list_of_times = new List<string>();
-                        if (t.Days != 0) list_of_times.Add(t.Days + (t.Days != 1 ? " Days" : " Day"));
-                        if (t.Hours != 0) list_of_times.Add(t.Hours + (t.Hours != 1 ? " Hours" : " Hour"));
-                        if (t.Minutes != 0) list_of_times.Add(t.Minutes + (t.Minutes != 1 ? " Minutes" : " Minute"));
-                        if (t.Days == 0 && t.Hours == 0 && t.Minutes == 0) list_of_times.Add("Less than a Minute Remaining");
-
-                        if (list_of_times.Count() >= 3 && (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed()))
+                        if (FileSettingsSave.LiveStreamingSupport())
                         {
-                            secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1] + ", " + list_of_times[2];
-                        }
-                        else if (list_of_times.Count() >= 2)
-                        {
-                            secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1];
+                            if (ProcessWID == 0)
+                            {
+                                ProcessWID++;
+                                User32.SetWindowText((IntPtr)oneProcess.MainWindowHandle.ToInt64(), Strings.Encode("NEED FOR SPEED™ WORLD | Server: " + ServerListUpdater.ServerName("In-Game") +
+                                    " | " + DiscordGamePresence.LauncherRPC));
+                            }
                         }
                         else
                         {
-                            secondsToShutDownNamed = list_of_times[0];
-                        }
+                            TimeSpan t = TimeSpan.FromSeconds(InformationCache.RestartTimer);
 
-                        if (InformationCache.RestartTimer == 0)
-                        {
-                            secondsToShutDownNamed = "Waiting for event to finish.";
-                        }
+                            String secondsToShutDownNamed = String.Empty;
+                            /* Proper Formatting */
+                            List<string> list_of_times = new List<string>();
+                            if (t.Days != 0) list_of_times.Add(t.Days + (t.Days != 1 ? " Days" : " Day"));
+                            if (t.Hours != 0) list_of_times.Add(t.Hours + (t.Hours != 1 ? " Hours" : " Hour"));
+                            if (t.Minutes != 0) list_of_times.Add(t.Minutes + (t.Minutes != 1 ? " Minutes" : " Minute"));
+                            if (t.Days == 0 && t.Hours == 0 && t.Minutes == 0) list_of_times.Add("Less than a Minute Remaining");
 
-                        User32.SetWindowText((IntPtr)p, "NEED FOR SPEED™ WORLD | Server: " + ServerListUpdater.ServerName("In-Game") +
-                            " | " + DiscordGamePresence.LauncherRPC + " | Force Restart In: " + secondsToShutDownNamed);
+                            if (list_of_times.Count() >= 3 && (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed()))
+                            {
+                                secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1] + ", " + list_of_times[2];
+                            }
+                            else if (list_of_times.Count() >= 2)
+                            {
+                                secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1];
+                            }
+                            else
+                            {
+                                secondsToShutDownNamed = list_of_times[0];
+                            }
+                            if (InformationCache.RestartTimer == 0)
+                            {
+                                secondsToShutDownNamed = "Waiting for event to finish.";
+                            }
+                            User32.SetWindowText((IntPtr)oneProcess.MainWindowHandle.ToInt64(), Strings.Encode("NEED FOR SPEED™ WORLD | Server: " + ServerListUpdater.ServerName("In-Game") +
+                                " | " + DiscordGamePresence.LauncherRPC + " | Force Restart In: " + secondsToShutDownNamed));
+                        }
                     }
                     catch (Exception Error)
                     {
@@ -2515,7 +2524,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             }
                             else
                             {
-                                PlayProgressText.SafeInvokeAction(() => 
+                                PlayProgressText.SafeInvokeAction(() =>
                                 PlayProgressText.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper(), this);
                             }
 
@@ -3062,10 +3071,10 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
-            float ThirdFontSize = UnixOS.Detected() ? 10f : 10f * 100f / CreateGraphics().DpiY;
-            float FourthFontSize = UnixOS.Detected() ? 14f : 14f * 100f / CreateGraphics().DpiY;
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
+            float ThirdFontSize = UnixOS.Detected() ? 10f : 10f * 96f / CreateGraphics().DpiY;
+            float FourthFontSize = UnixOS.Detected() ? 14f : 14f * 96f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
 
             /* Front Screen */

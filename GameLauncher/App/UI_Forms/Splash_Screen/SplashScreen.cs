@@ -1,5 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using System;
 using System.Threading;
@@ -12,6 +13,7 @@ namespace GameLauncher.App.UI_Forms.Splash_Screen
         /* Global Thread for Splash Screen */
         private static Thread SplashScreenThread;
         private static bool IsSplashScreenLive = false;
+        private static int ProcessID = 0;
 
         private static void StartSplashScreen()
         {
@@ -99,6 +101,11 @@ namespace GameLauncher.App.UI_Forms.Splash_Screen
                     LogToFileAddons.OpenLog("SPLASH SCREEN", null, Error, null, true);
                     Close();
                 }
+            }
+            else if (ProcessID == 0)
+            {
+                ProcessID++;
+                this.SafeInvokeAction(() => BackgroundImage = Theming.LogoSplash, this);
             }
         }
     }

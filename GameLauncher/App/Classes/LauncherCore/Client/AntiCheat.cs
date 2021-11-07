@@ -107,17 +107,24 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
             Secret.Start();
         }
 
+        public static int Get_Cheat_Status()
+        {
+            int _cheats_detected = 0;
+            if (detect_MULTIHACK) _cheats_detected |= 1;
+            if (detect_FAST_POWERUPS) _cheats_detected |= 2;
+            if (detect_SPEEDHACK) _cheats_detected |= 4;
+            if (detect_SMOOTH_WALLS) _cheats_detected |= 8;
+            if (detect_TANK_MODE) _cheats_detected |= 16;
+            if (detect_WALLHACK) _cheats_detected |= 32;
+            if (detect_DRIFTMOD) _cheats_detected |= 64;
+            if (detect_PURSUITBOT) _cheats_detected |= 128;
+            if (detect_GHOSTING) _cheats_detected |= 512;
+            return _cheats_detected;
+        }
+
         public static void DisableChecks(bool CompletedEvent)
         {
-            if (detect_MULTIHACK == true) cheats_detected |= 1;
-            if (detect_FAST_POWERUPS == true) cheats_detected |= 2;
-            if (detect_SPEEDHACK == true) cheats_detected |= 4;
-            if (detect_SMOOTH_WALLS == true) cheats_detected |= 8;
-            if (detect_TANK_MODE == true) cheats_detected |= 16;
-            if (detect_WALLHACK == true) cheats_detected |= 32;
-            if (detect_DRIFTMOD == true) cheats_detected |= 64;
-            if (detect_PURSUITBOT == true) cheats_detected |= 128;
-            if (detect_GHOSTING == true) cheats_detected |= 512;
+            cheats_detected = Get_Cheat_Status();
 
             if (cheats_detected != 0)
             {

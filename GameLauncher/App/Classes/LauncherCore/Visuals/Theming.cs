@@ -1,6 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.UI_Forms.Splash_Screen;
 using System;
 using System.Drawing;
 using System.IO;
@@ -21,9 +21,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* Theme Name & Author */
 
-        public static string ThemeName = "Custom";
+        public static string ThemeName = "Default";
 
-        public static string ThemeAuthor = "Unknown - Check File";
+        public static string ThemeAuthor = "Launcher - Division";
 
 
         /* Logo */
@@ -439,20 +439,28 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         /* Read Theme File and Check Values */
         public static void CheckIfThemeExists()
         {
-            if (File.Exists("Theme.ini"))
+            if (File.Exists(Path.Combine(Locations.LauncherThemeFolder, "Theme.ini")) && (FileSettingsSave.ThemeSupport == "1"))
             {
                 try
                 {
-                    IniFile ThemeFile = new IniFile("Theme.ini");
+                    IniFile ThemeFile = new IniFile(Path.Combine(Locations.LauncherThemeFolder, "Theme.ini"));
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ThemeName")))
                     {
                         ThemeName = ThemeFile.Read("ThemeName");
                     }
+                    else
+                    {
+                        ThemeName = "Custom";
+                    }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ThemeAuthor")))
                     {
                         ThemeAuthor = ThemeFile.Read("ThemeAuthor");
+                    }
+                    else
+                    {
+                        ThemeAuthor = "Unknown - Check File";
                     }
 
                     /* Logo */
@@ -1395,8 +1403,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                     LogToFileAddons.OpenLog("THEMING", null, Error, null, true);
                 }
             }
-
-            SplashScreen.ThreadStatus("Start");
         }
 
         /* Convert User Inputed String into a Valid RBG Spectrum Values */

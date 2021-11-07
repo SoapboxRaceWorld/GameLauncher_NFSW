@@ -41,6 +41,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         private bool _disableDiscordRPC;
         private bool _enableAltWebCalls;
         private bool _enableInsiderPreview;
+        private bool _enableThemeSupport;
+        private bool _enableStreamSupport;
         private bool _restartRequired;
         private string _newLauncherPath;
         private string _newGameFilesPath;
@@ -216,8 +218,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
 
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
             ButtonSecurityPanel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -239,6 +241,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsAltWebCallsheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsOptInsiderCheckBox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsThemeSupportCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsStreanCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsGameFilesCurrentText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGameFilesCurrent.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsCDNCurrentText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -294,6 +298,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             SettingsDiscordRPCCheckbox.ForeColor = Theming.SettingsCheckBoxes;
             SettingsAltWebCallsheckbox.ForeColor = Theming.SettingsCheckBoxes;
             SettingsOptInsiderCheckBox.ForeColor = Theming.SettingsCheckBoxes;
+            SettingsThemeSupportCheckbox.ForeColor = Theming.SettingsCheckBoxes;
+            SettingsStreanCheckbox.ForeColor = Theming.SettingsCheckBoxes;
 
             /* Bottom Left */
             SettingsLauncherVersion.ForeColor = Theming.FivithTextForeColor;
@@ -396,6 +402,11 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
             Hover.SetToolTip(SettingsOptInsiderCheckBox, "Unchecked: Only Official \"Release\" Builds will prompt Updates\n" +
                 "Checked: Insider/Beta Build\'s will be available to the Updater");
+            Hover.SetToolTip(SettingsThemeSupportCheckbox, "Enables supporting External Themes for the Launcher");
+            Hover.SetToolTip(SettingsStreanCheckbox, "Setting for Recording/Streaming Programs:\n" +
+                "Enable \"Native\" capture of the NFSW Game Window\n" +
+                "If Checked, this removes the Window Title countdown timer\n" +
+                "If Unchecked, you can still capture, but may need special methods");
             Hover.SetToolTip(SettingsAltWebCallsheckbox, "Changes the internal method used by Launcher for Communications\n" +
                 "Unchecked: Uses \'standard\' WebClient calls\n" +
                 "Checked: Uses WebClientWithTimeout");
@@ -540,16 +551,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 SettingsWordFilterCheck.Enabled = false;
             }
 
-            if (File.Exists("Theme.ini"))
-            {
-                ThemeName.Text = "Theme Name: " + Theming.ThemeName;
-                ThemeAuthor.Text = "Theme Author: " + Theming.ThemeAuthor;
-            }
-            else
-            {
-                ThemeName.Text = "Theme Name: Default";
-                ThemeAuthor.Text = "Theme Author: Launcher - Division";
-            }
+            ThemeName.Text = "Theme Name: " + Theming.ThemeName;
+            ThemeAuthor.Text = "Theme Author: " + Theming.ThemeAuthor;
 
             /*******************************/
             /* Folder Locations             /
@@ -562,11 +565,15 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             _disableDiscordRPC = (FileSettingsSave.RPC == "1");
             _enableAltWebCalls = (FileSettingsSave.WebCallMethod == "WebClientWithTimeout");
             _enableInsiderPreview = FileSettingsSave.Insider == "1";
+            _enableThemeSupport = FileSettingsSave.ThemeSupport == "1";
+            _enableStreamSupport = FileSettingsSave.StreamingSupport == "1";
 
             SettingsProxyCheckbox.Checked = _disableProxy;
             SettingsDiscordRPCCheckbox.Checked = _disableDiscordRPC;
             SettingsAltWebCallsheckbox.Checked = _enableAltWebCalls;
             SettingsOptInsiderCheckBox.Checked = _enableInsiderPreview;
+            SettingsThemeSupportCheckbox.Checked = _enableThemeSupport;
+            SettingsStreanCheckbox.Checked = _enableStreamSupport;
 
             /*******************************/
             /* Enable/Disable Visuals       /
@@ -895,9 +902,20 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 _restartRequired = true;
             }
 
+            if (FileSettingsSave.ThemeSupport != (SettingsThemeSupportCheckbox.Checked ? "1" : "0"))
+            {
+                FileSettingsSave.ThemeSupport = SettingsThemeSupportCheckbox.Checked ? "1" : "0";
+                _restartRequired = true;
+            }
+
             if (FileSettingsSave.WebCallMethod != (SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient"))
             {
                 FileSettingsSave.WebCallMethod = SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient";
+            }
+
+            if (FileSettingsSave.StreamingSupport != (SettingsStreanCheckbox.Checked ? "1" : "0"))
+            {
+                FileSettingsSave.StreamingSupport = SettingsStreanCheckbox.Checked ? "1" : "0";
             }
 
             try

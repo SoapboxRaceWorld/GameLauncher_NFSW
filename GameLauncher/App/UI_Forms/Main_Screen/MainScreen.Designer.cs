@@ -564,12 +564,10 @@
             this.Name = "MainScreen";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.ShowPlayPanel.ResumeLayout(false);
-            this.ShowPlayPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).EndInit();
             this.ServerInfoPanel.ResumeLayout(false);
-            this.ServerInfoPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HomePageIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FacebookIcon)).EndInit();
@@ -583,6 +581,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Banner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ButtonSecurityCenter)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

@@ -256,7 +256,7 @@
     <value>NoControl</value>
   </data>
   <data name="PlayProgressText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>42, 404</value>
+    <value>42, 406</value>
   </data>
   <data name="PlayProgressText.Size" type="System.Drawing.Size, System.Drawing">
     <value>510, 14</value>
@@ -359,7 +359,7 @@
     <value>NoControl</value>
   </data>
   <data name="ServerStatusText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>242, 453</value>
+    <value>240, 453</value>
   </data>
   <data name="ServerStatusText.Size" type="System.Drawing.Size, System.Drawing">
     <value>150, 30</value>
@@ -393,7 +393,7 @@
     <value>NoControl</value>
   </data>
   <data name="ServerStatusDesc.Location" type="System.Drawing.Point, System.Drawing">
-    <value>242, 486</value>
+    <value>240, 486</value>
   </data>
   <data name="ServerStatusDesc.Size" type="System.Drawing.Size, System.Drawing">
     <value>150, 40</value>
@@ -428,7 +428,7 @@ Online</value>
     <value>NoControl</value>
   </data>
   <data name="APIStatusText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>426, 453</value>
+    <value>424, 453</value>
   </data>
   <data name="APIStatusText.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 30</value>
@@ -465,7 +465,7 @@ Online</value>
     <value>NoControl</value>
   </data>
   <data name="APIStatusDesc.Location" type="System.Drawing.Point, System.Drawing">
-    <value>426, 486</value>
+    <value>424, 486</value>
   </data>
   <data name="APIStatusDesc.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 14</value>
@@ -655,7 +655,7 @@ Online</value>
     <value>NoControl</value>
   </data>
   <data name="LoginButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>605, 362</value>
+    <value>606, 362</value>
   </data>
   <data name="LoginButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 35</value>
@@ -691,7 +691,7 @@ Online</value>
     <value>NoControl</value>
   </data>
   <data name="RegisterText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>605, 409</value>
+    <value>606, 409</value>
   </data>
   <data name="RegisterText.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 35</value>
@@ -721,7 +721,7 @@ Online</value>
     <value>Off</value>
   </data>
   <data name="ServerPingStatusText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 0</value>
+    <value>6, 0</value>
   </data>
   <data name="ServerPingStatusText.Size" type="System.Drawing.Size, System.Drawing">
     <value>230, 61</value>
@@ -760,10 +760,10 @@ Online</value>
     <value>Off</value>
   </data>
   <data name="LogoutButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 64</value>
+    <value>7, 64</value>
   </data>
   <data name="LogoutButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>231, 35</value>
+    <value>230, 35</value>
   </data>
   <data name="LogoutButton.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -865,7 +865,7 @@ Online</value>
     <value>600, 281</value>
   </data>
   <data name="ShowPlayPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>237, 173</value>
+    <value>239, 173</value>
   </data>
   <data name="ShowPlayPanel.TabIndex" type="System.Int32, mscorlib">
     <value>153</value>
@@ -967,7 +967,7 @@ Online</value>
     <value />
   </data>
   <data name="SettingsButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>806, 15</value>
+    <value>805, 15</value>
   </data>
   <data name="SettingsButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 25</value>
@@ -997,7 +997,7 @@ Online</value>
     <value />
   </data>
   <data name="CloseBTN.Location" type="System.Drawing.Point, System.Drawing">
-    <value>841, 15</value>
+    <value>840, 15</value>
   </data>
   <data name="CloseBTN.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 25</value>
@@ -1096,7 +1096,7 @@ Online</value>
     <value />
   </data>
   <data name="FacebookIcon.Location" type="System.Drawing.Point, System.Drawing">
-    <value>260, 8</value>
+    <value>257, 8</value>
   </data>
   <data name="FacebookIcon.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 25</value>
@@ -1126,10 +1126,10 @@ Online</value>
     <value>NoControl</value>
   </data>
   <data name="TwitterAccountLink.Location" type="System.Drawing.Point, System.Drawing">
-    <value>434, 12</value>
+    <value>434, 13</value>
   </data>
   <data name="TwitterAccountLink.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 14</value>
+    <value>84, 14</value>
   </data>
   <data name="TwitterAccountLink.TabIndex" type="System.Int32, mscorlib">
     <value>174</value>
@@ -1138,7 +1138,7 @@ Online</value>
     <value>Twitter Feed</value>
   </data>
   <data name="TwitterAccountLink.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+    <value>BottomLeft</value>
   </data>
   <data name="&gt;&gt;TwitterAccountLink.Name" xml:space="preserve">
     <value>TwitterAccountLink</value>
@@ -1162,7 +1162,7 @@ Online</value>
     <value />
   </data>
   <data name="TwitterIcon.Location" type="System.Drawing.Point, System.Drawing">
-    <value>404, 8</value>
+    <value>405, 8</value>
   </data>
   <data name="TwitterIcon.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 25</value>
@@ -1192,7 +1192,7 @@ Online</value>
     <value>NoControl</value>
   </data>
   <data name="FacebookGroupLink.Location" type="System.Drawing.Point, System.Drawing">
-    <value>289, 12</value>
+    <value>286, 13</value>
   </data>
   <data name="FacebookGroupLink.Size" type="System.Drawing.Size, System.Drawing">
     <value>110, 14</value>
@@ -1204,7 +1204,7 @@ Online</value>
     <value>Facebook Group</value>
   </data>
   <data name="FacebookGroupLink.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+    <value>BottomLeft</value>
   </data>
   <data name="&gt;&gt;FacebookGroupLink.Name" xml:space="preserve">
     <value>FacebookGroupLink</value>
@@ -1225,10 +1225,10 @@ Online</value>
     <value>NoControl</value>
   </data>
   <data name="HomePageLink.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 12</value>
+    <value>36, 13</value>
   </data>
   <data name="HomePageLink.Size" type="System.Drawing.Size, System.Drawing">
-    <value>79, 14</value>
+    <value>78, 14</value>
   </data>
   <data name="HomePageLink.TabIndex" type="System.Int32, mscorlib">
     <value>171</value>
@@ -1237,7 +1237,7 @@ Online</value>
     <value>Home Page</value>
   </data>
   <data name="HomePageLink.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+    <value>BottomLeft</value>
   </data>
   <data name="&gt;&gt;HomePageLink.Name" xml:space="preserve">
     <value>HomePageLink</value>
@@ -1258,10 +1258,10 @@ Online</value>
     <value>NoControl</value>
   </data>
   <data name="DiscordInviteLink.Location" type="System.Drawing.Point, System.Drawing">
-    <value>153, 12</value>
+    <value>154, 13</value>
   </data>
   <data name="DiscordInviteLink.Size" type="System.Drawing.Size, System.Drawing">
-    <value>95, 14</value>
+    <value>94, 14</value>
   </data>
   <data name="DiscordInviteLink.TabIndex" type="System.Int32, mscorlib">
     <value>172</value>
@@ -1270,7 +1270,7 @@ Online</value>
     <value>Discord Invite</value>
   </data>
   <data name="DiscordInviteLink.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+    <value>BottomLeft</value>
   </data>
   <data name="&gt;&gt;DiscordInviteLink.Name" xml:space="preserve">
     <value>DiscordInviteLink</value>
@@ -1294,10 +1294,10 @@ Online</value>
     <value>NoControl</value>
   </data>
   <data name="ServerShutDown.Location" type="System.Drawing.Point, System.Drawing">
-    <value>290, 43</value>
+    <value>285, 43</value>
   </data>
   <data name="ServerShutDown.Size" type="System.Drawing.Size, System.Drawing">
-    <value>220, 15</value>
+    <value>215, 15</value>
   </data>
   <data name="ServerShutDown.TabIndex" type="System.Int32, mscorlib">
     <value>169</value>
@@ -1330,10 +1330,10 @@ Online</value>
     <value>NoControl</value>
   </data>
   <data name="SceneryGroupText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>51, 43</value>
+    <value>25, 43</value>
   </data>
   <data name="SceneryGroupText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>220, 15</value>
+    <value>215, 15</value>
   </data>
   <data name="SceneryGroupText.TabIndex" type="System.Int32, mscorlib">
     <value>179</value>
@@ -1420,7 +1420,7 @@ Online</value>
     <value />
   </data>
   <data name="APIStatusIcon.Location" type="System.Drawing.Point, System.Drawing">
-    <value>397, 456</value>
+    <value>396, 456</value>
   </data>
   <data name="APIStatusIcon.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 25</value>
@@ -3716,9 +3716,6 @@ Online</value>
         IkWKFClSpEiRIkWKFClSpEiRIkWKFClSpEiRIkWKFClSpEiRIkWKFClSpEiRIkWKFClSpEiRIkWKFClS
         pEiRIsVG8P8DuG4mmZKJBOgAAAAASUVORK5CYII=
 </value>
-  </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
