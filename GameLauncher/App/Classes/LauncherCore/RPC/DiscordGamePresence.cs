@@ -361,9 +361,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     };
                     _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-
-                    Launcher_Value.Game_Event_ID = EventID;
-                    AC_Core.Start();
+                    AC_Core.Start(InformationCache.SelectedServerJSON.Server_Enable_Crew_Tags, false, InformationCache.GameProcess.Id, EventID);
 
                     if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }

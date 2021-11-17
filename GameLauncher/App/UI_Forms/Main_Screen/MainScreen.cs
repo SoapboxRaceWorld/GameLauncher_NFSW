@@ -1548,8 +1548,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             };
             if (UnixOS.Detected()) { TirePSI.UseShellExecute = false; }
 
-            Process nfswProcess = Process.Start(TirePSI);
-            nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
+            InformationCache.GameProcess = Process.Start(TirePSI);
+            InformationCache.GameProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
 
             int processorAffinity = 0;
             for (int i = 0; i < Math.Min(Math.Max(1, Environment.ProcessorCount), 8); i++)
@@ -1557,9 +1557,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 processorAffinity |= 1 << i;
             }
 
-            nfswProcess.ProcessorAffinity = (IntPtr)processorAffinity;
+            InformationCache.GameProcess.ProcessorAffinity = (IntPtr)processorAffinity;
 
-            Launcher_Value.Game_ID = nfswProcess.Id;
             CloseBTN.SafeInvokeAction(() =>
             CloseBTN.Visible = false, this);
             FunctionStatus.LauncherBattlePass = true;
@@ -1591,7 +1590,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     if (ProcessID == 1)
                     {
                         ProcessID++;
-                        AC_Core.Start();
+                        AC_Core.Start(InformationCache.SelectedServerJSON.Server_Enable_Crew_Tags, false, InformationCache.GameProcess.Id);
                     }
 
                     if (AC_Core.Status && ProcessID == 2)
@@ -1636,7 +1635,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 }
 
                 /* change title */
-
 
                 foreach (Process oneProcess in allOfThem)
                 {
@@ -1696,15 +1694,15 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             shutdowntimer.Interval = !ServerProxy.Running() ? 30000 : 60000;
             shutdowntimer.Enabled = true;
 
-            if (nfswProcess != null)
+            if (InformationCache.GameProcess != null)
             {
-                nfswProcess.EnableRaisingEvents = true;
-                _nfswPid = nfswProcess.Id;
+                InformationCache.GameProcess.EnableRaisingEvents = true;
+                _nfswPid = InformationCache.GameProcess.Id;
 
-                nfswProcess.Exited += (sender2, e2) =>
+                InformationCache.GameProcess.Exited += (sender2, e2) =>
                 {
                     _nfswPid = 0;
-                    int exitCode = nfswProcess.ExitCode;
+                    int exitCode = InformationCache.GameProcess.ExitCode;
 
                     FunctionStatus.LauncherBattlePass = false;
 

@@ -115,8 +115,8 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
-    <Reference Include="SBRW.Launcher.Core, Version=0.0.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SBRW.Launcher.Core.0.0.10-preview001\lib\net461\SBRW.Launcher.Core.dll</HintPath>
+    <Reference Include="SBRW.Launcher.Core, Version=0.0.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Launcher.Core.0.0.11-preview001\lib\net461\SBRW.Launcher.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

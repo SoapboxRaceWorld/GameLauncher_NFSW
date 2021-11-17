@@ -42,6 +42,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* Selected Server Category */
         public static string SelectedServerCategory;
 
+        public static Process GameProcess;
+
         /* Selected Server List Key Information */
         public static Json_List_Server SelectedServerData;
 
