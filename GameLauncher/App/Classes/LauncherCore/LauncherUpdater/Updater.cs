@@ -1,20 +1,20 @@
 ﻿using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using GameLauncher.App.UI_Forms.UpdatePopup_Screen;
 using Newtonsoft.Json;
-using SBRW.Launcher.Core.Classes.Cache;
-using SBRW.Launcher.Core.Classes.Extension.Api_;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Extension.Validation_.Json_.Newtonsoft_;
-using SBRW.Launcher.Core.Classes.Extension.Web_;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Extension.Api_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Extension.Validation_.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Extension.Web_;
+using SBRW.Launcher.Core.Discord.RPC_;
+using SBRW.Launcher.Core.Extra.File_;
+using SBRW.Launcher.Core.Proxy.Nancy_;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -50,7 +50,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
         public static void Latest()
         {
             Log.Checking("LAUNCHER UPDATE: Is Version Up to Date or not");
-            DiscordLauncherPresence.Status("Start Up", "Checking Latest Launcher Release Information");
+            Presence_Launcher.Status("Start Up", "Checking Latest Launcher Release Information");
             try
             {
                 Uri URLCall = new Uri((EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed()) ?
@@ -119,14 +119,14 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             }
             else
             {
-                if (DiscordLauncherPresence.Running())
+                if (Presence_Launcher.Running())
                 {
-                    DiscordLauncherPresence.Stop("Close");
+                    Presence_Launcher.Stop("Close");
                 }
 
-                if (ServerProxy.Running())
+                if (Proxy_Settings.Running())
                 {
-                    ServerProxy.Instance.Stop("Force Close");
+                    Proxy_Server.Instance.Stop("Force Close");
                 }
 
                 Application.Exit();
@@ -144,7 +144,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 {
                     Log.Info("LAUNCHER POPUP: Checking if Popup is Required");
 
-                    if (FileSettingsSave.Live_Data.Update_Version_Skip != LatestLauncherBuild)
+                    if (Save_Settings.Live_Data.Update_Version_Skip != LatestLauncherBuild)
                     {
                         FunctionStatus.LoadingComplete = true;
                         SplashScreen.ThreadStatus("Stop");
@@ -223,10 +223,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     description.Text = Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Stable") + " " + LatestLauncherBuild +
                         "\n" + Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Current") + " " + Application.ProductVersion;
 
-                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Update_Version_Skip))
+                    if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Update_Version_Skip))
                     {
-                        FileSettingsSave.Live_Data.Update_Version_Skip = String.Empty;
-                        FileSettingsSave.SaveSettings();
+                        Save_Settings.Live_Data.Update_Version_Skip = String.Empty;
+                        Save_Settings.Save();
                         Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. " +
                             "You are currenly using a " + WhatBuildAmI + " Build!");
                     }
@@ -238,10 +238,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     text.ForeColor = Theming.Sucess;
                     description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Version") + " " + Application.ProductVersion;
 
-                    if (FileSettingsSave.Live_Data.Update_Version_Skip == Application.ProductVersion)
+                    if (Save_Settings.Live_Data.Update_Version_Skip == Application.ProductVersion)
                     {
-                        FileSettingsSave.Live_Data.Update_Version_Skip = String.Empty;
-                        FileSettingsSave.SaveSettings();
+                        Save_Settings.Live_Data.Update_Version_Skip = String.Empty;
+                        Save_Settings.Save();
                         Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You're now on the Latest Game Launcher!");
                     }
                 }
@@ -255,8 +255,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     UpgradeAvailable = true;
                     if (SkipAvailableUpgrade)
                     {
-                        FileSettingsSave.Live_Data.Update_Version_Skip = LatestLauncherBuild;
-                        FileSettingsSave.SaveSettings();
+                        Save_Settings.Live_Data.Update_Version_Skip = LatestLauncherBuild;
+                        Save_Settings.Save();
                         Log.Info("IGNOREUPDATEVERSION: User had skipped latest Launcher Version!");
                     }
                 }

@@ -1,6 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.Core.Classes.Cache;
+using SBRW.Launcher.Core.Cache;
 using System;
 using System.IO;
 

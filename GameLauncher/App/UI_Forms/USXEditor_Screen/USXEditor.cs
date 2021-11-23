@@ -2,12 +2,12 @@
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
-using SBRW.Launcher.Core.Classes.Required.System.Windows_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Required.System.Windows_;
+using SBRW.Launcher.Core.Discord.RPC_;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -52,7 +52,7 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
         public USXEditor()
         {
             IsUSXEditorOpen = true;
-            DiscordLauncherPresence.Status("User XML Editor", null);
+            Presence_Launcher.Status("User XML Editor", null);
             Log.Checking("UXE: Success, a UserSettings.xml file was found!");
             if (new FileInfo(Locations.UserSettingsXML).IsReadOnly == true)
             {
@@ -70,7 +70,7 @@ namespace GameLauncher.App.UI_Forms.USXEditor_Screen
             SetVisuals();
             this.Closing += (x, y) =>
             {
-                DiscordLauncherPresence.Status("Settings", null);
+                Presence_Launcher.Status("Settings", null);
                 if (IsUSXEditorOpen) { IsUSXEditorOpen = false; }
                 /* This is for Mono Support */
                 if (Hover.Active)

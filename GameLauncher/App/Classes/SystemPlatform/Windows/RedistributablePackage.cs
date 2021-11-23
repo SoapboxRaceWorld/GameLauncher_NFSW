@@ -1,13 +1,13 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Microsoft.Win32;
-using SBRW.Launcher.Core.Classes.Cache;
-using SBRW.Launcher.Core.Classes.Extension.Api_;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Extension.Web_;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Extension.Api_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Extension.Web_;
+using SBRW.Launcher.Core.Discord.RPC_;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -117,7 +117,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             if (!UnixOS.Detected())
             {
                 Log.Checking("REDISTRIBUTABLE: Is Installed or Not");
-                DiscordLauncherPresence.Status("Start Up", "Checking Redistributable Package Visual Code 2015 to 2019");
+                Presence_Launcher.Status("Start Up", "Checking Redistributable Package Visual Code 2015 to 2019");
 
                 if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
                 {

@@ -105,18 +105,30 @@
     <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nancy.2.0.0\lib\net452\Nancy.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Hosting.Self, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nancy.Hosting.Self.2.0.0\lib\net452\Nancy.Hosting.Self.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
-    <Reference Include="SBRW.Launcher.Core, Version=0.0.11.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SBRW.Launcher.Core.0.0.11-preview001\lib\net461\SBRW.Launcher.Core.dll</HintPath>
+    <Reference Include="SBRW.Ini.Parser, Version=2.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Ini.Parser.2.6.1\lib\net461\SBRW.Ini.Parser.dll</HintPath>
+    </Reference>
+    <Reference Include="SBRW.Launcher.Core, Version=0.0.20.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Launcher.Core.0.0.20\lib\net461\SBRW.Launcher.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SBRW.Launcher.Core.Discord, Version=0.0.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Launcher.Core.Discord.0.0.10\lib\net461\SBRW.Launcher.Core.Discord.dll</HintPath>
+    </Reference>
+    <Reference Include="SBRW.Launcher.Core.Extra, Version=0.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Launcher.Core.Extra.0.0.5\lib\net461\SBRW.Launcher.Core.Extra.dll</HintPath>
+    </Reference>
+    <Reference Include="SBRW.Launcher.Core.Proxy, Version=0.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Launcher.Core.Proxy.0.0.8\lib\net461\SBRW.Launcher.Core.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="SBRW.Nancy, Version=2.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Nancy.2.0.9\lib\net461\SBRW.Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="SBRW.Nancy.Hosting.Self, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Nancy.Hosting.Self.2.0.5\lib\net461\SBRW.Nancy.Hosting.Self.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -165,9 +177,7 @@
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderAddons.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\Downloader.cs" />
-    <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileAccountSave.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileGameSettingsSave.cs" />
-    <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileSettingsSave.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\EnumTypes.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\FunctionEvents.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\FunctionStatus.cs" />
@@ -179,7 +189,6 @@
     <Compile Include="App\Classes\LauncherCore\Lists\ResolutionsListUpdater.cs" />
     <Compile Include="App\Classes\LauncherCore\Logger\LogToFileAddons.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\JSON\JsonServerModNet.cs" />
-    <Compile Include="App\Classes\LauncherCore\RPC\DiscordLauncherPresence.cs" />
     <Compile Include="App\Classes\LauncherCore\Support\SecurityCenter.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\ProgressBar.cs">
       <SubType>Component</SubType>
@@ -190,7 +199,6 @@
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderHashReader.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterSchema.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\ExtractResource.cs" />
-    <Compile Include="App\Classes\LauncherCore\FileReadWrite\IniFile.cs" />
     <Compile Include="App\Classes\LauncherCore\InsiderKit\KitEnabler.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\ModNetHandler.cs" />
     <Compile Include="App\Classes\SystemPlatform\NativeFunctions.cs" />
@@ -198,18 +206,10 @@
     <Compile Include="App\Classes\LauncherCore\Client\NFSW.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\AboutNoteBlock.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\Prompt.cs" />
-    <Compile Include="App\Classes\LauncherCore\Proxy\CommunicationLog.cs" />
-    <Compile Include="App\Classes\LauncherCore\Proxy\NancyBootstrapper.cs" />
-    <Compile Include="App\Classes\LauncherCore\Proxy\NancyGzipCompression.cs" />
-    <Compile Include="App\Classes\LauncherCore\Proxy\ProxyException.cs" />
-    <Compile Include="App\Classes\LauncherCore\Proxy\ProxyHandler.cs" />
     <Compile Include="App\Classes\SystemPlatform\Unix\UnixOS.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\ManagementSearcher.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\RedistributablePackage.cs" />
     <Compile Include="App\Classes\RemovedClasses.cs" />
-    <Compile Include="App\Classes\LauncherCore\RPC\CarList.cs" />
-    <Compile Include="App\Classes\LauncherCore\RPC\DiscordGamePresence.cs" />
-    <Compile Include="App\Classes\LauncherCore\RPC\EventList.cs" />
     <Compile Include="App\Languages\English_Texts.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -241,8 +241,6 @@
     </Compile>
     <Compile Include="App\Classes\LauncherCore\Lists\CDNListUpdater.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\ServerListUpdater.cs" />
-    <Compile Include="App\Classes\LauncherCore\Proxy\ServerProxy.cs" />
-    <Compile Include="App\Classes\LauncherCore\Proxy\Singleton.cs" />
     <Compile Include="App\Classes\SystemPlatform\TaskBar.cs" />
     <Compile Include="App\UI_Forms\Debug_Screen\DebugScreen.cs">
       <SubType>Form</SubType>
@@ -366,8 +364,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <EmbeddedResource Include="App\Classes\LauncherCore\RPC\JSON\events.json" />
-    <EmbeddedResource Include="App\Classes\LauncherCore\RPC\JSON\cars.json" />
     <EmbeddedResource Include="Resources\Fonts\DejaVuSans.ttf" />
     <EmbeddedResource Include="Resources\Fonts\DejaVuSans-Bold.ttf" />
     <None Include="packages.config" />

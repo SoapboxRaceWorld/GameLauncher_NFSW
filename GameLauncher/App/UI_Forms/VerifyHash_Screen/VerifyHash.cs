@@ -1,17 +1,17 @@
 ﻿using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRW.Launcher.Core.Classes.Cache;
-using SBRW.Launcher.Core.Classes.Extension.Hash_;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Extension.Time_;
-using SBRW.Launcher.Core.Classes.Extension.Web_;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Extension.Hash_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Extension.Time_;
+using SBRW.Launcher.Core.Extension.Web_;
+using SBRW.Launcher.Core.Discord.RPC_;
+using SBRW.Launcher.Core.Extra.File_;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -69,7 +69,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
         public VerifyHash()
         {
             IsVerifyHashOpen = true;
-            DiscordLauncherPresence.Status("Verify", null);
+            Presence_Launcher.Status("Verify", null);
             InitializeComponent();
             SetVisuals();
             this.Closing += (x, CloseForm) =>
@@ -82,7 +82,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                     }
                     else
                     {
-                        DiscordLauncherPresence.Status("Settings", null);
+                        Presence_Launcher.Status("Settings", null);
                         IsVerifyHashOpen = false;
                         GameScanner(false);
                     }
@@ -90,7 +90,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 else
                 {
                     IsVerifyHashOpen = false;
-                    DiscordLauncherPresence.Status("Settings", null);
+                    Presence_Launcher.Status("Settings", null);
                 }
 
                 GC.Collect();
@@ -124,15 +124,15 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                 }
 
                 Log_Verify.Info("VERIFYHASH: Checking Characters in URL");
-                if (FileSettingsSave.Live_Data.Launcher_CDN.EndsWith("/"))
+                if (Save_Settings.Live_Data.Launcher_CDN.EndsWith("/"))
                 {
                     char[] charsToTrim = { '/' };
-                    FinalCDNURL = FileSettingsSave.Live_Data.Launcher_CDN.TrimEnd(charsToTrim);
+                    FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN.TrimEnd(charsToTrim);
                     Log_Verify.Info("VERIFYHASH: Trimed end of CDN URL -> " + FinalCDNURL);
                 }
                 else
                 {
-                    FinalCDNURL = FileSettingsSave.Live_Data.Launcher_CDN;
+                    FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN;
                     Log_Verify.Info("VERIFYHASH: Choosen CDN URL -> " + FinalCDNURL);
                 }
             }
@@ -188,7 +188,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
 
         private void StartGameScanner()
         {
-            DiscordLauncherPresence.Status("Verify Scan", null);
+            Presence_Launcher.Status("Verify Scan", null);
             Log.Info("VERIFY HASH: Checking and Deleting '.orig' Files and Symbolic Folders");
             ScanProgressText.SafeInvokeAction(() => ScanProgressText.Text = "Removing any '.orig' Files in Game Directory");
 
@@ -202,7 +202,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
 
             try
             {
-                DirectoryInfo InstallationDirectory = new DirectoryInfo(FileSettingsSave.Live_Data.Game_Path);
+                DirectoryInfo InstallationDirectory = new DirectoryInfo(Save_Settings.Live_Data.Game_Path);
 
                 foreach (DirectoryInfo FoldersWeFound in InstallationDirectory.GetDirectories())
                 {
@@ -348,9 +348,9 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                     }
                 }
 
-                if (Directory.Exists(Path.Combine(FileSettingsSave.Live_Data.Game_Path, "scripts")) && !ForceStopScan)
+                if (Directory.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "scripts")) && !ForceStopScan)
                 {
-                    DirectoryInfo ScriptsFolder = new DirectoryInfo(Path.Combine(FileSettingsSave.Live_Data.Game_Path, "scripts"));
+                    DirectoryInfo ScriptsFolder = new DirectoryInfo(Path.Combine(Save_Settings.Live_Data.Game_Path, "scripts"));
 
                     if (ScriptsFolder.EnumerateFiles().Count() > 1)
                     {
@@ -497,7 +497,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                         {
                             String FileHash = file[0].Trim();
                             String FileName = file[1].Trim();
-                            String RealPathToFile = FileSettingsSave.Live_Data.Game_Path + FileName;
+                            String RealPathToFile = Save_Settings.Live_Data.Game_Path + FileName;
 
                             if (!File.Exists(RealPathToFile))
                             {
@@ -564,14 +564,14 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
 
         private void Integrity()
         {
-            DiscordLauncherPresence.Status("Verify Good", null);
-            FileSettingsSave.Live_Data.Game_Integrity = "Good";
-            FileSettingsSave.SaveSettings();
+            Presence_Launcher.Status("Verify Good", null);
+            Save_Settings.Live_Data.Game_Integrity = "Good";
+            Save_Settings.Save();
         }
 
         private void CorruptedFilesFound()
         {
-            DiscordLauncherPresence.Status("Verify Bad", null);
+            Presence_Launcher.Status("Verify Bad", null);
             /* START Show Redownloader Progress*/
             StartScanner.SafeInvokeAction(() => StartScanner.Visible = false);
             StopScanner.SafeInvokeAction(() => StopScanner.Visible = true);
@@ -596,7 +596,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
                             {
                                 currentCount = files.Count();
 
-                                string text2 = FileSettingsSave.Live_Data.Game_Path + text;
+                                string text2 = Save_Settings.Live_Data.Game_Path + text;
                                 string address = FinalCDNURL + "/unpacked" + text.Replace("\\", "/");
                                 if (File.Exists(text2))
                                 {
@@ -714,7 +714,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
             {
                 redownloadErrorCount++;
                 Log_Verify.Downloaded("File: " + CurrentDownloadingFile);
-                DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + redownloadErrorCount + " out of " + currentCount);
+                Presence_Launcher.Status("Verify Bad", redownloadedCount + redownloadErrorCount + " out of " + currentCount);
 
                 DownloadProgressText.SafeInvokeAction(() =>
                 DownloadProgressText.Text = "Failed To Download File [ " + 
@@ -747,7 +747,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
             {
                 redownloadedCount++;
 
-                DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + " out of " + currentCount);
+                Presence_Launcher.Status("Verify Bad", redownloadedCount + " out of " + currentCount);
                 Log_Verify.Downloaded("File: " + CurrentDownloadingFile);
 
                 DownloadProgressText.SafeInvokeAction(() =>
@@ -791,7 +791,7 @@ namespace GameLauncher.App.UI_Forms.VerifyHash_Screen
             else if (IsVerifyHashOpen && ForceStopScan)
             {
                 Log.Info("VERIFY HASH: Download Process has Stopped");
-                DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + " out of " + currentCount);
+                Presence_Launcher.Status("Verify Bad", redownloadedCount + " out of " + currentCount);
 
                 DownloadProgressText.SafeInvokeAction(() =>
                 DownloadProgressText.Text = "Download Stopped on File [ " + 

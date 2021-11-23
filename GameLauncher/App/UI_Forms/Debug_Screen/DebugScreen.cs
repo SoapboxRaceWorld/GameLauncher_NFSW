@@ -1,14 +1,15 @@
-﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.Global;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRW.Launcher.Core.Classes.Required.System;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Required.System;
+using SBRW.Launcher.Core.Discord.RPC_;
+using SBRW.Launcher.Core.Extra.File_;
+using SBRW.Launcher.Core.Proxy.Nancy_;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -113,17 +114,17 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
             }
 
             string UpdateSkip;
-            if (FileSettingsSave.Live_Data.Update_Version_Skip == Application.ProductVersion || FileSettingsSave.Live_Data.Update_Version_Skip == String.Empty)
+            if (Save_Settings.Live_Data.Update_Version_Skip == Application.ProductVersion || Save_Settings.Live_Data.Update_Version_Skip == String.Empty)
             {
                 UpdateSkip = "False";
             }
             else
             {
-                UpdateSkip = FileSettingsSave.Live_Data.Update_Version_Skip;
+                UpdateSkip = Save_Settings.Live_Data.Update_Version_Skip;
             }
 
             string StreamOpt;
-            if (FileSettingsSave.Live_Data.Launcher_Streaming_Support == "0")
+            if (Save_Settings.Live_Data.Launcher_Streaming_Support == "0")
             {
                 StreamOpt = "Displaying Timer";
             }
@@ -133,7 +134,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
             }
 
             string ThemeOpt;
-            if (FileSettingsSave.Live_Data.Launcher_Theme_Support == "0")
+            if (Save_Settings.Live_Data.Launcher_Theme_Support == "0")
             {
                 ThemeOpt = "Disabled";
             }
@@ -143,7 +144,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
             }
 
             string InsiderOpt;
-            if (FileSettingsSave.Live_Data.Launcher_Insider == "0")
+            if (Save_Settings.Live_Data.Launcher_Insider == "0")
             {
                 InsiderOpt = "Release Only";
             }
@@ -158,7 +159,7 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
             {
                 try
                 {
-                    Kernel32.GetDiskFreeSpaceEx(FileSettingsSave.Live_Data.Game_Path,
+                    Kernel32.GetDiskFreeSpaceEx(Save_Settings.Live_Data.Game_Path,
                         out lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
                 }
                 catch (Exception Error)
@@ -173,34 +174,34 @@ namespace GameLauncher.App.UI_Forms.Debug_Screen
                 new ListType{ Name = "Environment Version", Value = Environment.OSVersion.Version.ToString() },
                 new ListType{ Name = "Screen Resolution", Value = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height + " (Primary Display)" },
                 new ListType{ Name = "", Value = "" },
-                new ListType{ Name = "InstallationDirectory", Value = FileSettingsSave.Live_Data.Game_Path},
+                new ListType{ Name = "InstallationDirectory", Value = Save_Settings.Live_Data.Game_Path},
                 new ListType{ Name = "Launcher Version", Value = Application.ProductVersion},
-                new ListType{ Name = "Credentials Saved", Value = (!String.IsNullOrWhiteSpace(FileAccountSave.Live_Data.User_Raw_Password)) ? "True" : "False"},
-                new ListType{ Name = "Language", Value =  FileSettingsSave.Live_Data.Launcher_Language},
+                new ListType{ Name = "Credentials Saved", Value = (!String.IsNullOrWhiteSpace(Save_Account.Live_Data.User_Raw_Password)) ? "True" : "False"},
+                new ListType{ Name = "Language", Value =  Save_Settings.Live_Data.Launcher_Language},
                 new ListType{ Name = "Skipping Update", Value = UpdateSkip},
-                new ListType{ Name = "Proxy Enabled", Value = ServerProxy.Running().ToString()},
-                new ListType{ Name = "RPC Enabled", Value = DiscordLauncherPresence.Running().ToString()},
+                new ListType{ Name = "Proxy Enabled", Value = Proxy_Settings.Running().ToString()},
+                new ListType{ Name = "RPC Enabled", Value = Presence_Launcher.Running().ToString()},
                 new ListType{ Name = "Catpure Support", Value = StreamOpt},
                 new ListType{ Name = "Theme Support", Value = ThemeOpt},
                 new ListType{ Name = "Insider State", Value = InsiderOpt},
                 new ListType{ Name = "", Value = "" },
                 new ListType{ Name = "Server Name", Value = ServerListUpdater.ServerName("Debug")},
-                new ListType{ Name = "Server Address", Value = InformationCache.SelectedServerData.IPAddress},
-                new ListType{ Name = "CDN Address", Value = FileSettingsSave.Live_Data.Launcher_CDN},
-                new ListType{ Name = "ProxyPort", Value = ServerProxy.ProxyPort.ToString()},
-                new ListType{ Name = "Client Method", Value = FileSettingsSave.Live_Data.Launcher_WebClient_Method},
+                new ListType{ Name = "Server Address", Value = Launcher_Value.Launcher_Select_Server_Data.IPAddress},
+                new ListType{ Name = "CDN Address", Value = Save_Settings.Live_Data.Launcher_CDN},
+                new ListType{ Name = "ProxyPort", Value = Proxy_Settings.Port.ToString()},
+                new ListType{ Name = "Client Method", Value = Save_Settings.Live_Data.Launcher_WebClient_Method},
                 new ListType{ Name = "", Value = "" },
             };
 
             if (!UnixOS.Detected())
             {
-                DriveInfo driveInfo = new DriveInfo(FileSettingsSave.Live_Data.Game_Path);
+                DriveInfo driveInfo = new DriveInfo(Save_Settings.Live_Data.Game_Path);
                 settings.AddRange(new[]
                 {
                     new ListType{ Name = "Antivirus", Value = Antivirus },
                     new ListType{ Name = "Firewall Application", Value = Firewall },
-                    new ListType{ Name = "Firewall Rule - Launcher", Value =  FileSettingsSave.Live_Data.Firewall_Launcher},
-                    new ListType{ Name = "Firewall Rule - Game", Value =  FileSettingsSave.Live_Data.Firewall_Game},
+                    new ListType{ Name = "Firewall Rule - Launcher", Value =  Save_Settings.Live_Data.Firewall_Launcher},
+                    new ListType{ Name = "Firewall Rule - Game", Value =  Save_Settings.Live_Data.Firewall_Game},
                     new ListType{ Name = "AntiSpyware", Value = AntiSpyware },
                     new ListType{ Name = "", Value = "" },
                     new ListType{ Name = "CPU", Value = HardwareInfo.CPU.CPUName() },

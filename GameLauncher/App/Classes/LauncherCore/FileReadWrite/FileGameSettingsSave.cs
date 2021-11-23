@@ -1,7 +1,7 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Downloader;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Extension.String_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Extension.String_;
 using System;
 using System.IO;
 using System.Windows.Forms;

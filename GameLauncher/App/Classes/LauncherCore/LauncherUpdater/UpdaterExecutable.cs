@@ -1,12 +1,12 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using Newtonsoft.Json;
-using SBRW.Launcher.Core.Classes.Cache;
-using SBRW.Launcher.Core.Classes.Extension.Api_;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Extension.Validation_.Json_.Newtonsoft_;
-using SBRW.Launcher.Core.Classes.Extension.Web_;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Extension.Api_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Extension.Validation_.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Extension.Web_;
+using SBRW.Launcher.Core.Discord.RPC_;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -27,7 +27,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
         public static void Check()
         {
             Log.Checking("LAUNCHER UPDATER: Is Version Up to Date or not");
-            DiscordLauncherPresence.Status("Start Up", "Checking Launcher and Updater Release Information");
+            Presence_Launcher.Status("Start Up", "Checking Launcher and Updater Release Information");
 
             /* Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon */
             try

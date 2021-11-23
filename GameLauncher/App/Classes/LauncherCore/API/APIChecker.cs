@@ -2,12 +2,12 @@
 using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.RPC;
-using SBRW.Launcher.Core.Classes.Cache;
-using SBRW.Launcher.Core.Classes.Extension.Api_;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Extension.Validation_.Json_.Newtonsoft_;
-using SBRW.Launcher.Core.Classes.Extension.Web_;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Extension.Api_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Extension.Validation_.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Extension.Web_;
+using SBRW.Launcher.Core.Discord.RPC_;
 using System;
 using System.Net;
 using System.Text;
@@ -177,7 +177,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             /* Check If Launcher Failed to Connect to any APIs */
             if (!CarbonAPITwo())
             {
-                DiscordLauncherPresence.Status("Start Up", "Launcher Encountered API Errors");
+                Presence_Launcher.Status("Start Up", "Launcher Encountered API Errors");
 
                 if (MessageBox.Show(null, Translations.Database("VisualsAPIChecker_TextBox_No_API"),
                     Translations.Database("VisualsAPIChecker_TextBox_No_API_P2"),

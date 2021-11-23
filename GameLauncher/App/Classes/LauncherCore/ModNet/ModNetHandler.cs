@@ -2,8 +2,10 @@
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.Core.Classes.Extension.Api_;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Extension.Api_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Extra.File_;
 using System;
 using System.IO;
 
@@ -87,7 +89,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
         public static bool Supported()
         {
-            if (API_Core.StatusCheck(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo", 10) == APIStatus.NotFound)
+            if (API_Core.StatusCheck(Launcher_Value.Launcher_Select_Server_Data.IPAddress + "/Modding/GetModInfo", 10) == APIStatus.NotFound)
             {
                 return false;
             }
@@ -208,8 +210,8 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
                     if (FileErrors > 0)
                     {
-                        FileSettingsSave.Live_Data.Game_Integrity = "Bad";
-                        FileSettingsSave.SaveSettings();
+                        Save_Settings.Live_Data.Game_Integrity = "Bad";
+                        Save_Settings.Save();
                         FileErrors = 0;
                     }
 

@@ -4,8 +4,10 @@ using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Extra.File_;
+using SBRW.Launcher.Core.Extra.Ini_;
 using System;
 using System.Drawing;
 using System.IO;
@@ -234,7 +236,7 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
         {
             if (!string.IsNullOrWhiteSpace(((Json_List_Language)GameLangSource.SelectedItem).Value_Ini))
             {
-                FileSettingsSave.Live_Data.Launcher_Language = ((Json_List_Language)GameLangSource.SelectedItem).Value_Ini;
+                Save_Settings.Live_Data.Launcher_Language = ((Json_List_Language)GameLangSource.SelectedItem).Value_Ini;
                 FileGameSettingsData.Language = ((Json_List_Language)GameLangSource.SelectedItem).Value_XML;
             }
 
@@ -243,21 +245,21 @@ namespace GameLauncher.App.UI_Forms.Welcome_Screen
                 if (((Json_List_Language)GameLangSource.SelectedItem).Category == "Custom")
                 {
                     /* Create Custom Settings.ini for LangPicker.asi module */
-                    if (!Directory.Exists(FileSettingsSave.Live_Data.Game_Path + "/scripts"))
+                    if (!Directory.Exists(Save_Settings.Live_Data.Game_Path + "/scripts"))
                     {
-                        Directory.CreateDirectory(FileSettingsSave.Live_Data.Game_Path + "/scripts");
+                        Directory.CreateDirectory(Save_Settings.Live_Data.Game_Path + "/scripts");
                     }
 
-                    IniFile LanguagePickerFile = new IniFile(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini");
-                    LanguagePickerFile.Write("Language", ((Json_List_Language)GameLangSource.SelectedItem).Value_Ini);
+                    Ini_File LanguagePickerFile = new Ini_File(Save_Settings.Live_Data.Game_Path + "/scripts/LangPicker.ini");
+                    LanguagePickerFile.Key_Write("Language", ((Json_List_Language)GameLangSource.SelectedItem).Value_Ini);
                     MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English instead.",
                         "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    if (File.Exists(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini"))
+                    if (File.Exists(Save_Settings.Live_Data.Game_Path + "/scripts/LangPicker.ini"))
                     {
-                        File.Delete(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini");
+                        File.Delete(Save_Settings.Live_Data.Game_Path + "/scripts/LangPicker.ini");
                     }
                 }
             }

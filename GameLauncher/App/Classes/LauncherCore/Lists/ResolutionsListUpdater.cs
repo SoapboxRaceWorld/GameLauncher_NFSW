@@ -2,11 +2,11 @@
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using Newtonsoft.Json;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using System;
 using System.Collections.Generic;
-using SBRW.Launcher.Core.Classes.Required.DLL.User32_;
+using SBRW.Launcher.Core.Required.DLL.User32_;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {

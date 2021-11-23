@@ -90,39 +90,4 @@
         /// </summary>
         Unknown = 2017
     }
-    /// <summary>
-    /// Identifies the Values of the Status State
-    /// </summary>
-    enum SecurityCenterCodes
-    {
-        /// <summary>Unknown Status</summary>
-        /// <remarks>User hasn't ran any checks</remarks>
-        Unknown = 0,
-        /// <summary>Firewall Exclusions is current</summary>
-        Firewall_Updated = 2,
-        /// <summary>Firewall Exclusions had encounterd an Error</summary>
-        Firewall_Error = 6,
-        /// <summary>Firewall Exclusions is not current</summary>
-        /// <remarks>Game Path had changed and User hasn't updated Exclusions</remarks>
-        Firewall_Outdated = 8,
-        /// <summary>Defender Exclusions is current</summary>
-        Defender_Updated = 10,
-        /// <summary>Defender Exclusions had encounterd an Error</summary>
-        Defender_Error = 12,
-        /// <summary>Defender Exclusions is not current</summary>
-        /// <remarks>Game Path had changed and User hasn't updated Exclusions</remarks>
-        Defender_Outdated = 14,
-        /// <summary>Unix System</summary>
-        /// <remarks>All Functions should not continue past Seeing the Screen</remarks>
-        Unix = 16,
-        /// <summary>Permssions has not been Set</summary>
-        Permissions_NotSet = 18,
-        /// <summary>Permssions is Set</summary>
-        Permissions_Updated = 20,
-        /// <summary>Permssions had encounterd an Error</summary>
-        Permissions_Error = 22,
-        /// <summary>Defender Exclusions is not current</summary>
-        /// <remarks>Game Path had changed and User hasn't updated Permissions</remarks>
-        Permissions_Outdated = 24
-    }
 }

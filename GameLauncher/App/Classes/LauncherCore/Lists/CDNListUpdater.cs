@@ -1,6 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using Newtonsoft.Json;
-using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using System;
 using System.Collections.Generic;
 using System.Linq;

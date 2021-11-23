@@ -5,8 +5,6 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
-using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
@@ -15,12 +13,16 @@ using GameLauncher.App.UI_Forms.Debug_Screen;
 using GameLauncher.App.UI_Forms.SecurityCenter_Screen;
 using GameLauncher.App.UI_Forms.USXEditor_Screen;
 using GameLauncher.App.UI_Forms.VerifyHash_Screen;
-using SBRW.Launcher.Core.Classes.Cache;
-using SBRW.Launcher.Core.Classes.Extension.Api_;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Extension.String_;
-using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
-using SBRW.Launcher.Core.Classes.Required.System.Windows_;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Extension.Api_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Extension.String_;
+using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Required.System.Windows_;
+using SBRW.Launcher.Core.Discord.RPC_;
+using SBRW.Launcher.Core.Extra.File_;
+using SBRW.Launcher.Core.Extra.Ini_;
+using SBRW.Launcher.Core.Proxy.Nancy_;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -79,7 +81,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             SetVisuals();
             this.Closing += (x, y) =>
             {
-                DiscordLauncherPresence.Status("Idle Ready", null);
+                Presence_Launcher.Status("Idle Ready", null);
 
                 if (ThreadChangedCDN != null)
                 {
@@ -109,7 +111,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 GC.Collect();
             };
 
-            DiscordLauncherPresence.Status("Settings", null);
+            Presence_Launcher.Status("Settings", null);
         }
         /// <summary>
         /// Sets the Color for Buttons
@@ -210,8 +212,8 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             /* Set Hardcoded Text           /
             /*******************************/
 
-            SettingsCDNCurrent.Text = FileSettingsSave.Live_Data.Launcher_CDN;
-            SettingsGameFilesCurrent.Text = FileSettingsSave.Live_Data.Game_Path;
+            SettingsCDNCurrent.Text = Save_Settings.Live_Data.Launcher_CDN;
+            SettingsGameFilesCurrent.Text = Save_Settings.Live_Data.Game_Path;
             SettingsLauncherPathCurrent.Text = AppDomain.CurrentDomain.BaseDirectory;
             SettingsLauncherVersion.Text = "Version: v" + Application.ProductVersion;
 
@@ -547,9 +549,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             /* Read Settings.ini            /
             /*******************************/
 
-            if (File.Exists(FileSettingsSave.Live_Data.Game_Path + "/profwords") || File.Exists(FileSettingsSave.Live_Data.Game_Path + "/profwords_dis"))
+            if (File.Exists(Save_Settings.Live_Data.Game_Path + "/profwords") || File.Exists(Save_Settings.Live_Data.Game_Path + "/profwords_dis"))
             {
-                SettingsWordFilterCheck.Checked = !File.Exists(FileSettingsSave.Live_Data.Game_Path + "/profwords");
+                SettingsWordFilterCheck.Checked = !File.Exists(Save_Settings.Live_Data.Game_Path + "/profwords");
             }
             else
             {
@@ -563,14 +565,14 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             /* Folder Locations             /
             /*******************************/
 
-            _newGameFilesPath = FileSettingsSave.Live_Data.Game_Path;
+            _newGameFilesPath = Save_Settings.Live_Data.Game_Path;
             _newLauncherPath = Locations.LauncherFolder;
-            _disableProxy = (FileSettingsSave.Live_Data.Launcher_Proxy == "1");
-            _disableDiscordRPC = (FileSettingsSave.Live_Data.Launcher_Discord_Presence == "1");
-            _enableAltWebCalls = (FileSettingsSave.Live_Data.Launcher_WebClient_Method == "WebClientWithTimeout");
-            _enableInsiderPreview = FileSettingsSave.Live_Data.Launcher_Insider == "1";
-            _enableThemeSupport = FileSettingsSave.Live_Data.Launcher_Theme_Support == "1";
-            _enableStreamSupport = FileSettingsSave.Live_Data.Launcher_Streaming_Support == "1";
+            _disableProxy = (Save_Settings.Live_Data.Launcher_Proxy == "1");
+            _disableDiscordRPC = (Save_Settings.Live_Data.Launcher_Discord_Presence == "1");
+            _enableAltWebCalls = (Save_Settings.Live_Data.Launcher_WebClient_Method == "WebClientWithTimeout");
+            _enableInsiderPreview = Save_Settings.Live_Data.Launcher_Insider == "1";
+            _enableThemeSupport = Save_Settings.Live_Data.Launcher_Theme_Support == "1";
+            _enableStreamSupport = Save_Settings.Live_Data.Launcher_Streaming_Support == "1";
 
             SettingsProxyCheckbox.Checked = _disableProxy;
             SettingsDiscordRPCCheckbox.Checked = _disableDiscordRPC;
@@ -583,7 +585,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             /* Enable/Disable Visuals       /
             /*******************************/
 
-            if (File.Exists(Path.Combine(FileSettingsSave.Live_Data.Game_Path, "NFSWO_COMMUNICATION_LOG.txt")))
+            if (File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "NFSWO_COMMUNICATION_LOG.txt")))
             {
                 ButtonsColorSet(SettingsClearCommunicationLogButton, 2, true);
             }
@@ -592,7 +594,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 ButtonsColorSet(SettingsClearCommunicationLogButton, 4, false);
             }
 
-            if (Directory.Exists(FileSettingsSave.Live_Data.Game_Path + "/.data"))
+            if (Directory.Exists(Save_Settings.Live_Data.Game_Path + "/.data"))
             {
                 ButtonsColorSet(SettingsClearServerModCacheButton, 2, true);
             }
@@ -603,7 +605,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
             try
             {
-                DirectoryInfo CrashLogFilesDirectory = new DirectoryInfo(FileSettingsSave.Live_Data.Game_Path);
+                DirectoryInfo CrashLogFilesDirectory = new DirectoryInfo(Save_Settings.Live_Data.Game_Path);
 
                 if (CrashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp", SearchOption.TopDirectoryOnly).Count() != 0)
                 {
@@ -646,20 +648,20 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             try
             {
                 Log.Info("SETTINGS VERIFYHASH: Checking Characters in URL");
-                if (FileSettingsSave.Live_Data.Launcher_CDN.EndsWith("/"))
+                if (Save_Settings.Live_Data.Launcher_CDN.EndsWith("/"))
                 {
                     char[] charsToTrim = { '/' };
-                    FinalCDNURL = FileSettingsSave.Live_Data.Launcher_CDN.TrimEnd(charsToTrim);
+                    FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN.TrimEnd(charsToTrim);
                     Log.Info("SETTINGS VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
                 }
                 else
                 {
-                    FinalCDNURL = FileSettingsSave.Live_Data.Launcher_CDN;
+                    FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN;
                 }
             }
             catch (Exception Error)
             {
-                FinalCDNURL = FileSettingsSave.Live_Data.Launcher_CDN;
+                FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN;
                 LogToFileAddons.OpenLog("SETTINGS CDN URL TRIM", null, Error, null, true);
             }
 
@@ -689,7 +691,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                                 {
                                     case APIStatus.Online:
                                         FunctionStatus.DoesCDNSupportVerifyHash = true;
-                                        ButtonsColorSet(SettingsVFilesButton, (FileSettingsSave.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
+                                        ButtonsColorSet(SettingsVFilesButton, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
                                         break;
                                     default:
                                         FunctionStatus.DoesCDNSupportVerifyHash = false;
@@ -732,7 +734,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             /* TODO null check */
             if (SettingsLanguage.SelectedItem != null && !string.IsNullOrWhiteSpace(((Json_List_Language)SettingsLanguage.SelectedItem).Value_Ini))
             {
-                FileSettingsSave.Live_Data.Launcher_Language = ((Json_List_Language)SettingsLanguage.SelectedItem).Value_Ini;
+                Save_Settings.Live_Data.Launcher_Language = ((Json_List_Language)SettingsLanguage.SelectedItem).Value_Ini;
                 FileGameSettingsData.Language = ((Json_List_Language)SettingsLanguage.SelectedItem).Value_XML;
 
                 /* TODO: Inform player about custom languagepack used. */
@@ -741,52 +743,52 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                     MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English Language Pack instead.",
                         "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    if (!Directory.Exists(FileSettingsSave.Live_Data.Game_Path + "/scripts"))
+                    if (!Directory.Exists(Save_Settings.Live_Data.Game_Path + "/scripts"))
                     {
-                        try { Directory.CreateDirectory(FileSettingsSave.Live_Data.Game_Path + "/scripts"); }
+                        try { Directory.CreateDirectory(Save_Settings.Live_Data.Game_Path + "/scripts"); }
                         catch { }
                     }
 
-                    if (File.Exists(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini"))
+                    if (File.Exists(Save_Settings.Live_Data.Game_Path + "/scripts/LangPicker.ini"))
                     {
-                        try { File.Delete(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini"); }
+                        try { File.Delete(Save_Settings.Live_Data.Game_Path + "/scripts/LangPicker.ini"); }
                         catch { }
                     }
 
                     try
                     {
-                        IniFile LanguagePickerFile = new IniFile(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini");
-                        LanguagePickerFile.Write("Language", ((Json_List_Language)SettingsLanguage.SelectedItem).Value_Ini);
+                        Ini_File LanguagePickerFile = new Ini_File(Save_Settings.Live_Data.Game_Path + "/scripts/LangPicker.ini");
+                        LanguagePickerFile.Key_Write("Language", ((Json_List_Language)SettingsLanguage.SelectedItem).Value_Ini);
                     }
                     catch { }
                 }
                 /* Delete Custom Settings.ini for LangPicker.asi module */
-                else if (File.Exists(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini"))
+                else if (File.Exists(Save_Settings.Live_Data.Game_Path + "/scripts/LangPicker.ini"))
                 {
-                    try { File.Delete(FileSettingsSave.Live_Data.Game_Path + "/scripts/LangPicker.ini"); }
+                    try { File.Delete(Save_Settings.Live_Data.Game_Path + "/scripts/LangPicker.ini"); }
                     catch { }
                 }
             }
 
             if (!string.IsNullOrWhiteSpace(_newGameFilesPath))
             {
-                if (Product_Version.GetWindowsNumber() >= 10.0 && (FileSettingsSave.Live_Data.Game_Path != _newGameFilesPath) && !UnixOS.Detected())
+                if (Product_Version.GetWindowsNumber() >= 10.0 && (Save_Settings.Live_Data.Game_Path != _newGameFilesPath) && !UnixOS.Detected())
                 {
                     WindowsDefenderGameFilesDirctoryChange();
                 }
-                else if (FileSettingsSave.Live_Data.Game_Path != _newGameFilesPath)
+                else if (Save_Settings.Live_Data.Game_Path != _newGameFilesPath)
                 {
                     if (!UnixOS.Detected())
                     {
                         /* Check if New Game! Files is not in Banned Folder Locations */
                         CheckGameFilesDirectoryPrevention();
                         /* Store Old Location for Security Panel to Use Later on */
-                        FileSettingsSave.Live_Data.Game_Path_Old = FileSettingsSave.Live_Data.Game_Path;
-                        FileSettingsSave.Live_Data.Firewall_Game = "Not Excluded";
+                        Save_Settings.Live_Data.Game_Path_Old = Save_Settings.Live_Data.Game_Path;
+                        Save_Settings.Live_Data.Firewall_Game = "Not Excluded";
                         ButtonsColorSet(ButtonSecurityPanel, 2, true);
                     }
 
-                    FileSettingsSave.Live_Data.Game_Path = _newGameFilesPath;
+                    Save_Settings.Live_Data.Game_Path = _newGameFilesPath;
 
                     /* Clean Mods Files from New Dirctory (If it has .links in directory) */
                     if (File.Exists(Path.Combine(_newGameFilesPath, Locations.NameModLinks)))
@@ -815,11 +817,11 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                     LocalFinalCDNURL = ((Json_List_CDN)SettingsCDNPick.SelectedItem).Url;
                 }
 
-                if (FileSettingsSave.Live_Data.Launcher_CDN != LocalFinalCDNURL)
+                if (Save_Settings.Live_Data.Launcher_CDN != LocalFinalCDNURL)
                 {
                     SettingsCDNCurrentText.Text = "CHANGED CDN";
                     SettingsCDNCurrent.Text = LocalFinalCDNURL;
-                    FinalCDNURL = FileSettingsSave.Live_Data.Launcher_CDN = LocalFinalCDNURL;
+                    FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN = LocalFinalCDNURL;
                     _restartRequired = true;
 
                     if (ThreadChecksums != null)
@@ -836,7 +838,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                         {
                             case APIStatus.Online:
                                 FunctionStatus.DoesCDNSupportVerifyHash = true;
-                                ButtonsColorSet(SettingsVFilesButton, (FileSettingsSave.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
+                                ButtonsColorSet(SettingsVFilesButton, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
                                 break;
                             default:
                                 FunctionStatus.DoesCDNSupportVerifyHash = false;
@@ -852,15 +854,15 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 Log.Error("SETTINGS: Selected CDN does not contain a URL, unable to Save Contents");
             }
 
-            if (FileSettingsSave.Live_Data.Launcher_Proxy != (SettingsProxyCheckbox.Checked ? "1" : "0"))
+            if (Save_Settings.Live_Data.Launcher_Proxy != (SettingsProxyCheckbox.Checked ? "1" : "0"))
             {
-                FileSettingsSave.Live_Data.Launcher_Proxy = SettingsProxyCheckbox.Checked ? "1" : "0";
+                Save_Settings.Live_Data.Launcher_Proxy = SettingsProxyCheckbox.Checked ? "1" : "0";
 
-                if (FileSettingsSave.Live_Data.Launcher_Proxy == "1")
+                if (Save_Settings.Live_Data.Launcher_Proxy == "1")
                 {
-                    if (ServerProxy.Running())
+                    if (Proxy_Settings.Running())
                     {
-                        ServerProxy.Instance.Stop("Settings Screen");
+                        Proxy_Server.Instance.Stop("Settings Screen");
                     }
 
                     if (InformationCache.SelectedServerEnforceProxy)
@@ -872,77 +874,77 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 }
                 else
                 {
-                    if (!ServerProxy.Running())
+                    if (!Proxy_Settings.Running())
                     {
-                        ServerProxy.Instance.Start("Settings Screen");
+                        Proxy_Server.Instance.Start("Settings Screen");
                     }
                 }
             }
 
-            if (FileSettingsSave.Live_Data.Launcher_Discord_Presence != (SettingsDiscordRPCCheckbox.Checked ? "1" : "0"))
+            if (Save_Settings.Live_Data.Launcher_Discord_Presence != (SettingsDiscordRPCCheckbox.Checked ? "1" : "0"))
             {
-                FileSettingsSave.Live_Data.Launcher_Discord_Presence = SettingsDiscordRPCCheckbox.Checked ? "1" : "0";
+                Save_Settings.Live_Data.Launcher_Discord_Presence = SettingsDiscordRPCCheckbox.Checked ? "1" : "0";
 
-                if (FileSettingsSave.Live_Data.Launcher_Discord_Presence == "1")
+                if (Save_Settings.Live_Data.Launcher_Discord_Presence == "1")
                 {
-                    if (DiscordLauncherPresence.Running())
+                    if (Presence_Launcher.Running())
                     {
-                        DiscordLauncherPresence.Stop("Close");
+                        Presence_Launcher.Stop("Close");
                     }
                 }
                 else
                 {
-                    if (!DiscordLauncherPresence.Running())
+                    if (!Presence_Launcher.Running())
                     {
-                        DiscordLauncherPresence.Start("Start Up", null);
+                        Presence_Launcher.Start("Start Up", null);
                     }
                 }
             }
 
-            if (FileSettingsSave.Live_Data.Launcher_Insider != (SettingsOptInsiderCheckBox.Checked ? "1" : "0"))
+            if (Save_Settings.Live_Data.Launcher_Insider != (SettingsOptInsiderCheckBox.Checked ? "1" : "0"))
             {
-                EnableInsiderBetaTester.Allowed((FileSettingsSave.Live_Data.Launcher_Insider = SettingsOptInsiderCheckBox.Checked ? "1" : "0") == "1");
+                EnableInsiderBetaTester.Allowed((Save_Settings.Live_Data.Launcher_Insider = SettingsOptInsiderCheckBox.Checked ? "1" : "0") == "1");
                 _restartRequired = true;
             }
 
-            if (FileSettingsSave.Live_Data.Launcher_Theme_Support != (SettingsThemeSupportCheckbox.Checked ? "1" : "0"))
+            if (Save_Settings.Live_Data.Launcher_Theme_Support != (SettingsThemeSupportCheckbox.Checked ? "1" : "0"))
             {
-                FileSettingsSave.Live_Data.Launcher_Theme_Support = SettingsThemeSupportCheckbox.Checked ? "1" : "0";
+                Save_Settings.Live_Data.Launcher_Theme_Support = SettingsThemeSupportCheckbox.Checked ? "1" : "0";
                 _restartRequired = true;
             }
 
-            if (FileSettingsSave.Live_Data.Launcher_WebClient_Method != (SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient"))
+            if (Save_Settings.Live_Data.Launcher_WebClient_Method != (SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient"))
             {
-                FileSettingsSave.Live_Data.Launcher_WebClient_Method = SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient";
-                Launcher_Value.Launcher_Alternative_Webcalls(FileSettingsSave.Live_Data.Launcher_WebClient_Method == "WebClient");
+                Save_Settings.Live_Data.Launcher_WebClient_Method = SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient";
+                Launcher_Value.Launcher_Alternative_Webcalls(Save_Settings.Live_Data.Launcher_WebClient_Method == "WebClient");
             }
 
-            if (FileSettingsSave.Live_Data.Launcher_Streaming_Support != (SettingsStreanCheckbox.Checked ? "1" : "0"))
+            if (Save_Settings.Live_Data.Launcher_Streaming_Support != (SettingsStreanCheckbox.Checked ? "1" : "0"))
             {
-                FileSettingsSave.Live_Data.Launcher_Streaming_Support = SettingsStreanCheckbox.Checked ? "1" : "0";
+                Save_Settings.Live_Data.Launcher_Streaming_Support = SettingsStreanCheckbox.Checked ? "1" : "0";
             }
 
             try
             {
                 /* Actually lets check those 2 files */
-                if (File.Exists(FileSettingsSave.Live_Data.Game_Path + "/profwords") && File.Exists(FileSettingsSave.Live_Data.Game_Path + "/profwords_dis"))
+                if (File.Exists(Save_Settings.Live_Data.Game_Path + "/profwords") && File.Exists(Save_Settings.Live_Data.Game_Path + "/profwords_dis"))
                 {
-                    File.Delete(FileSettingsSave.Live_Data.Game_Path + "/profwords_dis");
+                    File.Delete(Save_Settings.Live_Data.Game_Path + "/profwords_dis");
                 }
 
                 /* Delete/Enable profwords filter here */
                 if (SettingsWordFilterCheck.Checked)
                 {
-                    if (File.Exists(FileSettingsSave.Live_Data.Game_Path + "/profwords"))
+                    if (File.Exists(Save_Settings.Live_Data.Game_Path + "/profwords"))
                     {
-                        File.Move(FileSettingsSave.Live_Data.Game_Path + "/profwords", FileSettingsSave.Live_Data.Game_Path + "/profwords_dis");
+                        File.Move(Save_Settings.Live_Data.Game_Path + "/profwords", Save_Settings.Live_Data.Game_Path + "/profwords_dis");
                     }
                 }
                 else
                 {
-                    if (File.Exists(FileSettingsSave.Live_Data.Game_Path + "/profwords_dis"))
+                    if (File.Exists(Save_Settings.Live_Data.Game_Path + "/profwords_dis"))
                     {
-                        File.Move(FileSettingsSave.Live_Data.Game_Path + "/profwords_dis", FileSettingsSave.Live_Data.Game_Path + "/profwords");
+                        File.Move(Save_Settings.Live_Data.Game_Path + "/profwords_dis", Save_Settings.Live_Data.Game_Path + "/profwords");
                     }
                 }
             }
@@ -952,7 +954,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             }
 
             /* Save Settings */
-            FileSettingsSave.SaveSettings();
+            Save_Settings.Save();
             FileGameSettings.Save("Suppress", "Language Only");
             SettingsSave.Text = "SAVED";
 
@@ -987,13 +989,13 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             {
                 try
                 {
-                    if (Directory.Exists(FileSettingsSave.Live_Data.Game_Path + "/.data"))
+                    if (Directory.Exists(Save_Settings.Live_Data.Game_Path + "/.data"))
                     {
-                        Directory.Delete(FileSettingsSave.Live_Data.Game_Path + "/.data", true);
+                        Directory.Delete(Save_Settings.Live_Data.Game_Path + "/.data", true);
                     }
-                    if (Directory.Exists(FileSettingsSave.Live_Data.Game_Path + "/MODS"))
+                    if (Directory.Exists(Save_Settings.Live_Data.Game_Path + "/MODS"))
                     {
-                        Directory.Delete(FileSettingsSave.Live_Data.Game_Path + "/MODS", true);
+                        Directory.Delete(Save_Settings.Live_Data.Game_Path + "/MODS", true);
                     }
                     Log.Warning("LAUNCHER: User Confirmed to Delete Server Mods Cache");
                     ButtonsColorSet(SettingsClearServerModCacheButton, 1, false);
@@ -1012,9 +1014,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         {
             try
             {
-                if (File.Exists(FileSettingsSave.Live_Data.Game_Path + "/NFSWO_COMMUNICATION_LOG.txt"))
+                if (File.Exists(Save_Settings.Live_Data.Game_Path + "/NFSWO_COMMUNICATION_LOG.txt"))
                 {
-                    File.Delete(FileSettingsSave.Live_Data.Game_Path + "/NFSWO_COMMUNICATION_LOG.txt");
+                    File.Delete(Save_Settings.Live_Data.Game_Path + "/NFSWO_COMMUNICATION_LOG.txt");
                 }
                 ButtonsColorSet(SettingsClearCommunicationLogButton, 1, false);
                 MessageBox.Show(null, "Deleted NFSWO Communication Log", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1031,7 +1033,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         {
             try
             {
-                DirectoryInfo CrashLogFilesDirectory = new DirectoryInfo(FileSettingsSave.Live_Data.Game_Path);
+                DirectoryInfo CrashLogFilesDirectory = new DirectoryInfo(Save_Settings.Live_Data.Game_Path);
 
                 foreach (FileInfo LocatedFile in CrashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp", SearchOption.TopDirectoryOnly))
                 {
@@ -1126,9 +1128,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
         /* Settings Open Current CDN in Browser */
         private void SettingsCDNCurrent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Launcher_CDN))
+            if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN))
             {
-                Process.Start(FileSettingsSave.Live_Data.Launcher_CDN);
+                Process.Start(Save_Settings.Live_Data.Launcher_CDN);
             }
         }
 
@@ -1271,13 +1273,13 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 /* Check if New Game! Files is not in Banned Folder Locations */
                 CheckGameFilesDirectoryPrevention();
                 /* Store Old Location for Security Panel to Use Later on */
-                FileSettingsSave.Live_Data.Game_Path_Old = FileSettingsSave.Live_Data.Game_Path;
-                FileSettingsSave.Live_Data.Firewall_Game = "Not Excluded";
-                FileSettingsSave.Live_Data.Defender_Game = "Not Excluded";
+                Save_Settings.Live_Data.Game_Path_Old = Save_Settings.Live_Data.Game_Path;
+                Save_Settings.Live_Data.Firewall_Game = "Not Excluded";
+                Save_Settings.Live_Data.Defender_Game = "Not Excluded";
                 ButtonsColorSet(ButtonSecurityPanel, 2, true);
             }
 
-            FileSettingsSave.Live_Data.Game_Path = _newGameFilesPath;
+            Save_Settings.Live_Data.Game_Path = _newGameFilesPath;
 
             /* Clean Mods Files from New Dirctory (If it has .links in directory) */
             if (File.Exists(Path.Combine(_newGameFilesPath, Locations.NameModLinks)))
@@ -1299,7 +1301,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 {
                     case FolderType.IsSameAsLauncherFolder:
                         FailSafePathCreation = true;
-                        FileSettingsSave.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                        Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
                         Log.Error("LAUNCHER: Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
                         MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed." +
                             "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher",
@@ -1307,7 +1309,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                         break;
                     case FolderType.IsTempFolder:
                         FailSafePathCreation = true;
-                        FileSettingsSave.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                        Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
                         Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is NOT allowed!");
                         MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is NOT allowed!" +
                             "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher",
@@ -1317,14 +1319,14 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                     case FolderType.IsUsersFolders:
                     case FolderType.IsWindowsFolder:
                         FailSafePathCreation = true;
-                        FileSettingsSave.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                        Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
                         Log.Error("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is not recommended or allowed." +
                             "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                 }
-                FileSettingsSave.SaveSettings();
+                Save_Settings.Save();
 
                 if (FailSafePathCreation)
                 {
@@ -1413,18 +1415,18 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
                     try
                     {
-                        if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Launcher_CDN))
+                        if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN))
                         {
                             string FinalCDNURL;
 
-                            if (FileSettingsSave.Live_Data.Launcher_CDN.EndsWith("/"))
+                            if (Save_Settings.Live_Data.Launcher_CDN.EndsWith("/"))
                             {
                                 char[] charsToTrim = { '/' };
-                                FinalCDNURL = FileSettingsSave.Live_Data.Launcher_CDN.TrimEnd(charsToTrim);
+                                FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN.TrimEnd(charsToTrim);
                             }
                             else
                             {
-                                FinalCDNURL = FileSettingsSave.Live_Data.Launcher_CDN;
+                                FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN;
                             }
 
                             Log.Core("SETTINGS CDNLIST: Found something!");
@@ -1473,9 +1475,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             /* Last Selected CDN */
             try
             {
-                if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Launcher_CDN))
+                if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN))
                 {
-                    string FinalCDNURL = FileSettingsSave.Live_Data.Launcher_CDN + "/";
+                    string FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN + "/";
 
                     if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
                     {
@@ -1518,9 +1520,9 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
 
             try
             {
-                if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Launcher_Language))
+                if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_Language))
                 {
-                    string SavedLang = FileSettingsSave.Live_Data.Launcher_Language.Trim();
+                    string SavedLang = Save_Settings.Live_Data.Launcher_Language.Trim();
 
                     Log.Core("SETTINGS LANGLIST: Found something!");
                     Log.Core("SETTINGS LANGLIST: Checking if Language exists on our database");
@@ -1570,7 +1572,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 ThreadSavedCDN = null;
             }
 
-            if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Launcher_CDN))
+            if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN))
             {
                 SettingsCDNCurrent.LinkColor = Theming.SecondaryTextForeColor;
                 Log.Info("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
@@ -1579,21 +1581,21 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
                 {
                     if (!Application.OpenForms[this.Name].IsDisposed)
                     {
-                        switch (API_Core.StatusCheck(FileSettingsSave.Live_Data.Launcher_CDN + "/index.xml", 10))
+                        switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/index.xml", 10))
                         {
                             case APIStatus.Online:
                                 SettingsCDNCurrent.SafeInvokeAction(() =>
                                 {
                                     SettingsCDNCurrent.LinkColor = Theming.Sucess;
                                 });
-                                Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.Live_Data.Launcher_CDN + " Is Online!");
+                                Log.UrlCall("SETTINGS PINGING CDN: " + Save_Settings.Live_Data.Launcher_CDN + " Is Online!");
                                 break;
                             default:
                                 SettingsCDNCurrent.SafeInvokeAction(() =>
                                 {
                                     SettingsCDNCurrent.LinkColor = Theming.Error;
                                 });
-                                Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.Live_Data.Launcher_CDN + " Is Offline!");
+                                Log.UrlCall("SETTINGS PINGING CDN: " + Save_Settings.Live_Data.Launcher_CDN + " Is Offline!");
                                 break;
                         }
                     }
@@ -1666,7 +1668,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             if (FunctionStatus.IsVerifyHashDisabled)
             {
                 ButtonsColorSet(SettingsVFilesButton, 3, true);
-                if (!File.Exists(Path.Combine(FileSettingsSave.Live_Data.Game_Path, "nfsw.exe")))
+                if (!File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe")))
                 {
                     MessageBox.Show(null, "You need to Download the Game Files first before you can have access to run Verify Hash",
                         "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -1685,7 +1687,7 @@ namespace GameLauncher.App.UI_Forms.Settings_Screen
             }
             else
             {
-                ButtonsColorSet(SettingsVFilesButton, (FileSettingsSave.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
+                ButtonsColorSet(SettingsVFilesButton, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
                 VerifyHash.OpenScreen();
             }
         }

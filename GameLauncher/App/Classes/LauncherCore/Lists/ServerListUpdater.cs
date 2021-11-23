@@ -1,12 +1,13 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.UI_Forms.SelectServer_Screen;
 using Newtonsoft.Json;
-using SBRW.Launcher.Core.Classes.Extension.Hash_;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Extension.Hash_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Discord.RPC_;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -31,7 +32,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
         public static void GetList()
         {
             Log.Checking("SERVER LIST CORE: Creating Server List");
-            DiscordLauncherPresence.Status("Start Up", "Creating Server List");
+            Presence_Launcher.Status("Start Up", "Creating Server List");
 
             List<Json_List_Server> serverInfos = new List<Json_List_Server>();
 
@@ -213,15 +214,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
         {
             try
             {
-                if (InformationCache.SelectedServerJSON != null &&
-                    !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Name))
+                if (Launcher_Value.Launcher_Select_Server_JSON != null &&
+                    !string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Name))
                 {
-                    return InformationCache.SelectedServerJSON.Server_Name;
+                    return Launcher_Value.Launcher_Select_Server_JSON.Server_Name;
                 }
-                else if (InformationCache.SelectedServerData != null &&
-                    !string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.Name))
+                else if (Launcher_Value.Launcher_Select_Server_Data != null &&
+                    !string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_Data.Name))
                 {
-                    return InformationCache.SelectedServerData.Name;
+                    return Launcher_Value.Launcher_Select_Server_Data.Name;
                 }
                 else
                 {

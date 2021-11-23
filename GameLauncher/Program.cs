@@ -5,21 +5,22 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Languages.Visual_Forms;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
-using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using Microsoft.Win32;
-using SBRW.Launcher.Core.Classes.Cache;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Extension.Registry_;
-using SBRW.Launcher.Core.Classes.Extension.Time_;
-using SBRW.Launcher.Core.Classes.Extension.Web_;
-using SBRW.Launcher.Core.Classes.Required.Certificate;
-using SBRW.Launcher.Core.Classes.Required.System.Windows_;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Extension.Registry_;
+using SBRW.Launcher.Core.Extension.Time_;
+using SBRW.Launcher.Core.Extension.Web_;
+using SBRW.Launcher.Core.Required.Certificate;
+using SBRW.Launcher.Core.Required.System.Windows_;
+using SBRW.Launcher.Core.Discord.RPC_;
+using SBRW.Launcher.Core.Extra.File_;
+using SBRW.Launcher.Core.Proxy.Nancy_;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -355,11 +356,11 @@ namespace GameLauncher
 
         private static void Start()
         {
-            DiscordLauncherPresence.Start("Start Up", null);
+            Presence_Launcher.Start("Start Up", null);
 
             if (!UnixOS.Detected())
             {
-                DiscordLauncherPresence.Status("Start Up", "Checking .NET Framework");
+                Presence_Launcher.Status("Start Up", "Checking .NET Framework");
                 try
                 {
                     /* Check if User has a compatible .NET Framework Installed */
@@ -464,7 +465,7 @@ namespace GameLauncher
                 Log.Completed("LAUNCHER MIGRATION");
 
                 Log.Checking("LAUNCHER XML: If File Exists or Not");
-                DiscordLauncherPresence.Status("Start Up", "Checking if UserSettings XML Exists");
+                Presence_Launcher.Status("Start Up", "Checking if UserSettings XML Exists");
                 /* Create Default Configuration Files (if they don't already exist) */
                 if (!File.Exists(Locations.UserSettingsXML))
                 {
@@ -497,7 +498,7 @@ namespace GameLauncher
                 Log.Build(Insider + "BUILD: GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
 
                 Log.Checking("OS: Detecting");
-                DiscordLauncherPresence.Status("Start Up", "Checking Operating System");
+                Presence_Launcher.Status("Start Up", "Checking Operating System");
                 try
                 {
                     if (UnixOS.Detected())
@@ -537,7 +538,7 @@ namespace GameLauncher
                     if (!UnixOS.Detected())
                     {
                         Log.Checking("FOLDER LOCATION: Checking Launcher Folder Directory");
-                        DiscordLauncherPresence.Status("Start Up", "Checking Launcher Folder Locations");
+                        Presence_Launcher.Status("Start Up", "Checking Launcher Folder Locations");
 
                         switch (FunctionStatus.CheckFolder(Locations.LauncherFolder))
                         {
@@ -586,7 +587,7 @@ namespace GameLauncher
                             if (!UnixOS.Detected())
                             {
                                 Log.Checking("INI FILES: Doing Migration");
-                                DiscordLauncherPresence.Status("Start Up", "Doing Ini File Migration");
+                                Presence_Launcher.Status("Start Up", "Doing Ini File Migration");
                                 if (File.Exists(Locations.NameAccountIni))
                                 {
                                     try
@@ -622,22 +623,22 @@ namespace GameLauncher
                             else
                             {
                                 Log.Checking("INI FILES: Doing Nullsafe");
-                                DiscordLauncherPresence.Status("Start Up", "Doing NullSafe ini Files");
-                                FileSettingsSave.NullSafe();
-                                FileAccountSave.NullSafe();
+                                Presence_Launcher.Status("Start Up", "Doing NullSafe ini Files");
+                                Save_Settings.NullSafe();
+                                Save_Account.NullSafe();
                                 Log.Completed("INI FILES: Done");
                                 /* Sets up Theming */
                                 Theming.CheckIfThemeExists();
 
                                 Log.Function("APPLICATION: Setting Language");
-                                CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Translations.UI(Translations.Application_Language = FileSettingsSave.Live_Data.Launcher_Language.ToLower(), true));
+                                CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Translations.UI(Translations.Application_Language = Save_Settings.Live_Data.Launcher_Language.ToLower(), true));
                                 Log.Completed("APPLICATION: Done Setting Language '" + Translations.UI(Translations.Application_Language) + "'");
 
                                 /* Windows 7 TLS Check */
                                 if (Product_Version.GetWindowsNumber() == 6.1)
                                 {
                                     Log.Checking("SSL/TLS: Windows 7 Detected");
-                                    DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 SSL/TLS");
+                                    Presence_Launcher.Status("Start Up", "Checking Windows 7 SSL/TLS");
 
                                     try
                                     {
@@ -678,10 +679,10 @@ namespace GameLauncher
                                 }
 
                                 /* Windows 7 HotFix Check */
-                                if (Product_Version.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Win_7_Patches))
+                                if (Product_Version.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Win_7_Patches))
                                 {
                                     Log.Checking("HotFixes: Windows 7 Detected");
-                                    DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 HotFixes");
+                                    Presence_Launcher.Status("Start Up", "Checking Windows 7 HotFixes");
 
                                     try
                                     {
@@ -706,15 +707,15 @@ namespace GameLauncher
                                                 MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
                                             {
                                                 /* Since it's Informational we just need to know if they clicked 'OK' */
-                                                FileSettingsSave.Live_Data.Win_7_Patches = "1";
+                                                Save_Settings.Live_Data.Win_7_Patches = "1";
                                             }
                                             else
                                             {
                                                 /* or if they clicked 'Cancel' */
-                                                FileSettingsSave.Live_Data.Win_7_Patches = "0";
+                                                Save_Settings.Live_Data.Win_7_Patches = "0";
                                             }
 
-                                            FileSettingsSave.SaveSettings();
+                                            Save_Settings.Save();
                                         }
 
                                         Log.Completed("HotFixes: Done");
@@ -765,12 +766,12 @@ namespace GameLauncher
                                 }
                                 Log.Checking("JSON: Done");
 
-                                if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Game_Path))
+                                if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
                                 {
                                     Log.Checking("CLEANLINKS: Game Path");
-                                    if (File.Exists(Path.Combine(FileSettingsSave.Live_Data.Game_Path, Locations.NameModLinks)))
+                                    if (File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, Locations.NameModLinks)))
                                     {
-                                        ModNetHandler.CleanLinks(FileSettingsSave.Live_Data.Game_Path);
+                                        ModNetHandler.CleanLinks(Save_Settings.Live_Data.Game_Path);
                                         Log.Completed("CLEANLINKS: Done");
                                     }
                                     else
@@ -779,11 +780,11 @@ namespace GameLauncher
                                     }
                                 }
 
-                                Log.Checking("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + FileSettingsSave.Live_Data.Launcher_Proxy);
-                                if (FileSettingsSave.Live_Data.Launcher_Proxy == "0")
+                                Log.Checking("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + Save_Settings.Live_Data.Launcher_Proxy);
+                                if (Save_Settings.Live_Data.Launcher_Proxy == "0")
                                 {
                                     Log.Core("PROXY: Starting Proxy (From Startup)");
-                                    ServerProxy.Instance.Start("Splash Screen [Program.cs]");
+                                    Proxy_Server.Instance.Start("Splash Screen [Program.cs]");
                                     Log.Completed("PROXY: Started");
                                 }
                                 else
@@ -794,7 +795,7 @@ namespace GameLauncher
                                 Log.Checking("PRELOAD: Headers");
                                 Custom_Header.Headers_WHC();
                                 Log.Completed("PRELOAD: Headers");
-                                DiscordLauncherPresence.Status("Start Up", "Checking Root Certificate Authority");
+                                Presence_Launcher.Status("Start Up", "Checking Root Certificate Authority");
                                 Certificate_Store.Latest();
 
                                 Log.Info("REDISTRIBUTABLE: Moved to Function");

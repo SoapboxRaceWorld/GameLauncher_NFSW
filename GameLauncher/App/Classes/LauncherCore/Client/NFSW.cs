@@ -1,6 +1,7 @@
 ﻿using GameLauncher.App.Classes.Auth;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using SBRW.Launcher.Core.Classes.Extension.Time_;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Extension.Time_;
 using System.Diagnostics;
 using System.Threading;
 
@@ -95,7 +96,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                     return "AllocationAssistant encountered an 'Out of Memory' condition";
                 case 2137:
                     return "Launcher Forced Closed your Game. \nYou are Required to Restart the Game After " +
-                        Time_Conversion.RelativeTime((InformationCache.SelectedServerJSON.Server_Session_Timer != 0) ? InformationCache.SelectedServerJSON.Server_Session_Timer : 7200);
+                        Time_Conversion.RelativeTime((Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0) ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 7200);
                 case 2017:
                     return "Server replied with Code: " + Tokens.UserId + " (0x" + Exit_Code.ToString("X") + ")";
                 case -1:

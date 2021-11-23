@@ -2,7 +2,7 @@
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Extension.Logging_;
 using System;
 using System.Threading;
 using System.Windows.Forms;

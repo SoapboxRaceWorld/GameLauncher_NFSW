@@ -1,9 +1,9 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using Newtonsoft.Json;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Discord.RPC_;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +19,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
         public static void GetList()
         {
             Log.Checking("LIST CORE: Creating Language List");
-            DiscordLauncherPresence.Status("Start Up", "Creating Language List");
+            Presence_Launcher.Status("Start Up", "Creating Language List");
 
             List<Json_List_Language> langInfos = new List<Json_List_Language>();
 

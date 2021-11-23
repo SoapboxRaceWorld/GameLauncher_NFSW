@@ -1,4 +1,4 @@
-﻿using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
+﻿using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON
 {

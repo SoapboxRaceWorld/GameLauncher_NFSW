@@ -3,15 +3,15 @@ using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRW.Launcher.Core.Classes.Cache;
-using SBRW.Launcher.Core.Classes.Extension.Api_;
-using SBRW.Launcher.Core.Classes.Extension.Hash_;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Extension.Validation_;
-using SBRW.Launcher.Core.Classes.Extension.Web_;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Extension.Api_;
+using SBRW.Launcher.Core.Extension.Hash_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Extension.Validation_;
+using SBRW.Launcher.Core.Extension.Web_;
+using SBRW.Launcher.Core.Discord.RPC_;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -49,10 +49,10 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
             IsRegisterScreenOpen = true;
             InitializeComponent();
             SetVisuals();
-            DiscordLauncherPresence.Status("Register", ServerListUpdater.ServerName("Register"));
+            Presence_Launcher.Status("Register", ServerListUpdater.ServerName("Register"));
             this.Closing += (x, y) =>
             {
-                DiscordLauncherPresence.Status("Idle Ready", null);
+                Presence_Launcher.Status("Idle Ready", null);
                 IsRegisterScreenOpen = false;
                 GC.Collect();
             };
@@ -113,7 +113,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                 String Email;
                 String Password;
 
-                switch (Authentication.HashType(InformationCache.SelectedServerJSON.Server_Authentication_Version ?? string.Empty))
+                switch (Authentication.HashType(Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Version ?? string.Empty))
                 {
                     case AuthHash.H10:
                         Email = RegisterEmail.Text.ToString();
@@ -229,10 +229,10 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
                 {
                     Tokens.Clear();
 
-                    Tokens.IPAddress = InformationCache.SelectedServerData.IPAddress;
+                    Tokens.IPAddress = Launcher_Value.Launcher_Select_Server_Data.IPAddress;
                     Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
-                    Authentication.Client("Register", InformationCache.SelectedServerJSON.Server_Authentication_Post, Email, Password, _ticketRequired ? RegisterTicket.Text : null);
+                    Authentication.Client("Register", Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Post, Email, Password, _ticketRequired ? RegisterTicket.Text : null);
 
                     if (!String.IsNullOrWhiteSpace(Tokens.Success))
                     {
@@ -428,7 +428,7 @@ namespace GameLauncher.App.UI_Forms.Register_Screen
             /********************************/
 
             CurrentWindowInfo.Text = "REGISTER ON \n" + ServerListUpdater.ServerName("Register").ToUpper();
-            _ticketRequired = InformationCache.SelectedServerJSON.Server_Registration_Token;
+            _ticketRequired = Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Token;
             /* Show Ticket Box if its Required  */
             RegisterTicket.Visible = _ticketRequired;
             RegisterTicketBorder.Visible = _ticketRequired;

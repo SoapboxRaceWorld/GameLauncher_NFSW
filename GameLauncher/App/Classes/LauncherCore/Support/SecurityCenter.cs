@@ -1,76 +1,12 @@
-﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.SystemPlatform.Unix;
-using SBRW.Launcher.Core.Classes.Required.System.Windows_;
+﻿using GameLauncher.App.Classes.LauncherCore.Visuals;
+using SBRW.Launcher.Core.Extension.Security_;
+using SBRW.Launcher.Core.Extra.Conversion_;
 using System.Drawing;
 
 namespace GameLauncher.App.Classes.LauncherCore.Support
 {
     class SecurityCenter
     {
-        public static SecurityCenterCodes SecurityCenterSavedCodes()
-        {
-            if (UnixOS.Detected())
-            {
-                return SecurityCenterCodes.Unix;
-            }
-            else if (FileSettingsSave.Live_Data.Firewall_Launcher == "Excluded" && FileSettingsSave.Live_Data.Firewall_Game == "Excluded")
-            {
-                return SecurityCenterCodes.Firewall_Updated;
-            }
-            else if ((FileSettingsSave.Live_Data.Firewall_Launcher == "Excluded" && FileSettingsSave.Live_Data.Firewall_Game == "Not Excluded") ||
-                (FileSettingsSave.Live_Data.Firewall_Launcher == "Unknown" && FileSettingsSave.Live_Data.Firewall_Game == "Unknown") ||
-                (FileSettingsSave.Live_Data.Firewall_Launcher == "Removed" && FileSettingsSave.Live_Data.Firewall_Game == "Removed"))
-            {
-                return SecurityCenterCodes.Firewall_Outdated;
-            }
-            else if ((FileSettingsSave.Live_Data.Firewall_Launcher == "Error" && FileSettingsSave.Live_Data.Firewall_Game == "Error") ||
-                (FileSettingsSave.Live_Data.Firewall_Launcher == "Not Supported" && FileSettingsSave.Live_Data.Firewall_Game == "Not Supported"))
-            {
-                return SecurityCenterCodes.Firewall_Error;
-            }
-            else if ((Product_Version.GetWindowsNumber() >= 10) &&
-                FileSettingsSave.Live_Data.Defender_Launcher == "Excluded" && FileSettingsSave.Live_Data.Defender_Game == "Excluded")
-            {
-                return SecurityCenterCodes.Defender_Updated;
-            }
-            else if ((Product_Version.GetWindowsNumber() >= 10) &&
-                ((FileSettingsSave.Live_Data.Defender_Launcher == "Excluded" && FileSettingsSave.Live_Data.Defender_Game == "Not Excluded") ||
-                (FileSettingsSave.Live_Data.Defender_Launcher == "Unknown" && FileSettingsSave.Live_Data.Defender_Game == "Unknown") ||
-                (FileSettingsSave.Live_Data.Defender_Launcher == "Removed" && FileSettingsSave.Live_Data.Defender_Game == "Removed")))
-            {
-                return SecurityCenterCodes.Defender_Outdated;
-            }
-            else if ((Product_Version.GetWindowsNumber() >= 10) &&
-                ((FileSettingsSave.Live_Data.Defender_Launcher == "Error" && FileSettingsSave.Live_Data.Defender_Game == "Error") ||
-                (FileSettingsSave.Live_Data.Defender_Launcher == "Not Supported" && FileSettingsSave.Live_Data.Defender_Game == "Not Supported")))
-            {
-                return SecurityCenterCodes.Defender_Error;
-            }
-            else if (FileSettingsSave.Live_Data.Write_Permissions == "Set")
-            {
-                return SecurityCenterCodes.Permissions_Updated;
-            }
-            else if (FileSettingsSave.Live_Data.Write_Permissions == "Error")
-            {
-                return SecurityCenterCodes.Permissions_Error;
-            }
-            else if (FileSettingsSave.Live_Data.Write_Permissions == "Not Set")
-            {
-                return SecurityCenterCodes.Permissions_Outdated;
-            }
-            else if ((FileSettingsSave.Live_Data.Firewall_Launcher == "Not Excluded" && FileSettingsSave.Live_Data.Firewall_Game == "Not Excluded") ||
-                ((Product_Version.GetWindowsNumber() >= 10) &&
-                FileSettingsSave.Live_Data.Defender_Launcher == "Not Excluded" && FileSettingsSave.Live_Data.Defender_Game == "Not Excluded"))
-            {
-                return SecurityCenterCodes.Unknown;
-            }
-            else
-            {
-                return SecurityCenterCodes.Unknown;
-            }
-        }
         /// <summary>Returns the Shield Image for Security Panel Button
         /// <code>"0" Regular Colored Image</code>
         /// <code>"1" Clickage Colored Image</code>
@@ -84,7 +20,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
         /// <returns>Button Image</returns>
         public static Image SecurityCenterIcon(int ImageState)
         {
-            switch (SecurityCenterSavedCodes())
+            switch (Security_Codes_Reference.Check())
             {
                 case SecurityCenterCodes.Unix:
                     if (ImageState == 1) { return Theming.ShieldButtonCheckingClick; }
@@ -112,64 +48,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                     if (ImageState == 1) { return Theming.ShieldButtonUnknownClick; }
                     else if (ImageState == 2) { return Theming.ShieldButtonUnknownHover; }
                     else { return Theming.ShieldButtonUnknown; }
-            }
-        }
-
-        /// <summary>Returns the State of RPC for Security Panel Status
-        /// <code>"0" Icon File Name</code>
-        /// <code>"1" Status String</code>
-        /// </summary>
-        /// <returns>RPC String for Security Center Status</returns>
-        /// <param name="StringRequest">        
-        /// <code>"0" Icon File Name</code>
-        /// <code>"1" Status String</code></param>
-        /// <returns>RPC Status String</returns>
-        public static string SecurityCenterRPC(int StringRequest)
-        {
-            switch (StringRequest)
-            {
-                case 0:
-                    switch (SecurityCenterSavedCodes())
-                    {
-                        case SecurityCenterCodes.Unix:
-                            return "screen_security_center_unix";
-                        case SecurityCenterCodes.Firewall_Outdated:
-                        case SecurityCenterCodes.Defender_Outdated:
-                        case SecurityCenterCodes.Permissions_Outdated:
-                            return "screen_security_center_outdated";
-                        case SecurityCenterCodes.Firewall_Error:
-                        case SecurityCenterCodes.Defender_Error:
-                        case SecurityCenterCodes.Permissions_Error:
-                            return "screen_security_center_error";
-                        case SecurityCenterCodes.Firewall_Updated:
-                        case SecurityCenterCodes.Defender_Updated:
-                        case SecurityCenterCodes.Permissions_Updated:
-                            return "screen_security_center_updated";
-                        default:
-                            return "screen_security_center";
-                    }
-                case 1:
-                    switch (SecurityCenterSavedCodes())
-                    {
-                        case SecurityCenterCodes.Unix:
-                            return "Status: Unix";
-                        case SecurityCenterCodes.Firewall_Outdated:
-                        case SecurityCenterCodes.Defender_Outdated:
-                        case SecurityCenterCodes.Permissions_Outdated:
-                            return "Status: Requires Attention";
-                        case SecurityCenterCodes.Firewall_Error:
-                        case SecurityCenterCodes.Defender_Error:
-                        case SecurityCenterCodes.Permissions_Error:
-                            return "Status: Encountered an Error";
-                        case SecurityCenterCodes.Firewall_Updated:
-                        case SecurityCenterCodes.Defender_Updated:
-                        case SecurityCenterCodes.Permissions_Updated:
-                            return "Status: Good";
-                        default:
-                            return "Status: Unknown";
-                    }
-                default:
-                    return string.Empty;
             }
         }
     }

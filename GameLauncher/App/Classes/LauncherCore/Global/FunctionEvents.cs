@@ -3,9 +3,9 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.UI_Forms.Register_Screen;
 using GameLauncher.App.UI_Forms.SelectServer_Screen;
-using SBRW.Launcher.Core.Classes.Cache;
-using SBRW.Launcher.Core.Classes.Extension.Validation_;
-using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Cache;
+using SBRW.Launcher.Core.Extension.Validation_;
+using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -34,18 +34,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         {
             if (FunctionStatus.AllowRegistration)
             {
-                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Registration_Page))
+                if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page))
                 {
-                    Process.Start(InformationCache.SelectedServerJSON.Server_Registration_Page);
+                    Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page);
                     MessageBox.Show(null, "A browser window has been opened to complete registration on " +
                         ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                else if (InformationCache.SelectedServerData.Name.ToUpper() == "WORLDUNITED OFFICIAL")
+                else if (Launcher_Value.Launcher_Select_Server_Data.Name.ToUpper() == "WORLDUNITED OFFICIAL")
                 {
                     Process.Start("https://signup.worldunited.gg/" + ((!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Discord_UserID) &&
                         Launcher_Value.Launcher_Discord_UserID != "0") ? "?discordid=" + Launcher_Value.Launcher_Discord_UserID : string.Empty));
                     MessageBox.Show(null, "A browser window has been opened to complete registration on " +
-                        InformationCache.SelectedServerData.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Launcher_Value.Launcher_Select_Server_Data.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -60,37 +60,37 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void DiscordInviteLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Social_Discord))
-                Process.Start(InformationCache.SelectedServerJSON.Server_Social_Discord);
+            if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord))
+                Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord);
         }
 
         public static void HomePageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Social_Home))
-                Process.Start(InformationCache.SelectedServerJSON.Server_Social_Home);
+            if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Home))
+                Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Home);
         }
 
         public static void FacebookGroupLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Social_Facebook))
-                Process.Start(InformationCache.SelectedServerJSON.Server_Social_Facebook);
+            if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Facebook))
+                Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Facebook);
         }
 
         public static void TwitterAccountLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Social_Twitter))
-                Process.Start(InformationCache.SelectedServerJSON.Server_Social_Twitter);
+            if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Twitter))
+                Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Twitter);
         }
 
         public static void ForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (InformationCache.SelectedServerJSON != null)
+            if (Launcher_Value.Launcher_Select_Server_JSON != null)
             {
-                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.Server_Account_Recovery_Page))
+                if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Account_Recovery_Page))
                 {
-                    Process.Start(InformationCache.SelectedServerJSON.Server_Account_Recovery_Page);
+                    Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Account_Recovery_Page);
                     MessageBox.Show(null, "A browser window has been opened to complete password recovery on " +
-                        InformationCache.SelectedServerJSON.Server_Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Launcher_Value.Launcher_Select_Server_JSON.Server_Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -107,7 +107,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         {
                             try
                             {
-                                Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IPAddress + "/RecoveryPassword/forgotPassword");
+                                Uri resetPasswordUrl = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress + "/RecoveryPassword/forgotPassword");
                                 ServicePointManager.FindServicePoint(resetPasswordUrl).ConnectionLeaseTimeout =
                                     (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 

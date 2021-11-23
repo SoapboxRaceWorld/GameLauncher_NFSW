@@ -1,5 +1,5 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
+using SBRW.Launcher.Core.Extension.Logging_;
 using System;
 using System.Diagnostics;
 using System.IO;

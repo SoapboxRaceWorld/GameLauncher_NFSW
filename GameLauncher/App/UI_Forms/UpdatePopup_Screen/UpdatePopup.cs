@@ -2,10 +2,10 @@
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Newtonsoft.Json;
+using SBRW.Launcher.Core.Discord.RPC_;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -17,7 +17,7 @@ namespace GameLauncher.App.UI_Forms.UpdatePopup_Screen
     {
         public UpdatePopup()
         {
-            DiscordLauncherPresence.Status("Start Up", "New Version Is Available: " + LauncherUpdateCheck.LatestLauncherBuild);
+            Presence_Launcher.Status("Start Up", "New Version Is Available: " + LauncherUpdateCheck.LatestLauncherBuild);
             InitializeComponent();
             SetVisuals();
 

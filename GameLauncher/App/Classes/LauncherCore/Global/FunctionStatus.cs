@@ -2,18 +2,17 @@
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
-using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.UI_Forms.Main_Screen;
 using GameLauncher.App.UI_Forms.Splash_Screen;
 using GameLauncher.App.UI_Forms.Welcome_Screen;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using SBRW.Launcher.Core.Classes.Extension.Logging_;
-using SBRW.Launcher.Core.Classes.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Discord.RPC_;
+using SBRW.Launcher.Core.Extra.File_;
+using SBRW.Launcher.Core.Proxy.Nancy_;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,17 +37,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         /* Selected Server Is Enforcing Proxy */
         public static bool SelectedServerEnforceProxy = false;
-
-        /* Selected Server Category */
-        public static string SelectedServerCategory;
-
-        public static Process GameProcess;
-
-        /* Selected Server List Key Information */
-        public static Json_List_Server SelectedServerData;
-
-        /* Selected Server JSON (GetServerInformation) */
-        public static Json_Server_Info SelectedServerJSON = new Json_Server_Info();
 
         /* Holds a collection of Server Status of Servers */
         public static Dictionary<string, int> ServerStatusBook = new Dictionary<string, int>();
@@ -158,14 +146,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         {
             SplashScreen.ThreadStatus("Stop");
 
-            if (DiscordLauncherPresence.Running())
+            if (Presence_Launcher.Running())
             {
-                DiscordLauncherPresence.Stop("Close");
+                Presence_Launcher.Stop("Close");
             }
 
-            if (ServerProxy.Running())
+            if (Proxy_Settings.Running())
             {
-                ServerProxy.Instance.Stop("Force Close");
+                Proxy_Server.Instance.Stop("Force Close");
             }
 
             Log.Warning("LAUNCHER: Exiting (" + Notes + ")");
@@ -201,15 +189,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 SplashScreen.ThreadStatus("Stop");
             }
 
-            if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Game_Path))
+            if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
             {
-                Log.Core("LAUNCHER: Checking InstallationDirectory: " + FileSettingsSave.Live_Data.Game_Path);
+                Log.Core("LAUNCHER: Checking InstallationDirectory: " + Save_Settings.Live_Data.Game_Path);
             }
 
             Log.Checking("LAUNCHER: Checking Game Installation");
-            if (string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Game_Path))
+            if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
             {
-                DiscordLauncherPresence.Status("Start Up", "Doing First Time Run");
+                Presence_Launcher.Status("Start Up", "Doing First Time Run");
                 Log.Core("LAUNCHER: First run!");
 
                 try
@@ -223,17 +211,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     }
                     else
                     {
-                        FileSettingsSave.Live_Data.Launcher_CDN = SelectedCDN.CDNUrl;
-                        FileSettingsSave.SaveSettings();
+                        Save_Settings.Live_Data.Launcher_CDN = SelectedCDN.CDNUrl;
+                        Save_Settings.Save();
                     }
                 }
                 catch
                 {
                     Log.Warning("LAUNCHER: CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
-                    FileSettingsSave.Live_Data.Launcher_CDN = "http://localhost";
+                    Save_Settings.Live_Data.Launcher_CDN = "http://localhost";
                     Log.Core("LAUNCHER: Installation Directory was Empty! Creating and Setting Directory at " + Locations.GameFilesFailSafePath);
-                    FileSettingsSave.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                    FileSettingsSave.SaveSettings();
+                    Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                    Save_Settings.Save();
                 }
 
                 if (LauncherForceClose)
@@ -242,9 +230,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
                 else
                 {
-                    if (string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Game_Path))
+                    if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
                     {
-                        DiscordLauncherPresence.Status("Start Up", "User Selecting/Inputting Game Files Folder");
+                        Presence_Launcher.Status("Start Up", "User Selecting/Inputting Game Files Folder");
 
                         try
                         {
@@ -273,7 +261,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                                 if (!string.IsNullOrWhiteSpace(GameFolderPath))
                                 {
-                                    DiscordLauncherPresence.Status("Start Up", "Verifying Game Files Folder Location");
+                                    Presence_Launcher.Status("Start Up", "Verifying Game Files Folder Location");
 
                                     if (!HasWriteAccessToFolder(GameFolderPath))
                                     {
@@ -293,8 +281,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                             MessageBox.Show(null, string.Format("Installing NFSW in root of the harddisk is not allowed. " +
                                                 "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
                                                 "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                            FileSettingsSave.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                                            FileSettingsSave.SaveSettings();
+                                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                                            Save_Settings.Save();
                                             FileGameSettings.Save("Suppress", "Language Only");
                                         }
                                         else if (GameFolderPath == Locations.LauncherFolder)
@@ -304,15 +292,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                             MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n " +
                                                 "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
                                                 "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                            FileSettingsSave.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                                            FileSettingsSave.SaveSettings();
+                                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                                            Save_Settings.Save();
                                             FileGameSettings.Save("Suppress", "Language Only");
                                         }
                                         else
                                         {
                                             Log.Core("FOLDER SELECT DIALOG: Directory Set: " + GameFolderPath);
-                                            FileSettingsSave.Live_Data.Game_Path = GameFolderPath;
-                                            FileSettingsSave.SaveSettings();
+                                            Save_Settings.Live_Data.Game_Path = GameFolderPath;
+                                            Save_Settings.Save();
                                             FileGameSettings.Save("Suppress", "Language Only");
                                         }
                                     }
@@ -324,34 +312,34 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                             }
                             else
                             {
-                                if (string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Game_Path))
+                                if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
                                 {
                                     try
                                     {
-                                        FileSettingsSave.Live_Data.Game_Path = Path.GetFullPath("GameFiles");
+                                        Save_Settings.Live_Data.Game_Path = Path.GetFullPath("GameFiles");
                                     }
                                     catch
                                     {
-                                        FileSettingsSave.Live_Data.Game_Path = "GameFiles";
+                                        Save_Settings.Live_Data.Game_Path = "GameFiles";
                                     }
                                 }
                             }
 
-                            if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Game_Path))
+                            if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
                             {
-                                if (!Directory.Exists(FileSettingsSave.Live_Data.Game_Path))
+                                if (!Directory.Exists(Save_Settings.Live_Data.Game_Path))
                                 {
-                                    Log.Core("FOLDER SELECT DIALOG: Created Game Files Directory: " + FileSettingsSave.Live_Data.Game_Path);
-                                    Directory.CreateDirectory(FileSettingsSave.Live_Data.Game_Path);
+                                    Log.Core("FOLDER SELECT DIALOG: Created Game Files Directory: " + Save_Settings.Live_Data.Game_Path);
+                                    Directory.CreateDirectory(Save_Settings.Live_Data.Game_Path);
                                 }
                             }
 
-                            if (!string.IsNullOrWhiteSpace(FileSettingsSave.Live_Data.Game_Path))
+                            if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
                             {
                                 Log.Checking("CLEANLINKS: Game Path");
-                                if (File.Exists(Path.Combine(FileSettingsSave.Live_Data.Game_Path, Locations.NameModLinks)))
+                                if (File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, Locations.NameModLinks)))
                                 {
-                                    ModNetHandler.CleanLinks(FileSettingsSave.Live_Data.Game_Path);
+                                    ModNetHandler.CleanLinks(Save_Settings.Live_Data.Game_Path);
                                     Log.Completed("CLEANLINKS: Done");
                                 }
                                 else
@@ -380,9 +368,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 if (!UnixOS.Detected())
                 {
                     Log.Checking("LAUNCHER: Checking Game Path Location");
-                    DiscordLauncherPresence.Status("Start Up", "Checking Game Files Folder Location");
+                    Presence_Launcher.Status("Start Up", "Checking Game Files Folder Location");
 
-                    switch (CheckFolder(FileSettingsSave.Live_Data.Game_Path))
+                    switch (CheckFolder(Save_Settings.Live_Data.Game_Path))
                     {
                         case FolderType.IsSameAsLauncherFolder:
                             Directory.CreateDirectory("Game Files");
@@ -390,7 +378,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                             MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n" +
                                 "Instead, we will install it at {0}.", Locations.GameFilesFailSafePath),
                                 "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            FileSettingsSave.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
                             break;
                         case FolderType.IsTempFolder:
                         case FolderType.IsUsersFolders:
@@ -417,17 +405,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                             catch { }
                             MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             Log.Error("LAUNCHER: Installing NFSW in a Restricted Location is not allowed.");
-                            FileSettingsSave.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
                             break;
                     }
-                    FileSettingsSave.SaveSettings();
+                    Save_Settings.Save();
                     Log.Completed("LAUNCHER: Done Checking Game Path Location");
                 }
 
                 /* Check If Launcher Failed to Connect to any APIs */
                 if (!VisualsAPIChecker.CarbonAPITwo())
                 {
-                    DiscordLauncherPresence.Status("Start Up", "Launcher Encountered API Errors");
+                    Presence_Launcher.Status("Start Up", "Launcher Encountered API Errors");
 
                     DialogResult restartAppNoApis = MessageBox.Show(null, "There is no internet connection, Launcher might crash." +
                         "\n\nClick Yes to Close GameLauncher" +
