@@ -255,19 +255,23 @@ namespace GameLauncher
                                         "DiscordRPC.dll - 1.0.175.0",
                                         "Flurl.dll - 3.0.2",
                                         "Flurl.Http.dll - 3.2.0",
-                                        "INIFileParser.dll - 2.5.2",
                                         "LZMA.dll - 9.10 beta",
                                         "Microsoft.WindowsAPICodePack.dll - 1.1.0.0",
                                         "Microsoft.WindowsAPICodePack.Shell.dll - 1.1.0.0",
                                         "Microsoft.WindowsAPICodePack.ShellExtensions.dll - 1.1.0.0",
-                                        "Nancy.dll - 2.0.0",
-                                        "Nancy.Hosting.Self.dll - 2.0.0",
                                         "Newtonsoft.Json.dll - 13.0.1",
                                         "System.Runtime.InteropServices.RuntimeInformation.dll - 4.6.24705.01. " +
                                         "Commit Hash: 4d1af962ca0fede10beb01d197367c2f90e92c97",
                                         "System.ValueTuple.dll - 4.6.26515.06 @BuiltBy: dlab-DDVSOWINAGE059 " +
                                         "@Branch: release/2.1 @SrcCode: https://github.com/dotnet/corefx/tree/30ab651fcb4354552bd4891619a0bdd81e0ebdbf",
-                                        "WindowsFirewallHelper.dll - 2.1.4.81"
+                                        "WindowsFirewallHelper.dll - 2.1.4.81",
+                                        "SBRW.Ini.Parser.dll - 2.6.3",
+                                        "SBRW.Launcher.Core.dll - 0.0.22",
+                                        "SBRW.Nancy.dll - 2.0.10",
+                                        "SBRW.Nancy.Hosting.Self.dll - 2.0.6",
+                                        "SBRW.Launcher.Core.Extra.dll - 0.0.7",
+                                        "SBRW.Launcher.Core.Discord.dll - 0.0.12",
+                                        "SBRW.Launcher.Core.Proxy.dll - 0.0.10"
                                     };
 
                                     List<string> Missing_File_List = new List<string>();
@@ -645,7 +649,7 @@ namespace GameLauncher
                                         String MessageBoxPopupTLS = String.Empty;
                                         string keyName = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client";
                                         string subKey = "DisabledByDefault";
-
+                                        
                                         if (Registry.GetValue(keyName, subKey, null) == null)
                                         {
                                             MessageBoxPopupTLS = Translations.Database("Program_TextBox_W7_TLS_P1") + "\n\n";

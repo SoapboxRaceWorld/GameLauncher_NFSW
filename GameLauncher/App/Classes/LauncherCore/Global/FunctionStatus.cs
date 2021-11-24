@@ -36,7 +36,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         public static Point ParentScreenLocation;
 
         /* Selected Server Is Enforcing Proxy */
-        public static bool SelectedServerEnforceProxy = false;
+        public static bool SelectedServerEnforceProxy { get; set; }
 
         /* Holds a collection of Server Status of Servers */
         public static Dictionary<string, int> ServerStatusBook = new Dictionary<string, int>();
@@ -46,40 +46,21 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
     class FunctionStatus
     {
         /* Launcher had Encounterd an Error and It Must Close */
-        public static bool LauncherForceClose = false;
-
+        public static bool LauncherForceClose { get; set; }
         /* Launcher had Encounterd an Error and It Reason*/
-        public static string LauncherForceCloseReason;
-
+        public static string LauncherForceCloseReason { get; set; }
         /* Updater.cs Sets Conditional on If Launcher had Finished Loading (It Self) */
-        public static bool LoadingComplete = false;
-
+        public static bool LoadingComplete { get; set; }
         /* Allows Registration Button to be Enabled/Disabled */
-        public static bool AllowRegistration;
-
+        public static bool AllowRegistration { get; set; }
         /* If Verify Hash (.dat) File Exists on Server */
-        public static bool DoesCDNSupportVerifyHash = false;
-
+        public static bool DoesCDNSupportVerifyHash { get; set; }
         /* Verify Hash Status */
-        public static bool IsVerifyHashDisabled = false;
-
-        /* Firewall Status */
-        public static bool IsFirewallResetDisabled = false;
-
-        /* Windows Security (Defender) Status */
-        public static bool IsWindowsSecurityResetDisabled = false;
-
+        public static bool IsVerifyHashDisabled { get; set; }
         /* Visual API Status */
-        public static bool IsVisualAPIsChecked = false;
-
-        /* Sets Conditional to If its Possible to Close Game */
-        public static bool CanCloseGame = true;
-
-        /* Sets Conditional if Game was Closed (By Timer) */
-        public static bool GameKilledBySpeedBugCheck = false;
-
+        public static bool IsVisualAPIsChecked { get; set; }
         /* Prevents Launcher from bring Closed when Game is Loading */
-        public static bool LauncherBattlePass = false;
+        public static bool LauncherBattlePass { get; set; }
 
         /* Checks if we have Write Permissions */
         public static bool HasWriteAccessToFolder(string path)

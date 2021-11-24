@@ -71,6 +71,9 @@
     <OutputPath>bin\Release\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -78,6 +81,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>false</DelaySign>
@@ -109,26 +114,26 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
-    <Reference Include="SBRW.Ini.Parser, Version=2.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SBRW.Ini.Parser.2.6.1\lib\net461\SBRW.Ini.Parser.dll</HintPath>
+    <Reference Include="SBRW.Ini.Parser, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Ini.Parser.2.6.3\lib\net461\SBRW.Ini.Parser.dll</HintPath>
     </Reference>
-    <Reference Include="SBRW.Launcher.Core, Version=0.0.20.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SBRW.Launcher.Core.0.0.20\lib\net461\SBRW.Launcher.Core.dll</HintPath>
+    <Reference Include="SBRW.Launcher.Core, Version=0.0.22.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Launcher.Core.0.0.22\lib\net461\SBRW.Launcher.Core.dll</HintPath>
     </Reference>
-    <Reference Include="SBRW.Launcher.Core.Discord, Version=0.0.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SBRW.Launcher.Core.Discord.0.0.10\lib\net461\SBRW.Launcher.Core.Discord.dll</HintPath>
+    <Reference Include="SBRW.Launcher.Core.Discord, Version=0.0.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Launcher.Core.Discord.0.0.12\lib\net461\SBRW.Launcher.Core.Discord.dll</HintPath>
     </Reference>
-    <Reference Include="SBRW.Launcher.Core.Extra, Version=0.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SBRW.Launcher.Core.Extra.0.0.5\lib\net461\SBRW.Launcher.Core.Extra.dll</HintPath>
+    <Reference Include="SBRW.Launcher.Core.Extra, Version=0.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Launcher.Core.Extra.0.0.7\lib\net461\SBRW.Launcher.Core.Extra.dll</HintPath>
     </Reference>
-    <Reference Include="SBRW.Launcher.Core.Proxy, Version=0.0.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SBRW.Launcher.Core.Proxy.0.0.8\lib\net461\SBRW.Launcher.Core.Proxy.dll</HintPath>
+    <Reference Include="SBRW.Launcher.Core.Proxy, Version=0.0.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Launcher.Core.Proxy.0.0.10\lib\net461\SBRW.Launcher.Core.Proxy.dll</HintPath>
     </Reference>
-    <Reference Include="SBRW.Nancy, Version=2.0.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SBRW.Nancy.2.0.9\lib\net461\SBRW.Nancy.dll</HintPath>
+    <Reference Include="SBRW.Nancy, Version=2.0.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Nancy.2.0.10\lib\net461\SBRW.Nancy.dll</HintPath>
     </Reference>
-    <Reference Include="SBRW.Nancy.Hosting.Self, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SBRW.Nancy.Hosting.Self.2.0.5\lib\net461\SBRW.Nancy.Hosting.Self.dll</HintPath>
+    <Reference Include="SBRW.Nancy.Hosting.Self, Version=2.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Nancy.Hosting.Self.2.0.6\lib\net461\SBRW.Nancy.Hosting.Self.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -156,9 +161,6 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
-    <Reference Include="INIFileParser">
-      <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsFirewallHelper, Version=2.1.4.81, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsFirewallHelper.2.1.4.81\lib\net40\WindowsFirewallHelper.dll</HintPath>
     </Reference>
@@ -496,10 +498,10 @@
     <PostBuildEvent>if "$(Configuration)" == "Release" (
 if exist "$(SolutionDir)Keys\Launcher.p12" ("C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x86\signtool.exe" sign /f "$(SolutionDir)Keys\Launcher.p12" /p "Launcher Development CRT" /d "Soapbox Race World" /du "https://soapboxrace.world" /tr http://timestamp.digicert.com /td SHA256 "$(TargetPath)")
 if exist "$(SolutionDir)Keys\Launcher.p12" ("C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x86\signtool.exe" sign /f "$(SolutionDir)Keys\Launcher.p12" /p "Launcher Development CRT" /d "Soapbox Race World" /du "https://soapboxrace.world" /tr http://timestamp.digicert.com /td SHA256 "$(TargetDir)*.dll")
-echo "Deleting XML, PDB, and INI Files"
+echo "Deleting XML and INI Files"
 echo "-------"
-del "$(TargetDir)*.xml", "$(TargetDir)*.pdb","$(TargetDir)*.ini"
-echo "Sucessfully Deleted XML, PDB, and INI Files"
+del "$(TargetDir)*.xml", "$(TargetDir)*.ini"
+echo "Sucessfully Deleted XML and INI Files"
 )
 </PostBuildEvent>
   </PropertyGroup>

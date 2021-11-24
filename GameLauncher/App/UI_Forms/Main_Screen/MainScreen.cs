@@ -1058,11 +1058,11 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             LoginButton.ForeColor = Theming.FivithTextForeColor;
                             LoginButton.Enabled = true;
                             RegisterText.Enabled = true;
-                            Launcher_Value.Launcher_Select_Server_Category = ((Json_List_Server)ServerPick.SelectedItem).Category;
+                            Launcher_Value.Launcher_Select_Server_Category = ((Json_List_Server)ServerPick.SelectedItem).Category ?? string.Empty;
                             Session_Timer.Remaining = (Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0) ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 2 * 60 * 60;
 
-                            if ((Launcher_Value.Launcher_Select_Server_Category ?? string.Empty).ToUpper() == "DEV" ||
-                            (Launcher_Value.Launcher_Select_Server_Category ?? string.Empty).ToUpper() == "OFFLINE")
+                            if (Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "DEV" ||
+                            Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "OFFLINE")
                             {
                                 /* Disable Social Panel */
                                 DisableSocialPanelandClearIt();
@@ -1622,12 +1622,28 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 }
                 else if (Session_Timer.Remaining <= 0)
                 {
-                    if (FunctionStatus.CanCloseGame)
+                    if (!Launcher_Value.Game_In_Event)
                     {
-                        foreach (var oneProcess in allOfThem)
+                        Launcher_Value.Game_In_Event_Bug = true;
+                        if (Launcher_Value.Game_Process != null)
                         {
-                            FunctionStatus.GameKilledBySpeedBugCheck = true;
-                            Process.GetProcessById(oneProcess.Id).Kill();
+                            if (!Launcher_Value.Game_Process.CloseMainWindow())
+                            {
+                                Launcher_Value.Game_Process.Kill();
+                            }
+                        }
+                        else
+                        {
+                            if (allOfThem != null && allOfThem.Any())
+                            {
+                                foreach (Process oneProcess in allOfThem)
+                                {
+                                    if (!Process.GetProcessById(oneProcess.Id).CloseMainWindow())
+                                    {
+                                        Process.GetProcessById(oneProcess.Id).Kill();
+                                    }
+                                }
+                            }
                         }
                     }
                     else
@@ -1649,7 +1665,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 ProcessWID++;
 
                                 User32.SetWindowText((IntPtr)oneProcess.MainWindowHandle.ToInt64(), Strings.Encode("NEED FOR SPEED™ WORLD | Server: " + ServerListUpdater.ServerName("In-Game") +
-                                    " | " + "@TODO DiscordGamePresence.LauncherRPC"));
+                                    " | " + Presence_Settings.Launcher_Version));
                             }
                         }
                         else
@@ -1684,7 +1700,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             }
 
                             User32.SetWindowText((IntPtr)oneProcess.MainWindowHandle.ToInt64(), Strings.Encode("NEED FOR SPEED™ WORLD | Server: " + ServerListUpdater.ServerName("In-Game") +
-                                " | " + "@TODO DiscordGamePresence.LauncherRPC" + " | Force Restart In: " + secondsToShutDownNamed));
+                                " | " + Presence_Settings.Launcher_Version + " | Force Restart In: " + secondsToShutDownNamed));
                         }
                     }
                     catch (Exception Error)
@@ -1708,13 +1724,13 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                     FunctionStatus.LauncherBattlePass = false;
 
-                    if (FunctionStatus.GameKilledBySpeedBugCheck)
+                    if (Launcher_Value.Game_In_Event_Bug)
                     {
                         if (AC_Core.Status) exitCode = 2017;
                         else exitCode = 2137;
                     }
 
-                    if (exitCode == 0 && !FunctionStatus.GameKilledBySpeedBugCheck && AC_Core.Stop_Check())
+                    if (exitCode == 0 && !Launcher_Value.Game_In_Event_Bug && AC_Core.Stop_Check())
                     {
                         CloseBTN_Click(null, null);
                     }
@@ -2402,7 +2418,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                     Launcher_Value.Game_Server_IP = Launcher_Value.Launcher_Select_Server_Data.IPAddress;
 
                     Launcher_Value.Game_User_ID = _userId;
-                    Launcher_Value.Game_Server_IP = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress).Host;
+                    Launcher_Value.Game_Server_IP_Host = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress).Host;
 
                     StartGame(_userId, _loginToken);
 
