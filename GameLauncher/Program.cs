@@ -266,12 +266,12 @@ namespace GameLauncher
                                         "@Branch: release/2.1 @SrcCode: https://github.com/dotnet/corefx/tree/30ab651fcb4354552bd4891619a0bdd81e0ebdbf",
                                         "WindowsFirewallHelper.dll - 2.1.4.81",
                                         "SBRW.Ini.Parser.dll - 2.6.3",
-                                        "SBRW.Launcher.Core.dll - 0.0.22",
+                                        "SBRW.Launcher.Core.dll - 0.0.24",
                                         "SBRW.Nancy.dll - 2.0.10",
                                         "SBRW.Nancy.Hosting.Self.dll - 2.0.6",
                                         "SBRW.Launcher.Core.Extra.dll - 0.0.7",
-                                        "SBRW.Launcher.Core.Discord.dll - 0.0.12",
-                                        "SBRW.Launcher.Core.Proxy.dll - 0.0.10"
+                                        "SBRW.Launcher.Core.Discord.dll - 0.0.14",
+                                        "SBRW.Launcher.Core.Proxy.dll - 0.0.12"
                                     };
 
                                     List<string> Missing_File_List = new List<string>();

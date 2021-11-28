@@ -117,17 +117,17 @@
     <Reference Include="SBRW.Ini.Parser, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SBRW.Ini.Parser.2.6.3\lib\net461\SBRW.Ini.Parser.dll</HintPath>
     </Reference>
-    <Reference Include="SBRW.Launcher.Core, Version=0.0.22.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SBRW.Launcher.Core.0.0.22\lib\net461\SBRW.Launcher.Core.dll</HintPath>
+    <Reference Include="SBRW.Launcher.Core, Version=0.0.24.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Launcher.Core.0.0.24\lib\net461\SBRW.Launcher.Core.dll</HintPath>
     </Reference>
-    <Reference Include="SBRW.Launcher.Core.Discord, Version=0.0.12.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SBRW.Launcher.Core.Discord.0.0.12\lib\net461\SBRW.Launcher.Core.Discord.dll</HintPath>
+    <Reference Include="SBRW.Launcher.Core.Discord, Version=0.0.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Launcher.Core.Discord.0.0.14\lib\net461\SBRW.Launcher.Core.Discord.dll</HintPath>
     </Reference>
     <Reference Include="SBRW.Launcher.Core.Extra, Version=0.0.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SBRW.Launcher.Core.Extra.0.0.7\lib\net461\SBRW.Launcher.Core.Extra.dll</HintPath>
     </Reference>
-    <Reference Include="SBRW.Launcher.Core.Proxy, Version=0.0.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SBRW.Launcher.Core.Proxy.0.0.10\lib\net461\SBRW.Launcher.Core.Proxy.dll</HintPath>
+    <Reference Include="SBRW.Launcher.Core.Proxy, Version=0.0.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SBRW.Launcher.Core.Proxy.0.0.12\lib\net461\SBRW.Launcher.Core.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="SBRW.Nancy, Version=2.0.10.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SBRW.Nancy.2.0.10\lib\net461\SBRW.Nancy.dll</HintPath>

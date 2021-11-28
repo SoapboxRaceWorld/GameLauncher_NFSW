@@ -55,48 +55,48 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using SBRW.Launcher.Core.Recommended.Process_;
+using SBRW.Launcher.Core.Recommended.Time_;
 
 namespace GameLauncher.App.UI_Forms.Main_Screen
 {
     public partial class MainScreen : Form
     {
-        private Point _mouseDownPoint = Point.Empty;
-        private bool _loginEnabled;
-        private bool _serverEnabled;
-        private bool _builtinserver;
-        private bool _skipServerTrigger;
-        private bool _playenabled;
-        private bool _isDownloading = true;
-        private bool _disableLogout = false;
-        private bool _restartLauncher = false;
+        private Point _mouseDownPoint { get; set; } = Point.Empty;
+        private bool _loginEnabled { get; set; }
+        private bool _serverEnabled { get; set; }
+        private bool _builtinserver { get; set; }
+        private bool _skipServerTrigger { get; set; }
+        private bool _playenabled { get; set; }
+        private bool _isDownloading { get; set; } = true;
+        private bool _disableLogout { get; set; }
+        private bool _restartLauncher { get; set; }
 
-        public static String getTempNa = Path.GetTempFileName();
+        public static string getTempNa { get; set; } = Path.GetTempFileName();
 
-        private static int _lastSelectedServerId;
-        private static int _nfswPid;
-        private static Thread _nfswstarted;
-        private static bool StillCheckingLastServer = false;
-        private static bool ServerChangeTriggered = false;
-        private static int ProcessID = 0;
-        private static int ProcessWID = 0;
+        private static int _lastSelectedServerId { get; set; }
+        private static int _nfswPid { get; set; }
+        private static Thread _nfswstarted { get; set; }
+        private static bool StillCheckingLastServer { get; set; }
+        private static bool ServerChangeTriggered { get; set; }
 
-        private static DateTime _downloadStartTime;
-        private static Downloader _downloader;
+        private static DateTime _downloadStartTime { get; set; }
+        private static Downloader _downloader { get; set; }
 
-        private static string JsonGSI;
-        private static MemoryStream _serverRawBanner = null;
-        private string _loginWelcomeTime = string.Empty;
-        private string _loginToken = string.Empty;
-        private string _userId = string.Empty;
-        private static int serverSecondsToShutDown;
+        private static string JsonGSI { get; set; }
+        private static MemoryStream _serverRawBanner { get; set; }
+        private string _loginWelcomeTime { get; set; }
+        private string _loginToken { get; set; }
+        private string _userId { get; set; }
+        private static int serverSecondsToShutDown { get; set; }
 
-        public static String ModNetFileNameInUse = String.Empty;
+        public static string ModNetFileNameInUse { get; set; }
         public static readonly Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
-        public static bool isDownloadingModNetFiles = false;
-        public static int CurrentModFileCount = 0;
-        public static int TotalModFileCount = 0;
+        public static bool isDownloadingModNetFiles { get; set; }
+        public static int CurrentModFileCount { get; set; }
+        public static int TotalModFileCount { get; set; }
 
-        public static readonly String filename_pack = Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack");
+        public static readonly string filename_pack = Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack");
 
         private void MoveWindow_MouseDown(object sender, MouseEventArgs e)
         {
@@ -531,8 +531,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
             Tokens.Clear();
 
-            String Email;
-            String Password;
+            string Email;
+            string Password;
 
             Tokens.IPAddress = Launcher_Value.Launcher_Select_Server_Data.IPAddress;
             Tokens.ServerName = ServerListUpdater.ServerName("Login");
@@ -574,7 +574,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
             Authentication.Client("Login", Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Post, Email, Password, null);
 
-            if (String.IsNullOrWhiteSpace(Tokens.Error))
+            if (string.IsNullOrWhiteSpace(Tokens.Error))
             {
                 try
                 {
@@ -639,7 +639,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                 Save_Account.Save();
 
-                if (!String.IsNullOrWhiteSpace(Tokens.Warning))
+                if (!string.IsNullOrWhiteSpace(Tokens.Warning))
                 {
                     MainEmail.Text = "EMAIL IS HIDDEN";
                     MessageBox.Show(null, Tokens.Warning, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -951,7 +951,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                             {
                                 /* Scenery Group Display */
                                 string SceneryStatus;
-                                switch (String.Join("", Launcher_Value.Launcher_Select_Server_JSON.Server_Active_Scenery))
+                                switch (string.Join("", Launcher_Value.Launcher_Select_Server_JSON.Server_Active_Scenery))
                                 {
                                     case "SCENERY_GROUP_NEWYEARS":
                                         SceneryStatus = "Scenery: New Years";
@@ -1387,8 +1387,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
             LoggedInFormElements(false);
             LoginFormElements(true);
 
-            _userId = String.Empty;
-            _loginToken = String.Empty;
+            _userId = string.Empty;
+            _loginToken = string.Empty;
         }
 
         private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
@@ -1542,185 +1542,31 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
         private void LaunchGame(string UserID, string LoginToken, string ServerIP, Form x)
         {
-            ProcessStartInfo TirePSI = new ProcessStartInfo()
+            if (Process_Start_Game.Initialize(Save_Settings.Live_Data.Game_Path, ServerIP, LoginToken, 
+                UserID, Launcher_Value.Launcher_Select_Server_Data.ID.ToUpper()) != null)
             {
-                WorkingDirectory = Save_Settings.Live_Data.Game_Path,
-                FileName = Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe"),
-                Arguments = Launcher_Value.Launcher_Select_Server_Data.ID.ToUpper() + " " + ServerIP + " " + LoginToken + " " + UserID
-            };
-            if (UnixOS.Detected()) { TirePSI.UseShellExecute = false; }
+                FunctionStatus.LauncherBattlePass = Process_Start_Game.Live_Process.EnableRaisingEvents = true;
+                _nfswPid = Process_Start_Game.Live_Process.Id;
 
-            Launcher_Value.Game_Process = Process.Start(TirePSI);
-            Launcher_Value.Game_Process.PriorityClass = ProcessPriorityClass.AboveNormal;
+                /* TIMER HERE */
+                System.Timers.Timer shutdowntimer = new System.Timers.Timer();
+                shutdowntimer.Elapsed += new System.Timers.ElapsedEventHandler(Time_Window.ClockWork_Planet);
+                shutdowntimer.Interval = !Proxy_Settings.Running() ? 30000 : 60000;
+                shutdowntimer.Enabled = true;
 
-            int processorAffinity = 0;
-            for (int i = 0; i < Math.Min(Math.Max(1, Environment.ProcessorCount), 8); i++)
-            {
-                processorAffinity |= 1 << i;
-            }
+                CloseBTN.SafeInvokeAction(() =>
+                CloseBTN.Visible = false, this);
 
-            Launcher_Value.Game_Process.ProcessorAffinity = (IntPtr)processorAffinity;
-
-            CloseBTN.SafeInvokeAction(() =>
-            CloseBTN.Visible = false, this);
-            FunctionStatus.LauncherBattlePass = true;
-
-            /* TIMER HERE */
-            System.Timers.Timer shutdowntimer = new System.Timers.Timer();
-            shutdowntimer.Elapsed += (x2, y2) =>
-            {
-                GC.Collect();
-
-                if (ProcessID == 0)
+                this.SafeInvokeAction(() =>
                 {
-                    ProcessID++;
-                    Session_Timer.Remaining -= Proxy_Settings.Running() ? 120 : 60;
+                    this.WindowState = FormWindowState.Minimized;
+                    this.ShowInTaskbar = false;
+                }, this);
 
-                    x.SafeInvokeAction(() =>
-                    {
-                        x.WindowState = FormWindowState.Minimized;
-                        x.ShowInTaskbar = false;
-                    }, x);
-                }
-                else
-                {
-                    Session_Timer.Remaining -= Proxy_Settings.Running() ? 60 : 30;
-                }
-
-                if (!Proxy_Settings.Running())
-                {
-                    if (ProcessID == 1)
-                    {
-                        ProcessID++;
-                        AC_Core.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Enable_Crew_Tags, true, 0);
-                    }
-
-                    if (AC_Core.Status && ProcessID == 2)
-                    {
-                        ProcessID++;
-                        AC_Core.Stop(true);
-                    }
-                }
-
-                Process[] allOfThem = Process.GetProcessesByName("nfsw");
-
-                if (Session_Timer.Remaining == 300)
-                {
-                    try
-                    {
-                        Notification.Visible = true;
-                        Notification.BalloonTipIcon = ToolTipIcon.Info;
-                        Notification.BalloonTipTitle = "Force Restart - " + ServerListUpdater.ServerName("In-Game");
-                        Notification.BalloonTipText = "Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.";
-                        Notification.ShowBalloonTip(5000);
-                        Notification.Dispose();
-                    }
-                    finally
-                    {
-                        GC.Collect();
-                    }
-                }
-                else if (Session_Timer.Remaining <= 0)
-                {
-                    if (!Launcher_Value.Game_In_Event)
-                    {
-                        Launcher_Value.Game_In_Event_Bug = true;
-                        if (Launcher_Value.Game_Process != null)
-                        {
-                            if (!Launcher_Value.Game_Process.CloseMainWindow())
-                            {
-                                Launcher_Value.Game_Process.Kill();
-                            }
-                        }
-                        else
-                        {
-                            if (allOfThem != null && allOfThem.Any())
-                            {
-                                foreach (Process oneProcess in allOfThem)
-                                {
-                                    if (!Process.GetProcessById(oneProcess.Id).CloseMainWindow())
-                                    {
-                                        Process.GetProcessById(oneProcess.Id).Kill();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Session_Timer.Remaining = 0;
-                    }
-                }
-
-                /* change title */
-
-                foreach (Process oneProcess in allOfThem)
-                {
-                    try
-                    {
-                        if (Save_Settings.LiveStreamingSupport())
-                        {
-                            if (ProcessWID == 0)
-                            {
-                                ProcessWID++;
-
-                                User32.SetWindowText((IntPtr)oneProcess.MainWindowHandle.ToInt64(), Strings.Encode("NEED FOR SPEED™ WORLD | Server: " + ServerListUpdater.ServerName("In-Game") +
-                                    " | " + Presence_Settings.Launcher_Version));
-                            }
-                        }
-                        else
-                        {
-                            TimeSpan t = TimeSpan.FromSeconds(Session_Timer.Remaining);
-
-                            String secondsToShutDownNamed = String.Empty;
-
-                            /* Proper Formatting */
-                            List<string> list_of_times = new List<string>();
-                            if (t.Days != 0) list_of_times.Add(t.Days + (t.Days != 1 ? " Days" : " Day"));
-                            if (t.Hours != 0) list_of_times.Add(t.Hours + (t.Hours != 1 ? " Hours" : " Hour"));
-                            if (t.Minutes != 0) list_of_times.Add(t.Minutes + (t.Minutes != 1 ? " Minutes" : " Minute"));
-                            if (t.Days == 0 && t.Hours == 0 && t.Minutes == 0) list_of_times.Add("Less than a Minute Remaining");
-
-                            if (list_of_times.Count() >= 3 && (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed()))
-                            {
-                                secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1] + ", " + list_of_times[2];
-                            }
-                            else if (list_of_times.Count() >= 2)
-                            {
-                                secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1];
-                            }
-                            else
-                            {
-                                secondsToShutDownNamed = list_of_times[0];
-                            }
-
-                            if (Session_Timer.Remaining == 0)
-                            {
-                                secondsToShutDownNamed = "Waiting for event to finish.";
-                            }
-
-                            User32.SetWindowText((IntPtr)oneProcess.MainWindowHandle.ToInt64(), Strings.Encode("NEED FOR SPEED™ WORLD | Server: " + ServerListUpdater.ServerName("In-Game") +
-                                " | " + Presence_Settings.Launcher_Version + " | Force Restart In: " + secondsToShutDownNamed));
-                        }
-                    }
-                    catch (Exception Error)
-                    {
-                        LogToFileAddons.OpenLog("Window Title", null, Error, null, true);
-                    }
-                }
-            };
-            shutdowntimer.Interval = !Proxy_Settings.Running() ? 30000 : 60000;
-            shutdowntimer.Enabled = true;
-
-            if (Launcher_Value.Game_Process != null)
-            {
-                Launcher_Value.Game_Process.EnableRaisingEvents = true;
-                _nfswPid = Launcher_Value.Game_Process.Id;
-
-                Launcher_Value.Game_Process.Exited += (sender2, e2) =>
+                Process_Start_Game.Live_Process.Exited += (Send, It) =>
                 {
                     _nfswPid = 0;
-                    int exitCode = Launcher_Value.Game_Process.ExitCode;
+                    int exitCode = Process_Start_Game.Live_Process.ExitCode;
 
                     FunctionStatus.LauncherBattlePass = false;
 
@@ -1973,17 +1819,17 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                         try
                         {
                             string[] modules_newlines = ModulesJSON.Split(new string[] { "\n" }, StringSplitOptions.None);
-                            foreach (String modules_newline in modules_newlines)
+                            foreach (string modules_newline in modules_newlines)
                             {
                                 if (modules_newline.Trim() == "{" || modules_newline.Trim() == "}") continue;
 
-                                String trim_modules_newline = modules_newline.Trim();
-                                String[] modules_files = trim_modules_newline.Split(new char[] { ':' });
+                                string trim_modules_newline = modules_newline.Trim();
+                                string[] modules_files = trim_modules_newline.Split(new char[] { ':' });
 
-                                String ModNetList = modules_files[0].Replace("\"", "").Trim();
-                                String ModNetSHA = modules_files[1].Replace("\"", "").Replace(",", "").Trim();
+                                string ModNetList = modules_files[0].Replace("\"", "").Trim();
+                                string ModNetSHA = modules_files[1].Replace("\"", "").Replace(",", "").Trim();
 
-                                String ModNetFilePath = Path.Combine(Save_Settings.Live_Data.Game_Path, ModNetList);
+                                string ModNetFilePath = Path.Combine(Save_Settings.Live_Data.Game_Path, ModNetList);
 
                                 if (Hashes.Hash_SHA256(ModNetFilePath).ToLower() != ModNetSHA || !File.Exists(ModNetFilePath))
                                 {
@@ -2225,7 +2071,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                 {
                                     json3 = JsonConvert.DeserializeObject<ServerModList>(ServerModListJSON);
                                     ServerModListJSON = null;
-                                    String ModFolderCache = Path.Combine(Save_Settings.Live_Data.Game_Path, "MODS", Hashes.Hash_String(0, json2.serverID).ToLower());
+                                    string ModFolderCache = Path.Combine(Save_Settings.Live_Data.Game_Path, "MODS", Hashes.Hash_String(0, json2.serverID).ToLower());
                                     if (!Directory.Exists(ModFolderCache)) Directory.CreateDirectory(ModFolderCache);
 
                                     /* (FILENAME.mods) 
@@ -2265,7 +2111,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                             {
                                                 if (ExtractedServerFolderRunTime == 0)
                                                 {
-                                                    String ExtractedServerFolder = Path.Combine(Save_Settings.Live_Data.Game_Path, ".data", Hashes.Hash_String(0, json2.serverID).ToLower());
+                                                    string ExtractedServerFolder = Path.Combine(Save_Settings.Live_Data.Game_Path, ".data", Hashes.Hash_String(0, json2.serverID).ToLower());
                                                     if (Directory.Exists(ExtractedServerFolder))
                                                     {
                                                         Directory.Delete(ExtractedServerFolder, true);
@@ -2712,7 +2558,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                 try
                 {
-                    String response = Client.DownloadString(URLCall);
+                    string response = Client.DownloadString(URLCall);
 
                     XmlDocument speechFileXml = new XmlDocument();
                     speechFileXml.LoadXml(response);
@@ -2806,10 +2652,10 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
 
                                     TaskbarProgress.SetValue(Handle, (int)(100 * current / numFiles), 100);
 
-                                    if (!File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, fullName.Replace(".sbrw", String.Empty))))
+                                    if (!File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, fullName.Replace(".sbrw", string.Empty))))
                                     {
                                         PlayProgressText.SafeInvokeAction(() =>
-                                        PlayProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper(), this);
+                                        PlayProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", string.Empty)).ToUpper(), this);
 
                                         PlayProgressTextTimer.SafeInvokeAction(() =>
                                         PlayProgressTextTimer.Text = "[" + current + " / " + archive.Entries.Count + "]", this);
@@ -2839,10 +2685,10 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                         }
                                         else
                                         {
-                                            String oldFileName = fullName.Replace(".sbrw", String.Empty);
-                                            String[] split = oldFileName.Split('/');
+                                            string oldFileName = fullName.Replace(".sbrw", string.Empty);
+                                            string[] split = oldFileName.Split('/');
 
-                                            String newFileName = String.Empty;
+                                            string newFileName = string.Empty;
 
                                             if (split.Length >= 2)
                                             {
@@ -2853,8 +2699,8 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                                 newFileName = split.Last();
                                             }
 
-                                            String KEY = Regex.Replace(Hashes.Hash_String(1, newFileName), "[^0-9.]", "").Substring(0, 8);
-                                            String IV = Regex.Replace(Hashes.Hash_String(0, newFileName), "[^0-9.]", "").Substring(0, 8);
+                                            string KEY = Regex.Replace(Hashes.Hash_String(1, newFileName), "[^0-9.]", "").Substring(0, 8);
+                                            string IV = Regex.Replace(Hashes.Hash_String(0, newFileName), "[^0-9.]", "").Substring(0, 8);
 
                                             entry.ExtractToFile(getTempNa, true);
 
@@ -2924,7 +2770,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 if (downloadCurrent < compressedLength)
                 {
                     PlayProgressText.SafeInvokeAction(() =>
-                    PlayProgressText.Text = String.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(downloadCurrent),
+                    PlayProgressText.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(downloadCurrent),
                     Time_Conversion.FormatFileSize(compressedLength), Time_Conversion.EstimateFinishTime(downloadCurrent, compressedLength, 
                     _downloadStartTime), (int)(100 * downloadCurrent / compressedLength)).ToUpper(), this);
                 }
@@ -3046,7 +2892,7 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                 if (PlayProgress.Value == 100)
                 {
                     PlayProgressText.SafeInvokeAction(() =>
-                    PlayProgressText.Text = String.Format("{0} of {1} : ({3}%) — {2}", Time_Conversion.FormatFileSize(currentCount),
+                    PlayProgressText.Text = string.Format("{0} of {1} : ({3}%) — {2}", Time_Conversion.FormatFileSize(currentCount),
                     Time_Conversion.FormatFileSize(allFilesCount), 
                     Time_Conversion.EstimateFinishTime(currentCount, allFilesCount, _downloadStartTime), (int)(100 * currentCount / allFilesCount)).ToUpper(), this);
                 }
