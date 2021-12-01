@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS8622: Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+dotnet_diagnostic.CS8622.severity = silent
