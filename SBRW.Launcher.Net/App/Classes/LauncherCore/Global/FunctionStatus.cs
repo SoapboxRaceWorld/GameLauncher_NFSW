@@ -8,7 +8,6 @@ using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
 using SBRW.Launcher.App.UI_Forms.Main_Screen;
 using SBRW.Launcher.App.UI_Forms.Splash_Screen;
 using SBRW.Launcher.App.UI_Forms.Welcome_Screen;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using SBRW.Launcher.Core.Extension.Logging_;
 using SBRW.Launcher.Core.Discord.RPC_;
 using SBRW.Launcher.Core.Extra.File_;
@@ -125,7 +124,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
         /// <param name="Boolen">True: Restarts Launcher | False: Closes Launcher</param>
         public static void ErrorCloseLauncher(string Notes, bool Boolen)
         {
-            SplashScreen.ThreadStatus("Stop");
+            Screen_Splash.ThreadStatus("Stop");
 
             if (Presence_Launcher.Running())
             {
@@ -167,7 +166,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
             if (!LauncherUpdateCheck.UpdatePopupStoppedSplashScreen)
             {
                 LoadingComplete = true;
-                SplashScreen.ThreadStatus("Stop");
+                Screen_Splash.ThreadStatus("Stop");
             }
 
             if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
@@ -183,7 +182,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
 
                 try
                 {
-                    Form welcome = new WelcomeScreen();
+                    Form welcome = new Screen_Welcome();
                     DialogResult welcomereply = welcome.ShowDialog();
 
                     if (welcomereply != DialogResult.OK)
@@ -221,16 +220,17 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                             {
                                 string GameFolderPath = string.Empty;
 
-                                CommonOpenFileDialog FolderDialog = new CommonOpenFileDialog
+                                OpenFileDialog FolderDialog = new OpenFileDialog
                                 {
-                                    EnsurePathExists = true,
-                                    EnsureFileExists = false,
-                                    AllowNonFileSystemItems = false,
-                                    Title = "Select the location to Find or Download NFS:W",
-                                    IsFolderPicker = true
+                                    InitialDirectory = "C:\\",
+                                    ValidateNames = false,
+                                    CheckFileExists = false,
+                                    CheckPathExists = true,
+                                    Title = "Select the location to Find or Download nfsw.exe",
+                                    FileName = "Select Game Files Folder"
                                 };
 
-                                if (FolderDialog.ShowDialog() == CommonFileDialogResult.Ok)
+                                if (FolderDialog.ShowDialog() == DialogResult.OK)
                                 {
                                     if (!string.IsNullOrWhiteSpace(FolderDialog.FileName))
                                     {
@@ -418,7 +418,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                     try
                     {
                         Log.Info("MAINSCREEN: Program Started");
-                        Application.Run(new MainScreen());
+                        Application.Run(new Screen_Main());
                     }
                     catch (COMException Error)
                     {

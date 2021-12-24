@@ -1,11 +1,12 @@
 ﻿using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.LauncherCore.Visuals;
+using SBRW.Launcher.App.UI_Forms.Custom_Server_Screen;
 using SBRW.Launcher.App.UI_Forms.Register_Screen;
-using SBRW.Launcher.App.UI_Forms.SelectServer_Screen;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Validation_;
 using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
+using SBRW.Launcher.Core.Theme;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -22,12 +23,12 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
         /* ServerList Load Checks */
         public static void SelectServerBtn_Click(object sender, EventArgs e)
         {
-            SelectServer.OpenScreen(false);
+            Screen_Custom_Server.OpenScreen(false);
         }
 
         public static void AddServer_Click(object sender, EventArgs e)
         {
-            SelectServer.OpenScreen(true);
+            Screen_Custom_Server.OpenScreen(true);
         }
 
         public static void RegisterText_LinkClicked(object sender, EventArgs e)
@@ -49,7 +50,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                 }
                 else
                 {
-                    RegisterScreen.OpenScreen();
+                    Screen_Register.OpenScreen();
                 }
             }
             else
@@ -60,25 +61,25 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
 
         public static void DiscordInviteLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord))
+            if (Launcher_Value.Launcher_Select_Server_JSON != null && !string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord))
                 Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord);
         }
 
         public static void HomePageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Home))
+            if (Launcher_Value.Launcher_Select_Server_JSON != null && !string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Home))
                 Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Home);
         }
 
         public static void FacebookGroupLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Facebook))
+            if (Launcher_Value.Launcher_Select_Server_JSON != null && !string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Facebook))
                 Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Facebook);
         }
 
         public static void TwitterAccountLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Twitter))
+            if (Launcher_Value.Launcher_Select_Server_JSON != null && !string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Twitter))
                 Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Twitter);
         }
 
@@ -211,8 +212,8 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                     if (serverListText.StartsWith("<GROUP>"))
                     {
                         font = new Font(font, FontStyle.Bold);
-                        e.Graphics.FillRectangle(new SolidBrush(Theming.DropMenuWhite), e.Bounds);
-                        e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, new SolidBrush(Theming.DropMenuBlack), e.Bounds);
+                        e.Graphics.FillRectangle(new SolidBrush(Color_Winform_Other.DropMenu_White), e.Bounds);
+                        e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, new SolidBrush(Color_Winform_Other.DropMenu_Black), e.Bounds);
                     }
                     else
                     {
@@ -228,23 +229,23 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                             {
                                 case 1:
                                     /* ONLINE */
-                                    backgroundColor = new SolidBrush(Theming.DropMenuPingSuccess);
+                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Ping_Success);
                                     break;
                                 case 2:
                                     /* CHECKING */
-                                    backgroundColor = new SolidBrush(Theming.DropMenuPingChecking);
+                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Ping_Checking);
                                     break;
                                 case 3:
                                     /* GSI ERROR */
-                                    backgroundColor = new SolidBrush(Theming.DropMenuPingWarning);
+                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Ping_Warning);
                                     break;
                                 default:
                                     /* OFFLINE */
-                                    backgroundColor = new SolidBrush(Theming.DropMenuPingError);
+                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Ping_Error);
                                     break;
                             }
 
-                            textColor = new SolidBrush(Theming.DropMenuBlack);
+                            textColor = new SolidBrush(Color_Winform_Other.DropMenu_Black);
                         }
 
                         e.Graphics.FillRectangle(backgroundColor, e.Bounds);

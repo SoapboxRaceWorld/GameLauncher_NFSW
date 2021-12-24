@@ -3,6 +3,7 @@ using SBRW.Launcher.App.Classes.SystemPlatform;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Logging_;
 using SBRW.Launcher.Core.Extension.Web_;
+using SBRW.Launcher.Core.Required.DLL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -582,7 +583,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Downloader
                                 num18 -= 13;
                                 IntPtr intPtr = new IntPtr(num18);
                                 IntPtr value = new IntPtr(num22);
-                                int num24 = LZMA.LzmaUncompressBuf2File(text6, ref value, array3, ref intPtr, array5, outPropsSize);
+                                int num24 = DLL_LZMA.LzmaUncompressBuf2File(text6, ref value, array3, ref intPtr, array5, outPropsSize);
 
                                 /* TODO: use total file lenght and extracted file length instead of files checked and total array size. */
                                 fileschecked = +num3;
@@ -904,7 +905,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Downloader
             }
             IntPtr intPtr2 = new IntPtr(num);
             byte[] array3 = new byte[num];
-            _ = LZMA.LzmaUncompress(array3, ref intPtr2, array, ref intPtr, array2, outPropsSize);
+            _ = DLL_LZMA.LzmaUncompress(array3, ref intPtr2, array, ref intPtr, array2, outPropsSize);
             return new string(Encoding.UTF8.GetString(array3).ToCharArray());
         }
     }

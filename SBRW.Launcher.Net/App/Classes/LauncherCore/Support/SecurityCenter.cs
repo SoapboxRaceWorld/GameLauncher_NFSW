@@ -1,6 +1,7 @@
 ﻿using SBRW.Launcher.App.Classes.LauncherCore.Visuals;
 using SBRW.Launcher.Core.Extension.Security_;
 using SBRW.Launcher.Core.Extra.Conversion_;
+using SBRW.Launcher.Core.Theme;
 using System.Drawing;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Support
@@ -23,31 +24,31 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
             switch (Security_Codes_Reference.Check())
             {
                 case SecurityCenterCodes.Unix:
-                    if (ImageState == 1) { return Theming.ShieldButtonCheckingClick; }
-                    else if (ImageState == 2) { return Theming.ShieldButtonCheckingHover; }
-                    else { return Theming.ShieldButtonChecking; }
+                    if (ImageState == 1) { return Image_Icon.Shield_Checking_Click; }
+                    else if (ImageState == 2) { return Image_Icon.Shield_Checking_Hover; }
+                    else { return Image_Icon.Shield_Checking; }
                 case SecurityCenterCodes.Firewall_Outdated:
                 case SecurityCenterCodes.Defender_Outdated:
                 case SecurityCenterCodes.Permissions_Outdated:
-                    if (ImageState == 1) { return Theming.ShieldButtonWarningClick; }
-                    else if (ImageState == 2) { return Theming.ShieldButtonWarningHover; }
-                    else { return Theming.ShieldButtonWarning; }
+                    if (ImageState == 1) { return Image_Icon.Shield_Warning_Click; }
+                    else if (ImageState == 2) { return Image_Icon.Shield_Warning_Hover; }
+                    else { return Image_Icon.Shield_Warning; }
                 case SecurityCenterCodes.Firewall_Error:
                 case SecurityCenterCodes.Defender_Error:
                 case SecurityCenterCodes.Permissions_Error:
-                    if (ImageState == 1) { return Theming.ShieldButtonErrorClick; }
-                    else if (ImageState == 2) { return Theming.ShieldButtonErrorHover; }
-                    else { return Theming.ShieldButtonError; }
+                    if (ImageState == 1) { return Image_Icon.Shield_Error_Click; }
+                    else if (ImageState == 2) { return Image_Icon.Shield_Error_Hover; }
+                    else { return Image_Icon.Shield_Error; }
                 case SecurityCenterCodes.Firewall_Updated:
                 case SecurityCenterCodes.Defender_Updated:
                 case SecurityCenterCodes.Permissions_Updated:
-                    if (ImageState == 1) { return Theming.ShieldButtonSuccessClick; }
-                    else if (ImageState == 2) { return Theming.ShieldButtonSuccessHover; }
-                    else { return Theming.ShieldButtonSuccess; }
+                    if (ImageState == 1) { return Image_Icon.Shield_Success_Click; }
+                    else if (ImageState == 2) { return Image_Icon.Shield_Success_Hover; }
+                    else { return Image_Icon.Shield_Success; }
                 default:
-                    if (ImageState == 1) { return Theming.ShieldButtonUnknownClick; }
-                    else if (ImageState == 2) { return Theming.ShieldButtonUnknownHover; }
-                    else { return Theming.ShieldButtonUnknown; }
+                    if (ImageState == 1) { return Image_Icon.Shield_Unknown_Click; }
+                    else if (ImageState == 2) { return Image_Icon.Shield_Unknown_Hover; }
+                    else { return Image_Icon.Shield_Unknown; }
             }
         }
     }

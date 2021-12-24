@@ -1,4 +1,5 @@
 ﻿using SBRW.Launcher.App.Classes.LauncherCore.Logger;
+using SBRW.Launcher.Core.Required.DLL.Kernel32_;
 using System;
 using System.IO;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Components
                 long memKb = 0;
                 try
                 {
-                    Kernel32.GetPhysicallyInstalledSystemMemory(out memKb);
+                    DLL_Kernel32.GetPhysicallyInstalledSystemMemory(out memKb);
                 }
                 catch (Exception Error)
                 {

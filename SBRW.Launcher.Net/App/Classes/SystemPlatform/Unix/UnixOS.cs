@@ -8,10 +8,11 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Unix
 {
     class UnixOS
     {
-        private static int CachedNumPlatform = 2020;
-
-        private static string CacheUnixOSName = null;
-
+#if NETFRAMEWORK
+        private static int CachedNumPlatform { get; set; } = 2020;
+#endif
+        private static string CacheUnixOSName { get; set; } = string.Empty;
+#if NETFRAMEWORK
         public static int Platform()
         {
             try
@@ -25,7 +26,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Unix
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Unix Platform Detection", null, Error, null, true);
+                LogToFileAddons.OpenLog("Unix Platform Detection", string.Empty, Error, string.Empty, true);
                 return CachedNumPlatform;
             }
         }
@@ -54,9 +55,10 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Unix
                     return PlatformIDPort.Unknown;
             }
         }
-
+#endif
         public static bool AmI()
         {
+#if NETFRAMEWORK
             if (Type.GetType("Mono.Runtime") != null)
             {
                 return true;
@@ -73,52 +75,109 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Unix
                         return false;
                 }
             }
+#else
+            return OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() || OperatingSystem.IsFreeBSD() || (Type.GetType("Mono.Runtime") != null);
+#endif
         }
 
         public static bool Detected() => File.Exists("SBRW.Launcher.Core.dll") ? Launcher_Value.System_Unix = AmI() : AmI();
 
         private static string PlatformOSName()
         {
-            if (!File.Exists("/etc/os-release"))
+            if (!File.Exists(@"/etc/os-release"))
             {
+#if NETFRAMEWORK
                 if (ID(Platform()) == PlatformIDPort.MacOSX)
                 {
                     return "MacOSX";
                 }
+#else
+                if (OperatingSystem.IsMacOS())
+                {
+                    return "MacOSX";
+                }
+                else if (OperatingSystem.IsFreeBSD())
+                {
+                    return "FreeBSD";
+                }
+                else if (OperatingSystem.IsLinux())
+                {
+                    return "Linux";
+                }
+#endif
                 else
                 {
-                    return "UNIX-Like System";
+                    return "Unknown System OS";
                 }
             }
-            else
+            else if (File.Exists(@"/etc/os-release"))
             {
-                using (StreamReader stream = new StreamReader("/etc/os-release"))
+                using (StreamReader stream = new StreamReader(@"/etc/os-release"))
                 {
-                    string line;
-                    while ((line = stream.ReadLine()) != null)
+                    string Live_String_Data = stream.ReadLine() ?? string.Empty;
+                    while (!string.IsNullOrWhiteSpace(Live_String_Data))
                     {
-                        string[] splits = line.Split(new[] { '=' }, 2);
-                        if (splits[0] == "PRETTY_NAME")
+                        try
                         {
-                            string val = splits[1];
-
-                            if (val[0] == '"')
+                            string[] Live_Split_String = Live_String_Data.Split(new[] { '=' }, 2);
+                            if (Live_Split_String[0] == "PRETTY_NAME")
                             {
-                                val = val.Substring(1);
-                            }
+                                string Live_String_Value = Live_Split_String[1];
 
-                            if (val[val.Length - 1] == '"')
-                            {
-                                val = val.Substring(0, val.Length - 1);
-                            }
+                                if (Live_String_Value[0] == '"')
+                                {
+                                    Live_String_Value = Live_String_Value.Substring(1);
+                                }
 
-                            return val;
+                                if (Live_String_Value[Live_String_Value.Length - 1] == '"')
+                                {
+                                    Live_String_Value = Live_String_Value.Substring(0, Live_String_Value.Length - 1);
+                                }
+
+                                try
+                                {
+                                    return Live_String_Value;
+                                }
+                                finally
+                                {
+                                    Live_String_Data = string.Empty;
+                                }
+                            }
+                        }
+                        catch (Exception Error)
+                        {
+                            Live_String_Data = string.Empty;
+                            LogToFileAddons.OpenLog("Platform OS Name", string.Empty, Error, string.Empty, true);
                         }
                     }
                 }
-
+            }
+            else if (File.Exists(@"/proc/sys/kernel/ostype"))
+            {
+                try
+                {
+                    if (File.ReadAllText(@"/proc/sys/kernel/ostype").StartsWith("Linux", StringComparison.OrdinalIgnoreCase))
+                    {
+                        /* Note: Android falls into This Detection gets here too */
+                        return "Linux";
+                    }
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Platform OS Type", string.Empty, Error, string.Empty, true);
+                }
+            }
+#if NET5_0_OR_GREATER
+            else if (OperatingSystem.IsFreeBSD())
+            {
+                return "FreeBSD";
+            }
+            else if (OperatingSystem.IsLinux())
+            {
                 return "Linux";
             }
+#endif
+            return "Unknown System OS";
         }
 
         public static string FullName()

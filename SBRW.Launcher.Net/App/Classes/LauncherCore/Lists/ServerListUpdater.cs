@@ -1,7 +1,6 @@
 ﻿using SBRW.Launcher.App.Classes.LauncherCore.Global;
 using SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.App.UI_Forms.SelectServer_Screen;
 using Newtonsoft.Json;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Hash_;
@@ -14,6 +13,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using SBRW.Launcher.App.UI_Forms.Custom_Server_Screen;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 {
@@ -234,14 +234,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                         case "Settings":
                             return "The Selected Server";
                         case "Select Server":
-                            if (SelectServer.ServerJsonData != null &&
-                                !string.IsNullOrWhiteSpace(SelectServer.ServerJsonData.Server_Name))
+                            if (Screen_Custom_Server.ServerJsonData != null &&
+                                !string.IsNullOrWhiteSpace(Screen_Custom_Server.ServerJsonData.Server_Name))
                             {
-                                return SelectServer.ServerJsonData.Server_Name;
+                                return Screen_Custom_Server.ServerJsonData.Server_Name;
                             }
                             else
                             {
-                                return SelectServer.ServerName;
+                                return Screen_Custom_Server.ServerName;
                             }
                         default:
                             return "Custom";
