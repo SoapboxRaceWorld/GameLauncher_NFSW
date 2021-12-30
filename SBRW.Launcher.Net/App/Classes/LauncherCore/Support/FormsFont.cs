@@ -5,12 +5,23 @@ using System.IO;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Support
 {
+    /// <summary>
+    /// 
+    /// </summary>
     internal class FormsFont
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static bool Primary_Cached() => Launcher_Value.Launcher_Font != null;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static FontFamily Primary()
         {
-            if (Launcher_Value.Launcher_Font == null)
+            if (!Primary_Cached())
             {
                 MemoryStream Live_Memory_Cache = new MemoryStream(Core.Theme.Properties.Resources.DejaVuSans)
                 {
@@ -22,10 +33,18 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
 
             return Launcher_Value.Launcher_Font;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static bool Primary_Bold_Cached() => Launcher_Value.Launcher_Font_Bold != null;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static FontFamily Primary_Bold()
         {
-            if (Launcher_Value.Launcher_Font_Bold == null)
+            if (!Primary_Bold_Cached())
             {
                 MemoryStream Live_Memory_Cache = new MemoryStream(Core.Theme.Properties.Resources.DejaVuSans_Bold)
                 {

@@ -92,23 +92,23 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
 
     class VisualsAPIChecker
     {
-        public static bool UnitedSL = false;
-        public static bool UnitedCDNL = false;
-        public static APIStatus UnitedSC = APIStatus.Unknown;
+        public static bool UnitedSL { get; set; }
+        public static bool UnitedCDNL { get; set; }
+        public static APIStatus UnitedSC { get; set; } = APIStatus.Unknown;
         public static bool UnitedAPI() => (UnitedSL && UnitedCDNL);
 
-        public static bool CarbonSL = false;
-        public static bool CarbonCDNL = false;
-        public static APIStatus CarbonSC = APIStatus.Unknown;
+        public static bool CarbonSL { get; set; }
+        public static bool CarbonCDNL { get; set; }
+        public static APIStatus CarbonSC { get; set; } = APIStatus.Unknown;
         public static bool CarbonAPI() => (CarbonSL && CarbonCDNL);
 
-        public static bool CarbonTwoSL = false;
-        public static bool CarbonTwoCDNL = false;
-        public static APIStatus CarbonTwoSC = APIStatus.Unknown;
+        public static bool CarbonTwoSL { get; set; }
+        public static bool CarbonTwoCDNL { get; set; }
+        public static APIStatus CarbonTwoSC { get; set; } = APIStatus.Unknown;
         public static bool CarbonAPITwo() => (CarbonTwoSL && CarbonTwoCDNL);
 
-        public static bool GitHubAPI = false;
-        public static APIStatus GitHubAPISC = APIStatus.Unknown;
+        public static bool GitHubAPI { get; set; }
+        public static APIStatus GitHubAPISC { get; set; } = APIStatus.Unknown;
 
         public static void PingAPIStatus()
         {

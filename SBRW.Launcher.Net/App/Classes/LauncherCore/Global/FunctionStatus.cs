@@ -29,16 +29,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
     class InformationCache
     {
         /* Detect and Set System Language */
-        public static CultureInfo Lang = Thread.CurrentThread.CurrentUICulture;
-
+        public static CultureInfo Lang { get; set; } = Thread.CurrentThread.CurrentUICulture;
         /* Parent Screen Cords */
-        public static Point ParentScreenLocation;
-
+        public static Point ParentScreenLocation { get; set; }
         /* Selected Server Is Enforcing Proxy */
         public static bool SelectedServerEnforceProxy { get; set; }
-
         /* Holds a collection of Server Status of Servers */
-        public static Dictionary<string, int> ServerStatusBook = new Dictionary<string, int>();
+        public static Dictionary<string, int> ServerStatusBook { get; set; } = new Dictionary<string, int>();
     }
 
     /* This is Used to call Certain Functions (Such as Completion Status or Function Callbacks) */

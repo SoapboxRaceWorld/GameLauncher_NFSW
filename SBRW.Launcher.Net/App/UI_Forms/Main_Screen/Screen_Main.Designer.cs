@@ -31,8 +31,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Drawing.Drawing2D.Blend blend3 = new System.Drawing.Drawing2D.Blend();
-            System.Drawing.Drawing2D.Blend blend4 = new System.Drawing.Drawing2D.Blend();
+            System.Drawing.Drawing2D.Blend blend7 = new System.Drawing.Drawing2D.Blend();
+            System.Drawing.Drawing2D.Blend blend8 = new System.Drawing.Drawing2D.Blend();
             this.Picture_Logo = new System.Windows.Forms.PictureBox();
             this.Picture_Server_Banner = new System.Windows.Forms.PictureBox();
             this.Picture_Bar_Outline = new System.Windows.Forms.PictureBox();
@@ -426,10 +426,13 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // 
             // ComboBox_Server_List
             // 
+            this.ComboBox_Server_List.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.ComboBox_Server_List.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_Server_List.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ComboBox_Server_List.FormattingEnabled = true;
             this.ComboBox_Server_List.Location = new System.Drawing.Point(586, 50);
             this.ComboBox_Server_List.Name = "ComboBox_Server_List";
-            this.ComboBox_Server_List.Size = new System.Drawing.Size(241, 23);
+            this.ComboBox_Server_List.Size = new System.Drawing.Size(241, 24);
             this.ComboBox_Server_List.TabIndex = 15;
             // 
             // Label_Information_Window
@@ -580,21 +583,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // ProgressBar_Preload
             // 
             this.ProgressBar_Preload.BackColor = System.Drawing.Color.Transparent;
-            blend3.Factors = new float[] {
+            blend7.Factors = new float[] {
         0.8F,
         0.7F,
         0.6F,
         0.4F,
         0F,
         0F};
-            blend3.Positions = new float[] {
+            blend7.Positions = new float[] {
         0F,
         0.2F,
         0.4F,
         0.6F,
         0.8F,
         1F};
-            this.ProgressBar_Preload.BBlend = blend3;
+            this.ProgressBar_Preload.BBlend = blend7;
             this.ProgressBar_Preload.Border = false;
             this.ProgressBar_Preload.Image = null;
             this.ProgressBar_Preload.Location = new System.Drawing.Point(30, 430);
@@ -606,21 +609,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // ProgressBar_Extracting
             // 
             this.ProgressBar_Extracting.BackColor = System.Drawing.Color.Transparent;
-            blend4.Factors = new float[] {
+            blend8.Factors = new float[] {
         0.8F,
         0.7F,
         0.6F,
         0.4F,
         0F,
         0F};
-            blend4.Positions = new float[] {
+            blend8.Positions = new float[] {
         0F,
         0.2F,
         0.4F,
         0.6F,
         0.8F,
         1F};
-            this.ProgressBar_Extracting.BBlend = blend4;
+            this.ProgressBar_Extracting.BBlend = blend8;
             this.ProgressBar_Extracting.Border = false;
             this.ProgressBar_Extracting.Image = null;
             this.ProgressBar_Extracting.Location = new System.Drawing.Point(30, 430);
