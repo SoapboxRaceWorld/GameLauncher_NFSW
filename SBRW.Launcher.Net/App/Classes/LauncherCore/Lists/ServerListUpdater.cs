@@ -19,15 +19,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 {
     public class ServerListUpdater
     {
-        public static bool LoadedList = false;
-
-        public static List<Json_List_Server> NoCategoryList = new List<Json_List_Server>();
-
-        public static List<Json_List_Server> NoCategoryList_CSO = new List<Json_List_Server>();
-
-        public static List<Json_List_Server> CleanList = new List<Json_List_Server>();
-
-        public static string CachedJSONList;
+        public static bool LoadedList { get; set; }
+        public static List<Json_List_Server> NoCategoryList { get; set; } = new List<Json_List_Server>();
+        public static List<Json_List_Server> NoCategoryList_CSO { get; set; } = new List<Json_List_Server>();
+        public static List<Json_List_Server> CleanList { get; set; } = new List<Json_List_Server>();
+        public static string CachedJSONList { get; set; }
 
         public static void GetList()
         {
@@ -45,14 +41,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("SERVER LIST CORE", null, Error, null, true);
+                LogToFileAddons.OpenLog("SERVER LIST CORE", string.Empty, Error, string.Empty, true);
                 LoadedList = false;
             }
             finally
             {
-                if (CachedJSONList != null)
+                if (!string.IsNullOrWhiteSpace(CachedJSONList))
                 {
-                    CachedJSONList = null;
+                    CachedJSONList = string.Empty;
                 }
             }
 
@@ -79,7 +75,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("SERVER LIST CORE", null, Error, null, true);
+                    LogToFileAddons.OpenLog("SERVER LIST CORE", string.Empty, Error, string.Empty, true);
                 }
             }
 
@@ -173,7 +169,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("SERVER LIST CORE", null, Error, null, true);
+                LogToFileAddons.OpenLog("SERVER LIST CORE", string.Empty, Error, string.Empty, true);
             }
 
             Log.Info("LAUNCHER UPDATER: Moved to Function");
@@ -199,7 +195,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("COUNTRYNAME", null, Error, null, true);
+                LogToFileAddons.OpenLog("COUNTRYNAME", string.Empty, Error, string.Empty, true);
             }
 
             return "Unknown";
@@ -250,7 +246,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Server Name Provider", null, Error, null, true);
+                LogToFileAddons.OpenLog("Server Name Provider", string.Empty, Error, string.Empty, true);
                 return "Unknown";
             }
         }

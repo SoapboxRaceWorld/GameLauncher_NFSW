@@ -142,7 +142,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                         }
                         catch (Exception Error)
                         {
-                            LogToFileAddons.OpenLog("Launcher", null, Error, null, true);
+                            LogToFileAddons.OpenLog("Launcher", string.Empty, Error, string.Empty, true);
                         }
                     }
                 }

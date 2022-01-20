@@ -7,7 +7,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Downloader
     class DownloaderAddons
     {
         /* Check System Language and Return Current Lang for Speech Files */
-        public static string SpeechFiles(string Language)
+        public static string SpeechFiles(string? Language)
         {
             string CurrentLang = string.IsNullOrWhiteSpace(Language) ? InformationCache.Lang.ThreeLetterISOLanguageName : Language.ToLower();
 

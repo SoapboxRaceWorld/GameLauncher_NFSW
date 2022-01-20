@@ -19,6 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="App\Languages\English_Texts.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>English_Texts.resx</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -27,6 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="App\Languages\English_Texts.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>English_Texts.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -34,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
     <PackageReference Include="SBRW.Ini.Parser" Version="2.6.5" />
     <PackageReference Include="SBRW.Launcher.Core" Version="0.0.28" />
     <PackageReference Include="SBRW.Launcher.Core.Discord" Version="0.0.15" />
@@ -42,6 +52,10 @@
     <PackageReference Include="SBRW.Launcher.Core.Theme" Version="0.0.10" />
     <PackageReference Include="SBRW.Nancy" Version="2.0.12" />
     <PackageReference Include="SBRW.Nancy.Hosting.Self" Version="2.0.8" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+    <PackageReference Include="System.Management" Version="5.0.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="WindowsFirewallHelper" Version="2.2.0.86" />
   </ItemGroup>
 
 </Project>

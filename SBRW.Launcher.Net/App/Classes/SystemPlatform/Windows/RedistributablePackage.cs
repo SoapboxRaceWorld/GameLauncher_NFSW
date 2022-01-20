@@ -2,7 +2,6 @@
 using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
-using Microsoft.Win32;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Api_;
 using SBRW.Launcher.Core.Extension.Logging_;
@@ -13,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using SBRW.Launcher.Core.Extension.Registry_;
 
 // based on https://github.com/bitbeans/RedistributableChecker/blob/master/RedistributableChecker/RedistributablePackage.cs
 namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
@@ -32,47 +32,36 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
     /// <see cref="//https://stackoverflow.com/questions/12206314/detect-if-visual-c-redistributable-for-visual-studio-2012-is-installed"/>
     public static class RedistributablePackage
     {
-        private static RegistryKey sk = null;
-        private static string InstalledVersion;
+        private static string InstalledVersion { get; set; }
         /// <summary>
         /// Check if a Microsoft Redistributable Package is installed.
         /// </summary>
-        /// <param name="redistributableVersion">The package version to detect.</param>
+        /// <param name="Redistributable_Version">The package version to detect.</param>
         /// <returns><c>true</c> if the package is installed, otherwise <c>false</c></returns>
-        public static bool IsInstalled(RedistributablePackageVersion redistributableVersion)
+        public static bool IsInstalled(RedistributablePackageVersion Redistributable_Version)
         {
             {
-                switch (redistributableVersion)
+                switch (Redistributable_Version)
                 {
                     case RedistributablePackageVersion.VC2015to2019x86:
                     case RedistributablePackageVersion.VC2015to2019x64:
                         try
                         {
-                            string subKey = Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", "14.0", "VC", "Runtimes",
-                                (redistributableVersion == RedistributablePackageVersion.VC2015to2019x86) ? "x86" : "x64");
+                            InstalledVersion = Registry_Core.Read("Version", 
+                                Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", "14.0", "VC", "Runtimes",
+                            (Redistributable_Version == RedistributablePackageVersion.VC2015to2019x86) ? "x86" : "x64"));
 
-                            sk = Registry.LocalMachine.OpenSubKey(subKey, false);
-
-                            if (sk != null)
+                            if (!string.IsNullOrWhiteSpace(InstalledVersion))
                             {
-                                InstalledVersion = sk.GetValue("Version").ToString();
-
-                                if (!string.IsNullOrWhiteSpace(InstalledVersion))
+                                if (InstalledVersion.StartsWith("v"))
                                 {
-                                    if (InstalledVersion.StartsWith("v"))
-                                    {
-                                        char[] charsToTrim = { 'v' };
-                                        InstalledVersion = InstalledVersion.Trim(charsToTrim);
-                                    }
+                                    char[] charsToTrim = { 'v' };
+                                    InstalledVersion = InstalledVersion.Trim(charsToTrim);
+                                }
 
-                                    if (InstalledVersion.CompareTo("14.20") >= 0)
-                                    {
-                                        return true;
-                                    }
-                                    else
-                                    {
-                                        return false;
-                                    }
+                                if (InstalledVersion.CompareTo("14.20") >= 0)
+                                {
+                                    return true;
                                 }
                                 else
                                 {
@@ -86,19 +75,14 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                         }
                         catch (Exception Error)
                         {
-                            LogToFileAddons.OpenLog("Redistributable Package", null, Error, null, true);
+                            LogToFileAddons.OpenLog("Redistributable Package", string.Empty, Error, string.Empty, true);
                             return false;
                         }
                         finally
                         {
-                            if (InstalledVersion != null)
+                            if (!string.IsNullOrWhiteSpace(InstalledVersion))
                             {
-                                InstalledVersion = null;
-                            }
-                            if (sk != null)
-                            {
-                                sk.Close();
-                                sk.Dispose();
+                                InstalledVersion = string.Empty;
                             }
                         }
                     default:
@@ -111,7 +95,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
 
     class Redistributable
     {
-        public static bool ErrorFree = true;
+        public static bool ErrorFree { get; set; }
         public static void Check()
         {
             if (!UnixOS.Detected())
@@ -152,7 +136,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                             }
                             catch (Exception Error)
                             {
-                                LogToFileAddons.OpenLog("REDISTRIBUTABLE", null, Error, null, true);
+                                LogToFileAddons.OpenLog("REDISTRIBUTABLE", string.Empty, Error, string.Empty, true);
                             }
                             finally
                             {
@@ -164,7 +148,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                         }
                         catch (Exception Error)
                         {
-                            LogToFileAddons.OpenLog("REDISTRIBUTABLE", null, Error, null, true);
+                            LogToFileAddons.OpenLog("REDISTRIBUTABLE", string.Empty, Error, string.Empty, true);
                         }
 
                         if (File.Exists("VC_redist.x86.exe"))
@@ -211,7 +195,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                             }
                             catch (Exception Error)
                             {
-                                LogToFileAddons.OpenLog("REDISTRIBUTABLE x86 Process", null, Error, null, true);
+                                LogToFileAddons.OpenLog("REDISTRIBUTABLE x86 Process", string.Empty, Error, string.Empty, true);
                                 ErrorFree = false;
                                 MessageBox.Show(Translations.Database("Redistributable_VC_P9"),
                                     Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
@@ -273,7 +257,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                 }
                                 catch (Exception Error)
                                 {
-                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE", null, Error, null, true);
+                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE", string.Empty, Error, string.Empty, true);
                                 }
                                 finally
                                 {
@@ -285,7 +269,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                             }
                             catch (Exception Error)
                             {
-                                LogToFileAddons.OpenLog("REDISTRIBUTABLE x64", null, Error, null, true);
+                                LogToFileAddons.OpenLog("REDISTRIBUTABLE x64", string.Empty, Error, string.Empty, true);
                             }
 
                             if (File.Exists("VC_redist.x64.exe"))

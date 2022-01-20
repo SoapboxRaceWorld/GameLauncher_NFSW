@@ -994,7 +994,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Visuals
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("THEMING", null, Error, null, true);
+                    LogToFileAddons.OpenLog("THEMING", string.Empty, Error, string.Empty, true);
                 }
             }
         }

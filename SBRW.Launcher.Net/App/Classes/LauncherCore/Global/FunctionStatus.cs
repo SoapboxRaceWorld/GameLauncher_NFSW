@@ -363,7 +363,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                         case FolderType.IsProgramFilesFolder:
                         case FolderType.IsWindowsFolder:
                         case FolderType.IsRootFolder:
-                            String constructMsg = String.Empty;
+                            string constructMsg = string.Empty;
                             constructMsg += "Using this location for Game Files is not allowed.\n\n";
                             constructMsg += "The following locations are also NOT allowed:\n";
                             constructMsg += "• X:\\nfsw.exe (Root of Drive, such as C:\\ or D:\\, must be in a folder)\n";

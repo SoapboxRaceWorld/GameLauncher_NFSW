@@ -20,8 +20,8 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
     class UpdaterExecutable
     {
         /* Hardcoded Default Version for Updater Version  */
-        private static string LatestUpdaterBuildVersion = "1.0.0.8";
-        private static string VersionJSON;
+        private static string LatestUpdaterBuildVersion { get; set; } = "1.0.0.8";
+        private static string VersionJSON { get; set; }
 
         /* Check If Updater Exists or Requires an Update */
         public static void Check()
@@ -58,7 +58,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
+                    LogToFileAddons.OpenLog("LAUNCHER UPDATER", string.Empty, Error, string.Empty, true);
                 }
                 finally
                 {
@@ -84,11 +84,6 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                         }
 
                         Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
-
-                        if (GHAPI != null)
-                        {
-                            GHAPI = null;
-                        }
                     }
                     else
                     {
@@ -97,7 +92,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
+                    LogToFileAddons.OpenLog("LAUNCHER UPDATER", string.Empty, Error, string.Empty, true);
                 }
 
                 if (!IsGithubOnline || !IsJsonValid)
@@ -107,13 +102,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
+                LogToFileAddons.OpenLog("LAUNCHER UPDATER", string.Empty, Error, string.Empty, true);
             }
             finally
             {
-                if (VersionJSON != null)
+                if (!string.IsNullOrWhiteSpace(VersionJSON))
                 {
-                    VersionJSON = null;
+                    VersionJSON = string.Empty;
                 }
             }
 
@@ -167,7 +162,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                     }
                     catch (Exception Error)
                     {
-                        LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE DL #1]", null, Error, null, true);
+                        LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE DL #1]", string.Empty, Error, string.Empty, true);
                     }
                     finally
                     {
@@ -179,7 +174,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("LAUNCHER UPDATER [!FileExists]", null, Error, null, true);
+                    LogToFileAddons.OpenLog("LAUNCHER UPDATER [!FileExists]", string.Empty, Error, string.Empty, true);
                 }
             }
             else if (File.Exists(UpdaterPath))
@@ -231,7 +226,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                                 }
                                 catch (Exception Error)
                                 {
-                                    LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE Error #2]", null, Error, null, true);
+                                    LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE Error #2]", string.Empty, Error, string.Empty, true);
                                 }
                             }
                         };
@@ -248,7 +243,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                         }
                         catch (Exception Error)
                         {
-                            LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE DL #2]", null, Error, null, true);
+                            LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE DL #2]", string.Empty, Error, string.Empty, true);
                         }
                         finally
                         {
@@ -261,7 +256,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("LAUNCHER UPDATER [FileExists]", null, Error, null, true);
+                    LogToFileAddons.OpenLog("LAUNCHER UPDATER [FileExists]", string.Empty, Error, string.Empty, true);
                 }
             }
 

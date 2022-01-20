@@ -30,7 +30,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Languages.Visual_Forms
                     switch (UI(Application_Language))
                     {
                         default:
-                            Lang_Launcher = new ResourceManager("GameLauncher.App.Languages.English_Texts", Assembly.GetExecutingAssembly());
+                            Lang_Launcher = new ResourceManager("SBRW.Launcher.App.Languages.English_Texts", Assembly.GetExecutingAssembly());
                             break;
                     }
 

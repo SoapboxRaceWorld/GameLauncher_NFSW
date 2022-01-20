@@ -3,7 +3,6 @@ using SBRW.Launcher.App.Classes.LauncherCore.APICheckers;
 using SBRW.Launcher.App.Classes.LauncherCore.Global;
 using SBRW.Launcher.App.Classes.LauncherCore.Languages.Visual_Forms;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.App.Classes.LauncherCore.Visuals;
 using Newtonsoft.Json;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Api_;
@@ -28,18 +27,18 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
 {
     class LauncherUpdateCheck
     {
-        public PictureBox status;
-        public Label text;
-        public Label description;
+        public PictureBox status { get; set; }
+        public Label text { get; set; }
+        public Label description { get; set; }
 
-        public static string CurrentLauncherBuild = Application.ProductVersion;
-        public static string LatestLauncherBuild;
-        public static bool UpgradeAvailable = false;
-        private static bool SkipAvailableUpgrade = false;
-        public static string VersionJSON;
-        private static bool ValidJSONDownload = false;
-        public static int Revisions;
-        public static bool UpdatePopupStoppedSplashScreen = false;
+        public static string CurrentLauncherBuild { get; set; } = Application.ProductVersion;
+        public static string LatestLauncherBuild { get; set; }
+        public static bool UpgradeAvailable { get; set; }
+        private static bool SkipAvailableUpgrade { get; set; }
+        public static string VersionJSON { get; set; }
+        private static bool ValidJSONDownload { get; set; }
+        public static int Revisions { get; set; }
+        public static bool UpdatePopupStoppedSplashScreen { get; set; }
 
         public LauncherUpdateCheck(PictureBox statusImage, Label statusText, Label statusDescription)
         {
@@ -81,7 +80,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("LAUNCHER UPDATE [GITHUB]", null, Error, null, true);
+                    LogToFileAddons.OpenLog("LAUNCHER UPDATE [GITHUB]", string.Empty, Error, string.Empty, true);
                 }
                 finally
                 {
@@ -107,7 +106,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("LAUNCHER UPDATE [GITHUB]", null, Error, null, true);
+                LogToFileAddons.OpenLog("LAUNCHER UPDATE [GITHUB]", string.Empty, Error, string.Empty, true);
             }
 
             Log.Completed("LAUNCHER UPDATE: Done");
@@ -189,9 +188,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                 Log.Completed("LAUNCHER POPUP: Unable to run Update Popup (Null String)");
             }
 
-            if (VersionJSON != null)
+            if (!string.IsNullOrWhiteSpace(VersionJSON))
             {
-                VersionJSON = null;
+                VersionJSON = string.Empty;
             }
 
             return StatusUpdate;

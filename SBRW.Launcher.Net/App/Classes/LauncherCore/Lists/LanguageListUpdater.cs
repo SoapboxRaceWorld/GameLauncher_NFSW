@@ -12,9 +12,8 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 {
     public class LanguageListUpdater
     {
-        public static List<Json_List_Language> NoCategoryList = new List<Json_List_Language>();
-
-        public static List<Json_List_Language> CleanList = new List<Json_List_Language>();
+        public static List<Json_List_Language> NoCategoryList { get; set; } = new List<Json_List_Language>();
+        public static List<Json_List_Language> CleanList { get; set; } = new List<Json_List_Language>();
 
         public static void GetList()
         {
@@ -23,7 +22,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 
             List<Json_List_Language> langInfos = new List<Json_List_Language>();
 
-            String json_language = String.Empty;
+            string json_language = string.Empty;
 
             try
             {
@@ -44,7 +43,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
+                LogToFileAddons.OpenLog("LIST CORE", string.Empty, Error, string.Empty, true);
             }
 
             try
@@ -53,7 +52,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
+                LogToFileAddons.OpenLog("LIST CORE", string.Empty, Error, string.Empty, true);
             }
 
             try
@@ -91,7 +90,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
+                LogToFileAddons.OpenLog("LIST CORE", string.Empty, Error, string.Empty, true);
             }
 
             Log.Checking("LIST CORE: Done");
