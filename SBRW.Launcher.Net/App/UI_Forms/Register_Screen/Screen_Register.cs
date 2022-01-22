@@ -3,10 +3,14 @@ using SBRW.Launcher.App.Classes.LauncherCore.Client.Auth;
 using SBRW.Launcher.App.Classes.LauncherCore.Global;
 using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
+using SBRW.Launcher.App.Classes.LauncherCore.Support;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Discord.RPC_;
 using SBRW.Launcher.Core.Extension.Api_;
+using SBRW.Launcher.Core.Extension.Hash_;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Extension.Validation_;
 using SBRW.Launcher.Core.Extension.Web_;
 using SBRW.Launcher.Core.Theme;
 using System;
@@ -17,6 +21,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -33,40 +38,39 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
 
             List<string> registerErrors = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(RegisterEmail.Text))
+            if (string.IsNullOrWhiteSpace(Input_Email.Text))
             {
                 registerErrors.Add("Please enter your e-mail.");
-                RegisterEmailBorder.Image = Theming.BorderEmailError;
-
+                Picture_Input_Email.Image = Theming.BorderEmailError;
             }
-            else if (!Is_Email.Valid(RegisterEmail.Text))
+            else if (!Is_Email.Valid(Input_Email.Text))
             {
                 registerErrors.Add("Please enter a valid e-mail address.");
-                RegisterEmailBorder.Image = Theming.BorderEmailError;
+                Picture_Input_Email.Image = Theming.BorderEmailError;
             }
 
-            if (string.IsNullOrWhiteSpace(RegisterTicket.Text) && _ticketRequired)
+            if (string.IsNullOrWhiteSpace(Input_Ticket.Text) && Ticket_Required)
             {
                 registerErrors.Add("Please enter your ticket.");
                 Picture_Input_Ticket.Image = Image_Other.Text_Border_Ticket_Error;
             }
 
-            if (string.IsNullOrWhiteSpace(RegisterPassword.Text))
+            if (string.IsNullOrWhiteSpace(Input_Password.Text))
             {
                 registerErrors.Add("Please enter your password.");
-                RegisterPasswordBorder.Image = Theming.BorderPasswordError;
+                Picture_Input_Password.Image = Theming.BorderPasswordError;
             }
 
-            if (string.IsNullOrWhiteSpace(RegisterConfirmPassword.Text))
+            if (string.IsNullOrWhiteSpace(Input_Password_Confirm.Text))
             {
                 registerErrors.Add("Please confirm your password.");
-                RegisterConfirmPasswordBorder.Image = Theming.BorderPasswordError;
+                Picture_Input_Password_Confirm.Image = Theming.BorderPasswordError;
             }
 
-            if (RegisterConfirmPassword.Text != RegisterPassword.Text)
+            if (Input_Password_Confirm.Text != Input_Password.Text)
             {
                 registerErrors.Add("Passwords don't match.");
-                RegisterConfirmPasswordBorder.Image = Theming.BorderPasswordError;
+                Picture_Input_Password_Confirm.Image = Theming.BorderPasswordError;
             }
 
             if (!CheckBox_Rules_Agreement.Checked)
@@ -79,38 +83,38 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             {
                 bool allowReg = false;
 
-                String Email;
-                String Password;
+                string Email;
+                string Password;
 
                 switch (Authentication.HashType(Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Version ?? string.Empty))
                 {
                     case AuthHash.H10:
-                        Email = RegisterEmail.Text.ToString();
-                        Password = RegisterPassword.Text.ToString();
+                        Email = Input_Email.Text.ToString();
+                        Password = Input_Email.Text.ToString();
                         break;
                     case AuthHash.H11:
-                        Email = RegisterEmail.Text.ToString();
-                        Password = Hashes.Hash_String(0, RegisterPassword.Text.ToString()).ToLower();
+                        Email = Input_Email.Text.ToString();
+                        Password = Hashes.Hash_String(0, Input_Password.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H12:
-                        Email = RegisterEmail.Text.ToString();
-                        Password = Hashes.Hash_String(1, RegisterPassword.Text.ToString()).ToLower();
+                        Email = Input_Email.Text.ToString();
+                        Password = Hashes.Hash_String(1, Input_Password.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H13:
-                        Email = RegisterEmail.Text.ToString();
-                        Password = Hashes.Hash_String(2, RegisterPassword.Text.ToString()).ToLower();
+                        Email = Input_Email.Text.ToString();
+                        Password = Hashes.Hash_String(2, Input_Password.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H20:
-                        Email = Hashes.Hash_String(0, RegisterEmail.Text.ToString()).ToLower();
-                        Password = Hashes.Hash_String(0, RegisterPassword.Text.ToString()).ToLower();
+                        Email = Hashes.Hash_String(0, Input_Email.Text.ToString()).ToLower();
+                        Password = Hashes.Hash_String(0, Input_Password.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H21:
-                        Email = Hashes.Hash_String(1, RegisterEmail.Text.ToString()).ToLower();
-                        Password = Hashes.Hash_String(1, RegisterPassword.Text.ToString()).ToLower();
+                        Email = Hashes.Hash_String(1, Input_Email.Text.ToString()).ToLower();
+                        Password = Hashes.Hash_String(1, Input_Password.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H22:
-                        Email = Hashes.Hash_String(2, RegisterEmail.Text.ToString()).ToLower();
-                        Password = Hashes.Hash_String(2, RegisterPassword.Text.ToString()).ToLower();
+                        Email = Hashes.Hash_String(2, Input_Email.Text.ToString()).ToLower();
+                        Password = Hashes.Hash_String(2, Input_Password.Text.ToString()).ToLower();
                         break;
                     default:
                         Log.Error("HASH TYPE: Unknown Hash Standard was Provided");
@@ -201,7 +205,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                     Tokens.IPAddress = Launcher_Value.Launcher_Select_Server_Data.IPAddress;
                     Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
-                    Authentication.Client("Register", Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Post, Email, Password, _ticketRequired ? RegisterTicket.Text : null);
+                    Authentication.Client("Register", Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Post, Email, Password, Ticket_Required ? Input_Ticket.Text : null);
 
                     if (!String.IsNullOrWhiteSpace(Tokens.Success))
                     {
@@ -258,7 +262,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
 
         private void Input_Email_TextChanged(object sender, EventArgs e)
         {
-            RegisterEmailBorder.Image = Theming.BorderEmail;
+            Picture_Input_Email.Image = Theming.BorderEmail;
         }
 
         private void Input_Ticket_TextChanged(object sender, EventArgs e)
@@ -268,12 +272,12 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
 
         private void Input_Password_Confirm_TextChanged(object sender, EventArgs e)
         {
-            RegisterConfirmPasswordBorder.Image = Theming.BorderPassword;
+            Picture_Input_Password_Confirm.Image = Theming.BorderPassword;
         }
 
         private void Input_Password_TextChanged(object sender, EventArgs e)
         {
-            RegisterPasswordBorder.Image = Theming.BorderPassword;
+            Picture_Input_Password.Image = Theming.BorderPassword;
         }
 
         private void Graybutton_click_MouseDown(object sender, EventArgs e)
@@ -319,22 +323,19 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             /* Set Font                     /
             /*******************************/
 
-            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-
             float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
             float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
-            Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            Font = new Font(FormsFont.Primary(), SecondaryFontSize, FontStyle.Regular);
 
             /* Registering Panel */
-            RegisterEmail.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            RegisterPassword.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            RegisterConfirmPassword.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            RegisterTicket.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            CheckBox_Rules_Agreement.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            Button_Register.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            Button_Cancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            CurrentWindowInfo.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            Input_Email.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            Input_Password.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            Input_Password_Confirm.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            Input_Ticket.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            CheckBox_Rules_Agreement.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            Button_Register.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            Button_Cancel.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            Label_Information_Window.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
 
             /********************************/
             /* Set Theme Colors & Images     /
@@ -344,23 +345,23 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             BackgroundImage = Image_Background.Registration;
             TransparencyKey = Color_Screen.BG_Registration;
 
-            CurrentWindowInfo.ForeColor = Theming.FivithTextForeColor;
+            Label_Information_Window.ForeColor = Theming.FivithTextForeColor;
 
-            RegisterEmail.BackColor = Theming.Input;
-            RegisterEmail.ForeColor = Theming.FivithTextForeColor;
-            RegisterEmailBorder.Image = Image_Other.Text_Border_Email;
+            Input_Email.BackColor = Theming.Input;
+            Input_Email.ForeColor = Theming.FivithTextForeColor;
+            Picture_Input_Email.Image = Image_Other.Text_Border_Email;
 
-            RegisterPasswordBorder.Image = Image_Other.Text_Border_Password;
-            RegisterPassword.BackColor = Theming.Input;
-            RegisterPassword.ForeColor = Theming.FivithTextForeColor;
+            Picture_Input_Password.Image = Image_Other.Text_Border_Password;
+            Input_Password.BackColor = Theming.Input;
+            Input_Password.ForeColor = Theming.FivithTextForeColor;
 
-            RegisterConfirmPasswordBorder.Image = Image_Other.Text_Border_Password;
-            RegisterConfirmPassword.BackColor = Theming.Input;
-            RegisterConfirmPassword.ForeColor = Theming.FivithTextForeColor;
+            Picture_Input_Password_Confirm.Image = Image_Other.Text_Border_Password;
+            Input_Password_Confirm.BackColor = Theming.Input;
+            Input_Password_Confirm.ForeColor = Theming.FivithTextForeColor;
 
             Picture_Input_Ticket.Image = Image_Other.Text_Border_Ticket;
-            RegisterTicket.BackColor = Theming.Input;
-            RegisterTicket.ForeColor = Theming.FivithTextForeColor;
+            Input_Ticket.BackColor = Theming.Input;
+            Input_Ticket.ForeColor = Theming.FivithTextForeColor;
 
             CheckBox_Rules_Agreement.ForeColor = Theming.WinFormWarningTextForeColor;
 
