@@ -28,98 +28,100 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.ListView_Server_List = new System.Windows.Forms.ListView();
+            this.Button_Server_Add = new System.Windows.Forms.Button();
+            this.Button_Server_Remove = new System.Windows.Forms.Button();
+            this.Button_Server_Select = new System.Windows.Forms.Button();
+            this.Button_Close = new System.Windows.Forms.Button();
+            this.Label_Loading = new System.Windows.Forms.Label();
+            this.Label_Version = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // listView1
+            // ListView_Server_List
             // 
-            this.listView1.Location = new System.Drawing.Point(13, 13);
-            this.listView1.MultiSelect = false;
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(544, 229);
-            this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.ListView_Server_List.Location = new System.Drawing.Point(13, 13);
+            this.ListView_Server_List.MultiSelect = false;
+            this.ListView_Server_List.Name = "ListView_Server_List";
+            this.ListView_Server_List.Size = new System.Drawing.Size(544, 229);
+            this.ListView_Server_List.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.ListView_Server_List.TabIndex = 0;
+            this.ListView_Server_List.UseCompatibleStateImageBehavior = false;
             // 
-            // button1
+            // Button_Server_Add
             // 
-            this.button1.Location = new System.Drawing.Point(15, 247);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(96, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Add Server";
-            this.button1.UseVisualStyleBackColor = true;
+            this.Button_Server_Add.Location = new System.Drawing.Point(15, 247);
+            this.Button_Server_Add.Name = "Button_Server_Add";
+            this.Button_Server_Add.Size = new System.Drawing.Size(96, 23);
+            this.Button_Server_Add.TabIndex = 1;
+            this.Button_Server_Add.Text = "Add Server";
+            this.Button_Server_Add.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // Button_Server_Remove
             // 
-            this.button2.Location = new System.Drawing.Point(117, 247);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Remove";
-            this.button2.UseVisualStyleBackColor = true;
+            this.Button_Server_Remove.Location = new System.Drawing.Point(117, 247);
+            this.Button_Server_Remove.Name = "Button_Server_Remove";
+            this.Button_Server_Remove.Size = new System.Drawing.Size(75, 23);
+            this.Button_Server_Remove.TabIndex = 2;
+            this.Button_Server_Remove.Text = "Remove";
+            this.Button_Server_Remove.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // Button_Server_Select
             // 
-            this.button3.Location = new System.Drawing.Point(399, 247);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Select";
-            this.button3.UseVisualStyleBackColor = true;
+            this.Button_Server_Select.Location = new System.Drawing.Point(399, 247);
+            this.Button_Server_Select.Name = "Button_Server_Select";
+            this.Button_Server_Select.Size = new System.Drawing.Size(75, 23);
+            this.Button_Server_Select.TabIndex = 3;
+            this.Button_Server_Select.Text = "Select";
+            this.Button_Server_Select.UseVisualStyleBackColor = true;
             // 
-            // button4
+            // Button_Close
             // 
-            this.button4.Location = new System.Drawing.Point(480, 247);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "Close";
-            this.button4.UseVisualStyleBackColor = true;
+            this.Button_Close.Location = new System.Drawing.Point(480, 247);
+            this.Button_Close.Name = "Button_Close";
+            this.Button_Close.Size = new System.Drawing.Size(75, 23);
+            this.Button_Close.TabIndex = 4;
+            this.Button_Close.Text = "Close";
+            this.Button_Close.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // Label_Loading
             // 
-            this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(234, 242);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(123, 14);
-            this.label3.TabIndex = 25;
-            this.label3.Text = "Loading Servers ...";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.Label_Loading.BackColor = System.Drawing.Color.Transparent;
+            this.Label_Loading.ForeColor = System.Drawing.Color.Black;
+            this.Label_Loading.Location = new System.Drawing.Point(234, 242);
+            this.Label_Loading.Name = "Label_Loading";
+            this.Label_Loading.Size = new System.Drawing.Size(123, 14);
+            this.Label_Loading.TabIndex = 25;
+            this.Label_Loading.Text = "Loading Servers ...";
+            this.Label_Loading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label1
+            // Label_Version
             // 
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(213, 260);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(164, 14);
-            this.label1.TabIndex = 26;
-            this.label1.Text = "Version : vXX.XX.XX.XXXX";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.Label_Version.BackColor = System.Drawing.Color.Transparent;
+            this.Label_Version.ForeColor = System.Drawing.Color.Black;
+            this.Label_Version.Location = new System.Drawing.Point(213, 260);
+            this.Label_Version.Name = "Label_Version";
+            this.Label_Version.Size = new System.Drawing.Size(164, 14);
+            this.Label_Version.TabIndex = 26;
+            this.Label_Version.Text = "Version : vXX.XX.XX.XXXX";
+            this.Label_Version.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Screen_Custom_Server
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(570, 275);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.Label_Version);
+            this.Controls.Add(this.Label_Loading);
+            this.Controls.Add(this.Button_Close);
+            this.Controls.Add(this.Button_Server_Select);
+            this.Controls.Add(this.Button_Server_Remove);
+            this.Controls.Add(this.Button_Server_Add);
+            this.Controls.Add(this.ListView_Server_List);
+            this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Screen_Custom_Server";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Please Select a Server - SBRW Launcher";
             this.ResumeLayout(false);
 
@@ -127,12 +129,12 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ListView ListView_Server_List;
+        private System.Windows.Forms.Button Button_Server_Add;
+        private System.Windows.Forms.Button Button_Server_Remove;
+        private System.Windows.Forms.Button Button_Server_Select;
+        private System.Windows.Forms.Button Button_Close;
+        private System.Windows.Forms.Label Label_Loading;
+        private System.Windows.Forms.Label Label_Version;
     }
 }
