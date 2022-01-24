@@ -13,16 +13,12 @@ using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Theme;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
@@ -104,7 +100,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
 
             Button_Server_Select.ForeColor = !CustomServersOnly ? Color_Winform_Buttons.Blue_Fore_Color : Color_Winform_Buttons.Gray_Fore_Color;
             Button_Server_Select.BackColor = !CustomServersOnly ? Color_Winform_Buttons.Blue_Back_Color : Color_Winform_Buttons.Gray_Back_Color;
-            Button_Server_Select.FlatAppearance.BorderColor = !CustomServersOnly ? Color_Winform_Buttons.Blue_Border_Color : Color_Winform_Buttons.Green_BorderColorButton;
+            Button_Server_Select.FlatAppearance.BorderColor = !CustomServersOnly ? Color_Winform_Buttons.Blue_Border_Color : Color_Winform_Buttons.Gray_Border_Color;
             Button_Server_Select.FlatAppearance.MouseOverBackColor = !CustomServersOnly ? Color_Winform_Buttons.Blue_Mouse_Over_Back_Color : Color_Winform_Buttons.Gray_Mouse_Over_Back_Color;
 
             Button_Close.ForeColor = Color_Winform_Buttons.Blue_Fore_Color;

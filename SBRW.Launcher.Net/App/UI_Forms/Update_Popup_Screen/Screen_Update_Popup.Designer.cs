@@ -31,10 +31,10 @@
             this.Icon_Information = new System.Windows.Forms.PictureBox();
             this.Label_Text_Update = new System.Windows.Forms.Label();
             this.GroupBox_Changelog = new System.Windows.Forms.GroupBox();
+            this.TextBox_Changelog = new System.Windows.Forms.TextBox();
             this.Button_Update = new System.Windows.Forms.Button();
             this.Button_Ignore = new System.Windows.Forms.Button();
             this.Button_Skip = new System.Windows.Forms.Button();
-            this.TextBox_Changelog = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.Icon_Information)).BeginInit();
             this.GroupBox_Changelog.SuspendLayout();
             this.SuspendLayout();
@@ -70,33 +70,6 @@
             this.GroupBox_Changelog.TabStop = false;
             this.GroupBox_Changelog.Text = "Changelog:";
             // 
-            // Button_Update
-            // 
-            this.Button_Update.Location = new System.Drawing.Point(82, 252);
-            this.Button_Update.Name = "Button_Update";
-            this.Button_Update.Size = new System.Drawing.Size(75, 23);
-            this.Button_Update.TabIndex = 32;
-            this.Button_Update.Text = "Update";
-            this.Button_Update.UseVisualStyleBackColor = true;
-            // 
-            // Button_Ignore
-            // 
-            this.Button_Ignore.Location = new System.Drawing.Point(163, 252);
-            this.Button_Ignore.Name = "Button_Ignore";
-            this.Button_Ignore.Size = new System.Drawing.Size(75, 23);
-            this.Button_Ignore.TabIndex = 33;
-            this.Button_Ignore.Text = "Ignore";
-            this.Button_Ignore.UseVisualStyleBackColor = true;
-            // 
-            // Button_Skip
-            // 
-            this.Button_Skip.Location = new System.Drawing.Point(244, 252);
-            this.Button_Skip.Name = "Button_Skip";
-            this.Button_Skip.Size = new System.Drawing.Size(75, 23);
-            this.Button_Skip.TabIndex = 34;
-            this.Button_Skip.Text = "Skip";
-            this.Button_Skip.UseVisualStyleBackColor = true;
-            // 
             // TextBox_Changelog
             // 
             this.TextBox_Changelog.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -107,6 +80,36 @@
             this.TextBox_Changelog.Size = new System.Drawing.Size(368, 139);
             this.TextBox_Changelog.TabIndex = 35;
             this.TextBox_Changelog.Text = "This is a Test";
+            // 
+            // Button_Update
+            // 
+            this.Button_Update.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button_Update.Location = new System.Drawing.Point(82, 252);
+            this.Button_Update.Name = "Button_Update";
+            this.Button_Update.Size = new System.Drawing.Size(75, 23);
+            this.Button_Update.TabIndex = 32;
+            this.Button_Update.Text = "Update";
+            this.Button_Update.UseVisualStyleBackColor = true;
+            // 
+            // Button_Ignore
+            // 
+            this.Button_Ignore.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button_Ignore.Location = new System.Drawing.Point(163, 252);
+            this.Button_Ignore.Name = "Button_Ignore";
+            this.Button_Ignore.Size = new System.Drawing.Size(75, 23);
+            this.Button_Ignore.TabIndex = 33;
+            this.Button_Ignore.Text = "Ignore";
+            this.Button_Ignore.UseVisualStyleBackColor = true;
+            // 
+            // Button_Skip
+            // 
+            this.Button_Skip.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button_Skip.Location = new System.Drawing.Point(244, 252);
+            this.Button_Skip.Name = "Button_Skip";
+            this.Button_Skip.Size = new System.Drawing.Size(75, 23);
+            this.Button_Skip.TabIndex = 34;
+            this.Button_Skip.Text = "Skip";
+            this.Button_Skip.UseVisualStyleBackColor = true;
             // 
             // Screen_Update_Popup
             // 

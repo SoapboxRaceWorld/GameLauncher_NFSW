@@ -658,8 +658,7 @@ namespace SBRW.Launcher.Net
                                     {
                                         string MessageBoxPopupTLS = string.Empty;
 
-                                        if (string.IsNullOrWhiteSpace(Registry_Core.Read(
-                                            @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client", "DisabledByDefault")))
+                                        if (string.IsNullOrWhiteSpace(Registry_Core.Read("DisabledByDefault", @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client")))
                                         {
                                             MessageBoxPopupTLS = Translations.Database("Program_TextBox_W7_TLS_P1") + "\n\n";
 

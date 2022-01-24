@@ -8,7 +8,11 @@ using SBRW.Launcher.App.Classes.LauncherCore.ModNet;
 using SBRW.Launcher.App.Classes.LauncherCore.Support;
 using SBRW.Launcher.App.Classes.LauncherCore.Visuals;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
+using SBRW.Launcher.App.UI_Forms.About_Screen;
+using SBRW.Launcher.App.UI_Forms.Main_Screen;
 using SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen;
+using SBRW.Launcher.App.UI_Forms.USXEditor_Screen;
+using SBRW.Launcher.App.UI_Forms.VerifyHash_Screen;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Discord.RPC_;
 using SBRW.Launcher.Core.Extension.Api_;
@@ -35,8 +39,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         /*******************************/
         /* Global Functions             /
         /*******************************/
-
-        private static bool IsSettingsScreenOpen { get; set; }
+        public static Screen_Settings Screen_Instance { get; set; }
+        public static Panel Screen_Panel_Forms { get; set; }
         private int LastSelectedCdnId { get; set; }
         private int LastSelectedLanguage { get; set; }
         private bool DisableProxy { get; set; }
@@ -53,22 +57,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         private static Thread? ThreadSavedCDN { get; set; }
         private static Thread? ThreadChecksums { get; set; }
 
-        public static void OpenScreen()
-        {
-            if (IsSettingsScreenOpen || Application.OpenForms["Screen_Settings"] != null)
-            {
-                if (Application.OpenForms["Screen_Settings"] != null) { Application.OpenForms["Screen_Settings"].Activate(); }
-            }
-            else
-            {
-                try { new Screen_Settings().ShowDialog(); }
-                catch (Exception Error)
-                {
-                    string ErrorMessage = "Settings Screen Encountered an Error";
-                    LogToFileAddons.OpenLog("Settings Screen", ErrorMessage, Error, "Exclamation", false);
-                }
-            }
-        }
         #region Support Functions
         private void WindowsDefenderGameFilesDirctoryChange()
         {
@@ -546,7 +534,12 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         {
             try
             {
-                Screen_Security_Center.OpenScreen("Settings");
+                Screen_Security_Center Custom_Instance_Settings = new Screen_Security_Center() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
+                Panel_Form_Screens.Visible = true;
+                Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
+                Screen_Security_Center.RPCStateCache = "Settings";
+                Custom_Instance_Settings.Show();
+                Screen_Main.Screen_Instance.Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
             }
             catch (Exception Error)
             {
@@ -580,7 +573,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             else
             {
                 ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
-                //VerifyHash.OpenScreen();
+                Screen_Verify_Hash.OpenScreen();
             }
         }
         /*******************************/
@@ -834,7 +827,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         /* Settings UserSettings XML Editor */
         private void SettingsUEditorButton_Click(object sender, EventArgs e)
         {
-            //USXEditor.OpenScreen();
+            Screen_User_Settings_Editor.OpenScreen();
         }
 
         /* Settings Clear ModNet Cache */
@@ -1015,7 +1008,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         /* Settings Open About Dialog */
         private void SettingsAboutButton_Click(object sender, EventArgs e)
         {
-            //About.OpenScreen();
+            Screen_About.OpenScreen();
         }
 
         private void SettingsLauncherVersion_Click(object sender, EventArgs e)
@@ -1578,6 +1571,14 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Button_Change_Game_Path.Click += new EventHandler(SettingsGameFiles_Click);
             Button_Launcher_logs.Click += new EventHandler(SettingsClearLauncherLogsButton_Click);
 
+            LinkLabel_Launcher_Path.LinkClicked += new LinkLabelLinkClickedEventHandler(SettingsLauncherPathCurrent_LinkClicked);
+            LinkLabel_CDN_Current.LinkClicked += new LinkLabelLinkClickedEventHandler(SettingsCDNCurrent_LinkClicked);
+            LinkLabel_Game_Path.LinkClicked += new LinkLabelLinkClickedEventHandler(SettingsGameFilesCurrent_LinkClicked);
+
+            MouseMove += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Move);
+            MouseUp += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Up);
+            MouseDown += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Down);
+
             Load += new EventHandler(Screen_Settings_Load);
 
             /********************************/
@@ -1639,9 +1640,16 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             };
         }
         #endregion
+
+        public void Clear_Hide_Screen_Form_Panel()
+        {
+            Screen_Panel_Forms.Controls.Clear();
+            Screen_Panel_Forms.Visible = false;
+            Screen_Main.Screen_Instance.Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
+        }
+
         public Screen_Settings()
         {
-            IsSettingsScreenOpen = true;
             InitializeComponent();
             Set_Visuals();
             this.Closing += (x, y) =>
@@ -1664,8 +1672,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                     ThreadChecksums = null;
                 }
 
-                IsSettingsScreenOpen = false;
-
                 /* This is for Mono Support */
                 if (ToolTip_Hover.Active)
                 {
@@ -1674,7 +1680,11 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 }
 
                 GC.Collect();
+
+                Screen_Main.Screen_Instance.Clear_Hide_Screen_Form_Panel();
             };
+            Screen_Instance = this;
+            Screen_Panel_Forms = Panel_Form_Screens;
 
             Presence_Launcher.Status("Settings", null);
         }

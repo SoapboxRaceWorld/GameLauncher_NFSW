@@ -355,9 +355,9 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
         /// <summary>Opens the Form. If the Form is already Open it will Give it Foucus</summary>
         public static void OpenScreen()
         {
-            if (IsAddServerOpen || Application.OpenForms["AddServer"] != null)
+            if (IsAddServerOpen || Application.OpenForms["Screen_Custom_Server_Add"] != null)
             {
-                if (Application.OpenForms["AddServer"] != null) { Application.OpenForms["AddServer"].Activate(); }
+                if (Application.OpenForms["Screen_Custom_Server_Add"] != null) { Application.OpenForms["Screen_Custom_Server_Add"].Activate(); }
             }
             else
             {

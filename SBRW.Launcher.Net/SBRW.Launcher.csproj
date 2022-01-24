@@ -12,6 +12,8 @@
 	<DebugType>full</DebugType>
 	<DebugSymbols>true</DebugSymbols>
 	<AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+	<Version>2.1.9.0002</Version>
+	<ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 	
   <ItemGroup>

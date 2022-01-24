@@ -31,8 +31,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Drawing.Drawing2D.Blend blend1 = new System.Drawing.Drawing2D.Blend();
-            System.Drawing.Drawing2D.Blend blend2 = new System.Drawing.Drawing2D.Blend();
+            System.Drawing.Drawing2D.Blend blend3 = new System.Drawing.Drawing2D.Blend();
+            System.Drawing.Drawing2D.Blend blend4 = new System.Drawing.Drawing2D.Blend();
             this.Picture_Logo = new System.Windows.Forms.PictureBox();
             this.Picture_Server_Banner = new System.Windows.Forms.PictureBox();
             this.Picture_Bar_Outline = new System.Windows.Forms.PictureBox();
@@ -84,6 +84,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.Button_Register = new System.Windows.Forms.Button();
             this.Button_Login = new System.Windows.Forms.Button();
             this.BackgroundWorker_One = new System.ComponentModel.BackgroundWorker();
+            this.Panel_Form_Screens = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.Picture_Logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Picture_Server_Banner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Picture_Bar_Outline)).BeginInit();
@@ -584,21 +585,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // ProgressBar_Preload
             // 
             this.ProgressBar_Preload.BackColor = System.Drawing.Color.Transparent;
-            blend1.Factors = new float[] {
+            blend3.Factors = new float[] {
         0.8F,
         0.7F,
         0.6F,
         0.4F,
         0F,
         0F};
-            blend1.Positions = new float[] {
+            blend3.Positions = new float[] {
         0F,
         0.2F,
         0.4F,
         0.6F,
         0.8F,
         1F};
-            this.ProgressBar_Preload.BBlend = blend1;
+            this.ProgressBar_Preload.BBlend = blend3;
             this.ProgressBar_Preload.Border = false;
             this.ProgressBar_Preload.Image = null;
             this.ProgressBar_Preload.Location = new System.Drawing.Point(30, 430);
@@ -610,21 +611,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // ProgressBar_Extracting
             // 
             this.ProgressBar_Extracting.BackColor = System.Drawing.Color.Transparent;
-            blend2.Factors = new float[] {
+            blend4.Factors = new float[] {
         0.8F,
         0.7F,
         0.6F,
         0.4F,
         0F,
         0F};
-            blend2.Positions = new float[] {
+            blend4.Positions = new float[] {
         0F,
         0.2F,
         0.4F,
         0.6F,
         0.8F,
         1F};
-            this.ProgressBar_Extracting.BBlend = blend2;
+            this.ProgressBar_Extracting.BBlend = blend4;
             this.ProgressBar_Extracting.Border = false;
             this.ProgressBar_Extracting.Image = null;
             this.ProgressBar_Extracting.Location = new System.Drawing.Point(30, 430);
@@ -695,12 +696,23 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.Button_Login.Text = "LOGIN";
             this.Button_Login.UseVisualStyleBackColor = false;
             // 
+            // Panel_Form_Screens
+            // 
+            this.Panel_Form_Screens.BackColor = System.Drawing.Color.Transparent;
+            this.Panel_Form_Screens.ForeColor = System.Drawing.Color.Transparent;
+            this.Panel_Form_Screens.Location = new System.Drawing.Point(0, 0);
+            this.Panel_Form_Screens.Name = "Panel_Form_Screens";
+            this.Panel_Form_Screens.Size = new System.Drawing.Size(891, 529);
+            this.Panel_Form_Screens.TabIndex = 44;
+            this.Panel_Form_Screens.Visible = false;
+            // 
             // Screen_Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.Panel_Form_Screens);
             this.Controls.Add(this.Label_Download_Information_Support);
             this.Controls.Add(this.ProgressBar_Extracting);
             this.Controls.Add(this.ProgressBar_Preload);
@@ -818,5 +830,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private Button Button_Register;
         private Button Button_Login;
         private System.ComponentModel.BackgroundWorker BackgroundWorker_One;
+        private Panel Panel_Form_Screens;
     }
 }

@@ -38,8 +38,8 @@
             this.Input_Password = new System.Windows.Forms.TextBox();
             this.Input_Password_Confirm = new System.Windows.Forms.TextBox();
             this.Input_Ticket = new System.Windows.Forms.TextBox();
-            this.Button_Register = new System.Windows.Forms.Label();
-            this.Button_Cancel = new System.Windows.Forms.Label();
+            this.Button_Register = new System.Windows.Forms.Button();
+            this.Button_Cancel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Picture_Input_Email)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Picture_Input_Password)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Picture_Input_Password_Confirm)).BeginInit();
@@ -147,24 +147,32 @@
             // Button_Register
             // 
             this.Button_Register.BackColor = System.Drawing.Color.Transparent;
-            this.Button_Register.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
+            this.Button_Register.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.Button_Register.FlatAppearance.BorderSize = 0;
+            this.Button_Register.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.Button_Register.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.Button_Register.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Register.Location = new System.Drawing.Point(606, 389);
             this.Button_Register.Name = "Button_Register";
             this.Button_Register.Size = new System.Drawing.Size(231, 35);
-            this.Button_Register.TabIndex = 23;
+            this.Button_Register.TabIndex = 43;
             this.Button_Register.Text = "REGISTER";
-            this.Button_Register.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.Button_Register.UseVisualStyleBackColor = false;
             // 
             // Button_Cancel
             // 
             this.Button_Cancel.BackColor = System.Drawing.Color.Transparent;
-            this.Button_Cancel.ForeColor = System.Drawing.Color.White;
+            this.Button_Cancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.Button_Cancel.FlatAppearance.BorderSize = 0;
+            this.Button_Cancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.Button_Cancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.Button_Cancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Cancel.Location = new System.Drawing.Point(606, 429);
             this.Button_Cancel.Name = "Button_Cancel";
             this.Button_Cancel.Size = new System.Drawing.Size(231, 35);
-            this.Button_Cancel.TabIndex = 24;
+            this.Button_Cancel.TabIndex = 44;
             this.Button_Cancel.Text = "CANCEL";
-            this.Button_Cancel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.Button_Cancel.UseVisualStyleBackColor = false;
             // 
             // Screen_Register
             // 
@@ -210,7 +218,7 @@
         private System.Windows.Forms.TextBox Input_Password;
         private System.Windows.Forms.TextBox Input_Password_Confirm;
         private System.Windows.Forms.TextBox Input_Ticket;
-        private System.Windows.Forms.Label Button_Register;
-        private System.Windows.Forms.Label Button_Cancel;
+        private System.Windows.Forms.Button Button_Register;
+        private System.Windows.Forms.Button Button_Cancel;
     }
 }

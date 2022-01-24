@@ -44,19 +44,23 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                 switch (Redistributable_Version)
                 {
                     case RedistributablePackageVersion.VC2015to2019x86:
+                        InstalledVersion = Registry_Core.Read("Version",
+                                Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", "14.0", "VC", "Runtimes", "x86"));
+                        goto case RedistributablePackageVersion.VC2015to2019x64;
                     case RedistributablePackageVersion.VC2015to2019x64:
+                        if (string.IsNullOrWhiteSpace(InstalledVersion))
+                        {
+                            InstalledVersion = Registry_Core.Read("Version",
+                                Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", "14.0", "VC", "Runtimes", "x64"));
+                        }
+                        
                         try
                         {
-                            InstalledVersion = Registry_Core.Read("Version", 
-                                Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", "14.0", "VC", "Runtimes",
-                            (Redistributable_Version == RedistributablePackageVersion.VC2015to2019x86) ? "x86" : "x64"));
-
                             if (!string.IsNullOrWhiteSpace(InstalledVersion))
                             {
                                 if (InstalledVersion.StartsWith("v"))
                                 {
-                                    char[] charsToTrim = { 'v' };
-                                    InstalledVersion = InstalledVersion.Trim(charsToTrim);
+                                    InstalledVersion = InstalledVersion.Trim('v');
                                 }
 
                                 if (InstalledVersion.CompareTo("14.20") >= 0)
@@ -95,7 +99,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
 
     class Redistributable
     {
-        public static bool ErrorFree { get; set; }
+        public static bool Error_Free { get; set; } = true;
         public static void Check()
         {
             if (!UnixOS.Detected())
@@ -165,7 +169,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
 
                                 if (proc == null)
                                 {
-                                    ErrorFree = false;
+                                    Error_Free = false;
                                     MessageBox.Show(Translations.Database("Redistributable_VC_P6"),
                                         Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                         MessageBoxIcon.Error);
@@ -175,12 +179,12 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                     if (!proc.HasExited)
                                     {
                                         if (proc.Responding) { proc.CloseMainWindow(); }
-                                        else { proc.Kill(); ErrorFree = false; }
+                                        else { proc.Kill(); Error_Free = false; }
                                     }
 
                                     if (proc.ExitCode != 0)
                                     {
-                                        ErrorFree = false;
+                                        Error_Free = false;
                                         Log.Error("REDISTRIBUTABLE INSTALLER [EXIT CODE]: " + proc.ExitCode.ToString() +
                                             " HEX: (0x" + proc.ExitCode.ToString("X") + ")");
                                         MessageBox.Show(Translations.Database("Redistributable_VC_P7") + " " + proc.ExitCode.ToString() +
@@ -196,7 +200,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                             catch (Exception Error)
                             {
                                 LogToFileAddons.OpenLog("REDISTRIBUTABLE x86 Process", string.Empty, Error, string.Empty, true);
-                                ErrorFree = false;
+                                Error_Free = false;
                                 MessageBox.Show(Translations.Database("Redistributable_VC_P9"),
                                     Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
@@ -204,7 +208,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                         }
                         else
                         {
-                            ErrorFree = false;
+                            Error_Free = false;
                             MessageBox.Show(Translations.Database("Redistributable_VC_P10"),
                                 Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
@@ -212,7 +216,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                     }
                     else
                     {
-                        ErrorFree = false;
+                        Error_Free = false;
                         MessageBox.Show(Translations.Database("Redistributable_VC_P8"), Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
                     }
@@ -287,7 +291,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
 
                                     if (proc == null)
                                     {
-                                        ErrorFree = false;
+                                        Error_Free = false;
                                         MessageBox.Show(Translations.Database("Redistributable_VC_P6"),
                                             Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                             MessageBoxIcon.Error);
@@ -297,12 +301,12 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                         if (!proc.HasExited)
                                         {
                                             if (proc.Responding) { proc.CloseMainWindow(); }
-                                            else { proc.Kill(); ErrorFree = false; }
+                                            else { proc.Kill(); Error_Free = false; }
                                         }
 
                                         if (proc.ExitCode != 0)
                                         {
-                                            ErrorFree = false;
+                                            Error_Free = false;
                                             Log.Error("REDISTRIBUTABLE INSTALLER [EXIT CODE]: " + proc.ExitCode.ToString() +
                                                 " HEX: (0x" + proc.ExitCode.ToString("X") + ")");
                                             MessageBox.Show(Translations.Database("Redistributable_VC_P7") + " " + proc.ExitCode.ToString() +
@@ -318,7 +322,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                 catch (Exception Error)
                                 {
                                     LogToFileAddons.OpenLog("REDISTRIBUTABLE x64 Process", null, Error, null, true);
-                                    ErrorFree = false;
+                                    Error_Free = false;
                                     MessageBox.Show(Translations.Database("Redistributable_VC_P9"),
                                         Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                         MessageBoxIcon.Error);
@@ -326,7 +330,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                             }
                             else
                             {
-                                ErrorFree = false;
+                                Error_Free = false;
                                 MessageBox.Show(Translations.Database("Redistributable_VC_P10"),
                                     Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                         MessageBoxIcon.Error);
@@ -334,7 +338,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                         }
                         else
                         {
-                            ErrorFree = false;
+                            Error_Free = false;
                             MessageBox.Show(Translations.Database("Redistributable_VC_P8"),
                                 Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);

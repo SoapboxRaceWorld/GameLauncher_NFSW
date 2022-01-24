@@ -3,6 +3,8 @@ using SBRW.Launcher.App.Classes.LauncherCore.Global;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.LauncherCore.Support;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
+using SBRW.Launcher.App.UI_Forms.Main_Screen;
+using SBRW.Launcher.App.UI_Forms.Settings_Screen;
 using SBRW.Launcher.Core.Discord.RPC_;
 using SBRW.Launcher.Core.Extension.Logging_;
 using SBRW.Launcher.Core.Extra.File_;
@@ -28,8 +30,6 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
 {
     public partial class Screen_Security_Center : Form
     {
-        ///<summary>Prevents a Duplicate Window from Happening</summary>
-        private static bool IsSecurityCenterOpen { get; set; }
         ///<summary>Windows 10: Caches Old Game Path in the event of the user does Firewall First</summary>
         private static string CacheOldGameLocation { get; set; } = Save_Settings.Live_Data.Game_Path_Old;
         ///<summary>Disable Button: Firewall Rules API</summary>
@@ -69,35 +69,27 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         ///<summary>Disable Button: Permission Set</summary>
         private static bool DisableButtonPRAA { get; set; } = true;
         ///<summary>RPC: Which State to do once Form Closes</summary>
-        private static string RPCStateCache { get; set; }
-
-        public static void OpenScreen(string RPCState)
-        {
-            if (IsSecurityCenterOpen || Application.OpenForms["SecurityCenterScreen"] != null)
-            {
-                if (Application.OpenForms["SecurityCenterScreen"] != null) { Application.OpenForms["SecurityCenterScreen"].Activate(); }
-            }
-            else
-            {
-                RPCStateCache = RPCState;
-                try { new Screen_Security_Center().ShowDialog(); }
-                catch (Exception Error)
-                {
-                    string ErrorMessage = "Security Center Screen Encountered an Error";
-                    LogToFileAddons.OpenLog("Security Center Panel", ErrorMessage, Error, "Exclamation", false);
-                }
-            }
-        }
+        public static string RPCStateCache { get; set; }
 
         public Screen_Security_Center()
         {
-            IsSecurityCenterOpen = true;
             InitializeComponent();
             SetVisuals();
             this.Closing += (x, y) =>
             {
                 Presence_Launcher.Status(RPCStateCache, null);
-                IsSecurityCenterOpen = DisableButtonFRAPI = DisableButtonDRAPI = DisableButtonDRAPI = DisableButtonPRC = false;
+                DisableButtonFRAPI = DisableButtonDRAPI = DisableButtonDRAPI = DisableButtonPRC = false;
+                if (!string.IsNullOrWhiteSpace(RPCStateCache))
+                {
+                    if (RPCStateCache.Contains("Settings"))
+                    {
+                        Screen_Settings.Screen_Instance.Clear_Hide_Screen_Form_Panel();
+                    }
+                    else if (RPCStateCache.Contains("Ready"))
+                    {
+                        Screen_Main.Screen_Instance.Clear_Hide_Screen_Form_Panel();
+                    }
+                }
                 RPCStateCache = string.Empty;
                 GC.Collect();
             };

@@ -49,6 +49,7 @@
             // 
             // Button_Server_Add
             // 
+            this.Button_Server_Add.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Server_Add.Location = new System.Drawing.Point(15, 247);
             this.Button_Server_Add.Name = "Button_Server_Add";
             this.Button_Server_Add.Size = new System.Drawing.Size(96, 23);
@@ -58,6 +59,7 @@
             // 
             // Button_Server_Remove
             // 
+            this.Button_Server_Remove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Server_Remove.Location = new System.Drawing.Point(117, 247);
             this.Button_Server_Remove.Name = "Button_Server_Remove";
             this.Button_Server_Remove.Size = new System.Drawing.Size(75, 23);
@@ -67,6 +69,7 @@
             // 
             // Button_Server_Select
             // 
+            this.Button_Server_Select.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Server_Select.Location = new System.Drawing.Point(399, 247);
             this.Button_Server_Select.Name = "Button_Server_Select";
             this.Button_Server_Select.Size = new System.Drawing.Size(75, 23);
@@ -76,6 +79,7 @@
             // 
             // Button_Close
             // 
+            this.Button_Close.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Close.Location = new System.Drawing.Point(480, 247);
             this.Button_Close.Name = "Button_Close";
             this.Button_Close.Size = new System.Drawing.Size(75, 23);

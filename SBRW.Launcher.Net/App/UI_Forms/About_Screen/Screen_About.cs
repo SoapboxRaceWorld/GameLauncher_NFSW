@@ -22,9 +22,9 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
 
         public static void OpenScreen()
         {
-            if (Application.OpenForms["About"] != null || IsAboutOpen)
+            if (Application.OpenForms["Screen_About"] != null || IsAboutOpen)
             {
-                if (Application.OpenForms["About"] != null) { Application.OpenForms["About"].Activate(); }
+                if (Application.OpenForms["Screen_About"] != null) { Application.OpenForms["Screen_About"].Activate(); }
             }
             else
             {
@@ -77,10 +77,10 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
 
             AboutText.ForeColor = Color_Winform.Secondary_Text_Fore_Color;
 
-            BackColor = Color_Winform.Secondary_Text_Fore_Color;
+            BackColor = Color_Winform.BG_Fore_Color;
             ForeColor = Color_Winform.Text_Fore_Color;
 
-            PatchContainerPanel.BackColor = Color_Winform.Secondary_Text_Fore_Color;
+            PatchContainerPanel.BackColor = Color_Winform.BG_Fore_Color;
             PatchContainerPanel.ForeColor = Color_Winform.Text_Fore_Color;
 
             PatchTitle1.BackColor = Color_Winform_About.BG_Fore_Color;

@@ -68,6 +68,7 @@
             this.Label_Theme_Author = new System.Windows.Forms.Label();
             this.Label_Version_Build = new System.Windows.Forms.Label();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.Panel_Form_Screens = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -116,21 +117,25 @@
             // 
             // Button_Change_Game_Path
             // 
+            this.Button_Change_Game_Path.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.Button_Change_Game_Path.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Change_Game_Path.Location = new System.Drawing.Point(38, 80);
             this.Button_Change_Game_Path.Name = "Button_Change_Game_Path";
             this.Button_Change_Game_Path.Size = new System.Drawing.Size(190, 25);
             this.Button_Change_Game_Path.TabIndex = 45;
             this.Button_Change_Game_Path.Text = "Change GameFiles Path";
-            this.Button_Change_Game_Path.UseVisualStyleBackColor = true;
+            this.Button_Change_Game_Path.UseVisualStyleBackColor = false;
             // 
             // Button_Game_Verify_Files
             // 
+            this.Button_Game_Verify_Files.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.Button_Game_Verify_Files.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Game_Verify_Files.Location = new System.Drawing.Point(234, 80);
             this.Button_Game_Verify_Files.Name = "Button_Game_Verify_Files";
             this.Button_Game_Verify_Files.Size = new System.Drawing.Size(122, 25);
             this.Button_Game_Verify_Files.TabIndex = 46;
             this.Button_Game_Verify_Files.Text = "Verify GameFiles";
-            this.Button_Game_Verify_Files.UseVisualStyleBackColor = true;
+            this.Button_Game_Verify_Files.UseVisualStyleBackColor = false;
             // 
             // Label_CDN
             // 
@@ -178,24 +183,29 @@
             // 
             // Button_Game_User_Settings
             // 
+            this.Button_Game_User_Settings.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.Button_Game_User_Settings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Game_User_Settings.Location = new System.Drawing.Point(213, 180);
             this.Button_Game_User_Settings.Name = "Button_Game_User_Settings";
             this.Button_Game_User_Settings.Size = new System.Drawing.Size(143, 25);
             this.Button_Game_User_Settings.TabIndex = 51;
             this.Button_Game_User_Settings.Text = "Edit UserSettings";
-            this.Button_Game_User_Settings.UseVisualStyleBackColor = true;
+            this.Button_Game_User_Settings.UseVisualStyleBackColor = false;
             // 
             // Button_Clear_Crash_Logs
             // 
+            this.Button_Clear_Crash_Logs.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.Button_Clear_Crash_Logs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Clear_Crash_Logs.Location = new System.Drawing.Point(38, 220);
             this.Button_Clear_Crash_Logs.Name = "Button_Clear_Crash_Logs";
             this.Button_Clear_Crash_Logs.Size = new System.Drawing.Size(154, 25);
             this.Button_Clear_Crash_Logs.TabIndex = 52;
             this.Button_Clear_Crash_Logs.Text = "Clear Crash Logs";
-            this.Button_Clear_Crash_Logs.UseVisualStyleBackColor = true;
+            this.Button_Clear_Crash_Logs.UseVisualStyleBackColor = false;
             // 
             // Button_Security_Center
             // 
+            this.Button_Security_Center.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Security_Center.Location = new System.Drawing.Point(38, 290);
             this.Button_Security_Center.Name = "Button_Security_Center";
             this.Button_Security_Center.Size = new System.Drawing.Size(154, 25);
@@ -205,33 +215,40 @@
             // 
             // Button_Clear_Server_Mods
             // 
+            this.Button_Clear_Server_Mods.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.Button_Clear_Server_Mods.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Clear_Server_Mods.Location = new System.Drawing.Point(202, 255);
             this.Button_Clear_Server_Mods.Name = "Button_Clear_Server_Mods";
             this.Button_Clear_Server_Mods.Size = new System.Drawing.Size(154, 25);
             this.Button_Clear_Server_Mods.TabIndex = 54;
             this.Button_Clear_Server_Mods.Text = "Clear Server Mods";
-            this.Button_Clear_Server_Mods.UseVisualStyleBackColor = true;
+            this.Button_Clear_Server_Mods.UseVisualStyleBackColor = false;
             // 
             // Button_Launcher_logs
             // 
+            this.Button_Launcher_logs.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.Button_Launcher_logs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Launcher_logs.Location = new System.Drawing.Point(38, 255);
             this.Button_Launcher_logs.Name = "Button_Launcher_logs";
             this.Button_Launcher_logs.Size = new System.Drawing.Size(154, 25);
             this.Button_Launcher_logs.TabIndex = 55;
             this.Button_Launcher_logs.Text = "Clear Launcher Logs";
-            this.Button_Launcher_logs.UseVisualStyleBackColor = true;
+            this.Button_Launcher_logs.UseVisualStyleBackColor = false;
             // 
             // Button_Clear_NFSWO_Logs
             // 
+            this.Button_Clear_NFSWO_Logs.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.Button_Clear_NFSWO_Logs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Clear_NFSWO_Logs.Location = new System.Drawing.Point(202, 220);
             this.Button_Clear_NFSWO_Logs.Name = "Button_Clear_NFSWO_Logs";
             this.Button_Clear_NFSWO_Logs.Size = new System.Drawing.Size(154, 25);
             this.Button_Clear_NFSWO_Logs.TabIndex = 56;
             this.Button_Clear_NFSWO_Logs.Text = "Clear NFSWO Log";
-            this.Button_Clear_NFSWO_Logs.UseVisualStyleBackColor = true;
+            this.Button_Clear_NFSWO_Logs.UseVisualStyleBackColor = false;
             // 
             // Button_About
             // 
+            this.Button_About.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_About.Location = new System.Drawing.Point(780, 58);
             this.Button_About.Name = "Button_About";
             this.Button_About.Size = new System.Drawing.Size(75, 23);
@@ -242,6 +259,7 @@
             // CheckBox_Word_Filter_Check
             // 
             this.CheckBox_Word_Filter_Check.BackColor = System.Drawing.Color.Transparent;
+            this.CheckBox_Word_Filter_Check.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Word_Filter_Check.ForeColor = System.Drawing.Color.White;
             this.CheckBox_Word_Filter_Check.Location = new System.Drawing.Point(38, 335);
             this.CheckBox_Word_Filter_Check.Name = "CheckBox_Word_Filter_Check";
@@ -253,6 +271,7 @@
             // CheckBox_Proxy
             // 
             this.CheckBox_Proxy.BackColor = System.Drawing.Color.Transparent;
+            this.CheckBox_Proxy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Proxy.ForeColor = System.Drawing.Color.White;
             this.CheckBox_Proxy.Location = new System.Drawing.Point(38, 357);
             this.CheckBox_Proxy.Name = "CheckBox_Proxy";
@@ -264,6 +283,7 @@
             // CheckBox_RPC
             // 
             this.CheckBox_RPC.BackColor = System.Drawing.Color.Transparent;
+            this.CheckBox_RPC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_RPC.ForeColor = System.Drawing.Color.White;
             this.CheckBox_RPC.Location = new System.Drawing.Point(38, 379);
             this.CheckBox_RPC.Name = "CheckBox_RPC";
@@ -275,6 +295,7 @@
             // CheckBox_Stream
             // 
             this.CheckBox_Stream.BackColor = System.Drawing.Color.Transparent;
+            this.CheckBox_Stream.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Stream.ForeColor = System.Drawing.Color.White;
             this.CheckBox_Stream.Location = new System.Drawing.Point(335, 379);
             this.CheckBox_Stream.Name = "CheckBox_Stream";
@@ -286,6 +307,7 @@
             // CheckBox_Theme_Support
             // 
             this.CheckBox_Theme_Support.BackColor = System.Drawing.Color.Transparent;
+            this.CheckBox_Theme_Support.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Theme_Support.ForeColor = System.Drawing.Color.White;
             this.CheckBox_Theme_Support.Location = new System.Drawing.Point(335, 357);
             this.CheckBox_Theme_Support.Name = "CheckBox_Theme_Support";
@@ -297,6 +319,7 @@
             // CheckBox_Opt_Insider
             // 
             this.CheckBox_Opt_Insider.BackColor = System.Drawing.Color.Transparent;
+            this.CheckBox_Opt_Insider.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Opt_Insider.ForeColor = System.Drawing.Color.White;
             this.CheckBox_Opt_Insider.Location = new System.Drawing.Point(335, 335);
             this.CheckBox_Opt_Insider.Name = "CheckBox_Opt_Insider";
@@ -308,6 +331,7 @@
             // CheckBox_Alt_WebCalls
             // 
             this.CheckBox_Alt_WebCalls.BackColor = System.Drawing.Color.Transparent;
+            this.CheckBox_Alt_WebCalls.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Alt_WebCalls.ForeColor = System.Drawing.Color.White;
             this.CheckBox_Alt_WebCalls.Location = new System.Drawing.Point(335, 401);
             this.CheckBox_Alt_WebCalls.Name = "CheckBox_Alt_WebCalls";
@@ -411,6 +435,7 @@
             this.Label_API_Status_Two.TabIndex = 73;
             this.Label_API_Status_Two.Text = "Main CDN List API: PINGING";
             this.Label_API_Status_Two.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label_API_Status_Two.Visible = false;
             // 
             // Label_API_Status_Three
             // 
@@ -422,6 +447,7 @@
             this.Label_API_Status_Three.TabIndex = 74;
             this.Label_API_Status_Three.Text = "Backup Server List API: PINGING";
             this.Label_API_Status_Three.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label_API_Status_Three.Visible = false;
             // 
             // Label_API_Status_Four
             // 
@@ -433,6 +459,7 @@
             this.Label_API_Status_Four.TabIndex = 75;
             this.Label_API_Status_Four.Text = "Backup CDN List API: PINGING";
             this.Label_API_Status_Four.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label_API_Status_Four.Visible = false;
             // 
             // Label_Theme_Name
             // 
@@ -472,12 +499,23 @@
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
             // 
+            // Panel_Form_Screens
+            // 
+            this.Panel_Form_Screens.BackColor = System.Drawing.Color.Transparent;
+            this.Panel_Form_Screens.ForeColor = System.Drawing.Color.Transparent;
+            this.Panel_Form_Screens.Location = new System.Drawing.Point(0, 0);
+            this.Panel_Form_Screens.Name = "Panel_Form_Screens";
+            this.Panel_Form_Screens.Size = new System.Drawing.Size(891, 529);
+            this.Panel_Form_Screens.TabIndex = 79;
+            this.Panel_Form_Screens.Visible = false;
+            // 
             // Screen_Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.Panel_Form_Screens);
             this.Controls.Add(this.Label_Version_Build);
             this.Controls.Add(this.Label_Theme_Author);
             this.Controls.Add(this.Label_Theme_Name);
@@ -569,5 +607,6 @@
         private System.Windows.Forms.Label Label_Theme_Author;
         private System.Windows.Forms.Label Label_Version_Build;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
+        private System.Windows.Forms.Panel Panel_Form_Screens;
     }
 }

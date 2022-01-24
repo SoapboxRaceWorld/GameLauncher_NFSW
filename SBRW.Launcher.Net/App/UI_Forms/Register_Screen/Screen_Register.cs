@@ -15,14 +15,10 @@ using SBRW.Launcher.Core.Extension.Web_;
 using SBRW.Launcher.Core.Theme;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SBRW.Launcher.App.UI_Forms.Register_Screen
@@ -41,12 +37,12 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             if (string.IsNullOrWhiteSpace(Input_Email.Text))
             {
                 registerErrors.Add("Please enter your e-mail.");
-                Picture_Input_Email.Image = Theming.BorderEmailError;
+                Picture_Input_Email.Image = Image_Other.Text_Border_Email_Error;
             }
             else if (!Is_Email.Valid(Input_Email.Text))
             {
                 registerErrors.Add("Please enter a valid e-mail address.");
-                Picture_Input_Email.Image = Theming.BorderEmailError;
+                Picture_Input_Email.Image = Image_Other.Text_Border_Email_Error;
             }
 
             if (string.IsNullOrWhiteSpace(Input_Ticket.Text) && Ticket_Required)
@@ -58,25 +54,25 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             if (string.IsNullOrWhiteSpace(Input_Password.Text))
             {
                 registerErrors.Add("Please enter your password.");
-                Picture_Input_Password.Image = Theming.BorderPasswordError;
+                Picture_Input_Password.Image = Image_Other.Text_Border_Password_Error;
             }
 
             if (string.IsNullOrWhiteSpace(Input_Password_Confirm.Text))
             {
                 registerErrors.Add("Please confirm your password.");
-                Picture_Input_Password_Confirm.Image = Theming.BorderPasswordError;
+                Picture_Input_Password_Confirm.Image = Image_Other.Text_Border_Password_Error;
             }
 
             if (Input_Password_Confirm.Text != Input_Password.Text)
             {
                 registerErrors.Add("Passwords don't match.");
-                Picture_Input_Password_Confirm.Image = Theming.BorderPasswordError;
+                Picture_Input_Password_Confirm.Image = Image_Other.Text_Border_Password_Error;
             }
 
             if (!CheckBox_Rules_Agreement.Checked)
             {
                 registerErrors.Add("You have not agreed to the Terms of Service.");
-                CheckBox_Rules_Agreement.ForeColor = Theming.Error;
+                CheckBox_Rules_Agreement.ForeColor = Color_Text.S_Error;
             }
 
             if (registerErrors.Count == 0)
@@ -237,67 +233,67 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
 
         private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
         {
-            Button_Register.BackgroundImage = Theming.GreenButtonHover;
+            Button_Register.BackgroundImage = Image_Button.Green_Hover;
         }
 
         private void Greenbutton_MouseLeave(object sender, EventArgs e)
         {
-            Button_Register.BackgroundImage = Theming.GreenButton;
+            Button_Register.BackgroundImage = Image_Button.Green;
         }
 
         private void Greenbutton_hover_MouseUp(object sender, EventArgs e)
         {
-            Button_Register.BackgroundImage = Theming.GreenButtonHover;
+            Button_Register.BackgroundImage = Image_Button.Green_Hover;
         }
 
         private void Greenbutton_click_MouseDown(object sender, EventArgs e)
         {
-            Button_Register.BackgroundImage = Theming.GreenButtonClick;
+            Button_Register.BackgroundImage = Image_Button.Green_Click;
         }
 
         private void CheckBox_Rules_Agreement_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox_Rules_Agreement.ForeColor = Theming.FivithTextForeColor;
+            CheckBox_Rules_Agreement.ForeColor = Color_Text.L_Five;
         }
 
         private void Input_Email_TextChanged(object sender, EventArgs e)
         {
-            Picture_Input_Email.Image = Theming.BorderEmail;
+            Picture_Input_Email.Image = Image_Other.Text_Border_Email;
         }
 
         private void Input_Ticket_TextChanged(object sender, EventArgs e)
         {
-            Picture_Input_Ticket.Image = Theming.BorderTicket;
+            Picture_Input_Ticket.Image = Image_Other.Text_Border_Ticket;
         }
 
         private void Input_Password_Confirm_TextChanged(object sender, EventArgs e)
         {
-            Picture_Input_Password_Confirm.Image = Theming.BorderPassword;
+            Picture_Input_Password_Confirm.Image = Image_Other.Text_Border_Password;
         }
 
         private void Input_Password_TextChanged(object sender, EventArgs e)
         {
-            Picture_Input_Password.Image = Theming.BorderPassword;
+            Picture_Input_Password.Image = Image_Other.Text_Border_Password;
         }
 
         private void Graybutton_click_MouseDown(object sender, EventArgs e)
         {
-            Button_Cancel.BackgroundImage = Theming.GrayButtonClick;
+            Button_Cancel.BackgroundImage = Image_Button.Grey_Click;
         }
 
         private void Graybutton_hover_MouseEnter(object sender, EventArgs e)
         {
-            Button_Cancel.BackgroundImage = Theming.GrayButtonHover;
+            Button_Cancel.BackgroundImage = Image_Button.Grey_Hover;
         }
 
         private void Graybutton_MouseLeave(object sender, EventArgs e)
         {
-            Button_Cancel.BackgroundImage = Theming.GrayButton;
+            Button_Cancel.BackgroundImage = Image_Button.Grey;
         }
 
         private void Graybutton_hover_MouseUp(object sender, EventArgs e)
         {
-            Button_Cancel.BackgroundImage = Theming.GrayButtonHover;
+            Button_Cancel.BackgroundImage = Image_Button.Grey_Hover;
         }
 
         private void Button_Cancel_Click(object sender, EventArgs e)
@@ -345,31 +341,31 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             BackgroundImage = Image_Background.Registration;
             TransparencyKey = Color_Screen.BG_Registration;
 
-            Label_Information_Window.ForeColor = Theming.FivithTextForeColor;
+            Label_Information_Window.ForeColor = Color_Text.L_Five;
 
-            Input_Email.BackColor = Theming.Input;
-            Input_Email.ForeColor = Theming.FivithTextForeColor;
+            Input_Email.BackColor = Color_Winform_Other.Input;
+            Input_Email.ForeColor = Color_Text.L_Five;
             Picture_Input_Email.Image = Image_Other.Text_Border_Email;
 
             Picture_Input_Password.Image = Image_Other.Text_Border_Password;
-            Input_Password.BackColor = Theming.Input;
-            Input_Password.ForeColor = Theming.FivithTextForeColor;
+            Input_Password.BackColor = Color_Winform_Other.Input;
+            Input_Password.ForeColor = Color_Text.L_Five;
 
             Picture_Input_Password_Confirm.Image = Image_Other.Text_Border_Password;
-            Input_Password_Confirm.BackColor = Theming.Input;
-            Input_Password_Confirm.ForeColor = Theming.FivithTextForeColor;
+            Input_Password_Confirm.BackColor = Color_Winform_Other.Input;
+            Input_Password_Confirm.ForeColor = Color_Text.L_Five;
 
             Picture_Input_Ticket.Image = Image_Other.Text_Border_Ticket;
-            Input_Ticket.BackColor = Theming.Input;
-            Input_Ticket.ForeColor = Theming.FivithTextForeColor;
+            Input_Ticket.BackColor = Color_Winform_Other.Input;
+            Input_Ticket.ForeColor = Color_Text.L_Five;
 
-            CheckBox_Rules_Agreement.ForeColor = Theming.WinFormWarningTextForeColor;
+            CheckBox_Rules_Agreement.ForeColor = Color_Winform.Warning_Text_Fore_Color;
 
-            Button_Register.BackgroundImage = Theming.GreenButton;
-            Button_Register.ForeColor = Theming.SeventhTextForeColor;
+            Button_Register.BackgroundImage = Image_Button.Green;
+            Button_Register.ForeColor = Color_Text.L_Seven;
 
-            Button_Cancel.BackgroundImage = Theming.GrayButton;
-            Button_Cancel.ForeColor = Theming.FivithTextForeColor;
+            Button_Cancel.BackgroundImage = Image_Button.Grey;
+            Button_Cancel.ForeColor = Color_Text.L_Five;
 
             /********************************/
             /* Events                        /

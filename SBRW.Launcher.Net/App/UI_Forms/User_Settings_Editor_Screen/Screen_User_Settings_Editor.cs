@@ -17,7 +17,7 @@ using SBRW.Launcher.App.Classes.LauncherCore.Support;
 
 namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
 {
-    public partial class USXEditor : Form
+    public partial class Screen_User_Settings_Editor : Form
     {
         private static bool IsUSXEditorOpen = false;
         public static bool FileReadOnly = false;
@@ -27,15 +27,15 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
 
         public static void OpenScreen()
         {
-            if (IsUSXEditorOpen || Application.OpenForms["USXEditor"] != null)
+            if (IsUSXEditorOpen || Application.OpenForms["Screen_User_Settings_Editor"] != null)
             {
-                if (Application.OpenForms["USXEditor"] != null) { Application.OpenForms["USXEditor"].Activate(); }
+                if (Application.OpenForms["Screen_User_Settings_Editor"] != null) { Application.OpenForms["Screen_User_Settings_Editor"].Activate(); }
             }
             else
             {
                 if (File.Exists(Locations.UserSettingsXML))
                 {
-                    try { new USXEditor().ShowDialog(); }
+                    try { new Screen_User_Settings_Editor().ShowDialog(); }
                     catch (Exception Error)
                     {
                         string ErrorMessage = "USX Editor Screen Encountered an Error";
@@ -50,7 +50,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             }
         }
 
-        public USXEditor()
+        public Screen_User_Settings_Editor()
         {
             IsUSXEditorOpen = true;
             Presence_Launcher.Status("User XML Editor", null);

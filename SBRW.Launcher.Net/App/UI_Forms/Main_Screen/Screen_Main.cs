@@ -63,6 +63,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 {
     public partial class Screen_Main : Form
     {
+        public static Screen_Main Screen_Instance { get; set; }
+        public static Panel Screen_Panel_Forms { get; set; }
         private bool Launcher_Restart { get; set; }
         private Point Mouse_Down_Point { get; set; } = Point.Empty;
         private bool LoginEnabled { get; set; }
@@ -99,18 +101,18 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public static int TotalModFileCount { get; set; }
         public static string Custom_SBRW_Pack { get; set; } = Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack");
 
-        private void Move_Window_Mouse_Down(object sender, MouseEventArgs e)
+        public void Move_Window_Mouse_Down(object sender, MouseEventArgs e)
         {
             if (e.Y <= 90) Mouse_Down_Point = new Point(e.X, e.Y);
         }
 
-        private void Move_Window_Mouse_Up(object sender, MouseEventArgs e)
+        public void Move_Window_Mouse_Up(object sender, MouseEventArgs e)
         {
             Mouse_Down_Point = Point.Empty;
             Opacity = 1;
         }
 
-        private void Move_Window_Mouse_Move(object sender, MouseEventArgs e)
+        public void Move_Window_Mouse_Move(object sender, MouseEventArgs e)
         {
             if (Mouse_Down_Point.IsEmpty) { return; }
             Form Main_Local_Window = this as Form;
@@ -608,7 +610,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         {
             try
             {
-                Screen_Settings.OpenScreen();
+                Screen_Settings Custom_Instance_Settings = new Screen_Settings() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
+                Panel_Form_Screens.Visible = true;
+                Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
+                Custom_Instance_Settings.Show();
+                Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
             }
             catch (Exception Error)
             {
@@ -619,7 +625,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private void ButtonSecurityCenter_Click(object sender, EventArgs e)
         {
-            Screen_Security_Center.OpenScreen("Idle Ready");
+            try
+            {
+                Screen_Security_Center Custom_Instance_Settings = new Screen_Security_Center() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
+                Panel_Form_Screens.Visible = true;
+                Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
+                Screen_Security_Center.RPCStateCache = "Idle Ready";
+                Custom_Instance_Settings.Show();
+                Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
+            }
+            catch (Exception Error)
+            {
+                string ErrorMessage = "Security Center Screen Encountered an Error";
+                LogToFileAddons.OpenLog("Security Center Panel", ErrorMessage, Error, "Exclamation", false);
+            }
         }
 
         private void ComboBox_Server_List_MouseWheel(object sender, MouseEventArgs e)
@@ -1032,7 +1051,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 return;
             }
 
-            if (!Redistributable.ErrorFree)
+            if (!Redistributable.Error_Free)
             {
                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
                 MessageBox.Show("GameLauncher has detected that the 2015-2019 VC++ Redistributable Package is not installed\n" +
@@ -3280,6 +3299,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
         }
 #endregion
+
+        public void Clear_Hide_Screen_Form_Panel()
+        {
+            Screen_Panel_Forms.Controls.Clear();
+            Screen_Panel_Forms.Visible = false;
+            Text = "SBRW Launcher: v" + Application.ProductVersion;
+        }
+
         public Screen_Main()
         {
             InitializeComponent();
@@ -3288,6 +3315,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 ClosingTasks();
             };
+            Screen_Instance = this;
+            Screen_Panel_Forms = Panel_Form_Screens;
         }
     }
 }

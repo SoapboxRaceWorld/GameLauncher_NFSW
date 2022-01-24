@@ -1,7 +1,7 @@
 ﻿
 namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
 {
-    partial class USXEditor
+    partial class Screen_User_Settings_Editor
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(USXEditor));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Screen_User_Settings_Editor));
             this.labelAudioMode = new System.Windows.Forms.Label();
             this.labelBrightness = new System.Windows.Forms.Label();
             this.labelMasterVol = new System.Windows.Forms.Label();
@@ -2055,7 +2055,6 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ForeColor = System.Drawing.Color.Silver;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "USXEditor";
