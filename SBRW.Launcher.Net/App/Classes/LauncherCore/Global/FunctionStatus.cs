@@ -22,6 +22,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using SBRW.Launcher.App.Classes.InsiderKit;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Global
 {
@@ -44,7 +45,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
         /* Launcher had Encounterd an Error and It Must Close */
         public static bool LauncherForceClose { get; set; }
         /* Launcher had Encounterd an Error and It Reason*/
+#pragma warning disable CS8618
         public static string LauncherForceCloseReason { get; set; }
+#pragma warning restore CS8618
         /* Updater.cs Sets Conditional on If Launcher had Finished Loading (It Self) */
         public static bool LoadingComplete { get; set; }
         /* Allows Registration Button to be Enabled/Disabled */
@@ -61,6 +64,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
         /* Checks if we have Write Permissions */
         public static bool HasWriteAccessToFolder(string path)
         {
+            if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
+            {
+                Log.Info("WRITE TEST: Folder Path [" + path + "]");
+            }
+
             try
             {
                 Log.Checking("WRITE TEST: Folder Write Test");
@@ -223,15 +231,16 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                                     ValidateNames = false,
                                     CheckFileExists = false,
                                     CheckPathExists = true,
+                                    AutoUpgradeEnabled = false,
                                     Title = "Select the location to Find or Download nfsw.exe",
-                                    FileName = "Select Game Files Folder"
+                                    FileName = "   Select Game Files Folder"
                                 };
 
                                 if (FolderDialog.ShowDialog() == DialogResult.OK)
                                 {
                                     if (!string.IsNullOrWhiteSpace(FolderDialog.FileName))
                                     {
-                                        GameFolderPath = FolderDialog.FileName;
+                                        GameFolderPath = Path.GetDirectoryName(FolderDialog.FileName)??string.Empty;
                                     }
                                 }
 
@@ -330,7 +339,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                         {
                             LauncherForceClose = true;
                             LauncherForceCloseReason = Error.Message;
-                            LogToFileAddons.OpenLog("FOLDER SELECT DIALOG", null, Error, null, true);
+                            LogToFileAddons.OpenLog("FOLDER SELECT DIALOG", string.Empty, Error, string.Empty, true);
                         }
                     }
                 }

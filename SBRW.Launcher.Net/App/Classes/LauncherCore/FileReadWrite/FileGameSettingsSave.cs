@@ -1,5 +1,5 @@
-﻿using SBRW.Launcher.App.Classes.LauncherCore.Downloader;
-using SBRW.Launcher.App.Classes.LauncherCore.Global;
+﻿using SBRW.Launcher.App.Classes.LauncherCore.Global;
+using SBRW.Launcher.Core.Downloader.LZMA;
 using SBRW.Launcher.Core.Extension.Logging_;
 using SBRW.Launcher.Core.Extension.String_;
 using System;
@@ -95,7 +95,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite
             {
                 /* Language */
                 FileGameSettingsData.Language = (NodeReader("InnerText", "Settings/UI/Language", null) != "ERROR") ?
-                                                 NodeReader("InnerText", "Settings/UI/Language", null) : DownloaderAddons.SpeechFiles(null).ToUpper();
+                                                 NodeReader("InnerText", "Settings/UI/Language", null) : Download_LZMA_Support.SpeechFiles(InformationCache.Lang.ThreeLetterISOLanguageName).ToUpper();
             }
             else if (FileReadStatus == "Full File")
             {

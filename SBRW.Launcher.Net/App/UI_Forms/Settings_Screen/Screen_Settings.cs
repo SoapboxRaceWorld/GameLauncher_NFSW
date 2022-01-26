@@ -39,8 +39,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         /*******************************/
         /* Global Functions             /
         /*******************************/
+#pragma warning disable CS8618
         public static Screen_Settings Screen_Instance { get; set; }
         public static Panel Screen_Panel_Forms { get; set; }
+#pragma warning restore CS8618
         private int LastSelectedCdnId { get; set; }
         private int LastSelectedLanguage { get; set; }
         private bool DisableProxy { get; set; }
@@ -946,14 +948,15 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         {
             if (!UnixOS.Detected())
             {
-                System.Windows.Forms.OpenFileDialog changeGameFilesPath = new System.Windows.Forms.OpenFileDialog
+                OpenFileDialog changeGameFilesPath = new OpenFileDialog
                 {
                     InitialDirectory = "C:\\",
                     ValidateNames = false,
                     CheckFileExists = false,
                     CheckPathExists = true,
+                    AutoUpgradeEnabled = false,
                     Title = "Select the location to Find or Download nfsw.exe",
-                    FileName = "Select Game Files Folder"
+                    FileName = "   Select Game Files Folder"
                 };
 
                 if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
@@ -1648,7 +1651,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Screen_Main.Screen_Instance.Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
         }
 
+#pragma warning disable CS8618
         public Screen_Settings()
+#pragma warning restore CS8618
         {
             InitializeComponent();
             Set_Visuals();

@@ -208,7 +208,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
             }
         }
 
+#pragma warning disable CS8618
         private static string OnlineListJson { get; set; }
+#pragma warning restore CS8618
 
         private static bool RetrieveJSON(string JSONUrl, string Function)
         {
