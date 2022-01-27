@@ -71,32 +71,6 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         ///<summary>RPC: Which State to do once Form Closes</summary>
         public static string RPCStateCache { get; set; }
 
-        public Screen_Security_Center()
-        {
-            InitializeComponent();
-            SetVisuals();
-            this.Closing += (x, y) =>
-            {
-                Presence_Launcher.Status(RPCStateCache, null);
-                DisableButtonFRAPI = DisableButtonDRAPI = DisableButtonDRAPI = DisableButtonPRC = false;
-                if (!string.IsNullOrWhiteSpace(RPCStateCache))
-                {
-                    if (RPCStateCache.Contains("Settings"))
-                    {
-                        Screen_Settings.Screen_Instance.Clear_Hide_Screen_Form_Panel();
-                    }
-                    else if (RPCStateCache.Contains("Ready"))
-                    {
-                        Screen_Main.Screen_Instance.Clear_Hide_Screen_Form_Panel();
-                    }
-                }
-                RPCStateCache = string.Empty;
-                GC.Collect();
-            };
-
-            Presence_Launcher.Status("Security Center", null);
-        }
-
         /// <summary>
         /// Sets the Color for Buttons
         /// </summary>
@@ -1883,6 +1857,38 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
             ButtonClose.MouseUp += new MouseEventHandler(ButtonClose_MouseLeaveANDMouseUp);
             ButtonClose.MouseDown += new MouseEventHandler(ButtonClose_MouseDown);
             ButtonClose.Click += new EventHandler(ButtonClose_Click);
+            /* Window */
+            MouseMove += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Move);
+            MouseUp += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Up);
+            MouseDown += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Down);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Screen_Security_Center()
+        {
+            InitializeComponent();
+            SetVisuals();
+            this.Closing += (x, y) =>
+            {
+                Presence_Launcher.Status(RPCStateCache, null);
+                DisableButtonFRAPI = DisableButtonDRAPI = DisableButtonDRAPI = DisableButtonPRC = false;
+                if (!string.IsNullOrWhiteSpace(RPCStateCache))
+                {
+                    if (RPCStateCache.Contains("Settings"))
+                    {
+                        Screen_Settings.Screen_Instance.Clear_Hide_Screen_Form_Panel();
+                    }
+                    else if (RPCStateCache.Contains("Ready"))
+                    {
+                        Screen_Main.Screen_Instance.Clear_Hide_Screen_Form_Panel();
+                    }
+                }
+                RPCStateCache = string.Empty;
+                GC.Collect();
+            };
+
+            Presence_Launcher.Status("Security Center", null);
         }
     }
 }
