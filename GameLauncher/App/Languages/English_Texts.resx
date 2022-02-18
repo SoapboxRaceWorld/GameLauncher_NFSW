@@ -410,7 +410,7 @@
     <value>You can press 'OK' to continue and you will not see this message again.</value>
   </data>
   <data name="Redistributable_VC_32" xml:space="preserve">
-    <value>You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed.</value>
+    <value>You do not have the 32-bit 2015-2019 VC++ Redistributable Package (or newer) installed.</value>
   </data>
   <data name="Redistributable_VC_P4" xml:space="preserve">
     <value>Click OK to install it.</value>
@@ -425,7 +425,7 @@
     <value>An instance of Need for Speed: World is already running</value>
   </data>
   <data name="Redistributable_VC_64" xml:space="preserve">
-    <value>You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed.</value>
+    <value>You do not have the 64-bit 2015-2019 VC++ Redistributable Package (or newer) installed.</value>
   </data>
   <data name="Redistributable_VC_P6" xml:space="preserve">
     <value>Failed to run package installer.\n The game will not be started.</value>

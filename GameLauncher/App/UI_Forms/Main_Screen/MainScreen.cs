@@ -952,6 +952,9 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                     case "SCENERY_GROUP_NEWYEARS":
                                         SceneryStatus = "Scenery: New Years";
                                         break;
+                                    case "SCENERY_GROUP_VALENTINES":
+                                        SceneryStatus = "Scenery: Valentines";
+                                        break;
                                     case "SCENERY_GROUP_OKTOBERFEST":
                                         SceneryStatus = "Scenery: Oktoberfest";
                                         break;
@@ -960,9 +963,6 @@ namespace GameLauncher.App.UI_Forms.Main_Screen
                                         break;
                                     case "SCENERY_GROUP_CHRISTMAS":
                                         SceneryStatus = "Scenery: Christmas";
-                                        break;
-                                    case "SCENERY_GROUP_VALENTINES":
-                                        SceneryStatus = "Scenery: Valentines";
                                         break;
                                     default:
                                         SceneryStatus = "Scenery: Normal";
