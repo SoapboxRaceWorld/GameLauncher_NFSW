@@ -12,6 +12,7 @@ using System;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
 {
@@ -107,6 +108,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
         public static APIStatus CarbonTwoSC { get; set; } = APIStatus.Unknown;
         public static bool CarbonAPITwo() => (CarbonTwoSL && CarbonTwoCDNL);
 
+        public static bool Local_Cached_SL { get; set; }
+        public static bool Local_Cached_CDNL { get; set; }
+        public static APIStatus Local_Cached_SC { get; set; } = APIStatus.Unknown;
+        public static bool Local_Cached_API() => (Local_Cached_SL && Local_Cached_CDNL);
+
         public static bool GitHubAPI { get; set; }
         public static APIStatus GitHubAPISC { get; set; } = APIStatus.Unknown;
 
@@ -117,8 +123,8 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
             switch (UnitedSC = API_Core.StatusCheck(URLs.Main + "/serverlist.json", 15))
             {
                 case APIStatus.Online:
-                    UnitedSL = RetrieveJSON(URLs.Main + "/serverlist.json", "SL");
-                    if (UnitedSL) { UnitedCDNL = RetrieveJSON(URLs.Main + "/cdn_list.json", "CDNL"); }
+                    UnitedSL = RetrieveJSON(URLs.Main + "/serverlist.json", "SL", UnitedSC);
+                    if (UnitedSL) { UnitedCDNL = RetrieveJSON(URLs.Main + "/cdn_list.json", "CDNL", UnitedSC); }
                     Log.Completed("API Status: WorldUnited");
                     break;
                 default:
@@ -132,9 +138,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                 switch (CarbonSC = API_Core.StatusCheck(URLs.Static + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
-                        if (!UnitedSL) { CarbonSL = RetrieveJSON(URLs.Static + "/serverlist.json", "SL"); }
+                        if (!UnitedSL) { CarbonSL = RetrieveJSON(URLs.Static + "/serverlist.json", "SL", CarbonSC); }
                         else { CarbonSL = true; }
-                        if (!UnitedCDNL) { CarbonCDNL = RetrieveJSON(URLs.Static + "/cdn_list.json", "CDNL"); }
+                        if (!UnitedCDNL) { CarbonCDNL = RetrieveJSON(URLs.Static + "/cdn_list.json", "CDNL", CarbonSC); }
                         else { CarbonCDNL = true; }
                         Log.Completed("API Status: DavidCarbon");
                         break;
@@ -145,8 +151,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
             }
             else
             {
-                CarbonSL = true;
-                CarbonCDNL = true;
+                CarbonSL = CarbonCDNL = true;
             }
 
             if (!CarbonAPI())
@@ -155,9 +160,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                 switch (CarbonTwoSC = API_Core.StatusCheck(URLs.Static_Alt + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
-                        if (!CarbonSL) { CarbonTwoSL = RetrieveJSON(URLs.Static_Alt + "/serverlist.json", "SL"); }
+                        if (!CarbonSL) { CarbonTwoSL = RetrieveJSON(URLs.Static_Alt + "/serverlist.json", "SL", CarbonTwoSC); }
                         else { CarbonTwoSL = true; }
-                        if (!CarbonCDNL) { CarbonTwoCDNL = RetrieveJSON(URLs.Static_Alt + "/cdn_list.json", "CDNL"); }
+                        if (!CarbonCDNL) { CarbonTwoCDNL = RetrieveJSON(URLs.Static_Alt + "/cdn_list.json", "CDNL", CarbonTwoSC); }
                         else { CarbonTwoCDNL = true; }
                         Log.Completed("API Status: DavidCarbon [Second]");
                         break;
@@ -168,14 +173,57 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
             }
             else
             {
-                CarbonTwoSL = true;
-                CarbonTwoCDNL = true;
+                CarbonTwoSL = CarbonTwoCDNL = true;
+            }
+
+            if (!CarbonAPITwo())
+            {
+                Log.Checking("API Status: Local Cache");
+                var Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "Lists");
+                var Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Game_Servers.json");
+                var CDN_List_Cache = Path.Combine(Launcher_Data_Folder, "Content_Delivery_Networks.json");
+
+                if (File.Exists(Server_List_Cache))
+                {
+                    if (Is_Json.Valid(File.ReadAllText(Server_List_Cache)))
+                    {
+                        Local_Cached_SL = RetrieveJSON(Server_List_Cache, "SL", Local_Cached_SC, true, File.ReadAllText(Server_List_Cache));
+                    }
+                    else
+                    {
+                        Log.Error("API Status: Invalid Game Servers Cache File");
+                    }
+                }
+                else
+                {
+                    Log.Error("API Status: No Game Servers Cache File Found");
+                }
+
+                if (File.Exists(CDN_List_Cache))
+                {
+                    if (Is_Json.Valid(File.ReadAllText(CDN_List_Cache)))
+                    {
+                        Local_Cached_CDNL = RetrieveJSON(CDN_List_Cache, "CDNL", Local_Cached_SC, true, File.ReadAllText(CDN_List_Cache));
+                    }
+                    else
+                    {
+                        Log.Error("API Status: Invalid Content Delivery Networks Cache File");
+                    }
+                }
+                else
+                {
+                    Log.Error("API Status: No Content Delivery Networks Cache File Found");
+                }
+            }
+            else
+            {
+                Local_Cached_SL = Local_Cached_CDNL = true;
             }
 
             Log.Checking("API: Test #2");
 
             /* Check If Launcher Failed to Connect to any APIs */
-            if (!CarbonAPITwo())
+            if (!Local_Cached_API())
             {
                 Presence_Launcher.Status("Start Up", "Launcher Encountered API Errors");
 
@@ -212,70 +260,59 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
         private static string OnlineListJson { get; set; }
 #pragma warning restore CS8618
 
-        private static bool RetrieveJSON(string JSONUrl, string Function)
+        private static bool RetrieveJSON(string JSONUrl, string Function, APIStatus API_Name, bool ByPass_Online = false, string? ByPass_List = null)
         {
             Log.Checking("JSON LIST: Retriving " + JSONUrl);
             try
             {
-                Uri URLCall = new Uri(JSONUrl);
-                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                var Client = new WebClient
+                if (!ByPass_Online)
                 {
-                    Encoding = Encoding.UTF8
-                };
+                    Uri URLCall = new Uri(JSONUrl);
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    var Client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
 
-                if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
+                    try
+                    {
+                        OnlineListJson = Client.DownloadString(URLCall);
+                        API_Name = APIStatus.Online;
+                        Log.UrlCall("JSON LIST: Retrieved " + JSONUrl);
+                    }
+                    catch (WebException Error)
+                    {
+                        APIStatus API_Status = API_Core.StatusCodes(JSONUrl, Error, (HttpWebResponse)Error.Response);
+                        API_Name = API_Status;
+
+                        return false;
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("JSON LIST", string.Empty, Error, string.Empty, true);
+                        API_Name = APIStatus.Unknown;
+
+                        return false;
+                    }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
+                    }
+                }
                 else
                 {
-                    Client.Headers.Add("user-agent", "SBRW Launcher " +
-                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                }
-
-                try
-                {
-                    OnlineListJson = Client.DownloadString(URLCall);
-
-                    if (URLCall.OriginalString.Contains(URLs.Main))
-                    { UnitedSC = APIStatus.Online; }
-                    else if (URLCall.OriginalString.Contains(URLs.Static))
-                    { CarbonSC = APIStatus.Online; }
-                    else if (URLCall.OriginalString.Contains(URLs.Static_Alt))
-                    { CarbonTwoSC = APIStatus.Online; }
-
-                    Log.UrlCall("JSON LIST: Retrieved " + JSONUrl);
-                }
-                catch (WebException Error)
-                {
-                    APIStatus API_Status = API_Core.StatusCodes(JSONUrl, Error, (HttpWebResponse)Error.Response);
-
-                    if (URLCall.OriginalString.Contains(URLs.Main))
-                    { UnitedSC = API_Status; }
-                    else if (URLCall.OriginalString.Contains(URLs.Static))
-                    { CarbonSC = API_Status; }
-                    else if (URLCall.OriginalString.Contains(URLs.Static_Alt))
-                    { CarbonTwoSC = API_Status; }
-
-                    return false;
-                }
-                catch (Exception Error)
-                {
-                    LogToFileAddons.OpenLog("JSON LIST", string.Empty, Error, string.Empty, true);
-
-                    if (URLCall.OriginalString.Contains(URLs.Main))
-                    { UnitedSC = APIStatus.Unknown; }
-                    else if (URLCall.OriginalString.Contains(URLs.Static))
-                    { CarbonSC = APIStatus.Unknown; }
-                    else if (URLCall.OriginalString.Contains(URLs.Static_Alt))
-                    { CarbonTwoSC = APIStatus.Unknown; }
-
-                    return false;
-                }
-                finally
-                {
-                    if (Client != null)
-                    {
-                        Client.Dispose();
-                    }
+                    API_Name = APIStatus.Online;
+                    OnlineListJson = ByPass_List;
                 }
 
                 if (Is_Json.Valid(OnlineListJson))
