@@ -14,6 +14,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using SBRW.Launcher.App.UI_Forms.Custom_Server_Screen;
+using SBRW.Launcher.App.Classes.LauncherCore.APICheckers;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 {
@@ -39,33 +40,35 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                 serverInfos.AddRange(JsonConvert.DeserializeObject<List<Json_List_Server>>(CachedJSONList));
                 LoadedList = true;
 
-                var Time_Check = DateTime.Now.Date;
-                var Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "Lists");
-                var Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
-                if (File.Exists(Time_Stamp))
+                if (VisualsAPIChecker.CarbonAPITwo())
                 {
-                    try
+                    var Time_Check = DateTime.Now.Date;
+                    var Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "Lists");
+                    var Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
+                    if (File.Exists(Time_Stamp))
                     {
-                        var Time_Lines = File.ReadLines(Time_Stamp);
-                        Time_Check = DateTime.Parse(Time_Lines.First()).Date;
-                    }
-                    catch
-                    {
+                        try
+                        {
+                            Time_Check = DateTime.Parse(File.ReadLines(Time_Stamp).First()).Date;
+                        }
+                        catch
+                        {
 
+                        }
                     }
-                }
 
-                if ((Time_Check < DateTime.Now.Date) || !File.Exists(Time_Stamp))
-                {
-                    if (!Directory.Exists(Launcher_Data_Folder))
+                    if ((Time_Check < DateTime.Now.Date) || !File.Exists(Time_Stamp))
                     {
-                        Directory.CreateDirectory(Launcher_Data_Folder);
+                        if (!Directory.Exists(Launcher_Data_Folder))
+                        {
+                            Directory.CreateDirectory(Launcher_Data_Folder);
+                        }
+                        var Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Game_Servers.json");
+                        File.WriteAllText(Server_List_Cache, CachedJSONList);
+                        var CDN_List_Cache = Path.Combine(Launcher_Data_Folder, "Content_Delivery_Networks.json");
+                        File.WriteAllText(CDN_List_Cache, CDNListUpdater.CachedJSONList);
+                        File.WriteAllText(Time_Stamp, DateTime.Now.ToString());
                     }
-                    var Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Game_Servers.json");
-                    File.WriteAllText(Server_List_Cache, CachedJSONList);
-                    var CDN_List_Cache = Path.Combine(Launcher_Data_Folder, "Content_Delivery_Networks.json");
-                    File.WriteAllText(CDN_List_Cache, CDNListUpdater.CachedJSONList);
-                    File.WriteAllText(Time_Stamp, DateTime.Now.ToString());
                 }
             }
             catch (Exception Error)
