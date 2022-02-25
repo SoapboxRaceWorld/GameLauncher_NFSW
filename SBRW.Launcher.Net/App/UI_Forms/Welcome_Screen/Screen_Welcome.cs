@@ -7,6 +7,7 @@ using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
 using SBRW.Launcher.Core.Extension.Logging_;
 using SBRW.Launcher.Core.Extra.File_;
 using SBRW.Launcher.Core.Extra.Ini_;
+using SBRW.Launcher.Core.Extra.XML_;
 using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Theme;
 using System;
@@ -225,7 +226,7 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             /* Load XML (Only one Section)   /
             /********************************/
 
-            FileGameSettings.Read("Language Only");
+            XML_File.Read(1);
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -233,7 +234,7 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             if (!string.IsNullOrWhiteSpace(((Json_List_Language)ComboBox_Game_Language.SelectedItem).Value_Ini))
             {
                 Save_Settings.Live_Data.Launcher_Language = ((Json_List_Language)ComboBox_Game_Language.SelectedItem).Value_Ini;
-                FileGameSettingsData.Language = ((Json_List_Language)ComboBox_Game_Language.SelectedItem).Value_XML;
+                XML_File.XML_Settings_Data.Language = ((Json_List_Language)ComboBox_Game_Language.SelectedItem).Value_XML;
             }
 
             try

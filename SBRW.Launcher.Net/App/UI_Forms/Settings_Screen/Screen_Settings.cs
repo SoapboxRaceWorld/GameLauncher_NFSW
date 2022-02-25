@@ -20,6 +20,7 @@ using SBRW.Launcher.Core.Extension.Logging_;
 using SBRW.Launcher.Core.Extension.String_;
 using SBRW.Launcher.Core.Extra.File_;
 using SBRW.Launcher.Core.Extra.Ini_;
+using SBRW.Launcher.Core.Extra.XML_;
 using SBRW.Launcher.Core.Proxy.Nancy_;
 using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Required.System.Windows_;
@@ -590,7 +591,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             if (ComboBox_Language_List.SelectedItem != null && !string.IsNullOrWhiteSpace(((Json_List_Language)ComboBox_Language_List.SelectedItem).Value_Ini))
             {
                 Save_Settings.Live_Data.Launcher_Language = ((Json_List_Language)ComboBox_Language_List.SelectedItem).Value_Ini;
-                FileGameSettingsData.Language = ((Json_List_Language)ComboBox_Language_List.SelectedItem).Value_XML;
+                XML_File.XML_Settings_Data.Language = ((Json_List_Language)ComboBox_Language_List.SelectedItem).Value_XML;
 
                 /* TODO: Inform player about custom languagepack used. */
                 if (((Json_List_Language)ComboBox_Language_List.SelectedItem).Category == "Custom")
@@ -810,7 +811,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 
             /* Save Settings */
             Save_Settings.Save();
-            FileGameSettings.Save("Suppress", "Language Only");
+            XML_File.Save(1);
             Button_Save.Text = "SAVED";
 
             if (RestartRequired)
@@ -1588,7 +1589,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             /* Load XML (Only one Section)   /
             /********************************/
 
-            FileGameSettings.Read("Language Only");
+            XML_File.Read(1);
 
             /********************************/
             /* Sets Red Buttons/Disables     /

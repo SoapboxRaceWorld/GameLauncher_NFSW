@@ -921,6 +921,29 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 /* TIMER HERE */
                 System.Timers.Timer shutdowntimer = new System.Timers.Timer();
                 shutdowntimer.Elapsed += new System.Timers.ElapsedEventHandler(Time_Window.ClockWork_Planet);
+                Time_Window.Session_Alert += (x, D_Live_Events) =>
+                {
+                    if (D_Live_Events != null)
+                    {
+                        try
+                        {
+                            NotifyIcon_Notification.Visible = D_Live_Events.Valid;
+                            NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
+                            NotifyIcon_Notification.BalloonTipTitle = "Force Restart - " + Launcher_Value.Game_Server_Name;
+                            NotifyIcon_Notification.BalloonTipText = "Game will shutdown by " + (D_Live_Events.Session_End_Time ?? DateTime.Now.AddMinutes(5)).ToString("t") + ". Please restart it manually before the launcher does it.";
+                            NotifyIcon_Notification.ShowBalloonTip(TimeSpan.FromMinutes(2).Seconds);
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("NotifyIcon_Notification Timer", string.Empty, Error, "Error", true);
+                        }
+                        finally
+                        {
+                            GC.Collect();
+                        }
+                    }
+                };
+
                 shutdowntimer.Interval = !Proxy_Settings.Running() ? 30000 : 60000;
                 shutdowntimer.Enabled = true;
 

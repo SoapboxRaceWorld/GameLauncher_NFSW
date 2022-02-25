@@ -371,7 +371,7 @@ namespace SBRW.Launcher.Net
         #region Application Start Process
         private static void Start()
         {
-            Presence_Launcher.Start("Start Up", null);
+            Presence_Launcher.Start("Start Up", "576154452348633108");
 
             if (!UnixOS.Detected())
             {

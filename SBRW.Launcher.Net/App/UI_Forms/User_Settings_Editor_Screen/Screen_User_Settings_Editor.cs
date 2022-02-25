@@ -14,6 +14,7 @@ using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
 using SBRW.Launcher.Core.Theme;
 using SBRW.Launcher.App.Classes.LauncherCore.Support;
+using SBRW.Launcher.Core.Extra.XML_;
 
 namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
 {
@@ -65,7 +66,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 Log.Completed("UXE: UserSettings.xml can be modified!");
             }
 
-            FileGameSettings.Read("Full File");
+            XML_File.Read(2);
             ResolutionsListUpdater.Get();
             InitializeComponent();
             SetVisuals();
@@ -240,27 +241,27 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                     /* Custom */
                     PresetButtonCustom.Checked = true;
 
-                    comboBoxBaseTextureFilter.SelectedIndex = CheckValidRange("BaseTextureFilter", "0-2", FileGameSettingsData.BaseTextureFilter);
-                    comboBoxAnisotropicLevel.SelectedIndex = CheckValidRange("AnisotropicLevel", "0-4", FileGameSettingsData.BaseTextureMaxAni);
-                    comboBoxCarEnvironmentDetail.SelectedIndex = CheckValidRange("CarEnvironmentDetail", "0-4", FileGameSettingsData.CarEnvironmentMapEnable);
-                    comboBoxWorldGlobalDetail.SelectedIndex = CheckValidRange("WorldGlobalDetail", "0-4", FileGameSettingsData.GlobalDetailLevel);
-                    comboBoxWorldRoadReflection.SelectedIndex = CheckValidRange("WorldRoadReflection", "0-2", FileGameSettingsData.RoadReflectionEnable);
-                    comboBoxWorldRoadTexture.SelectedIndex = CheckValidRange("WorldRoadTexture", "0-2", FileGameSettingsData.RoadTextureFilter);
-                    comboBoxWorldRoadAniso.SelectedIndex = CheckValidRange("WorldRoadAniso", "0-4", FileGameSettingsData.RoadTextureMaxAni);
-                    comboBoxShaderFSAA.SelectedIndex = CheckValidRange("ShaderFSAA", "0-2", FileGameSettingsData.FSAALevel);
-                    comboBoxShadowDetail.SelectedIndex = CheckValidRange("ShadowDetail", "0-2", FileGameSettingsData.ShadowDetail);
-                    comboBoxShaderDetail.SelectedIndex = CheckValidRange("ShaderDetail", "0-3", FileGameSettingsData.ShaderDetail);
+                    comboBoxBaseTextureFilter.SelectedIndex = CheckValidRange("BaseTextureFilter", "0-2", XML_File.XML_Settings_Data.BaseTextureFilter);
+                    comboBoxAnisotropicLevel.SelectedIndex = CheckValidRange("AnisotropicLevel", "0-4", XML_File.XML_Settings_Data.BaseTextureMaxAni);
+                    comboBoxCarEnvironmentDetail.SelectedIndex = CheckValidRange("CarEnvironmentDetail", "0-4", XML_File.XML_Settings_Data.CarEnvironmentMapEnable);
+                    comboBoxWorldGlobalDetail.SelectedIndex = CheckValidRange("WorldGlobalDetail", "0-4", XML_File.XML_Settings_Data.GlobalDetailLevel);
+                    comboBoxWorldRoadReflection.SelectedIndex = CheckValidRange("WorldRoadReflection", "0-2", XML_File.XML_Settings_Data.RoadReflectionEnable);
+                    comboBoxWorldRoadTexture.SelectedIndex = CheckValidRange("WorldRoadTexture", "0-2", XML_File.XML_Settings_Data.RoadTextureFilter);
+                    comboBoxWorldRoadAniso.SelectedIndex = CheckValidRange("WorldRoadAniso", "0-4", XML_File.XML_Settings_Data.RoadTextureMaxAni);
+                    comboBoxShaderFSAA.SelectedIndex = CheckValidRange("ShaderFSAA", "0-2", XML_File.XML_Settings_Data.FSAALevel);
+                    comboBoxShadowDetail.SelectedIndex = CheckValidRange("ShadowDetail", "0-2", XML_File.XML_Settings_Data.ShadowDetail);
+                    comboBoxShaderDetail.SelectedIndex = CheckValidRange("ShaderDetail", "0-3", XML_File.XML_Settings_Data.ShaderDetail);
 
-                    SetCorrectElementValues("BaseTextureLODBias", FileGameSettingsData.BaseTextureLODBias);
-                    SetCorrectElementValues("CarEnvironmentMapEnable", FileGameSettingsData.CarEnvironmentMapEnable);
-                    SetCorrectElementValues("MaxSkidMarks", FileGameSettingsData.MaxSkidMarks);
-                    SetCorrectElementValues("RoadTextureLODBias", FileGameSettingsData.RoadTextureLODBias);
-                    SetCorrectElementValues("MotionBlurEnable", FileGameSettingsData.MotionBlurEnable);
-                    SetCorrectElementValues("OverBrightEnable", FileGameSettingsData.OverBrightEnable);
-                    SetCorrectElementValues("ParticleSystemEnable", FileGameSettingsData.ParticleSystemEnable);
-                    SetCorrectElementValues("VisualTreatment", FileGameSettingsData.VisualTreatment);
-                    SetCorrectElementValues("WaterSimEnable", FileGameSettingsData.WaterSimEnable);
-                    SetCorrectElementValues("PostProcessingEnable", FileGameSettingsData.PostProcessingEnable);
+                    SetCorrectElementValues("BaseTextureLODBias", XML_File.XML_Settings_Data.BaseTextureLODBias);
+                    SetCorrectElementValues("CarEnvironmentMapEnable", XML_File.XML_Settings_Data.CarEnvironmentMapEnable);
+                    SetCorrectElementValues("MaxSkidMarks", XML_File.XML_Settings_Data.MaxSkidMarks);
+                    SetCorrectElementValues("RoadTextureLODBias", XML_File.XML_Settings_Data.RoadTextureLODBias);
+                    SetCorrectElementValues("MotionBlurEnable", XML_File.XML_Settings_Data.MotionBlurEnable);
+                    SetCorrectElementValues("OverBrightEnable", XML_File.XML_Settings_Data.OverBrightEnable);
+                    SetCorrectElementValues("ParticleSystemEnable", XML_File.XML_Settings_Data.ParticleSystemEnable);
+                    SetCorrectElementValues("VisualTreatment", XML_File.XML_Settings_Data.VisualTreatment);
+                    SetCorrectElementValues("WaterSimEnable", XML_File.XML_Settings_Data.WaterSimEnable);
+                    SetCorrectElementValues("PostProcessingEnable", XML_File.XML_Settings_Data.PostProcessingEnable);
 
                     Log.Info("USXE: Selected Custom Preset");
                     break;
@@ -328,58 +329,66 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
         {
             if (!FileReadOnly) { Button_Save.Text = "SAVING"; }
 
-            FileGameSettingsData.ScreenWidth = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
+            XML_File.XML_Settings_Data.ScreenWidth = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
                                                numericResWidth.Value : Convert.ToDecimal(((Json_List_Resolution)comboResolutions.SelectedItem).Width));
-            FileGameSettingsData.ScreenHeight = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
+            XML_File.XML_Settings_Data.ScreenHeight = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
                                                 numericResHeight.Value : Convert.ToDecimal(((Json_List_Resolution)comboResolutions.SelectedItem).Height));
-            FileGameSettingsData.Brightness = ValidWholeNumberRange("Brightness", numericBrightness.Value);
-            FileGameSettingsData.MasterAudio = ValidDecimalNumberRange(numericMVol.Value);
-            FileGameSettingsData.SFXAudio = ValidDecimalNumberRange(numericSFxVol.Value);
-            FileGameSettingsData.CarAudio = ValidDecimalNumberRange(numericCarVol.Value);
-            FileGameSettingsData.SpeechAudio = ValidDecimalNumberRange(numericSpeech.Value);
-            FileGameSettingsData.MusicAudio = ValidDecimalNumberRange(numericGMusic.Value);
-            FileGameSettingsData.FreeroamAudio = ValidDecimalNumberRange(numericFEMusic.Value);
+            XML_File.XML_Settings_Data.Brightness = ValidWholeNumberRange("Brightness", numericBrightness.Value);
+            XML_File.XML_Settings_Data.MasterAudio = ValidDecimalNumberRange(numericMVol.Value);
+            XML_File.XML_Settings_Data.SFXAudio = ValidDecimalNumberRange(numericSFxVol.Value);
+            XML_File.XML_Settings_Data.CarAudio = ValidDecimalNumberRange(numericCarVol.Value);
+            XML_File.XML_Settings_Data.SpeechAudio = ValidDecimalNumberRange(numericSpeech.Value);
+            XML_File.XML_Settings_Data.MusicAudio = ValidDecimalNumberRange(numericGMusic.Value);
+            XML_File.XML_Settings_Data.FreeroamAudio = ValidDecimalNumberRange(numericFEMusic.Value);
 
-            FileGameSettingsData.AudioQuality = (radioAQLow.Checked == true) ? "0" : "1";
-            FileGameSettingsData.VSyncOn = (radioVSyncOff.Checked == true) ? "0" : "1";
-            FileGameSettingsData.EnableAero = (radioAeroOff.Checked == true) ? "0" : "1";
-            FileGameSettingsData.ScreenWindowed = (radioWindowedOff.Checked == true) ? "0" : "1";
-            FileGameSettingsData.Damage = (radioDamageOn.Checked == true) ? "0" : "1";
-            FileGameSettingsData.SpeedUnits = (radioKmH.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.AudioQuality = (radioAQLow.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.VSyncOn = (radioVSyncOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.EnableAero = (radioAeroOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.ScreenWindowed = (radioWindowedOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.Damage = (radioDamageOn.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.SpeedUnits = (radioKmH.Checked == true) ? "0" : "1";
 
-            FileGameSettingsData.TransmissionType = comboBoxTransmisson.SelectedValue.ToString(); // Physics
-            FileGameSettingsData.Transmission = comboBoxTransmisson.SelectedValue.ToString(); // GamePlayOptions
-            FileGameSettingsData.AudioMode = comboAudioMode.SelectedValue.ToString(); // GamePlayOptions
-            FileGameSettingsData.AudioM = comboAudioMode.SelectedValue.ToString(); //VideoConfig
-            FileGameSettingsData.CameraPOV = comboBoxCamera.SelectedValue.ToString(); // Physics
-            FileGameSettingsData.Camera = comboBoxCamera.SelectedValue.ToString(); // GamePlayOptions
+            XML_File.XML_Settings_Data.TransmissionType = comboBoxTransmisson.SelectedValue.ToString(); // Physics
+            XML_File.XML_Settings_Data.Transmission = comboBoxTransmisson.SelectedValue.ToString(); // GamePlayOptions
+            XML_File.XML_Settings_Data.AudioMode = comboAudioMode.SelectedValue.ToString(); // GamePlayOptions
+            XML_File.XML_Settings_Data.AudioM = comboAudioMode.SelectedValue.ToString(); //VideoConfig
+            XML_File.XML_Settings_Data.CameraPOV = comboBoxCamera.SelectedValue.ToString(); // Physics
+            XML_File.XML_Settings_Data.Camera = comboBoxCamera.SelectedValue.ToString(); // GamePlayOptions
 
-            FileGameSettingsData.MotionBlurEnable = (radioMotionBlurOff.Checked == true) ? "0" : "1";
-            FileGameSettingsData.RoadTextureLODBias = (radioRoadLODBiasOff.Checked == true) ? "0" : "1";
-            FileGameSettingsData.BaseTextureLODBias = (radioBaseTextureLODOff.Checked == true) ? "0" : "1";
-            FileGameSettingsData.CarLODLevel = (radioCarDetailLODOff.Checked == true) ? "0" : "1";
-            FileGameSettingsData.OverBrightEnable = (radioOverBrightOff.Checked == true) ? "0" : "1";
-            FileGameSettingsData.ParticleSystemEnable = (radioParticleSysOff.Checked == true) ? "0" : "1";
-            FileGameSettingsData.VisualTreatment = (radioVisualTreatOff.Checked == true) ? "0" : "1";
-            FileGameSettingsData.WaterSimEnable = (radioWaterSimulationOff.Checked == true) ? "0" : "1";
-            FileGameSettingsData.MaxSkidMarks = SelectedElement("MaxSkidMarks");
-            FileGameSettingsData.PostProcessingEnable = (radioPostProcOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.MotionBlurEnable = (radioMotionBlurOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.RoadTextureLODBias = (radioRoadLODBiasOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.BaseTextureLODBias = (radioBaseTextureLODOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.CarLODLevel = (radioCarDetailLODOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.OverBrightEnable = (radioOverBrightOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.ParticleSystemEnable = (radioParticleSysOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.VisualTreatment = (radioVisualTreatOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.WaterSimEnable = (radioWaterSimulationOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.MaxSkidMarks = SelectedElement("MaxSkidMarks");
+            XML_File.XML_Settings_Data.PostProcessingEnable = (radioPostProcOff.Checked == true) ? "0" : "1";
 
-            FileGameSettingsData.PerformanceLevel = comboBoxPerformanceLevel.SelectedValue.ToString();
-            FileGameSettingsData.BaseTextureFilter = comboBoxBaseTextureFilter.SelectedValue.ToString();
-            FileGameSettingsData.BaseTextureMaxAni = comboBoxAnisotropicLevel.SelectedValue.ToString();
-            FileGameSettingsData.CarEnvironmentMapEnable = comboBoxCarEnvironmentDetail.SelectedValue.ToString();
-            FileGameSettingsData.GlobalDetailLevel = comboBoxWorldGlobalDetail.SelectedValue.ToString();
-            FileGameSettingsData.RoadReflectionEnable = comboBoxWorldRoadReflection.SelectedValue.ToString();
-            FileGameSettingsData.RoadTextureFilter = comboBoxWorldRoadTexture.SelectedValue.ToString();
-            FileGameSettingsData.RoadTextureMaxAni = comboBoxWorldRoadAniso.SelectedValue.ToString();
-            FileGameSettingsData.FSAALevel = comboBoxShaderFSAA.SelectedValue.ToString();
-            FileGameSettingsData.ShadowDetail = comboBoxShadowDetail.SelectedValue.ToString();
-            FileGameSettingsData.ShaderDetail = comboBoxShaderDetail.SelectedValue.ToString();
+            XML_File.XML_Settings_Data.PerformanceLevel = comboBoxPerformanceLevel.SelectedValue.ToString();
+            XML_File.XML_Settings_Data.BaseTextureFilter = comboBoxBaseTextureFilter.SelectedValue.ToString();
+            XML_File.XML_Settings_Data.BaseTextureMaxAni = comboBoxAnisotropicLevel.SelectedValue.ToString();
+            XML_File.XML_Settings_Data.CarEnvironmentMapEnable = comboBoxCarEnvironmentDetail.SelectedValue.ToString();
+            XML_File.XML_Settings_Data.GlobalDetailLevel = comboBoxWorldGlobalDetail.SelectedValue.ToString();
+            XML_File.XML_Settings_Data.RoadReflectionEnable = comboBoxWorldRoadReflection.SelectedValue.ToString();
+            XML_File.XML_Settings_Data.RoadTextureFilter = comboBoxWorldRoadTexture.SelectedValue.ToString();
+            XML_File.XML_Settings_Data.RoadTextureMaxAni = comboBoxWorldRoadAniso.SelectedValue.ToString();
+            XML_File.XML_Settings_Data.FSAALevel = comboBoxShaderFSAA.SelectedValue.ToString();
+            XML_File.XML_Settings_Data.ShadowDetail = comboBoxShadowDetail.SelectedValue.ToString();
+            XML_File.XML_Settings_Data.ShaderDetail = comboBoxShaderDetail.SelectedValue.ToString();
 
-            FileGameSettings.Save("Display", "Full File");
-
-            if (!FileReadOnly) { Button_Save.Text = "SAVED"; }
+            if (!FileReadOnly) 
+            {
+                if (XML_File.Save(2) == 1)
+                {
+                    Button_Save.Text = "SAVED";
+                }
+                else
+                {
+                    Button_Save.Text = "ERROR";
+                }
+            }
         }
 
         private int CheckValidRange(string Type, string Range, string Value)
@@ -793,7 +802,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             /********************************/
 
             labelLauncherVersion.Text = "Version: v" + Application.ProductVersion;
-            labelOverRideAspect.Text = FileGameSettingsData.PostProcessingEnable;
+            labelOverRideAspect.Text = XML_File.XML_Settings_Data.PostProcessingEnable;
             AmountofCenterTimes = 0;
 
             /*******************************/
@@ -1290,22 +1299,22 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 comboResolutions.Visible = false;
             }
 
-            numericResWidth.Value = Convert.ToInt32(FileGameSettingsData.ScreenWidth);
-            numericResHeight.Value = Convert.ToInt32(FileGameSettingsData.ScreenHeight);
-            numericBrightness.Value = Convert.ToDecimal(FileGameSettingsData.Brightness);
-            numericMVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.MasterAudio);
-            numericSFxVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.SFXAudio);
-            numericCarVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.CarAudio);
-            numericSpeech.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.SpeechAudio);
-            numericGMusic.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.MusicAudio);
-            numericFEMusic.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.FreeroamAudio);
+            numericResWidth.Value = Convert.ToInt32(XML_File.XML_Settings_Data.ScreenWidth);
+            numericResHeight.Value = Convert.ToInt32(XML_File.XML_Settings_Data.ScreenHeight);
+            numericBrightness.Value = Convert.ToDecimal(XML_File.XML_Settings_Data.Brightness);
+            numericMVol.Value = ConvertDecimalToWholeNumber(XML_File.XML_Settings_Data.MasterAudio);
+            numericSFxVol.Value = ConvertDecimalToWholeNumber(XML_File.XML_Settings_Data.SFXAudio);
+            numericCarVol.Value = ConvertDecimalToWholeNumber(XML_File.XML_Settings_Data.CarAudio);
+            numericSpeech.Value = ConvertDecimalToWholeNumber(XML_File.XML_Settings_Data.SpeechAudio);
+            numericGMusic.Value = ConvertDecimalToWholeNumber(XML_File.XML_Settings_Data.MusicAudio);
+            numericFEMusic.Value = ConvertDecimalToWholeNumber(XML_File.XML_Settings_Data.FreeroamAudio);
 
-            comboBoxTransmisson.SelectedIndex = CheckValidRange("Transmission", "0-1", FileGameSettingsData.Transmission);
-            comboAudioMode.SelectedIndex = CheckValidRange("AudioMode", "0-2", FileGameSettingsData.AudioMode);
-            comboBoxCamera.SelectedIndex = CheckValidRange("Camera", "0-3", FileGameSettingsData.CameraPOV);
-            comboBoxPerformanceLevel.SelectedIndex = CheckValidRange("PerformanceLevel", "0-5", FileGameSettingsData.PerformanceLevel);
+            comboBoxTransmisson.SelectedIndex = CheckValidRange("Transmission", "0-1", XML_File.XML_Settings_Data.Transmission);
+            comboAudioMode.SelectedIndex = CheckValidRange("AudioMode", "0-2", XML_File.XML_Settings_Data.AudioMode);
+            comboBoxCamera.SelectedIndex = CheckValidRange("Camera", "0-3", XML_File.XML_Settings_Data.CameraPOV);
+            comboBoxPerformanceLevel.SelectedIndex = CheckValidRange("PerformanceLevel", "0-5", XML_File.XML_Settings_Data.PerformanceLevel);
 
-            if (FileGameSettingsData.ScreenWindowed == "0")
+            if (XML_File.XML_Settings_Data.ScreenWindowed == "0")
             {
                 radioWindowedOff.Checked = true;
             }
@@ -1314,7 +1323,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 radioWindowedOn.Checked = true;
             }
 
-            if (FileGameSettingsData.EnableAero == "0")
+            if (XML_File.XML_Settings_Data.EnableAero == "0")
             {
                 radioAeroOff.Checked = true;
             }
@@ -1323,7 +1332,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 radioAeroOn.Checked = true;
             }
 
-            if (FileGameSettingsData.VSyncOn == "0")
+            if (XML_File.XML_Settings_Data.VSyncOn == "0")
             {
                 radioVSyncOff.Checked = true;
             }
@@ -1332,7 +1341,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 radioVSyncOn.Checked = true;
             }
 
-            if (FileGameSettingsData.AudioQuality == "0")
+            if (XML_File.XML_Settings_Data.AudioQuality == "0")
             {
                 radioAQLow.Checked = true;
             }
@@ -1341,7 +1350,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 radioAQHigh.Checked = true;
             }
 
-            if (FileGameSettingsData.Damage == "0")
+            if (XML_File.XML_Settings_Data.Damage == "0")
             {
                 radioDamageOff.Checked = true;
             }
@@ -1350,7 +1359,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 radioDamageOn.Checked = true;
             }
 
-            if (FileGameSettingsData.SpeedUnits == "0")
+            if (XML_File.XML_Settings_Data.SpeedUnits == "0")
             {
                 radioKmH.Checked = true;
             }
@@ -1359,7 +1368,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 radioMpH.Checked = true;
             }
 
-            string SavedResolution = FileGameSettingsData.ScreenWidth + "x" + FileGameSettingsData.ScreenHeight;
+            string SavedResolution = XML_File.XML_Settings_Data.ScreenWidth + "x" + XML_File.XML_Settings_Data.ScreenHeight;
             if (!string.IsNullOrWhiteSpace(SavedResolution))
             {
                 try

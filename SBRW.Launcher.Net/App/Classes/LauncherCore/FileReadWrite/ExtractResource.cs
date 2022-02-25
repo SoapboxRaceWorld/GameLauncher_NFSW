@@ -36,36 +36,5 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite
                 }
             }
         }
-
-        public static String AsString(String File_Name)
-        {
-            if (string.IsNullOrWhiteSpace(File_Name))
-            {
-                return String.Empty;
-            }
-            else
-            {
-                try
-                {
-                    Assembly TheRun = Assembly.GetExecutingAssembly();
-                    using (Stream LiveStream = TheRun.GetManifestResourceStream(File_Name))
-                    {
-                        if (LiveStream == null) { return String.Empty; }
-                        else
-                        {
-                            using (StreamReader StreamViewer = new StreamReader(LiveStream))
-                            {
-                                return StreamViewer.ReadToEnd();
-                            }
-                        }
-                    }
-                }
-                catch (Exception Error)
-                {
-                    LogToFileAddons.OpenLog("Extract Resource AsString", null, Error, null, true);
-                    return String.Empty;
-                }
-            }
-        }
     }
 }

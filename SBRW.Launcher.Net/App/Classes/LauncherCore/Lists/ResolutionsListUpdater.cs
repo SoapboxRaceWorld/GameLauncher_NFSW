@@ -7,12 +7,13 @@ using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using System;
 using System.Collections.Generic;
 using SBRW.Launcher.Core.Required.DLL.User32_;
+using SBRW.Launcher.Core.Extra.XML_;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 {
     class ResolutionsListUpdater
     {
-        public static List<Json_List_Resolution> List = new List<Json_List_Resolution>();
+        public static List<Json_List_Resolution> List { get; set; } = new List<Json_List_Resolution>();
 
         public static void Get()
         {
@@ -37,10 +38,10 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                     AmountOfRes++;
                 }
 
-                if (!string.IsNullOrWhiteSpace(FileGameSettingsData.ScreenWidth) && !string.IsNullOrWhiteSpace(FileGameSettingsData.ScreenHeight))
+                if (!string.IsNullOrWhiteSpace(XML_File.XML_Settings_Data.ScreenWidth) && !string.IsNullOrWhiteSpace(XML_File.XML_Settings_Data.ScreenHeight))
                 {
-                    JSONResolutions += "{\"resolution\": \"" + FileGameSettingsData.ScreenWidth + "x" + FileGameSettingsData.ScreenHeight +
-                            "\", \"dmPelsWidth\": \"" + FileGameSettingsData.ScreenWidth + "\", \"dmPelsHeight\": \"" + FileGameSettingsData.ScreenHeight + "\"}";
+                    JSONResolutions += "{\"resolution\": \"" + XML_File.XML_Settings_Data.ScreenWidth + "x" + XML_File.XML_Settings_Data.ScreenHeight +
+                            "\", \"dmPelsWidth\": \"" + XML_File.XML_Settings_Data.ScreenWidth + "\", \"dmPelsHeight\": \"" + XML_File.XML_Settings_Data.ScreenHeight + "\"}";
                 }
                 JSONResolutions += "]";
 

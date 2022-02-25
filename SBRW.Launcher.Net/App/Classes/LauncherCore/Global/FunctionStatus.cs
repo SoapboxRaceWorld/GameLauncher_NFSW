@@ -23,6 +23,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using SBRW.Launcher.App.Classes.InsiderKit;
+using SBRW.Launcher.Core.Extra.XML_;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Global
 {
@@ -270,7 +271,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                                                 "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                             Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
                                             Save_Settings.Save();
-                                            FileGameSettings.Save("Suppress", "Language Only");
+                                            XML_File.Save(1);
                                         }
                                         else if (GameFolderPath == Locations.LauncherFolder)
                                         {
@@ -281,14 +282,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                                                 "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                             Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
                                             Save_Settings.Save();
-                                            FileGameSettings.Save("Suppress", "Language Only");
+                                            XML_File.Save(1);
                                         }
                                         else
                                         {
                                             Log.Core("FOLDER SELECT DIALOG: Directory Set: " + GameFolderPath);
                                             Save_Settings.Live_Data.Game_Path = GameFolderPath;
                                             Save_Settings.Save();
-                                            FileGameSettings.Save("Suppress", "Language Only");
+                                            XML_File.Save(1);
                                         }
                                     }
                                 }
