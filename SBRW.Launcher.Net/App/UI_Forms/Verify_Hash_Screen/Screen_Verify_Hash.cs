@@ -384,7 +384,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("VERIFY HASH", null, Error, null, true);
+                LogToFileAddons.OpenLog("VERIFY HASH", String.Empty, Error, String.Empty, true);
             }
 
             if (DeletionError != 0)
@@ -558,7 +558,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("VERIFY HASH", null, Error, null, true);
+                    LogToFileAddons.OpenLog("VERIFY HASH", String.Empty, Error, String.Empty, true);
                 }
             }
         }
@@ -621,7 +621,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                                         new FileInfo(text2).Directory.Create();
                                     }
                                 }
-                                catch (Exception Error) { LogToFileAddons.OpenLog("VERIFY HASH File Info", null, Error, null, true); }
+                                catch (Exception Error) { LogToFileAddons.OpenLog("VERIFY HASH File Info", String.Empty, Error, String.Empty, true); }
 
                                 Uri URLCall = new Uri(address);
                                 int Timeout = (int)TimeSpan.FromMinutes(5).TotalMilliseconds;
@@ -670,7 +670,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                                 catch (Exception Error)
                                 {
                                     if (!ForceStopScan) { RedownloadErrorCount++; }
-                                    LogToFileAddons.OpenLog("VERIFY HASH", null, Error, null, true);
+                                    LogToFileAddons.OpenLog("VERIFY HASH", String.Empty, Error, String.Empty, true);
                                 }
                                 finally
                                 {
@@ -688,7 +688,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                         catch (Exception Error)
                         {
                             if (!ForceStopScan) { RedownloadErrorCount++; }
-                            LogToFileAddons.OpenLog("VERIFY HASH", null, Error, null, true);
+                            LogToFileAddons.OpenLog("VERIFY HASH", String.Empty, Error, String.Empty, true);
                         }
                         finally
                         {
@@ -824,7 +824,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
             GameScanner(true);
         }
 
-        private void StopScanner_Click(object sender, EventArgs e)
+        private void StopScanner_Click(object? sender, EventArgs? e)
         {
             StartScanner.SafeInvokeAction(() => StartScanner.Visible = false);
             StopScanner.SafeInvokeAction(() => StopScanner.Visible = false);

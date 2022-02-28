@@ -146,7 +146,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                     }
                     catch (Exception Error)
                     {
-                        LogToFileAddons.OpenLog("Register", null, Error, null, true);
+                        LogToFileAddons.OpenLog("Register", String.Empty, Error, String.Empty, true);
                     }
                     finally
                     {

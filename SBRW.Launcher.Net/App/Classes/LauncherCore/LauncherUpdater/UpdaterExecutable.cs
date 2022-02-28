@@ -146,7 +146,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                             }
                             catch (Exception Error)
                             {
-                                LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE Error #1]", null, Error, null, true);
+                                LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE Error #1]", String.Empty, Error, String.Empty, true);
                             }
                         }
                     };

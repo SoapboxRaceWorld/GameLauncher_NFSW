@@ -10,7 +10,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Languages.Visual_Forms
 {
     class Translations
     {
-        private static ResourceManager Lang_Launcher = null;
+        private static ResourceManager? Lang_Launcher = null;
 
         public static bool ResetCache = false;
 
@@ -50,13 +50,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Languages.Visual_Forms
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("Translations Database Selection", null, Error, null, true);
+                    LogToFileAddons.OpenLog("Translations Database Selection", String.Empty, Error, String.Empty, true);
                     return "Languages Program ERROR";
                 }
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Translations Database", null, Error, null, true);
+                LogToFileAddons.OpenLog("Translations Database", String.Empty, Error, String.Empty, true);
                 return "Languages ERROR";
             }
         }

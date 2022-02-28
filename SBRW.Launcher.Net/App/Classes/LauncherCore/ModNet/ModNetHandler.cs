@@ -51,7 +51,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.ModNet
                     }
                     catch (Exception Error)
                     {
-                        LogToFileAddons.OpenLog("ModNet Folder Removal", null, Error, null, true);
+                        LogToFileAddons.OpenLog("ModNet Folder Removal", String.Empty, Error, String.Empty, true);
                     }
                 }
             }
@@ -66,7 +66,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.ModNet
                     }
                     catch (Exception Error)
                     {
-                        LogToFileAddons.OpenLog("ModNet Folder Creator", null, Error, null, true);
+                        LogToFileAddons.OpenLog("ModNet Folder Creator", String.Empty, Error, String.Empty, true);
                     }
                 }
             }
@@ -81,7 +81,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.ModNet
                     }
                     catch (Exception Error)
                     {
-                        LogToFileAddons.OpenLog("ModNet Legacy Removal", null, Error, null, true);
+                        LogToFileAddons.OpenLog("ModNet Legacy Removal", String.Empty, Error, String.Empty, true);
                     }
                 }
             }
@@ -179,7 +179,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.ModNet
                                 FileErrors++;
 
                                 Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
-                                LogToFileAddons.OpenLog("CLEANLINKS", null, Error, null, true);
+                                LogToFileAddons.OpenLog("CLEANLINKS", String.Empty, Error, String.Empty, true);
                             }
                         }
                         else
@@ -220,7 +220,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.ModNet
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("CLEANLINKS", null, Error, null, true);
+                LogToFileAddons.OpenLog("CLEANLINKS", String.Empty, Error, String.Empty, true);
             }
         }
 

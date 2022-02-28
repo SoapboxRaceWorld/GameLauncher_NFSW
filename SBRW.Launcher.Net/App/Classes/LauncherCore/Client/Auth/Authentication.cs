@@ -111,7 +111,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
             }
             catch (WebException Error)
             {
-                LogToFileAddons.OpenLog("CLIENT [LOGIN/REGISTER]", null, Error, null, true);
+                LogToFileAddons.OpenLog("CLIENT [LOGIN/REGISTER]", String.Empty, Error, String.Empty, true);
 
                 ServerResponse = (HttpWebResponse)Error.Response;
 
@@ -160,7 +160,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                     }
                     catch (Exception Error)
                     {
-                        LogToFileAddons.OpenLog("XML LOGIN", null, Error, null, true);
+                        LogToFileAddons.OpenLog("XML LOGIN", String.Empty, Error, String.Empty, true);
 
                         XMLIsErrorFree = false;
                         msgBoxInfo = "An error occured: " + Error.Message;
@@ -226,7 +226,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                                     Tokens.UserId = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/UserId", "InnerText");
                                     Tokens.LoginToken = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/LoginToken", "InnerText");
 
-                                    if (XMLServerCore.NodeReader(sbrwXml, "NodeOnly", "LoginStatusVO/Warning", null) == "VAILD NODE - LAUNCHER")
+                                    if (XMLServerCore.NodeReader(sbrwXml, "NodeOnly", "LoginStatusVO/Warning", String.Empty) == "VAILD NODE - LAUNCHER")
                                     {
                                         Tokens.Warning = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/Warning", "InnerText");
                                     }

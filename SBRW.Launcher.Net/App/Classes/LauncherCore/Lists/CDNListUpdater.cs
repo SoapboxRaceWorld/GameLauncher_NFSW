@@ -34,14 +34,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("CDN LIST CORE", null, Error, null, true);
+                LogToFileAddons.OpenLog("CDN LIST CORE", String.Empty, Error, String.Empty, true);
                 LoadedList = false;
             }
             finally
             {
                 if (CachedJSONList != null)
                 {
-                    CachedJSONList = null;
+                    CachedJSONList = String.Empty;
                 }
             }
 

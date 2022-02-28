@@ -321,7 +321,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                 }
                                 catch (Exception Error)
                                 {
-                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE x64 Process", null, Error, null, true);
+                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE x64 Process", String.Empty, Error, String.Empty, true);
                                     Error_Free = false;
                                     MessageBox.Show(Translations.Database("Redistributable_VC_P9"),
                                         Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,

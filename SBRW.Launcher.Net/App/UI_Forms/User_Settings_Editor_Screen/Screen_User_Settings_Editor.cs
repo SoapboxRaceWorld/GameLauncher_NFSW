@@ -321,7 +321,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("USXE", null, Error, null, true);
+                LogToFileAddons.OpenLog("USXE", String.Empty, Error, String.Empty, true);
             }
         }
 
@@ -772,7 +772,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("USXE", null, Error, null, true);
+                LogToFileAddons.OpenLog("USXE", String.Empty, Error, String.Empty, true);
             }
         }
 
@@ -1250,7 +1250,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Resolution", null, Error, null, true);
+                LogToFileAddons.OpenLog("Resolution", String.Empty, Error, String.Empty, true);
             }
 
             /********************************/
@@ -1389,7 +1389,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("USXE Resolution", null, Error, null, true);
+                    LogToFileAddons.OpenLog("USXE Resolution", String.Empty, Error, String.Empty, true);
                 }
             }
 

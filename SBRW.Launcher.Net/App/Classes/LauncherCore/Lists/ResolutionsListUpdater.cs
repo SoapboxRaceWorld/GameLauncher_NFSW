@@ -56,7 +56,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("SCREENRESOLUTIONS", null, Error, null, true);
+                    LogToFileAddons.OpenLog("SCREENRESOLUTIONS", String.Empty, Error, String.Empty, true);
                 }
 
                 try
@@ -71,12 +71,12 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("SCREENRESOLUTIONS", null, Error, null, true);
+                    LogToFileAddons.OpenLog("SCREENRESOLUTIONS", String.Empty, Error, String.Empty, true);
                 }
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("SCREENRESOLUTIONS", null, Error, null, true);
+                LogToFileAddons.OpenLog("SCREENRESOLUTIONS", String.Empty, Error, String.Empty, true);
             }
         }
     }

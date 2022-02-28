@@ -31,7 +31,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("Extract Resource AsByte", null, Error, null, true);
+                    LogToFileAddons.OpenLog("Extract Resource AsByte", String.Empty, Error, String.Empty, true);
                     return null;
                 }
             }

@@ -34,7 +34,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
         public static Queue<string> ServersToPing { get; set; } = new Queue<string>();
 
         public static string ServerName { get; set; }
-        public static Json_Server_Info ServerJsonData { get; set; }
+        public static Json_Server_Info? ServerJsonData { get; set; }
 
         public static void OpenScreen(bool CSO)
         {
@@ -342,7 +342,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                             }
                             if (ServerName != null)
                             {
-                                ServerName = null;
+                                ServerName = String.Empty;
                             }
 
                             GC.Collect();

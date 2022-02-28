@@ -31,15 +31,15 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                 }
                 catch (ManagementException Error)
                 {
-                    LogToFileAddons.OpenLog("Installed KB [M.E.]", null, Error, null, true);
+                    LogToFileAddons.OpenLog("Installed KB [M.E.]", String.Empty, Error, String.Empty, true);
                 }
                 catch (COMException Error)
                 {
-                    LogToFileAddons.OpenLog("Installed KB [C.O.M.]", null, Error, null, true);
+                    LogToFileAddons.OpenLog("Installed KB [C.O.M.]", String.Empty, Error, String.Empty, true);
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("Installed KB", null, Error, null, true);
+                    LogToFileAddons.OpenLog("Installed KB", String.Empty, Error, String.Empty, true);
                 }
                 finally
                 {

@@ -349,7 +349,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Picture_Information_Window.Image = Image_Other.Information_Window;
         }
 
-        private void LoginButton_Click(object sender, EventArgs e)
+        private void LoginButton_Click(object? sender, EventArgs? e)
         {
             if ((LoginEnabled == false || ServerEnabled == false) && Builtinserver == false)
             {
@@ -416,7 +416,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     return;
             }
 
-            Authentication.Client("Login", Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Post, Email, Password, null);
+            Authentication.Client("Login", Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Post, Email, Password, String.Empty);
 
             if (string.IsNullOrWhiteSpace(Tokens.Error))
             {
@@ -632,7 +632,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
         }
 
-        private void Button_Close_Click(object sender, EventArgs e)
+        private void Button_Close_Click(object? sender, EventArgs? e)
         {
             ClosingTasks();
 
@@ -1758,7 +1758,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (e2.Error != null)
                     {
-                        LogToFileAddons.OpenLog("JSON GSI", null, e2.Error, null, true);
+                        LogToFileAddons.OpenLog("JSON GSI", String.Empty, e2.Error, String.Empty, true);
                     }
 
                     if (Client != null)
@@ -2464,7 +2464,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Download Speech Files", null, Error, null, true);
+                LogToFileAddons.OpenLog("Download Speech Files", String.Empty, Error, String.Empty, true);
                 speechFile = Download_LZMA_Support.SpeechFiles();
                 speechSize = Download_LZMA_Support.SpeechFilesSize();
             }

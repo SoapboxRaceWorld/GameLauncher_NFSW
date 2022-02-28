@@ -100,7 +100,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                     catch (Exception Error)
                     {
                         string LogMessage = "Add Server Check Encountered an Error:";
-                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, null, false);
+                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, String.Empty, false);
                     }
                     finally
                     {
@@ -141,7 +141,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                     catch (Exception Error)
                     {
                         string LogMessage = "Add Server Get Information Encountered an Error:";
-                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, null, false);
+                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, String.Empty, false);
                     }
 
                     if (ServerInformationData == null)
@@ -174,7 +174,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                         }
                         catch (Exception Error)
                         {
-                            LogToFileAddons.OpenLog("Add Server", null, Error, null, true);
+                            LogToFileAddons.OpenLog("Add Server", String.Empty, Error, String.Empty, true);
                             ServerID = Result.Host;
                         }
                         finally

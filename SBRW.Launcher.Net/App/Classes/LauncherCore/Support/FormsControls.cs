@@ -60,7 +60,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Safe Invoker Action", null, Error, null, true);
+                LogToFileAddons.OpenLog("Safe Invoker Action", String.Empty, Error, String.Empty, true);
             }
         }
         /// <summary>
@@ -111,7 +111,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Safe Invoker Action [Control Only]", null, Error, null, true);
+                LogToFileAddons.OpenLog("Safe Invoker Action [Control Only]", String.Empty, Error, String.Empty, true);
             }
         }
         /// <summary>
@@ -157,7 +157,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Safe Invoker Action [Control Only]", null, Error, null, true);
+                LogToFileAddons.OpenLog("Safe Invoker Action [Control Only]", String.Empty, Error, String.Empty, true);
             }
         }
         /// <summary>
@@ -187,7 +187,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Safe Invoker [End Invoke (Singleton)]", null, Error, null, true);
+                LogToFileAddons.OpenLog("Safe Invoker [End Invoke (Singleton)]", String.Empty, Error, String.Empty, true);
             }
         }
     }
