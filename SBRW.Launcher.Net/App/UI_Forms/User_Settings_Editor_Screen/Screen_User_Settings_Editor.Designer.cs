@@ -866,7 +866,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioOverBrightOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioOverBrightOn.Location = new System.Drawing.Point(126, 4);
             this.radioOverBrightOn.Name = "radioOverBrightOn";
-            this.radioOverBrightOn.Size = new System.Drawing.Size(42, 18);
+            this.radioOverBrightOn.Size = new System.Drawing.Size(44, 18);
             this.radioOverBrightOn.TabIndex = 73;
             this.radioOverBrightOn.TabStop = true;
             this.radioOverBrightOn.Tag = "OverbrightOn";
@@ -878,7 +878,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioPostProcOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioPostProcOn.Location = new System.Drawing.Point(126, 4);
             this.radioPostProcOn.Name = "radioPostProcOn";
-            this.radioPostProcOn.Size = new System.Drawing.Size(42, 18);
+            this.radioPostProcOn.Size = new System.Drawing.Size(44, 18);
             this.radioPostProcOn.TabIndex = 74;
             this.radioPostProcOn.TabStop = true;
             this.radioPostProcOn.Tag = "PostProcessingOn";
@@ -890,7 +890,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioParticleSysOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioParticleSysOn.Location = new System.Drawing.Point(126, 4);
             this.radioParticleSysOn.Name = "radioParticleSysOn";
-            this.radioParticleSysOn.Size = new System.Drawing.Size(42, 18);
+            this.radioParticleSysOn.Size = new System.Drawing.Size(44, 18);
             this.radioParticleSysOn.TabIndex = 75;
             this.radioParticleSysOn.TabStop = true;
             this.radioParticleSysOn.Tag = "ParticleSystemOn";
@@ -902,7 +902,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioMotionBlurOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioMotionBlurOn.Location = new System.Drawing.Point(126, 4);
             this.radioMotionBlurOn.Name = "radioMotionBlurOn";
-            this.radioMotionBlurOn.Size = new System.Drawing.Size(42, 18);
+            this.radioMotionBlurOn.Size = new System.Drawing.Size(44, 18);
             this.radioMotionBlurOn.TabIndex = 77;
             this.radioMotionBlurOn.TabStop = true;
             this.radioMotionBlurOn.Tag = "MotionBlurOn";
@@ -914,7 +914,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioMotionBlurOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioMotionBlurOff.Location = new System.Drawing.Point(183, 4);
             this.radioMotionBlurOff.Name = "radioMotionBlurOff";
-            this.radioMotionBlurOff.Size = new System.Drawing.Size(42, 18);
+            this.radioMotionBlurOff.Size = new System.Drawing.Size(44, 18);
             this.radioMotionBlurOff.TabIndex = 78;
             this.radioMotionBlurOff.TabStop = true;
             this.radioMotionBlurOff.Tag = "MotionBlurOff";
@@ -926,7 +926,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioOverBrightOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioOverBrightOff.Location = new System.Drawing.Point(183, 4);
             this.radioOverBrightOff.Name = "radioOverBrightOff";
-            this.radioOverBrightOff.Size = new System.Drawing.Size(42, 18);
+            this.radioOverBrightOff.Size = new System.Drawing.Size(44, 18);
             this.radioOverBrightOff.TabIndex = 79;
             this.radioOverBrightOff.TabStop = true;
             this.radioOverBrightOff.Tag = "OverbrightOff";
@@ -938,7 +938,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioPostProcOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioPostProcOff.Location = new System.Drawing.Point(183, 4);
             this.radioPostProcOff.Name = "radioPostProcOff";
-            this.radioPostProcOff.Size = new System.Drawing.Size(42, 18);
+            this.radioPostProcOff.Size = new System.Drawing.Size(44, 18);
             this.radioPostProcOff.TabIndex = 80;
             this.radioPostProcOff.TabStop = true;
             this.radioPostProcOff.Tag = "PostProcessingOff";
@@ -950,7 +950,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioParticleSysOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioParticleSysOff.Location = new System.Drawing.Point(183, 4);
             this.radioParticleSysOff.Name = "radioParticleSysOff";
-            this.radioParticleSysOff.Size = new System.Drawing.Size(42, 18);
+            this.radioParticleSysOff.Size = new System.Drawing.Size(44, 18);
             this.radioParticleSysOff.TabIndex = 81;
             this.radioParticleSysOff.TabStop = true;
             this.radioParticleSysOff.Tag = "ParticleSystemOff";
@@ -1129,7 +1129,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioBaseTextureLODOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioBaseTextureLODOn.Location = new System.Drawing.Point(126, 4);
             this.radioBaseTextureLODOn.Name = "radioBaseTextureLODOn";
-            this.radioBaseTextureLODOn.Size = new System.Drawing.Size(42, 18);
+            this.radioBaseTextureLODOn.Size = new System.Drawing.Size(44, 18);
             this.radioBaseTextureLODOn.TabIndex = 98;
             this.radioBaseTextureLODOn.TabStop = true;
             this.radioBaseTextureLODOn.Tag = "BaseTextureLOD0";
@@ -1141,7 +1141,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioCarDetailLODOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioCarDetailLODOn.Location = new System.Drawing.Point(126, 4);
             this.radioCarDetailLODOn.Name = "radioCarDetailLODOn";
-            this.radioCarDetailLODOn.Size = new System.Drawing.Size(42, 18);
+            this.radioCarDetailLODOn.Size = new System.Drawing.Size(44, 18);
             this.radioCarDetailLODOn.TabIndex = 99;
             this.radioCarDetailLODOn.TabStop = true;
             this.radioCarDetailLODOn.Tag = "CarDetailLOD0";
@@ -1153,7 +1153,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioRoadLODBiasOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioRoadLODBiasOn.Location = new System.Drawing.Point(126, 4);
             this.radioRoadLODBiasOn.Name = "radioRoadLODBiasOn";
-            this.radioRoadLODBiasOn.Size = new System.Drawing.Size(42, 18);
+            this.radioRoadLODBiasOn.Size = new System.Drawing.Size(44, 18);
             this.radioRoadLODBiasOn.TabIndex = 100;
             this.radioRoadLODBiasOn.TabStop = true;
             this.radioRoadLODBiasOn.Tag = "RoadLODBias0";
@@ -1165,7 +1165,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioBaseTextureLODOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioBaseTextureLODOff.Location = new System.Drawing.Point(183, 4);
             this.radioBaseTextureLODOff.Name = "radioBaseTextureLODOff";
-            this.radioBaseTextureLODOff.Size = new System.Drawing.Size(42, 18);
+            this.radioBaseTextureLODOff.Size = new System.Drawing.Size(44, 18);
             this.radioBaseTextureLODOff.TabIndex = 101;
             this.radioBaseTextureLODOff.TabStop = true;
             this.radioBaseTextureLODOff.Tag = "BaseTextureLOD1";
@@ -1177,7 +1177,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioCarDetailLODOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioCarDetailLODOff.Location = new System.Drawing.Point(183, 4);
             this.radioCarDetailLODOff.Name = "radioCarDetailLODOff";
-            this.radioCarDetailLODOff.Size = new System.Drawing.Size(42, 18);
+            this.radioCarDetailLODOff.Size = new System.Drawing.Size(44, 18);
             this.radioCarDetailLODOff.TabIndex = 102;
             this.radioCarDetailLODOff.TabStop = true;
             this.radioCarDetailLODOff.Tag = "CarDetailLOD1";
@@ -1189,7 +1189,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioRoadLODBiasOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioRoadLODBiasOff.Location = new System.Drawing.Point(183, 4);
             this.radioRoadLODBiasOff.Name = "radioRoadLODBiasOff";
-            this.radioRoadLODBiasOff.Size = new System.Drawing.Size(42, 18);
+            this.radioRoadLODBiasOff.Size = new System.Drawing.Size(44, 18);
             this.radioRoadLODBiasOff.TabIndex = 103;
             this.radioRoadLODBiasOff.TabStop = true;
             this.radioRoadLODBiasOff.Tag = "RoadLODBIas1";
@@ -1453,7 +1453,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioKmH.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioKmH.Location = new System.Drawing.Point(124, 4);
             this.radioKmH.Name = "radioKmH";
-            this.radioKmH.Size = new System.Drawing.Size(56, 18);
+            this.radioKmH.Size = new System.Drawing.Size(58, 18);
             this.radioKmH.TabIndex = 30;
             this.radioKmH.TabStop = true;
             this.radioKmH.Tag = "UnitsKMH";
@@ -1466,7 +1466,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioMpH.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioMpH.Location = new System.Drawing.Point(181, 4);
             this.radioMpH.Name = "radioMpH";
-            this.radioMpH.Size = new System.Drawing.Size(56, 18);
+            this.radioMpH.Size = new System.Drawing.Size(58, 18);
             this.radioMpH.TabIndex = 31;
             this.radioMpH.TabStop = true;
             this.radioMpH.Tag = "UnitsMpH";
@@ -1501,7 +1501,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioDamageOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioDamageOn.Location = new System.Drawing.Point(124, 4);
             this.radioDamageOn.Name = "radioDamageOn";
-            this.radioDamageOn.Size = new System.Drawing.Size(42, 18);
+            this.radioDamageOn.Size = new System.Drawing.Size(44, 18);
             this.radioDamageOn.TabIndex = 27;
             this.radioDamageOn.TabStop = true;
             this.radioDamageOn.Tag = "VisualDamageOn";
@@ -1513,7 +1513,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioDamageOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioDamageOff.Location = new System.Drawing.Point(181, 4);
             this.radioDamageOff.Name = "radioDamageOff";
-            this.radioDamageOff.Size = new System.Drawing.Size(42, 18);
+            this.radioDamageOff.Size = new System.Drawing.Size(44, 18);
             this.radioDamageOff.TabIndex = 28;
             this.radioDamageOff.TabStop = true;
             this.radioDamageOff.Tag = "VisualDamageOff";
@@ -1548,11 +1548,11 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioAQLow.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioAQLow.Location = new System.Drawing.Point(124, 4);
             this.radioAQLow.Name = "radioAQLow";
-            this.radioAQLow.Size = new System.Drawing.Size(48, 18);
+            this.radioAQLow.Size = new System.Drawing.Size(33, 18);
             this.radioAQLow.TabIndex = 16;
             this.radioAQLow.TabStop = true;
             this.radioAQLow.Tag = "AudioQualityLow";
-            this.radioAQLow.Text = "Low";
+            this.radioAQLow.Text = "0";
             this.radioAQLow.UseVisualStyleBackColor = true;
             // 
             // radioAQHigh
@@ -1560,11 +1560,11 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioAQHigh.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioAQHigh.Location = new System.Drawing.Point(181, 4);
             this.radioAQHigh.Name = "radioAQHigh";
-            this.radioAQHigh.Size = new System.Drawing.Size(53, 18);
+            this.radioAQHigh.Size = new System.Drawing.Size(33, 18);
             this.radioAQHigh.TabIndex = 17;
             this.radioAQHigh.TabStop = true;
             this.radioAQHigh.Tag = "AudioQualityHigh";
-            this.radioAQHigh.Text = "High";
+            this.radioAQHigh.Text = "1";
             this.radioAQHigh.UseVisualStyleBackColor = true;
             // 
             // panelVSync
@@ -1595,7 +1595,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioVSyncOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioVSyncOn.Location = new System.Drawing.Point(124, 4);
             this.radioVSyncOn.Name = "radioVSyncOn";
-            this.radioVSyncOn.Size = new System.Drawing.Size(42, 18);
+            this.radioVSyncOn.Size = new System.Drawing.Size(44, 18);
             this.radioVSyncOn.TabIndex = 11;
             this.radioVSyncOn.TabStop = true;
             this.radioVSyncOn.Tag = "VSyncOn";
@@ -1607,7 +1607,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioVSyncOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioVSyncOff.Location = new System.Drawing.Point(181, 4);
             this.radioVSyncOff.Name = "radioVSyncOff";
-            this.radioVSyncOff.Size = new System.Drawing.Size(42, 18);
+            this.radioVSyncOff.Size = new System.Drawing.Size(44, 18);
             this.radioVSyncOff.TabIndex = 12;
             this.radioVSyncOff.TabStop = true;
             this.radioVSyncOff.Tag = "VSyncOff";
@@ -1631,7 +1631,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioAeroOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioAeroOff.Location = new System.Drawing.Point(181, 4);
             this.radioAeroOff.Name = "radioAeroOff";
-            this.radioAeroOff.Size = new System.Drawing.Size(42, 18);
+            this.radioAeroOff.Size = new System.Drawing.Size(44, 18);
             this.radioAeroOff.TabIndex = 9;
             this.radioAeroOff.TabStop = true;
             this.radioAeroOff.Tag = "AeroOff";
@@ -1643,7 +1643,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioAeroOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioAeroOn.Location = new System.Drawing.Point(124, 4);
             this.radioAeroOn.Name = "radioAeroOn";
-            this.radioAeroOn.Size = new System.Drawing.Size(42, 18);
+            this.radioAeroOn.Size = new System.Drawing.Size(44, 18);
             this.radioAeroOn.TabIndex = 8;
             this.radioAeroOn.TabStop = true;
             this.radioAeroOn.Tag = "AeroOn";
@@ -1690,7 +1690,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioVisualTreatOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioVisualTreatOn.Location = new System.Drawing.Point(126, 4);
             this.radioVisualTreatOn.Name = "radioVisualTreatOn";
-            this.radioVisualTreatOn.Size = new System.Drawing.Size(42, 18);
+            this.radioVisualTreatOn.Size = new System.Drawing.Size(44, 18);
             this.radioVisualTreatOn.TabIndex = 76;
             this.radioVisualTreatOn.TabStop = true;
             this.radioVisualTreatOn.Tag = "VisualTreatmentOn";
@@ -1702,7 +1702,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioVisualTreatOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioVisualTreatOff.Location = new System.Drawing.Point(183, 4);
             this.radioVisualTreatOff.Name = "radioVisualTreatOff";
-            this.radioVisualTreatOff.Size = new System.Drawing.Size(42, 18);
+            this.radioVisualTreatOff.Size = new System.Drawing.Size(44, 18);
             this.radioVisualTreatOff.TabIndex = 82;
             this.radioVisualTreatOff.TabStop = true;
             this.radioVisualTreatOff.Tag = "VisualTreatmentOff";
@@ -1737,7 +1737,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioWindowedOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioWindowedOn.Location = new System.Drawing.Point(124, 4);
             this.radioWindowedOn.Name = "radioWindowedOn";
-            this.radioWindowedOn.Size = new System.Drawing.Size(42, 18);
+            this.radioWindowedOn.Size = new System.Drawing.Size(44, 18);
             this.radioWindowedOn.TabIndex = 5;
             this.radioWindowedOn.TabStop = true;
             this.radioWindowedOn.Tag = "WindowedOn";
@@ -1749,7 +1749,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioWindowedOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioWindowedOff.Location = new System.Drawing.Point(181, 4);
             this.radioWindowedOff.Name = "radioWindowedOff";
-            this.radioWindowedOff.Size = new System.Drawing.Size(42, 18);
+            this.radioWindowedOff.Size = new System.Drawing.Size(44, 18);
             this.radioWindowedOff.TabIndex = 6;
             this.radioWindowedOff.TabStop = true;
             this.radioWindowedOff.Tag = "WindowedOff";
@@ -1785,7 +1785,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioWaterSimulationOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioWaterSimulationOn.Location = new System.Drawing.Point(126, 4);
             this.radioWaterSimulationOn.Name = "radioWaterSimulationOn";
-            this.radioWaterSimulationOn.Size = new System.Drawing.Size(42, 18);
+            this.radioWaterSimulationOn.Size = new System.Drawing.Size(44, 18);
             this.radioWaterSimulationOn.TabIndex = 76;
             this.radioWaterSimulationOn.TabStop = true;
             this.radioWaterSimulationOn.Tag = "VisualTreatmentOn";
@@ -1797,7 +1797,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.radioWaterSimulationOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.radioWaterSimulationOff.Location = new System.Drawing.Point(183, 4);
             this.radioWaterSimulationOff.Name = "radioWaterSimulationOff";
-            this.radioWaterSimulationOff.Size = new System.Drawing.Size(42, 18);
+            this.radioWaterSimulationOff.Size = new System.Drawing.Size(44, 18);
             this.radioWaterSimulationOff.TabIndex = 82;
             this.radioWaterSimulationOff.TabStop = true;
             this.radioWaterSimulationOff.Tag = "VisualTreatmentOff";
