@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
+using System.Net.Cache;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -125,9 +126,13 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
                     {
-                        Encoding = Encoding.UTF8
+                        Encoding = Encoding.UTF8,
+                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                     };
-                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                    { 
+                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                    }
                     else
                     {
                         Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -146,7 +151,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                     }
                     catch (Exception Error)
                     {
-                        LogToFileAddons.OpenLog("Register", String.Empty, Error, String.Empty, true);
+                        LogToFileAddons.OpenLog("Register", string.Empty, Error, string.Empty, true);
                     }
                     finally
                     {

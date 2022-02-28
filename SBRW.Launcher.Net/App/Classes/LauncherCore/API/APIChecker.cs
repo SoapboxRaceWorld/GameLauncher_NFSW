@@ -13,6 +13,7 @@ using System.Net;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Net.Cache;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
 {
@@ -118,18 +119,25 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
 
         public static void PingAPIStatus()
         {
-            Log.Checking("API: Checking Status");
-            Log.Checking("API Status: WorldUnited");
-            switch (UnitedSC = API_Core.StatusCheck(URLs.Main + "/serverlist.json", 15))
+            if (!(InsiderKit.EnableInsiderBetaTester.Allowed() || InsiderKit.EnableInsiderDeveloper.Allowed()))
             {
-                case APIStatus.Online:
-                    UnitedSL = RetrieveJSON(URLs.Main + "/serverlist.json", "SL", UnitedSC);
-                    if (UnitedSL) { UnitedCDNL = RetrieveJSON(URLs.Main + "/cdn_list.json", "CDNL", UnitedSC); }
-                    Log.Completed("API Status: WorldUnited");
-                    break;
-                default:
-                    Log.Completed("API Status: WorldUnited");
-                    break;
+                Log.Checking("API: Checking Status");
+                Log.Checking("API Status: WorldUnited");
+                switch (UnitedSC = API_Core.StatusCheck(URLs.Main + "/serverlist.json", 15))
+                {
+                    case APIStatus.Online:
+                        UnitedSL = RetrieveJSON(URLs.Main + "/serverlist.json", "SL", UnitedSC);
+                        if (UnitedSL) { UnitedCDNL = RetrieveJSON(URLs.Main + "/cdn_list.json", "CDNL", UnitedSC); }
+                        Log.Completed("API Status: WorldUnited");
+                        break;
+                    default:
+                        Log.Completed("API Status: WorldUnited");
+                        break;
+                }
+            }
+            else
+            {
+                UnitedSC = APIStatus.NotImplmented;
             }
 
             if (!UnitedAPI())
@@ -271,10 +279,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
                     {
-                        Encoding = Encoding.UTF8
+                        Encoding = Encoding.UTF8,
+                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                     };
 
-                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                    { 
+                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                    }
                     else
                     {
                         Client.Headers.Add("user-agent", "SBRW Launcher " +

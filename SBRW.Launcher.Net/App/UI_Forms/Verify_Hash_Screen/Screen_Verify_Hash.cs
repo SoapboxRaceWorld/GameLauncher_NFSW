@@ -24,6 +24,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using SBRW.Launcher.Core.Theme;
+using System.Net.Cache;
 
 namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
 {
@@ -384,7 +385,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("VERIFY HASH", String.Empty, Error, String.Empty, true);
+                LogToFileAddons.OpenLog("VERIFY HASH", string.Empty, Error, string.Empty, true);
             }
 
             if (DeletionError != 0)
@@ -431,9 +432,13 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var Client = new WebClient
                         {
-                            Encoding = Encoding.UTF8
+                            Encoding = Encoding.UTF8,
+                            CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
-                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                        { 
+                            Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                        }
                         else
                         {
                             Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -558,7 +563,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("VERIFY HASH", String.Empty, Error, String.Empty, true);
+                    LogToFileAddons.OpenLog("VERIFY HASH", string.Empty, Error, string.Empty, true);
                 }
             }
         }
@@ -621,7 +626,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                                         new FileInfo(text2).Directory.Create();
                                     }
                                 }
-                                catch (Exception Error) { LogToFileAddons.OpenLog("VERIFY HASH File Info", String.Empty, Error, String.Empty, true); }
+                                catch (Exception Error) { LogToFileAddons.OpenLog("VERIFY HASH File Info", string.Empty, Error, string.Empty, true); }
 
                                 Uri URLCall = new Uri(address);
                                 int Timeout = (int)TimeSpan.FromMinutes(5).TotalMilliseconds;
@@ -637,8 +642,19 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
 
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = Timeout;
 
-                                var Client = new WebClient();
-                                if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout(); }
+                                var Client = new WebClient() 
+                                { 
+                                    Encoding = Encoding.UTF8,
+                                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                                };
+                                if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                                { 
+                                    Client = new WebClientWithTimeout()
+                                    {
+                                        Encoding = Encoding.UTF8,
+                                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                                    }; 
+                                }
                                 else
                                 {
                                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -670,7 +686,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                                 catch (Exception Error)
                                 {
                                     if (!ForceStopScan) { RedownloadErrorCount++; }
-                                    LogToFileAddons.OpenLog("VERIFY HASH", String.Empty, Error, String.Empty, true);
+                                    LogToFileAddons.OpenLog("VERIFY HASH", string.Empty, Error, string.Empty, true);
                                 }
                                 finally
                                 {
@@ -688,7 +704,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                         catch (Exception Error)
                         {
                             if (!ForceStopScan) { RedownloadErrorCount++; }
-                            LogToFileAddons.OpenLog("VERIFY HASH", String.Empty, Error, String.Empty, true);
+                            LogToFileAddons.OpenLog("VERIFY HASH", string.Empty, Error, string.Empty, true);
                         }
                         finally
                         {

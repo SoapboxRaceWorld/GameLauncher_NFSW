@@ -22,6 +22,7 @@ using SBRW.Launcher.Core.Extra.File_;
 using SBRW.Launcher.Core.Extra.Ini_;
 using SBRW.Launcher.Core.Extra.XML_;
 using SBRW.Launcher.Core.Proxy.Nancy_;
+using SBRW.Launcher.Core.Recommended.Time_;
 using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Required.System.Windows_;
 using SBRW.Launcher.Core.Theme;
@@ -46,12 +47,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 #pragma warning restore CS8618
         private int LastSelectedCdnId { get; set; }
         private int LastSelectedLanguage { get; set; }
-        private bool DisableProxy { get; set; }
-        private bool DisableDiscordRPC { get; set; }
-        private bool EnableAltWebCalls { get; set; }
-        private bool EnableInsiderPreview { get; set; }
-        private bool EnableThemeSupport { get; set; }
-        private bool EnableStreamSupport { get; set; }
+
         private bool RestartRequired { get; set; }
         private string NewLauncherPath { get; set; }
         private string NewGameFilesPath { get; set; }
@@ -83,7 +79,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 Log.Completed("CLEANLINKS: Done");
             }
 
-            ButtonsColorSet(Button_Game_Verify_Files, 1, true);
+            ButtonsColorSet(Button_Change_Game_Path, 1, true);
             RestartRequired = true;
         }
 
@@ -214,19 +210,14 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 
             NewGameFilesPath = Save_Settings.Live_Data.Game_Path;
             NewLauncherPath = Locations.LauncherFolder;
-            DisableProxy = (Save_Settings.Live_Data.Launcher_Proxy == "1");
-            DisableDiscordRPC = (Save_Settings.Live_Data.Launcher_Discord_Presence == "1");
-            EnableAltWebCalls = (Save_Settings.Live_Data.Launcher_WebClient_Method == "WebClientWithTimeout");
-            EnableInsiderPreview = Save_Settings.Live_Data.Launcher_Insider == "1";
-            EnableThemeSupport = Save_Settings.Live_Data.Launcher_Theme_Support == "1";
-            EnableStreamSupport = Save_Settings.Live_Data.Launcher_Streaming_Support == "1";
 
-            CheckBox_Proxy.Checked = DisableProxy;
-            CheckBox_RPC.Checked = DisableDiscordRPC;
-            CheckBox_Alt_WebCalls.Checked = EnableAltWebCalls;
-            CheckBox_Opt_Insider.Checked = EnableInsiderPreview;
-            CheckBox_Theme_Support.Checked = EnableThemeSupport;
-            CheckBox_Stream.Checked = EnableStreamSupport;
+            CheckBox_Proxy.Checked = InformationCache.DisableProxy;
+            CheckBox_RPC.Checked = InformationCache.DisableDiscordRPC;
+            CheckBox_Alt_WebCalls.Checked = InformationCache.EnableAltWebCalls;
+            CheckBox_Opt_Insider.Checked = InformationCache.EnableInsiderPreview;
+            CheckBox_Theme_Support.Checked = InformationCache.EnableThemeSupport;
+            CheckBox_Legacy_Timer.Checked = InformationCache.EnableLegacyTimer;
+            CheckBox_LZMA_Downloader.Checked = InformationCache.EnableLZMADownloader;
 
             /*******************************/
             /* Enable/Disable Visuals       /
@@ -321,6 +312,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 }
                 else
                 {
+                    ButtonsColorSet(Button_Game_Verify_Files, 0, false);
+
                     if (ThreadChecksums != null)
                     {
                         ThreadChecksums.Abort();
@@ -333,12 +326,11 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                         {
                             if (!Application.OpenForms[this.Name].Disposing)
                             {
-                                ButtonsColorSet(Button_Game_Verify_Files, 0, false);
                                 switch (API_Core.StatusCheck(FinalCDNURL + "/unpacked/checksums.dat", 10))
                                 {
                                     case APIStatus.Online:
                                         FunctionStatus.DoesCDNSupportVerifyHash = true;
-                                        ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
+                                        ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good") ? 2 : 0, true);
                                         break;
                                     default:
                                         FunctionStatus.DoesCDNSupportVerifyHash = false;
@@ -373,9 +365,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         #region ComboxList Setup
         private void RememberLastCDN()
         {
-            if (CDNListUpdater.CleanList != null)
+            if ((InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList) != null)
             {
-                if (CDNListUpdater.CleanList.Any())
+                if ((InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList).Any())
                 {
                     /* Last Selected CDN */
                     Log.Core("SETTINGS CDNLIST: Checking...");
@@ -401,10 +393,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                             Log.Core("SETTINGS CDNLIST: Found something!");
                             Log.Core("SETTINGS CDNLIST: Checking if CDN exists on our database");
 
-                            if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
+                            if ((InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList).FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
                             {
                                 Log.Core("SETTINGS CDNLIST: CDN found! Checking ID");
-                                var index = CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
+                                int index = (InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList).FindIndex(i => string.Equals(i.Url, FinalCDNURL));
 
                                 Log.Core("SETTINGS CDNLIST: ID is " + index);
                                 if (index >= 0)
@@ -448,9 +440,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 {
                     string FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN + "/";
 
-                    if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
+                    if ((InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList).FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
                     {
-                        var index = CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
+                        var index = (InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList).FindIndex(i => string.Equals(i.Url, FinalCDNURL));
 
                         if (index >= 0)
                         {
@@ -575,7 +567,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             }
             else
             {
-                ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
+                ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good") ? 2 : 0, true);
                 Screen_Verify_Hash.OpenScreen();
             }
         }
@@ -775,9 +767,20 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 Launcher_Value.Launcher_Alternative_Webcalls(Save_Settings.Live_Data.Launcher_WebClient_Method == "WebClient");
             }
 
-            if (Save_Settings.Live_Data.Launcher_Streaming_Support != (CheckBox_Stream.Checked ? "1" : "0"))
+            if (Save_Settings.Live_Data.Launcher_Legacy_Timer != (CheckBox_Legacy_Timer.Checked ? "1" : "0"))
             {
-                Save_Settings.Live_Data.Launcher_Streaming_Support = CheckBox_Stream.Checked ? "1" : "0";
+                Save_Settings.Live_Data.Launcher_Legacy_Timer = CheckBox_Legacy_Timer.Checked ? "1" : "0";
+                Time_Window.Legacy = CheckBox_Legacy_Timer.Checked;
+            }
+
+            if (Save_Settings.Live_Data.Launcher_LZMA_Downloader != (CheckBox_LZMA_Downloader.Checked ? "1" : "0"))
+            {
+                Save_Settings.Live_Data.Launcher_LZMA_Downloader = CheckBox_LZMA_Downloader.Checked ? "1" : "0";
+                if (Screen_Main.BackgroundWorker_One != null)
+                {
+                    Screen_Main.BackgroundWorker_One.CancelAsync();
+                    Screen_Main.BackgroundWorker_One.RunWorkerAsync();
+                }
             }
 
             try
@@ -1027,7 +1030,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             {
                 if (ComboBox_CDN_List.SelectedItem != null)
                 {
-                    if (((Json_List_CDN)ComboBox_CDN_List.SelectedItem).IsSpecial)
+                    if (((Json_List_CDN)ComboBox_CDN_List.SelectedItem).IsSpecial || ((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Offline)
                     {
                         ComboBox_CDN_List.SelectedIndex = LastSelectedCdnId;
                     }
@@ -1087,6 +1090,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 }
             }
             catch { }
+            finally
+            {
+                GC.Collect();
+            }
         }
 
         private void ComboBox_Language_List_SelectedIndexChanged(object sender, EventArgs e)
@@ -1120,6 +1127,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             try
             {
                 string cdnListText = string.Empty;
+                long CDN_Status = 0;
 
                 if (sender is ComboBox cb)
                 {
@@ -1128,6 +1136,19 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                         if (cb.Items[e.Index] is Json_List_CDN si)
                         {
                             cdnListText = si.Name;
+
+                            if (si.Offline)
+                            {
+                                CDN_Status = 0;
+                            }
+                            else if (si.Maintenance)
+                            {
+                                CDN_Status = 3;
+                            }
+                            else
+                            {
+                                CDN_Status = 1;
+                            }
                         }
                     }
                 }
@@ -1155,8 +1176,23 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                         }
                         else
                         {
-                            backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Background_ForeColor);
-                            textColor = new SolidBrush(Color_Winform_Other.DropMenu_Text_ForeColor);
+                            switch (CDN_Status)
+                            {
+                                case 1:
+                                    /* ONLINE */
+                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Background_ForeColor);
+                                    break;
+                                case 3:
+                                    /* MAINTENANCE */
+                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Ping_Warning);
+                                    break;
+                                default:
+                                    /* OFFLINE */
+                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Ping_Error);
+                                    break;
+                            }
+
+                            textColor = new SolidBrush((CDN_Status == 1) ? Color_Winform_Other.DropMenu_Text_ForeColor : Color_Winform_Other.DropMenu_Black);
                         }
 
                         e.Graphics.FillRectangle(backgroundColor, e.Bounds);
@@ -1165,6 +1201,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 }
             }
             catch { }
+            finally
+            {
+                GC.Collect();
+            }
         }
         /// <summary>
         /// Sets the Category for the Language Drop Down Menu with its set of Colors
@@ -1220,6 +1260,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 }
             }
             catch { }
+            finally
+            {
+                GC.Collect();
+            }
         }
         private void DropDownMenu_MouseWheel(object sender, MouseEventArgs e)
         {
@@ -1455,7 +1499,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             CheckBox_Alt_WebCalls.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             CheckBox_Opt_Insider.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             CheckBox_Theme_Support.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
-            CheckBox_Stream.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            CheckBox_Legacy_Timer.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            CheckBox_LZMA_Downloader.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_Game_Current_Path.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             LinkLabel_Game_Path.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_CDN_Current.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
@@ -1512,7 +1557,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             CheckBox_Alt_WebCalls.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
             CheckBox_Opt_Insider.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
             CheckBox_Theme_Support.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
-            CheckBox_Stream.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
+            CheckBox_Legacy_Timer.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
+            CheckBox_LZMA_Downloader.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
 
             /* Bottom Left */
             Label_Version_Build.ForeColor = Color_Text.L_Five;
@@ -1535,7 +1581,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             }
 
             ComboBox_CDN_List.DisplayMember = "Name";
-            ComboBox_CDN_List.DataSource = CDNListUpdater.CleanList;
+            ComboBox_CDN_List.DataSource = InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList;
 
             ComboBox_Language_List.DisplayMember = "Name";
             ComboBox_Language_List.DataSource = LanguageListUpdater.CleanList;
@@ -1627,13 +1673,15 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             ToolTip_Hover.SetToolTip(CheckBox_Opt_Insider, "Unchecked: Only Official \"Release\" Builds will prompt Updates\n" +
                 "Checked: Insider/Beta Build\'s will be available to the Updater");
             ToolTip_Hover.SetToolTip(CheckBox_Theme_Support, "Enables supporting External Themes for the Launcher");
-            ToolTip_Hover.SetToolTip(CheckBox_Stream, "Setting for Recording/Streaming Programs:\n" +
-                "Enable \"Native\" capture of the NFSW Game Window\n" +
-                "If Checked, this removes the Window Title countdown timer\n" +
-                "If Unchecked, you can still capture, but may need special methods");
+            ToolTip_Hover.SetToolTip(CheckBox_Legacy_Timer, "Setting for Legacy Timer:\n" +
+                "If Checked, this restores count down timer on Window Title\n" +
+                "If Unchecked, displays the time on when the session ends");
             ToolTip_Hover.SetToolTip(CheckBox_Alt_WebCalls, "Changes the internal method used by Launcher for Communications\n" +
                 "Unchecked: Uses \'standard\' WebClient calls\n" +
                 "Checked: Uses WebClientWithTimeout");
+            ToolTip_Hover.SetToolTip(CheckBox_LZMA_Downloader, "Setting for LZMA Downloader:\n" +
+                "If Checked, this enables the old LZMA Downloader\n" +
+                "If Unchecked, enables the new SBRW Pack Downloader");
 
             Shown += (x, y) =>
             {

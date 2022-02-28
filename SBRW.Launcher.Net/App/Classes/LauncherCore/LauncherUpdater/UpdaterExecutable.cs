@@ -14,6 +14,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
+using System.Net.Cache;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -37,9 +38,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 var Client = new WebClient
                 {
-                    Encoding = Encoding.UTF8
+                    Encoding = Encoding.UTF8,
+                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                 };
-                if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                { 
+                    Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                }
                 else
                 {
                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -125,9 +130,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
                     {
-                        Encoding = Encoding.UTF8
+                        Encoding = Encoding.UTF8,
+                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                     };
-                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                    { 
+                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                    }
                     else
                     {
                         Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -205,9 +214,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var Client = new WebClient
                         {
-                            Encoding = Encoding.UTF8
+                            Encoding = Encoding.UTF8,
+                            CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
-                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                        { 
+                            Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                        }
                         else
                         {
                             Client.Headers.Add("user-agent", "SBRW Launcher " +

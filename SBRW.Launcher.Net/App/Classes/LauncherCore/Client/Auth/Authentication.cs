@@ -12,6 +12,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Xml;
+using System.Net.Cache;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
 {
@@ -44,10 +45,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                     var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8,
-                        Headers = Custom_Header.Headers_WHC()
+                        Headers = Custom_Header.Headers_WHC(),
+                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                     };
 
-                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                    { 
+                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                    }
                     else
                     {
                         Client.Headers.Add(HttpRequestHeader.UserAgent, Custom_Header.Primary);
@@ -84,6 +89,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                     httpWebRequest.ContentType = "application/json";
                     httpWebRequest.Method = "POST";
                     httpWebRequest.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+                    httpWebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
                     using (StreamWriter streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                     {

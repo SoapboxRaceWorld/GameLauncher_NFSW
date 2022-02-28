@@ -30,6 +30,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Cache;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -202,7 +203,8 @@ namespace SBRW.Launcher.Net
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             WebClient Client = new WebClient
                             {
-                                Encoding = Encoding.UTF8
+                                Encoding = Encoding.UTF8,
+                                CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                             };
                             Client.Headers.Add("user-agent", "SBRW Launcher " +
                                 Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
@@ -738,10 +740,24 @@ namespace SBRW.Launcher.Net
                                     }
                                 }
 
+                                Log.Checking("FOLDER: Launcher Data Folder");
+                                try
+                                {
+                                    if (!Directory.Exists(Locations.LauncherDataFolder))
+                                    {
+                                        Directory.CreateDirectory(Locations.LauncherDataFolder);
+                                    }
+                                }
+                                catch (Exception Error)
+                                {
+                                    LogToFileAddons.OpenLog("FOLDER Launcher Data", string.Empty, Error, string.Empty, true);
+                                }
+                                Log.Completed("FOLDER: Done");
+
                                 Log.Checking("JSON: Servers File");
                                 try
                                 {
-                                    if (File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)))
+                                    if (File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)) || File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)))
                                     {
                                         if (File.Exists(Locations.LauncherCustomServers))
                                         {

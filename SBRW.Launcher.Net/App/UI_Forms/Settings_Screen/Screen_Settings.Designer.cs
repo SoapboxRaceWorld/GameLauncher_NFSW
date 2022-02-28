@@ -49,7 +49,7 @@
             this.CheckBox_Word_Filter_Check = new System.Windows.Forms.CheckBox();
             this.CheckBox_Proxy = new System.Windows.Forms.CheckBox();
             this.CheckBox_RPC = new System.Windows.Forms.CheckBox();
-            this.CheckBox_Stream = new System.Windows.Forms.CheckBox();
+            this.CheckBox_Legacy_Timer = new System.Windows.Forms.CheckBox();
             this.CheckBox_Theme_Support = new System.Windows.Forms.CheckBox();
             this.CheckBox_Opt_Insider = new System.Windows.Forms.CheckBox();
             this.CheckBox_Alt_WebCalls = new System.Windows.Forms.CheckBox();
@@ -69,6 +69,7 @@
             this.Label_Version_Build = new System.Windows.Forms.Label();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.Panel_Form_Screens = new System.Windows.Forms.Panel();
+            this.CheckBox_LZMA_Downloader = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -205,13 +206,14 @@
             // 
             // Button_Security_Center
             // 
+            this.Button_Security_Center.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.Button_Security_Center.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Button_Security_Center.Location = new System.Drawing.Point(38, 290);
             this.Button_Security_Center.Name = "Button_Security_Center";
             this.Button_Security_Center.Size = new System.Drawing.Size(154, 25);
             this.Button_Security_Center.TabIndex = 53;
             this.Button_Security_Center.Text = "Security Center";
-            this.Button_Security_Center.UseVisualStyleBackColor = true;
+            this.Button_Security_Center.UseVisualStyleBackColor = false;
             // 
             // Button_Clear_Server_Mods
             // 
@@ -292,24 +294,24 @@
             this.CheckBox_RPC.Text = "Disable Discord RPC";
             this.CheckBox_RPC.UseVisualStyleBackColor = false;
             // 
-            // CheckBox_Stream
+            // CheckBox_Legacy_Timer
             // 
-            this.CheckBox_Stream.BackColor = System.Drawing.Color.Transparent;
-            this.CheckBox_Stream.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CheckBox_Stream.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_Stream.Location = new System.Drawing.Point(335, 379);
-            this.CheckBox_Stream.Name = "CheckBox_Stream";
-            this.CheckBox_Stream.Size = new System.Drawing.Size(222, 18);
-            this.CheckBox_Stream.TabIndex = 63;
-            this.CheckBox_Stream.Text = "Enable Capture Support";
-            this.CheckBox_Stream.UseVisualStyleBackColor = false;
+            this.CheckBox_Legacy_Timer.BackColor = System.Drawing.Color.Transparent;
+            this.CheckBox_Legacy_Timer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CheckBox_Legacy_Timer.ForeColor = System.Drawing.Color.White;
+            this.CheckBox_Legacy_Timer.Location = new System.Drawing.Point(295, 379);
+            this.CheckBox_Legacy_Timer.Name = "CheckBox_Legacy_Timer";
+            this.CheckBox_Legacy_Timer.Size = new System.Drawing.Size(222, 18);
+            this.CheckBox_Legacy_Timer.TabIndex = 63;
+            this.CheckBox_Legacy_Timer.Text = "Enable Legacy Timer";
+            this.CheckBox_Legacy_Timer.UseVisualStyleBackColor = false;
             // 
             // CheckBox_Theme_Support
             // 
             this.CheckBox_Theme_Support.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_Theme_Support.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Theme_Support.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_Theme_Support.Location = new System.Drawing.Point(335, 357);
+            this.CheckBox_Theme_Support.Location = new System.Drawing.Point(295, 335);
             this.CheckBox_Theme_Support.Name = "CheckBox_Theme_Support";
             this.CheckBox_Theme_Support.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Theme_Support.TabIndex = 62;
@@ -321,7 +323,7 @@
             this.CheckBox_Opt_Insider.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_Opt_Insider.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Opt_Insider.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_Opt_Insider.Location = new System.Drawing.Point(335, 335);
+            this.CheckBox_Opt_Insider.Location = new System.Drawing.Point(556, 335);
             this.CheckBox_Opt_Insider.Name = "CheckBox_Opt_Insider";
             this.CheckBox_Opt_Insider.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Opt_Insider.TabIndex = 61;
@@ -333,7 +335,7 @@
             this.CheckBox_Alt_WebCalls.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_Alt_WebCalls.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Alt_WebCalls.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_Alt_WebCalls.Location = new System.Drawing.Point(335, 401);
+            this.CheckBox_Alt_WebCalls.Location = new System.Drawing.Point(295, 359);
             this.CheckBox_Alt_WebCalls.Name = "CheckBox_Alt_WebCalls";
             this.CheckBox_Alt_WebCalls.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Alt_WebCalls.TabIndex = 64;
@@ -503,11 +505,23 @@
             // 
             this.Panel_Form_Screens.BackColor = System.Drawing.Color.Transparent;
             this.Panel_Form_Screens.ForeColor = System.Drawing.Color.Transparent;
-            this.Panel_Form_Screens.Location = new System.Drawing.Point(878, 12);
+            this.Panel_Form_Screens.Location = new System.Drawing.Point(0, 0);
             this.Panel_Form_Screens.Name = "Panel_Form_Screens";
             this.Panel_Form_Screens.Size = new System.Drawing.Size(891, 529);
             this.Panel_Form_Screens.TabIndex = 79;
             this.Panel_Form_Screens.Visible = false;
+            // 
+            // CheckBox_LZMA_Downloader
+            // 
+            this.CheckBox_LZMA_Downloader.BackColor = System.Drawing.Color.Transparent;
+            this.CheckBox_LZMA_Downloader.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CheckBox_LZMA_Downloader.ForeColor = System.Drawing.Color.White;
+            this.CheckBox_LZMA_Downloader.Location = new System.Drawing.Point(295, 403);
+            this.CheckBox_LZMA_Downloader.Name = "CheckBox_LZMA_Downloader";
+            this.CheckBox_LZMA_Downloader.Size = new System.Drawing.Size(222, 18);
+            this.CheckBox_LZMA_Downloader.TabIndex = 80;
+            this.CheckBox_LZMA_Downloader.Text = "Enable LZMA Downloader";
+            this.CheckBox_LZMA_Downloader.UseVisualStyleBackColor = false;
             // 
             // Screen_Settings
             // 
@@ -530,8 +544,9 @@
             this.Controls.Add(this.Label_CDN_Current);
             this.Controls.Add(this.Label_API_Status);
             this.Controls.Add(this.Label_Game_Current_Path);
+            this.Controls.Add(this.CheckBox_LZMA_Downloader);
             this.Controls.Add(this.CheckBox_Alt_WebCalls);
-            this.Controls.Add(this.CheckBox_Stream);
+            this.Controls.Add(this.CheckBox_Legacy_Timer);
             this.Controls.Add(this.CheckBox_Theme_Support);
             this.Controls.Add(this.CheckBox_Opt_Insider);
             this.Controls.Add(this.CheckBox_RPC);
@@ -588,7 +603,7 @@
         private System.Windows.Forms.CheckBox CheckBox_Word_Filter_Check;
         private System.Windows.Forms.CheckBox CheckBox_Proxy;
         private System.Windows.Forms.CheckBox CheckBox_RPC;
-        private System.Windows.Forms.CheckBox CheckBox_Stream;
+        private System.Windows.Forms.CheckBox CheckBox_Legacy_Timer;
         private System.Windows.Forms.CheckBox CheckBox_Theme_Support;
         private System.Windows.Forms.CheckBox CheckBox_Opt_Insider;
         private System.Windows.Forms.CheckBox CheckBox_Alt_WebCalls;
@@ -608,5 +623,6 @@
         private System.Windows.Forms.Label Label_Version_Build;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.Panel Panel_Form_Screens;
+        private System.Windows.Forms.CheckBox CheckBox_LZMA_Downloader;
     }
 }

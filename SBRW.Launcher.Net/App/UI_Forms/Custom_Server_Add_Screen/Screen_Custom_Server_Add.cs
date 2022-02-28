@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
+using System.Net.Cache;
 using System.Text;
 using System.Windows.Forms;
 
@@ -83,10 +84,14 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                     ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
                     {
-                        Encoding = Encoding.UTF8
+                        Encoding = Encoding.UTF8,
+                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                     };
 
-                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                    { 
+                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                    }
                     else
                     {
                         Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -100,7 +105,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                     catch (Exception Error)
                     {
                         string LogMessage = "Add Server Check Encountered an Error:";
-                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, String.Empty, false);
+                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, string.Empty, false);
                     }
                     finally
                     {
@@ -141,7 +146,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                     catch (Exception Error)
                     {
                         string LogMessage = "Add Server Get Information Encountered an Error:";
-                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, String.Empty, false);
+                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, string.Empty, false);
                     }
 
                     if (ServerInformationData == null)
@@ -157,10 +162,14 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                         ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var Client = new WebClient
                         {
-                            Encoding = Encoding.UTF8
+                            Encoding = Encoding.UTF8,
+                            CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
 
-                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                        { 
+                            Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                        }
                         else
                         {
                             Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -174,7 +183,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                         }
                         catch (Exception Error)
                         {
-                            LogToFileAddons.OpenLog("Add Server", String.Empty, Error, String.Empty, true);
+                            LogToFileAddons.OpenLog("Add Server", string.Empty, Error, string.Empty, true);
                             ServerID = Result.Host;
                         }
                         finally

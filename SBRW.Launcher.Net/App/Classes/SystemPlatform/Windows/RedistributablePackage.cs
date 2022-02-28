@@ -13,6 +13,7 @@ using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using SBRW.Launcher.Core.Extension.Registry_;
+using System.Net.Cache;
 
 // based on https://github.com/bitbeans/RedistributableChecker/blob/master/RedistributableChecker/RedistributablePackage.cs
 namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
@@ -120,9 +121,15 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                         {
                             Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x86.exe");
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                            var Client = new WebClient();
+                            var Client = new WebClient()
+                            {
+                                CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                            };
 
-                            if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout(); }
+                            if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                            {
+                                Client = new WebClientWithTimeout() { CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)} ;
+                            }
                             else
                             {
                                 Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -241,9 +248,15 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                             {
                                 Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x64.exe");
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                                var Client = new WebClient();
+                                var Client = new WebClient()
+                                {
+                                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                                };
 
-                                if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout(); }
+                                if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                                {
+                                    Client = new WebClientWithTimeout() { CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+                                }
                                 else
                                 {
                                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -321,7 +334,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                 }
                                 catch (Exception Error)
                                 {
-                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE x64 Process", String.Empty, Error, String.Empty, true);
+                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE x64 Process", string.Empty, Error, string.Empty, true);
                                     Error_Free = false;
                                     MessageBox.Show(Translations.Database("Redistributable_VC_P9"),
                                         Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,

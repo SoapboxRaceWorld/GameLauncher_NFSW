@@ -38,6 +38,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
         public static bool SelectedServerEnforceProxy { get; set; }
         /* Holds a collection of Server Status of Servers */
         public static Dictionary<string, int> ServerStatusBook { get; set; } = new Dictionary<string, int>();
+        public static bool DisableProxy { get { return Save_Settings.Live_Data.Launcher_Proxy == "1"; } }
+        public static bool DisableDiscordRPC { get { return Save_Settings.Live_Data.Launcher_Discord_Presence == "1"; } }
+        public static bool EnableAltWebCalls { get { return Save_Settings.Live_Data.Launcher_WebClient_Method == "WebClientWithTimeout"; } }
+        public static bool EnableInsiderPreview { get { return Save_Settings.Live_Data.Launcher_Insider == "1"; } }
+        public static bool EnableThemeSupport { get { return Save_Settings.Live_Data.Launcher_Theme_Support == "1"; } }
+        public static bool EnableLegacyTimer { get { return Save_Settings.Live_Data.Launcher_Legacy_Timer == "1"; } }
+        public static bool EnableLZMADownloader { get { return Save_Settings.Live_Data.Launcher_LZMA_Downloader == "1"; } }
     }
 
     /* This is Used to call Certain Functions (Such as Completion Status or Function Callbacks) */

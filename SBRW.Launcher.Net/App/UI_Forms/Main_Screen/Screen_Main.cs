@@ -62,6 +62,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Net.Cache;
 
 namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 {
@@ -1042,10 +1043,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 var Client = new WebClient
                 {
-                    Encoding = Encoding.UTF8
+                    Encoding = Encoding.UTF8,
+                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                 };
 
-                if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                { 
+                    Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                }
                 else
                 {
                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1166,10 +1171,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var ModNetJsonURI = new WebClient
                     {
-                        Encoding = Encoding.UTF8
+                        Encoding = Encoding.UTF8,
+                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                     };
 
-                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { ModNetJsonURI = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                    { 
+                        ModNetJsonURI = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                    }
                     else
                     {
                         ModNetJsonURI.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1241,10 +1250,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                     var newModNetFilesDownload = new WebClient
                                     {
-                                        Encoding = Encoding.UTF8
+                                        Encoding = Encoding.UTF8,
+                                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                                     };
 
-                                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { newModNetFilesDownload = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                                    { 
+                                        newModNetFilesDownload = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                                    }
                                     else
                                     {
                                         newModNetFilesDownload.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1283,10 +1296,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var ModInfoJson = new WebClient
                         {
-                            Encoding = Encoding.UTF8
+                            Encoding = Encoding.UTF8,
+                            CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
 
-                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) { ModInfoJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                        { 
+                            ModInfoJson = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                        }
                         else
                         {
                             ModInfoJson.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1335,10 +1352,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             ServicePointManager.FindServicePoint(URLCall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var CarsJson = new WebClient
                             {
-                                Encoding = Encoding.UTF8
+                                Encoding = Encoding.UTF8,
+                                CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                             };
 
-                            if (!Launcher_Value.Launcher_Alternative_Webcalls()) { CarsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                            { 
+                                CarsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                            }
                             else
                             {
                                 CarsJson.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1362,10 +1383,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             ServicePointManager.FindServicePoint(URLCall_B).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var EventsJson = new WebClient
                             {
-                                Encoding = Encoding.UTF8
+                                Encoding = Encoding.UTF8,
+                                CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                             };
 
-                            if (!Launcher_Value.Launcher_Alternative_Webcalls()) { EventsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                            { 
+                                EventsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                            }
                             else
                             {
                                 EventsJson.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1416,10 +1441,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var ServerModsList = new WebClient
                             {
-                                Encoding = Encoding.UTF8
+                                Encoding = Encoding.UTF8,
+                                CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                             };
 
-                            if (!Launcher_Value.Launcher_Alternative_Webcalls()) { ServerModsList = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                            { 
+                                ServerModsList = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                            }
                             else
                             {
                                 ServerModsList.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1682,11 +1711,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Checking;
 
             Button_Login.ForeColor = Color_Text.L_Six;
-            string BannerCache = Path.Combine(".BannerCache", Hashes.Hash_String(1, Launcher_Value.Launcher_Select_Server_Data.IPAddress) + ".bin");
+            string Banner_Cache_Folder = Path.Combine(Locations.LauncherDataFolder, "Bin", "Server", "Banner", "EyeCatcher");
+            string Banner_Cache_File = Path.Combine(Banner_Cache_Folder, Hashes.Hash_String(1, Launcher_Value.Launcher_Select_Server_Data.IPAddress) + ".bin");
 #if NETFRAMEWORK
-            Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(BannerCache)??Image_Other.Server_Banner;
+            Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(Banner_Cache_File) ??Image_Other.Server_Banner;
 #elif NET6_0_OR_GREATER && WINDOWS
-            Picture_Server_Banner.Image = Image_Handler.Grayscale(BannerCache)??Image_Other.Server_Banner;
+            Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File)??Image_Other.Server_Banner;
 #endif
             Picture_Server_Banner.BackColor = Color.Transparent;
             string ImageUrl = string.Empty;
@@ -1714,10 +1744,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
             var Client = new WebClient
             {
-                Encoding = Encoding.UTF8
+                Encoding = Encoding.UTF8,
+                CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
             };
 
-            if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+            if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+            { 
+                Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+            }
             else
             {
                 Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2098,7 +2132,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         try
                         {
-                            if (!Directory.Exists(".BannerCache")) { Directory.CreateDirectory(".BannerCache"); }
+                            if (!Directory.Exists(Banner_Cache_Folder)) { Directory.CreateDirectory(Banner_Cache_Folder); }
 
                             if (!string.IsNullOrWhiteSpace(ImageUrl))
                             {
@@ -2107,10 +2141,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 var Client_A = new WebClient
                                 {
-                                    Encoding = Encoding.UTF8
+                                    Encoding = Encoding.UTF8,
+                                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                                 };
 
-                                if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                                { 
+                                    Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                                }
                                 else
                                 {
                                     Client_A.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2147,9 +2185,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         {
                                             /* Load cached banner! */
 #if NETFRAMEWORK
-                                            Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(BannerCache)??Image_Other.Server_Banner;
+                                            Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(Banner_Cache_File) ??Image_Other.Server_Banner;
 #elif NET6_0_OR_GREATER && WINDOWS
-                                            Picture_Server_Banner.Image = Image_Handler.Grayscale(BannerCache) ?? Image_Other.Server_Banner;
+                                            Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
 #endif
                                             GC.Collect();
                                         }
@@ -2182,11 +2220,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                             if (Strings.GetExtension(ImageUrl) == "gif")
                                             {
-                                                Image.FromStream(ServerRawBanner).Save(BannerCache);
+                                                Image.FromStream(ServerRawBanner).Save(Banner_Cache_File);
                                             }
                                             else
                                             {
-                                                File.WriteAllBytes(BannerCache, ServerRawBanner.ToArray());
+                                                File.WriteAllBytes(Banner_Cache_File, ServerRawBanner.ToArray());
                                             }
                                         }
                                         catch (Exception Error)
@@ -2206,13 +2244,13 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     }
                                 };
                             }
-                            else if (File.Exists(BannerCache) && !Application.OpenForms[this.Name].IsDisposed)
+                            else if (File.Exists(Banner_Cache_File) && !Application.OpenForms[this.Name].IsDisposed)
                             {
                                 /* Load cached banner! */
 #if NETFRAMEWORK
-                                Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(BannerCache)??Image_Other.Server_Banner;
+                                Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(Banner_Cache_File) ??Image_Other.Server_Banner;
 #elif NET6_0_OR_GREATER && WINDOWS
-                                Picture_Server_Banner.Image = Image_Handler.Grayscale(BannerCache) ?? Image_Other.Server_Banner;
+                                Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
 #endif
                                 GC.Collect();
                             }
@@ -2339,13 +2377,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
 
             string GameExePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe");
-            /* Use Local Packed Archive for Install Source - DavidCarbon */
-            if (!File.Exists(GameExePath) && EnableInsiderDeveloper.Allowed())
-            {
-                /* GameFiles.sbrwpack */
-                Game_Downloader();
-            }
-            else if (!File.Exists(GameExePath))
+
+            if (!File.Exists(GameExePath))
             {
                 if (Save_Settings.Live_Data.Launcher_CDN.StartsWith("http://localhost") || Save_Settings.Live_Data.Launcher_CDN.StartsWith("https://localhost"))
                 {
@@ -2363,6 +2396,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
                     Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
                 }
+                /* Use Local Packed Archive for Install Source - DavidCarbon */
+                else if (!InformationCache.EnableLZMADownloader)
+                {
+                    /* GameFiles.sbrwpack */
+                    Game_Downloader();
+                }
                 else
                 {
                     DownloadStartTime = DateTime.Now;
@@ -2372,6 +2411,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
                     LZMA_Downloader.StartDownload(Save_Settings.Live_Data.Launcher_CDN, string.Empty, Save_Settings.Live_Data.Game_Path, false, false, 1130632198);
                 }
+            }
+            else if (!InformationCache.EnableLZMADownloader)
+            {
+                OnDownloadFinished();
             }
             else
             {
@@ -2410,42 +2453,48 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         public void DownloadSpeechFiles()
         {
-            Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Looking for correct Speech Files...".ToUpper(), this);
+            string speechFile = string.Empty;
+            int speechSize = 0;
 
-            ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Width = 0, this);
-
-            ProgressBar_Extracting.SafeInvokeAction(() =>
-            ProgressBar_Extracting.Width = 0, this);
-
-            Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
-
-            string speechFile;
-            int speechSize;
-
-            try
+            if (InformationCache.EnableLZMADownloader)
             {
-                speechFile = Download_LZMA_Support.SpeechFiles(Save_Settings.Live_Data.Launcher_Language);
+                Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Looking for correct Speech Files...".ToUpper(), this);
 
-                Uri URLCall = new Uri(Save_Settings.Live_Data.Launcher_CDN + "/" + speechFile + "/index.xml");
-                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                var Client = new WebClient
-                {
-                    Encoding = Encoding.UTF8
-                };
+                ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Width = 0, this);
 
-                if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
-                else
-                {
-                    Client.Headers.Add("user-agent", "SBRW Launcher " +
-                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                }
+                ProgressBar_Extracting.SafeInvokeAction(() =>
+                ProgressBar_Extracting.Width = 0, this);
+
+                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);                
 
                 try
                 {
-                    string response = Client.DownloadString(URLCall);
+                    speechFile = Download_LZMA_Support.SpeechFiles(Save_Settings.Live_Data.Launcher_Language);
 
-                    XmlDocument speechFileXml = new XmlDocument();
-                    speechFileXml.LoadXml(response);
+                    Uri URLCall = new Uri(Save_Settings.Live_Data.Launcher_CDN + "/" + speechFile + "/index.xml");
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    var Client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8,
+                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                    };
+
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                    {
+                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+                    }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
+                    try
+                    {
+                        string response = Client.DownloadString(URLCall);
+
+                        XmlDocument speechFileXml = new XmlDocument();
+                        speechFileXml.LoadXml(response);
 
                     XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
                     speechSize = Convert.ToInt32(speechSizeNode.InnerText);
@@ -2464,16 +2513,17 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Download Speech Files", String.Empty, Error, String.Empty, true);
+                LogToFileAddons.OpenLog("Download Speech Files", null, Error, null, true);
                 speechFile = Download_LZMA_Support.SpeechFiles();
                 speechSize = Download_LZMA_Support.SpeechFilesSize();
             }
 
-            Label_Download_Information.SafeInvokeAction(() =>
-            Label_Download_Information.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper(), this);
+                Label_Download_Information.SafeInvokeAction(() =>
+                Label_Download_Information.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper(), this);
+            }
 
             string SoundSpeechPath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Sound", "Speech", "copspeechsth_" + speechFile + ".big");
-            if (!File.Exists(SoundSpeechPath))
+            if (!File.Exists(SoundSpeechPath) && InformationCache.EnableLZMADownloader)
             {
                 DownloadStartTime = DateTime.Now;
                 Label_Download_Information_Support.SafeInvokeAction(() =>
@@ -2776,7 +2826,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
             };
             /* Main Note: Current Revision File Size (in long) is: 3862102244 */
-            Pack_SBRW_Downloader.Download("http://g2-sbrw.davidcarbon.download/GameFiles.sbrwpack", Save_Settings.Live_Data.Game_Path, 3862102244);
+            Pack_SBRW_Downloader.Download(Save_Settings.Live_Data.Launcher_CDN, Save_Settings.Live_Data.Game_Path, 3862102244);
         }
         #endregion
 
@@ -3270,10 +3320,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                     var Client = new WebClient
                                     {
-                                        Encoding = Encoding.UTF8
+                                        Encoding = Encoding.UTF8,
+                                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                                     };
 
-                                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
+                                    { 
+                                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                                    }
                                     else
                                     {
                                         Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -3343,7 +3397,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 try
                 {
                     string CursorFile = (!UnixOS.Detected()) ? Path.GetTempFileName() : Path.Combine(Locations.LauncherFolder, "Cursor.ani");
-                    File.WriteAllBytes(CursorFile, ExtractResource.AsByte("SBRW.Launcher.Core.Theme.Resources.Cursors.Cursor.ani"));
+                    File.WriteAllBytes(CursorFile, ExtractResource.AsByte("Core.Theme.Resources.Cursors.Cursor.ani"));
                     Cursor mycursor = new Cursor(Cursor.Current.Handle);
                     IntPtr colorcursorhandle = DLL_Cursor.LoadCursorFromFile(CursorFile);
                     mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField,

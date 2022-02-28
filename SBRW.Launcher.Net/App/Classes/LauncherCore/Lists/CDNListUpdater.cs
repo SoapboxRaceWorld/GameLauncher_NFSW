@@ -4,44 +4,76 @@ using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SBRW.Launcher.Core.Extension.Validation_.Json_.Newtonsoft_;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 {
     class SelectedCDN
     {
-        public static string CDNUrl = String.Empty;
-        public static string TrackHigh = String.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string CDNUrl { get; set; } = string.Empty;
     }
 
     public class CDNListUpdater
     {
-        public static bool LoadedList = false;
-
-        public static List<Json_List_CDN> NoCategoryList = new List<Json_List_CDN>();
-
-        public static List<Json_List_CDN> CleanList = new List<Json_List_CDN>();
-
-        public static string CachedJSONList;
-
+        /// <summary>
+        /// If the CDN List Is Ready to be Consumed
+        /// </summary>
+        public static bool LoadedList { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public static List<Json_List_CDN> NoCategoryList { get; set; } = new List<Json_List_CDN>();
+        /// <summary>
+        /// 
+        /// </summary>
+        public static List<Json_List_CDN> NoCategoryList_LZMA { get; set; } = new List<Json_List_CDN>();
+        /// <summary>
+        /// 
+        /// </summary>
+        public static List<Json_List_CDN> CleanList { get; set; } = new List<Json_List_CDN>();
+        /// <summary>
+        /// 
+        /// </summary>
+        public static List<Json_List_CDN> CleanList_LZMA { get; set; } = new List<Json_List_CDN>();
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string CachedJSONList { get; set; } = string.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
         public static void GetList()
         {
             List<Json_List_CDN> cdnInfos = new List<Json_List_CDN>();
 
             try
             {
-                cdnInfos.AddRange(JsonConvert.DeserializeObject<List<Json_List_CDN>>(CachedJSONList));
-                LoadedList = true;
+                if (Is_Json.Valid(CachedJSONList))
+                {
+#pragma warning disable CS8604 //Is Null Safe with the check above
+                    cdnInfos.AddRange(JsonConvert.DeserializeObject<List<Json_List_CDN>>(CachedJSONList));
+#pragma warning restore CS8604
+                    LoadedList = true;
+                }
+                else
+                {
+                    CachedJSONList = string.Empty;
+                    LoadedList = false;
+                }
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("CDN LIST CORE", String.Empty, Error, String.Empty, true);
+                LogToFileAddons.OpenLog("CDN LIST CORE", string.Empty, Error, string.Empty, true);
                 LoadedList = false;
             }
             finally
             {
                 if (CachedJSONList != null)
                 {
-                    CachedJSONList = String.Empty;
+                    CachedJSONList = string.Empty;
                 }
             }
 
@@ -54,24 +86,57 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                     {
                         if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
                         {
-                            NoCategoryList.Add(NoCatList);
+                            if (long.TryParse(NoCatList.Legacy_Support, out long CDN_Result))
+                            {
+                                /* SBRW Pack (1) Only */
+                                if (CDN_Result >= 1)
+                                {
+                                    NoCategoryList.Add(NoCatList);
+                                }
+
+                                /* LZMA (0) & SBRW Pack (1) = Both (2) */
+                                if (CDN_Result == 0 || CDN_Result == 2)
+                                {
+                                    NoCategoryList_LZMA.Add(NoCatList);
+                                }
+                            }
+                            else
+                            {
+                                NoCategoryList.Add(new Json_List_CDN() 
+                                { 
+                                    Name = "JSON FORMAT ERROR", 
+                                    Url = "http://localhost",
+                                    Offline = true
+                                });
+
+                                NoCategoryList_LZMA.Add(new Json_List_CDN()
+                                {
+                                    Name = "JSON FORMAT ERROR",
+                                    Url = "http://localhost",
+                                    Offline = true
+                                });
+
+                                break;
+                            }
                         }
                     }
 
                     /* Create Rough Draft CDN List with Categories */
                     List<Json_List_CDN> RawList = new List<Json_List_CDN>();
-
-                    foreach (var cdnItemGroup in cdnInfos.GroupBy(s => s.Category))
+                    
+                    foreach (var CDNCategoryGroup in cdnInfos.GroupBy(Aoba => new { Aoba.Category, Aoba.Legacy_Support }))
                     {
-                        if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{cdnItemGroup.Key} Mirrors")) == -1)
+                        if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{CDNCategoryGroup.Key.Category} Mirrors")) == -1)
                         {
                             RawList.Add(new Json_List_CDN
                             {
-                                Name = $"<GROUP>{cdnItemGroup.Key} Mirrors",
+                                Name = $"<GROUP>{CDNCategoryGroup.Key.Category} Mirrors",
+                                Legacy_Support = CDNCategoryGroup.Key.Legacy_Support,
                                 IsSpecial = true
                             });
                         }
-                        RawList.AddRange(cdnItemGroup.ToList());
+
+                        RawList.AddRange(CDNCategoryGroup.ToList());
                     }
 
                     /* Create Final CDN List with Categories */
@@ -79,7 +144,40 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                     {
                         if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
                         {
-                            CleanList.Add(CList);
+                            if (long.TryParse(CList.Legacy_Support, out long CDN_Result))
+                            {
+                                /* SBRW Pack (1) Only */
+                                if (CDN_Result >= 1)
+                                {
+                                    CleanList.Add(CList);
+                                }
+
+                                /* LZMA (0) & SBRW Pack (1) = Both (2) */
+                                if (CDN_Result == 0 || CDN_Result == 2)
+                                {
+                                    CleanList_LZMA.Add(CList);
+                                }
+                            }
+                            else
+                            {
+                                CleanList.Add(new Json_List_CDN()
+                                {
+                                    Category = "BLANK 'Legacy_Support' ENTRY",
+                                    Name = "JSON FORMAT ERROR",
+                                    Url = "http://localhost",
+                                    Offline = true
+                                });
+
+                                CleanList_LZMA.Add(new Json_List_CDN()
+                                {
+                                    Category = "BLANK 'Legacy_Support' ENTRY",
+                                    Name = "JSON FORMAT ERROR",
+                                    Url = "http://localhost",
+                                    Offline = true
+                                });
+
+                                break;
+                            }
                         }
                     }
                 }
