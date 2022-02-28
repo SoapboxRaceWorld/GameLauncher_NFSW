@@ -18,11 +18,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
 {
     class Authentication
     {
-        private static int ServerErrorCode;
-        private static String LoginResponse;
+        private static int ServerErrorCode { get; set; }
+        private static string LoginResponse { get; set; } = string.Empty;
 
-        private static string ServerErrorResponse;
-        private static HttpWebResponse ServerResponse;
+        private static string ServerErrorResponse { get; set; } = string.Empty;
+        private static HttpWebResponse? ServerResponse { get; set; }
 
         /// <summary>
         /// Form Url or Post Request to the Server for Login and Registration
@@ -41,6 +41,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                         new Uri((Method == "Login") ? Tokens.IPAddress + "/User/authenticateUser?email=" + Email + "&password=" + Password :
                         Tokens.IPAddress + "/User/createUser?email=" + Email + "&password=" + Password +
                         (!String.IsNullOrWhiteSpace(Token) ? "&inviteTicket=" + Token : ""));
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
                     {
@@ -48,6 +49,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                         Headers = Custom_Header.Headers_WHC(),
                         CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                     };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                     if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                     { 
@@ -83,43 +85,48 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                     }
 
                     Uri SendRequest = new Uri(ServerUrl);
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                     ServicePointManager.FindServicePoint(SendRequest).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
-                    HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(SendRequest);
-                    httpWebRequest.ContentType = "application/json";
-                    httpWebRequest.Method = "POST";
-                    httpWebRequest.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-                    httpWebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-
-                    using (StreamWriter streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    HttpWebRequest? httpWebRequest = WebRequest.Create(SendRequest) as HttpWebRequest;
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
+                    if (httpWebRequest != null)
                     {
-                        String JSON;
+                        httpWebRequest.ContentType = "application/json";
+                        httpWebRequest.Method = "POST";
+                        httpWebRequest.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+                        httpWebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
-                        if (Method == "Login")
+                        using (StreamWriter streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                         {
-                            JSON = new JavaScriptSerializer().Serialize(new { Email, Password, upgrade = true });
+                            string JSON;
+
+                            if (Method == "Login")
+                            {
+                                JSON = new JavaScriptSerializer().Serialize(new { Email, Password, upgrade = true });
+                            }
+                            else
+                            {
+                                JSON = new JavaScriptSerializer().Serialize(new { Email, Password, Ticket = Token });
+                            }
+
+                            streamWriter.Write(JSON);
                         }
-                        else
+
+                        ServerResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                        using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
                         {
-                            JSON = new JavaScriptSerializer().Serialize(new { Email, Password, Ticket = Token });
+                            ServerErrorCode = (int)ServerResponse.StatusCode;
+                            LoginResponse = sr.ReadToEnd();
                         }
-
-                        streamWriter.Write(JSON);
-                    }
-
-                    ServerResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                    using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
-                    {
-                        ServerErrorCode = (int)ServerResponse.StatusCode;
-                        LoginResponse = sr.ReadToEnd();
                     }
                 }
             }
             catch (WebException Error)
             {
-                LogToFileAddons.OpenLog("CLIENT [LOGIN/REGISTER]", String.Empty, Error, String.Empty, true);
+                LogToFileAddons.OpenLog("CLIENT [LOGIN/REGISTER]", string.Empty, Error, string.Empty, true);
 
-                ServerResponse = (HttpWebResponse)Error.Response;
+                ServerResponse = Error.Response as HttpWebResponse;
 
                 if (ServerResponse == null)
                 {
@@ -132,7 +139,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                     using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
                     {
                         ServerErrorCode = (int)ServerResponse.StatusCode;
-                        ServerErrorResponse = Modern_Auth ? "{\"error\":\"" + ServerResponse.StatusDescription + "\"}" : null;
+                        ServerErrorResponse = Modern_Auth ? "{\"error\":\"" + ServerResponse.StatusDescription + "\"}" : string.Empty;
                         LoginResponse = sr.ReadToEnd();
                     }
                 }
@@ -291,9 +298,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
             }
             else
             {
-                if (String.IsNullOrWhiteSpace(LoginResponse))
+                if (string.IsNullOrWhiteSpace(LoginResponse))
                 {
-                    Tokens.Error = "Server seems to be offline.";
+                    Tokens.Error = "Did not Receive a Response from the Server";
                 }
                 else
                 {
@@ -308,14 +315,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                         ServerObjectResponse = JsonConvert.DeserializeObject<ModernAuthObject>(ServerErrorResponse);
                     }
 
-                    if (String.IsNullOrWhiteSpace(ServerObjectResponse.Error) || ServerObjectResponse.Error == "SERVER FULL")
+                    if (string.IsNullOrWhiteSpace(ServerObjectResponse.Error) || ServerObjectResponse.Error == "SERVER FULL")
                     {
                         if (Method == "Login")
                         {
                             Tokens.UserId = ServerObjectResponse.UserId;
                             Tokens.LoginToken = ServerObjectResponse.Token;
 
-                            if (!String.IsNullOrWhiteSpace(ServerObjectResponse.Warning))
+                            if (!string.IsNullOrWhiteSpace(ServerObjectResponse.Warning))
                             {
                                 Tokens.Warning = ServerObjectResponse.Warning;
                             }
@@ -476,12 +483,12 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
     public class ModernAuthObject
     {
         ///<value>Gets a Auth Token. Used to Login into the Server</value>
-        public string Token { get; set; }
+        public string Token { get; set; } = string.Empty;
         ///<value>Gets a UserID. Used to tell the Server which Account to use</value>
-        public string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
         ///<value>Gets a Warning Code. Used to inform the user about an issue, but can still login in</value>
-        public string Warning { get; set; }
+        public string Warning { get; set; } = string.Empty;
         ///<value>Gets a Error Code. Used to inform the user about an issue and can not proceed to login into the server</value>
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
     }
 }

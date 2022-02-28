@@ -70,6 +70,7 @@
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.Panel_Form_Screens = new System.Windows.Forms.Panel();
             this.CheckBox_LZMA_Downloader = new System.Windows.Forms.CheckBox();
+            this.CheckBox_JSON_Update_Cache = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -523,6 +524,18 @@
             this.CheckBox_LZMA_Downloader.Text = "Enable LZMA Downloader";
             this.CheckBox_LZMA_Downloader.UseVisualStyleBackColor = false;
             // 
+            // CheckBox_JSON_Update_Cache
+            // 
+            this.CheckBox_JSON_Update_Cache.BackColor = System.Drawing.Color.Transparent;
+            this.CheckBox_JSON_Update_Cache.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CheckBox_JSON_Update_Cache.ForeColor = System.Drawing.Color.White;
+            this.CheckBox_JSON_Update_Cache.Location = new System.Drawing.Point(38, 403);
+            this.CheckBox_JSON_Update_Cache.Name = "CheckBox_JSON_Update_Cache";
+            this.CheckBox_JSON_Update_Cache.Size = new System.Drawing.Size(222, 18);
+            this.CheckBox_JSON_Update_Cache.TabIndex = 81;
+            this.CheckBox_JSON_Update_Cache.Text = "Disable Frequent JSON Cache";
+            this.CheckBox_JSON_Update_Cache.UseVisualStyleBackColor = false;
+            // 
             // Screen_Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -544,6 +557,7 @@
             this.Controls.Add(this.Label_CDN_Current);
             this.Controls.Add(this.Label_API_Status);
             this.Controls.Add(this.Label_Game_Current_Path);
+            this.Controls.Add(this.CheckBox_JSON_Update_Cache);
             this.Controls.Add(this.CheckBox_LZMA_Downloader);
             this.Controls.Add(this.CheckBox_Alt_WebCalls);
             this.Controls.Add(this.CheckBox_Legacy_Timer);
@@ -624,5 +638,6 @@
         private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.Panel Panel_Form_Screens;
         private System.Windows.Forms.CheckBox CheckBox_LZMA_Downloader;
+        private System.Windows.Forms.CheckBox CheckBox_JSON_Update_Cache;
     }
 }

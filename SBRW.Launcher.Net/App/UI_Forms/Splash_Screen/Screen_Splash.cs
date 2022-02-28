@@ -13,7 +13,7 @@ namespace SBRW.Launcher.App.UI_Forms.Splash_Screen
     public partial class Screen_Splash : Form
     {
         /* Global Thread for Splash Screen */
-        private static Thread SplashScreenThread { get; set; }
+        private static Thread? SplashScreenThread { get; set; }
         private static bool IsSplashScreenLive { get; set; }
         private static int ProcessID { get; set; }
 

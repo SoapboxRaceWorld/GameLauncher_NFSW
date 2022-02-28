@@ -218,6 +218,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             CheckBox_Theme_Support.Checked = InformationCache.EnableThemeSupport;
             CheckBox_Legacy_Timer.Checked = InformationCache.EnableLegacyTimer;
             CheckBox_LZMA_Downloader.Checked = InformationCache.EnableLZMADownloader;
+            CheckBox_JSON_Update_Cache.Checked = InformationCache.DisableFrequencyJSONUpdate;
 
             /*******************************/
             /* Enable/Disable Visuals       /
@@ -534,7 +535,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
                 Screen_Security_Center.RPCStateCache = "Settings";
                 Custom_Instance_Settings.Show();
-                Screen_Main.Screen_Instance.Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
+                if (Screen_Main.Screen_Instance != null)
+                {
+                    Screen_Main.Screen_Instance.Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
+                }
             }
             catch (Exception Error)
             {
@@ -781,6 +785,11 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                     Screen_Main.BackgroundWorker_One.CancelAsync();
                     Screen_Main.BackgroundWorker_One.RunWorkerAsync();
                 }
+            }
+
+            if (Save_Settings.Live_Data.Launcher_JSON_Frequency_Update_Cache != (CheckBox_JSON_Update_Cache.Checked ? "1" : "0"))
+            {
+                Save_Settings.Live_Data.Launcher_JSON_Frequency_Update_Cache = CheckBox_JSON_Update_Cache.Checked ? "1" : "0";
             }
 
             try
@@ -1153,7 +1162,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(cdnListText))
+                if (!string.IsNullOrWhiteSpace(cdnListText) && sender != null)
                 {
                     Font font = (sender as ComboBox).Font;
                     Brush backgroundColor;
@@ -1227,7 +1236,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(langListText))
+                if (!string.IsNullOrWhiteSpace(langListText) && sender != null)
                 {
                     Font font = (sender as ComboBox).Font;
                     Brush backgroundColor;
@@ -1501,6 +1510,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             CheckBox_Theme_Support.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             CheckBox_Legacy_Timer.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             CheckBox_LZMA_Downloader.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            CheckBox_JSON_Update_Cache.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_Game_Current_Path.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             LinkLabel_Game_Path.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_CDN_Current.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
@@ -1559,6 +1569,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             CheckBox_Theme_Support.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
             CheckBox_Legacy_Timer.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
             CheckBox_LZMA_Downloader.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
+            CheckBox_JSON_Update_Cache.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
 
             /* Bottom Left */
             Label_Version_Build.ForeColor = Color_Text.L_Five;
@@ -1625,9 +1636,12 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             LinkLabel_CDN_Current.LinkClicked += new LinkLabelLinkClickedEventHandler(SettingsCDNCurrent_LinkClicked);
             LinkLabel_Game_Path.LinkClicked += new LinkLabelLinkClickedEventHandler(SettingsGameFilesCurrent_LinkClicked);
 
-            MouseMove += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Move);
-            MouseUp += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Up);
-            MouseDown += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Down);
+            if (Screen_Main.Screen_Instance != null)
+            {
+                MouseMove += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Move);
+                MouseUp += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Up);
+                MouseDown += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Down);
+            }
 
             Load += new EventHandler(Screen_Settings_Load);
 
@@ -1682,6 +1696,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             ToolTip_Hover.SetToolTip(CheckBox_LZMA_Downloader, "Setting for LZMA Downloader:\n" +
                 "If Checked, this enables the old LZMA Downloader\n" +
                 "If Unchecked, enables the new SBRW Pack Downloader");
+            ToolTip_Hover.SetToolTip(CheckBox_JSON_Update_Cache, "Setting for JSON Update Cache Frequency:\n" +
+                "If Checked, this enables daily cache update for Launcher Related JSON Files\n" +
+                "If Unchecked, enables hourly cache update for Launcher Related JSON Files");
 
             Shown += (x, y) =>
             {
@@ -1697,7 +1714,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         {
             Screen_Panel_Forms.Controls.Clear();
             Screen_Panel_Forms.Visible = false;
-            Screen_Main.Screen_Instance.Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
+            if (Screen_Main.Screen_Instance != null)
+            {
+                Screen_Main.Screen_Instance.Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
+            }
         }
 
 #pragma warning disable CS8618
@@ -1735,7 +1755,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 
                 GC.Collect();
 
-                Screen_Main.Screen_Instance.Clear_Hide_Screen_Form_Panel();
+                if (Screen_Main.Screen_Instance != null)
+                {
+                    Screen_Main.Screen_Instance.Clear_Hide_Screen_Form_Panel();
+                }
             };
             Screen_Instance = this;
             Screen_Panel_Forms = Panel_Form_Screens;

@@ -268,7 +268,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
         private static string OnlineListJson { get; set; }
 #pragma warning restore CS8618
 
-        private static bool RetrieveJSON(string JSONUrl, string Function, APIStatus API_Name, bool ByPass_Online = false, string? ByPass_List = null)
+        private static bool RetrieveJSON(string JSONUrl, string Function, APIStatus API_Name, bool ByPass_Online = false, string ByPass_List = "")
         {
             Log.Checking("JSON LIST: Retriving " + JSONUrl);
             try
@@ -276,12 +276,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                 if (!ByPass_Online)
                 {
                     Uri URLCall = new Uri(JSONUrl);
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8,
                         CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                     };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                     if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                     { 
@@ -301,7 +303,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                     }
                     catch (WebException Error)
                     {
-                        APIStatus API_Status = API_Core.StatusCodes(JSONUrl, Error, (HttpWebResponse)Error.Response);
+                        APIStatus API_Status = API_Core.StatusCodes(JSONUrl, Error, Error.Response as HttpWebResponse);
                         API_Name = API_Status;
 
                         return false;

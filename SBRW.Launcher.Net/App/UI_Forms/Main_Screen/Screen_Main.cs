@@ -68,8 +68,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 {
     public partial class Screen_Main : Form
     {
-        public static Screen_Main Screen_Instance { get; set; }
-        public static Panel Screen_Panel_Forms { get; set; }
+        public static Screen_Main? Screen_Instance { get; set; }
+        public static Panel? Screen_Panel_Forms { get; set; }
         private bool Launcher_Restart { get; set; }
         private Point Mouse_Down_Point { get; set; } = Point.Empty;
         private bool LoginEnabled { get; set; }
@@ -84,27 +84,27 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private static int LastSelectedServerId { get; set; }
         private static int NfswPid { get; set; }
-        private static Thread Nfswstarted { get; set; }
+        private static Thread? Nfswstarted { get; set; }
         private static bool StillCheckingLastServer { get; set; }
         private static bool ServerChangeTriggered { get; set; }
 
         private static DateTime DownloadStartTime { get; set; }
         
-        private static Download_LZMA_Data LZMA_Downloader { get; set; }
+        private static Download_LZMA_Data? LZMA_Downloader { get; set; }
         private static Download_Queue? Pack_SBRW_Downloader { get; set; }
         private static Download_Extract? Pack_SBRW_Unpacker { get; set; }
         private static int Pack_SBRW_Downloader_Time_Span { get; set; }
 
 
-        private static string JsonGSI { get; set; }
-        private static MemoryStream ServerRawBanner { get; set; }
-        private string LoginWelcomeTime { get; set; }
-        private string LoginToken { get; set; }
-        private string UserId { get; set; }
+        private static string JsonGSI { get; set; } = string.Empty;
+        private static MemoryStream? ServerRawBanner { get; set; }
+        private string LoginWelcomeTime { get; set; } = string.Empty;
+        private string LoginToken { get; set; } = string.Empty;
+        private string UserId { get; set; } = string.Empty;
         private static int ServerSecondsToShutDown { get; set; }
         private static Ping? CheckMate { get; set; }
 
-        public static string ModNetFileNameInUse { get; set; }
+        public static string ModNetFileNameInUse { get; set; } = string.Empty;
         public static Queue<Uri> ModFilesDownloadUrls { get; set; } = new Queue<Uri>();
         public static bool IsDownloadingModNetFiles { get; set; }
         public static int CurrentModFileCount { get; set; }
@@ -554,8 +554,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Save_Account.Save();
 
             try
-            { 
-                LZMA_Downloader.Stop(); 
+            {
+                if (LZMA_Downloader != null)
+                {
+                    LZMA_Downloader.Stop();
+                }
             }
             catch (Exception Error)
             {
@@ -998,7 +1001,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 catch { /* ignored */ }
                             }
 
-                            Nfswstarted.Abort();
+                            if (Nfswstarted != null)
+                            {
+                                Nfswstarted.Abort();
+                            }
+                            
                             DialogResult restartApp = MessageBox.Show(null, Error_Msg + "\nWould you like to restart the GameLauncher?",
                                 "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                             if (restartApp == DialogResult.Yes)
@@ -1040,12 +1047,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 ModNetFileNameInUse = FileName;
 
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                 ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 var Client = new WebClient
                 {
                     Encoding = Encoding.UTF8,
                     CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                 };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
+
 
                 if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                 { 
@@ -1157,23 +1167,25 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 /* Caches (In Order of Excution) */
                 string ModulesJSON = string.Empty;
                 string ServerModInfo = string.Empty;
-                GetModInfo json2 = null;
+                GetModInfo? json2 = null;
                 string remoteCarsFile = string.Empty;
                 string remoteEventsFile = string.Empty;
                 string ServerModListJSON = string.Empty;
-                ServerModList json3 = null;
+                ServerModList? json3 = null;
 
                 try
                 {
                     Presence_Launcher.Status("Checking ModNet", null);
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
                     Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                     ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var ModNetJsonURI = new WebClient
                     {
                         Encoding = Encoding.UTF8,
                         CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                     };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                     if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                     { 
@@ -1192,6 +1204,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     }
                     catch (Exception Error)
                     {
+
+
                         Label_Download_Information.Text = ("JSON: Unable to Retrieve ModNet Files Information").ToUpper();
                         Presence_Launcher.Status("ModNet Files Information Error", null);
                         Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
@@ -1213,13 +1227,48 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Label_Download_Information.Text = ("JSON: Invalid ModNet Files Information").ToUpper();
                         Presence_Launcher.Status("ModNet Files Information Error", null);
                         Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                        ModulesJSON = null;
+                        ModulesJSON = string.Empty;
                         return;
                     }
                     else
                     {
                         try
                         {
+                            try
+                            {
+                                DateTime Time_Check = DateTime.Now.Date;
+                                string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "ModNet");
+                                string Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
+                                if (File.Exists(Time_Stamp))
+                                {
+                                    try
+                                    {
+                                        Time_Check = DateTime.Parse(File.ReadLines(Time_Stamp).First()).Date;
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                }
+
+                                if ((Time_Check < DateTime.Now.Date) || !File.Exists(Time_Stamp))
+                                {
+                                    if (!Directory.Exists(Launcher_Data_Folder))
+                                    {
+                                        Directory.CreateDirectory(Launcher_Data_Folder);
+                                    }
+
+                                    string Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Modules.json");
+                                    File.WriteAllText(Server_List_Cache, ModulesJSON);
+                                    File.WriteAllText(Time_Stamp, DateTime.Now.ToString());
+                                }
+                            }
+                            catch { }
+                            finally
+                            {
+                                GC.Collect();
+                            }
+
                             string[] modules_newlines = ModulesJSON.Split(new string[] { "\n" }, StringSplitOptions.None);
                             foreach (string modules_newline in modules_newlines)
                             {
@@ -1247,12 +1296,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     Presence_Launcher.Status("Download ModNet", ModNetList);
 
                                     Uri URLCall = new Uri(URLs.ModNet + "/launcher-modules/" + ModNetList);
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                     var newModNetFilesDownload = new WebClient
                                     {
                                         Encoding = Encoding.UTF8,
                                         CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                                     };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                                     if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                                     { 
@@ -1286,19 +1337,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
                         finally
                         {
-                            if (ModulesJSON != null)
+                            if (!string.IsNullOrWhiteSpace(ModulesJSON))
                             {
-                                ModulesJSON = null;
+                                ModulesJSON = string.Empty;
                             }
                         }
 
                         Uri newModNetUri = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress + "/Modding/GetModInfo");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                         ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var ModInfoJson = new WebClient
                         {
                             Encoding = Encoding.UTF8,
                             CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                         if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                         { 
@@ -1338,23 +1391,25 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Label_Download_Information.Text = ("JSON: Invalid Server Mod Information").ToUpper();
                             Presence_Launcher.Status("Server Mods Get Information Error", null);
                             Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                            ServerModInfo = null;
+                            ServerModInfo = string.Empty;
                             return;
                         }
                         else
                         {
                             /* get files now */
                             json2 = JsonConvert.DeserializeObject<GetModInfo>(ServerModInfo);
-                            ServerModInfo = null;
+                            ServerModInfo = string.Empty;
 
                             /* Set and Get for RemoteRPC Files */
                             Uri URLCall_A = new Uri(json2.basePath + "/cars.json");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                             ServicePointManager.FindServicePoint(URLCall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var CarsJson = new WebClient
                             {
                                 Encoding = Encoding.UTF8,
                                 CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                             };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                             if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                             { 
@@ -1380,12 +1435,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
 
                             Uri URLCall_B = new Uri(json2.basePath + "/events.json");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                             ServicePointManager.FindServicePoint(URLCall_B).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var EventsJson = new WebClient
                             {
                                 Encoding = Encoding.UTF8,
                                 CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                             };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                             if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                             { 
@@ -1415,7 +1472,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
                                 Log.Info("DISCORD: Found RemoteRPC List for cars.json");
                                 Cars.List_File = remoteCarsFile;
-                                remoteCarsFile = null;
+                                remoteCarsFile = string.Empty;
                             }
                             else
                             {
@@ -1427,7 +1484,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
                                 Log.Info("DISCORD: Found RemoteRPC List for events.json");
                                 SBRW.Launcher.Core.Discord.Reference_.List_.Events.List_File = remoteEventsFile;
-                                remoteEventsFile = null;
+                                remoteEventsFile = string.Empty;
                             }
                             else
                             {
@@ -1438,12 +1495,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Log.Core("CORE: Loading Server Mods List");
                             /* Get Server Mod Index */
                             Uri newIndexFile = new Uri(json2.basePath + "/index.json");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                             ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var ServerModsList = new WebClient
                             {
                                 Encoding = Encoding.UTF8,
                                 CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                             };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                             if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                             { 
@@ -1484,7 +1543,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Label_Download_Information.Text = ("JSON: Invalid Server Mod List Information").ToUpper();
                                 Presence_Launcher.Status("Server Mods Get Information Error", null);
                                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                                ServerModListJSON = null;
+                                ServerModListJSON = string.Empty;
                                 return;
                             }
                             else
@@ -1492,7 +1551,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 try
                                 {
                                     json3 = JsonConvert.DeserializeObject<ServerModList>(ServerModListJSON);
-                                    ServerModListJSON = null;
+                                    ServerModListJSON = string.Empty;
                                     string ModFolderCache = Path.Combine(Save_Settings.Live_Data.Game_Path, "MODS", Hashes.Hash_String(0, json2.serverID).ToLower());
                                     if (!Directory.Exists(ModFolderCache)) Directory.CreateDirectory(ModFolderCache);
 
@@ -1585,29 +1644,29 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 }
                                 finally
                                 {
-                                    if (ModulesJSON != null)
+                                    if (!string.IsNullOrWhiteSpace(ModulesJSON))
                                     {
-                                        ModulesJSON = null;
+                                        ModulesJSON = string.Empty;
                                     }
-                                    if (ServerModInfo != null)
+                                    if (!string.IsNullOrWhiteSpace(ServerModInfo))
                                     {
-                                        ServerModInfo = null;
+                                        ServerModInfo = string.Empty;
                                     }
                                     if (json2 != null)
                                     {
                                         json2 = null;
                                     }
-                                    if (remoteCarsFile != null)
+                                    if (!string.IsNullOrWhiteSpace(remoteCarsFile))
                                     {
-                                        remoteCarsFile = null;
+                                        remoteCarsFile = string.Empty;
                                     }
-                                    if (remoteEventsFile != null)
+                                    if (!string.IsNullOrWhiteSpace(remoteEventsFile))
                                     {
-                                        remoteEventsFile = null;
+                                        remoteEventsFile = string.Empty;
                                     }
-                                    if (ServerModListJSON != null)
+                                    if (!string.IsNullOrWhiteSpace(ServerModListJSON))
                                     {
-                                        ServerModListJSON = null;
+                                        ServerModListJSON = string.Empty;
                                     }
                                     if (json3 != null)
                                     {
@@ -1628,29 +1687,29 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
                 finally
                 {
-                    if (ModulesJSON != null)
+                    if (!string.IsNullOrWhiteSpace(ModulesJSON))
                     {
-                        ModulesJSON = null;
+                        ModulesJSON = string.Empty;
                     }
-                    if (ServerModInfo != null)
+                    if (!string.IsNullOrWhiteSpace(ServerModInfo))
                     {
-                        ServerModInfo = null;
+                        ServerModInfo = string.Empty;
                     }
                     if (json2 != null)
                     {
                         json2 = null;
                     }
-                    if (remoteCarsFile != null)
+                    if (!string.IsNullOrWhiteSpace(remoteCarsFile))
                     {
-                        remoteCarsFile = null;
+                        remoteCarsFile = string.Empty;
                     }
-                    if (remoteEventsFile != null)
+                    if (!string.IsNullOrWhiteSpace(remoteEventsFile))
                     {
-                        remoteEventsFile = null;
+                        remoteEventsFile = string.Empty;
                     }
-                    if (ServerModListJSON != null)
+                    if (!string.IsNullOrWhiteSpace(ServerModListJSON))
                     {
-                        ServerModListJSON = null;
+                        ServerModListJSON = string.Empty;
                     }
                     if (json3 != null)
                     {
@@ -1741,12 +1800,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
 
             Uri ServerURI = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress + "/GetServerInformation");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
             ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
             var Client = new WebClient
             {
                 Encoding = Encoding.UTF8,
                 CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
             };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
             if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
             { 
@@ -1839,7 +1900,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             InformationCache.ServerStatusBook[Launcher_Value.Launcher_Select_Server_Data.ID] = (!GSIErrorFree) ? 3 : 1;
                         }
 
-                        if (GSIErrorFree)
+                        if (GSIErrorFree && (Launcher_Value.Launcher_Select_Server_JSON != null))
                         {
                             try
                             {
@@ -2107,7 +2168,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     Log.Warning("SERVER PING:  Unable to Ping " + ServerListUpdater.ServerName("Ping"));
                                 }
 
-                                ((AutoResetEvent)_e.UserState).Set();
+                                if (_e.UserState != null)
+                                {
+#pragma warning disable CS8602 // Null Safe Check is done Above.
+                                    (_e.UserState as AutoResetEvent).Set();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                                }
                             };
 
                             CheckMate.SendAsync(ServerURI.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
@@ -2138,12 +2204,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
 
                                 Uri URICall_A = new Uri(ImageUrl);
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                                 ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 var Client_A = new WebClient
                                 {
                                     Encoding = Encoding.UTF8,
                                     CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                                 };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                                 if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                                 { 
@@ -2332,8 +2400,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                             FunctionStatus.IsVerifyHashDisabled = true;
 
-                            Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
-                            Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
+                            if (Screen_Instance != null)
+                            {
+                                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
+                                Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
+                            }
                         }
                         else
                         {
@@ -2374,7 +2445,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             ProgressBar_Extracting.SafeInvokeAction(() =>
             ProgressBar_Extracting.Width = 0, this);
 
-            Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
+            if (Screen_Instance != null)
+            {
+                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
+            }
 
             string GameExePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe");
 
@@ -2393,8 +2467,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Failsafe CDN Detected".ToUpper(), this);
                     Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Please Choose a CDN from Settings Screen".ToUpper(), this);
 
-                    Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
-                    Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
+                    if (Screen_Instance != null)
+                    {
+                        Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
+                        Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
+                    }
                 }
                 /* Use Local Packed Archive for Install Source - DavidCarbon */
                 else if (!InformationCache.EnableLZMADownloader)
@@ -2402,7 +2479,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     /* GameFiles.sbrwpack */
                     Game_Downloader();
                 }
-                else
+                else if (LZMA_Downloader != null)
                 {
                     DownloadStartTime = DateTime.Now;
                     Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Downloading: Core GameFiles".ToUpper(), this);
@@ -2410,6 +2487,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Download_Settings.System_Unix = UnixOS.Detected();
                     Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
                     LZMA_Downloader.StartDownload(Save_Settings.Live_Data.Launcher_CDN, string.Empty, Save_Settings.Live_Data.Game_Path, false, false, 1130632198);
+                }
+                else
+                {
+                    OnDownloadFinished();
                 }
             }
             else if (!InformationCache.EnableLZMADownloader)
@@ -2433,10 +2514,13 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             ProgressBar_Extracting.SafeInvokeAction(() =>
             ProgressBar_Extracting.Width = 0, this);
 
-            Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
+            if (Screen_Instance != null)
+            {
+                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
+            }
 
             string SpecificTracksFilePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Tracks", "STREAML5RA_98.BUN");
-            if (!File.Exists(SpecificTracksFilePath))
+            if (!File.Exists(SpecificTracksFilePath) && (LZMA_Downloader != null))
             {
                 DownloadStartTime = DateTime.Now;
                 Label_Download_Information_Support.SafeInvokeAction(() =>
@@ -2465,19 +2549,24 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 ProgressBar_Extracting.SafeInvokeAction(() =>
                 ProgressBar_Extracting.Width = 0, this);
 
-                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);                
+                if (Screen_Instance != null)
+                {
+                    Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
+                }
 
                 try
                 {
                     speechFile = Download_LZMA_Support.SpeechFiles(Save_Settings.Live_Data.Launcher_Language);
 
                     Uri URLCall = new Uri(Save_Settings.Live_Data.Launcher_CDN + "/" + speechFile + "/index.xml");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8,
                         CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                     };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                     if (!Launcher_Value.Launcher_Alternative_Webcalls())
                     {
@@ -2496,34 +2585,34 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         XmlDocument speechFileXml = new XmlDocument();
                         speechFileXml.LoadXml(response);
 
-                    XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
-                    speechSize = Convert.ToInt32(speechSizeNode.InnerText);
-                }
-                catch
-                {
-                    throw;
-                }
-                finally
-                {
-                    if (Client != null)
+                        XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
+                        speechSize = Convert.ToInt32(speechSizeNode.InnerText);
+                    }
+                    catch
                     {
-                        Client.Dispose();
+                        throw;
+                    }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
                     }
                 }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("Download Speech Files", null, Error, null, true);
-                speechFile = Download_LZMA_Support.SpeechFiles();
-                speechSize = Download_LZMA_Support.SpeechFilesSize();
-            }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Download Speech Files", string.Empty, Error, string.Empty, true);
+                    speechFile = Download_LZMA_Support.SpeechFiles();
+                    speechSize = Download_LZMA_Support.SpeechFilesSize();
+                }
 
                 Label_Download_Information.SafeInvokeAction(() =>
                 Label_Download_Information.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper(), this);
             }
 
             string SoundSpeechPath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Sound", "Speech", "copspeechsth_" + speechFile + ".big");
-            if (!File.Exists(SoundSpeechPath) && InformationCache.EnableLZMADownloader)
+            if (!File.Exists(SoundSpeechPath) && InformationCache.EnableLZMADownloader && LZMA_Downloader != null)
             {
                 DownloadStartTime = DateTime.Now;
                 Label_Download_Information_Support.SafeInvokeAction(() =>
@@ -2565,11 +2654,17 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", (int)(100 * downloadCurrent / compressedLength)));
 
-                Taskbar_Progress.SetValue(Screen_Instance.Handle, (int)(100 * downloadCurrent / compressedLength), 100);
+                if (Screen_Instance != null)
+                {
+                    Taskbar_Progress.SetValue(Screen_Instance.Handle, (int)(100 * downloadCurrent / compressedLength), 100);
+                }
             }
             catch
             {
-                Taskbar_Progress.SetValue(Screen_Instance.Handle, 0, 100);
+                if (Screen_Instance != null)
+                {
+                    Taskbar_Progress.SetValue(Screen_Instance.Handle, 0, 100);
+                }
 
                 ProgressBar_Preload.SafeInvokeAction(() =>
                 {
@@ -2578,12 +2673,18 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }, this);
             }
 
-            Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+            if (Screen_Instance != null)
+            {
+                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+            }
         }
 
         private void OnDownloadFinished()
         {
-           LZMA_Downloader.Stop();
+            if (LZMA_Downloader != null)
+            {
+                LZMA_Downloader.Stop();
+            }
 
             try
             {
@@ -2606,8 +2707,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             EnablePlayButton();
 
-            Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
-            Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+            if (Screen_Instance != null)
+            {
+                Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
+                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+            }
         }
 
         private void EnablePlayButton()
@@ -2624,7 +2728,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private void OnDownloadFailed(Exception Error)
         {
-           LZMA_Downloader.Stop();
+            if (LZMA_Downloader != null)
+            {
+                LZMA_Downloader.Stop();
+            }
 
             Presence_Launcher.Status("Download Game Files Error", null);
 
@@ -2637,20 +2744,28 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             FunctionStatus.IsVerifyHashDisabled = true;
 
-            Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
-            Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Error);
-
-            string TempEmailCache = string.Empty;
-            if (!string.IsNullOrWhiteSpace(Input_Email.Text))
+            if (Screen_Instance != null)
             {
-                TempEmailCache = Input_Email.Text;
-                Input_Email.Text = "EMAIL IS HIDDEN";
+                Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
+                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Error);
             }
-            string LogMessage = "CDN Downloader Encountered an Error:";
-            LogToFileAddons.OpenLog("Game Download", LogMessage, Error, "Error", false);
-            if (!string.IsNullOrWhiteSpace(TempEmailCache))
+            
+            if (Error != null)
             {
-                Input_Email.Text = TempEmailCache;
+                string TempEmailCache = string.Empty;
+                if (!string.IsNullOrWhiteSpace(Input_Email.Text))
+                {
+                    TempEmailCache = Input_Email.Text;
+                    Input_Email.Text = "EMAIL IS HIDDEN";
+                }
+
+                string LogMessage = "CDN Downloader Encountered an Error:";
+                LogToFileAddons.OpenLog("Game Download", LogMessage, Error, "Error", false);
+
+                if (!string.IsNullOrWhiteSpace(TempEmailCache))
+                {
+                    Input_Email.Text = TempEmailCache;
+                }
             }
         }
 
@@ -2737,7 +2852,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Pack_SBRW_Downloader_Time_Span = Time_Clock.Seconds;
                     }
 
-                    Taskbar_Progress.SetValue(Screen_Instance.Handle, (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total), 100);
+                    if (Screen_Instance != null)
+                    {
+                        Taskbar_Progress.SetValue(Screen_Instance.Handle, (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total), 100);
+                    }
 
                     Label_Download_Information.SafeInvokeAction(() =>
                     {
@@ -2750,7 +2868,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 if (D_Live_Events.Complete)
                 {
-                    Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
+                    if (Screen_Instance != null)
+                    {
+                        Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
+                    }
 
                     ProgressBar_Preload.SafeInvokeAction(() =>
                     {
@@ -2781,41 +2902,50 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         };
                         Pack_SBRW_Unpacker.Live_Progress += (x, U_Live_Events) =>
                         {
-                            ProgressBar_Extracting.SafeInvokeAction(() =>
+                            if (U_Live_Events != null)
                             {
-                                ProgressBar_Extracting.Value = U_Live_Events.Extract_Percentage;
-                                ProgressBar_Extracting.Width = (int)(519 * U_Live_Events.File_Current / U_Live_Events.File_Total);
-                            }, this);
+                                ProgressBar_Extracting.SafeInvokeAction(() =>
+                                {
+                                    ProgressBar_Extracting.Value = U_Live_Events.Extract_Percentage;
+                                    ProgressBar_Extracting.Width = (int)(519 * U_Live_Events.File_Current / U_Live_Events.File_Total);
+                                }, this);
 
-                            Presence_Launcher.Status("Unpack Game Files", string.Format("Unpacking Game: {0}%", U_Live_Events.Extract_Percentage));
+                                Presence_Launcher.Status("Unpack Game Files", string.Format("Unpacking Game: {0}%", U_Live_Events.Extract_Percentage));
 
-                            Taskbar_Progress.SetValue(Screen_Instance.Handle, U_Live_Events.Extract_Percentage, 100);
+                                if (Screen_Instance != null)
+                                {
+                                    Taskbar_Progress.SetValue(Screen_Instance.Handle, U_Live_Events.Extract_Percentage, 100);
+                                }
 
-                            Label_Download_Information_Support.SafeInvokeAction(() =>
-                            Label_Download_Information_Support.Text = "[" + U_Live_Events.File_Current + " / " + U_Live_Events.File_Total + "]", this);
+                                Label_Download_Information_Support.SafeInvokeAction(() =>
+                                Label_Download_Information_Support.Text = "[" + U_Live_Events.File_Current + " / " + U_Live_Events.File_Total + "]", this);
 
-                            if (!string.IsNullOrWhiteSpace(U_Live_Events.File_Current_Name))
-                            {
-                                Label_Download_Information.SafeInvokeAction(() =>
-                                Label_Download_Information.Text = ("Unpacking " + U_Live_Events.File_Current_Name.Replace(Pack_SBRW_Unpacker.File_Extension_Replacement, string.Empty)).ToUpper(), this);
+                                if (!string.IsNullOrWhiteSpace(U_Live_Events.File_Current_Name))
+                                {
+                                    Label_Download_Information.SafeInvokeAction(() =>
+                                    Label_Download_Information.Text = ("Unpacking " + U_Live_Events.File_Current_Name.Replace(Pack_SBRW_Unpacker.File_Extension_Replacement, string.Empty)).ToUpper(), this);
+                                }
                             }
                         };
                         Pack_SBRW_Unpacker.Complete += (x, U_Live_Events) =>
                         {
-                            Label_Download_Information_Support.SafeInvokeAction(() =>
+                            if (U_Live_Events != null)
                             {
-                                Label_Download_Information_Support.Visible = false;
-                                Label_Download_Information_Support.Text = string.Empty;
-                            }, this);
+                                Label_Download_Information_Support.SafeInvokeAction(() =>
+                                {
+                                    Label_Download_Information_Support.Visible = false;
+                                    Label_Download_Information_Support.Text = string.Empty;
+                                }, this);
 
-                            IsDownloading = false;
-                            OnDownloadFinished();
+                                IsDownloading = false;
+                                OnDownloadFinished();
 
-                            NotifyIcon_Notification.Visible = true;
-                            NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
-                            NotifyIcon_Notification.BalloonTipTitle = "SBRW Launcher";
-                            NotifyIcon_Notification.BalloonTipText = "Your game is now ready to launch!";
-                            NotifyIcon_Notification.ShowBalloonTip(5000);
+                                NotifyIcon_Notification.Visible = true;
+                                NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                NotifyIcon_Notification.BalloonTipTitle = "SBRW Launcher";
+                                NotifyIcon_Notification.BalloonTipText = "Your game is now ready to launch!";
+                                NotifyIcon_Notification.ShowBalloonTip(5000);
+                            }
                         };
                         Pack_SBRW_Unpacker.Custom_Unpack(D_Live_Events.Download_Location ?? Path.Combine(Save_Settings.Live_Data.Game_Path, ".Launcher", "GameFiles.sbrwpack"), Save_Settings.Live_Data.Game_Path);
                     }
@@ -2989,10 +3119,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 Log.Core("LAUNCHER: Re-checking InstallationDirectory: " + Save_Settings.Live_Data.Game_Path);
 
-                string Drive = Path.GetPathRoot(Save_Settings.Live_Data.Game_Path);
+                string Drive = Path.GetPathRoot(Save_Settings.Live_Data.Game_Path)??string.Empty;
                 if (!Directory.Exists(Drive))
                 {
-                    if (!string.IsNullOrWhiteSpace(Drive))
+                    if (string.IsNullOrWhiteSpace(Drive))
                     {
                         Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
                         Save_Settings.Save();
@@ -3317,12 +3447,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 {
                                     while (StillCheckingLastServer) { }
                                     Uri URLCall = new Uri(Servers.IPAddress + "/GetServerInformation");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                     var Client = new WebClient
                                     {
                                         Encoding = Encoding.UTF8,
                                         CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                                     };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                                     if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                                     { 
@@ -3415,8 +3547,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         public void Clear_Hide_Screen_Form_Panel()
         {
-            Screen_Panel_Forms.Controls.Clear();
-            Screen_Panel_Forms.Visible = false;
+            if (Screen_Panel_Forms != null)
+            {
+                Screen_Panel_Forms.Controls.Clear();
+                Screen_Panel_Forms.Visible = false;
+            }
+            
             Text = "SBRW Launcher: v" + Application.ProductVersion;
         }
 

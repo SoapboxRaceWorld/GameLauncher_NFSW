@@ -40,6 +40,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
         public static Dictionary<string, int> ServerStatusBook { get; set; } = new Dictionary<string, int>();
         public static bool DisableProxy { get { return Save_Settings.Live_Data.Launcher_Proxy == "1"; } }
         public static bool DisableDiscordRPC { get { return Save_Settings.Live_Data.Launcher_Discord_Presence == "1"; } }
+        public static bool DisableFrequencyJSONUpdate { get { return Save_Settings.Live_Data.Launcher_JSON_Frequency_Update_Cache == "1"; } }
         public static bool EnableAltWebCalls { get { return Save_Settings.Live_Data.Launcher_WebClient_Method == "WebClientWithTimeout"; } }
         public static bool EnableInsiderPreview { get { return Save_Settings.Live_Data.Launcher_Insider == "1"; } }
         public static bool EnableThemeSupport { get { return Save_Settings.Live_Data.Launcher_Theme_Support == "1"; } }

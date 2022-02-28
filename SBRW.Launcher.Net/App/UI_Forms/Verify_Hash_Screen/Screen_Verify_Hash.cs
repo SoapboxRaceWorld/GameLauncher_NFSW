@@ -41,11 +41,11 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
         public int RedownloadErrorCount { get; set; }
         public List<string> InvalidFileList { get; set; } = new List<string>();
         public List<string> ValidFileList { get; set; } = new List<string>();
-        public string FinalCDNURL { get; set; }
-        public static Thread StartScan { get; set; }
+        public string FinalCDNURL { get; set; } = string.Empty;
+        public static Thread? StartScan { get; set; }
         public bool IsScanning { get; set; }
         public static bool ForceStopScan { get; set; }
-        public static string CurrentDownloadingFile { get; set; }
+        public static string CurrentDownloadingFile { get; set; } = string.Empty;
         public static int DeletionError { get; set; }
         public static bool DeletionErrorBypass { get; set; }
         public static bool StillDownloading { get; set; }
@@ -429,12 +429,14 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                         ScanProgressText.SafeInvokeAction(() => ScanProgressText.Text = "Downloading Checksums File");
 
                         Uri URLCall = new Uri(FinalCDNURL + "/unpacked/checksums.dat");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var Client = new WebClient
                         {
                             Encoding = Encoding.UTF8,
                             CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
                         if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                         { 
                             Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
@@ -621,9 +623,12 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
 
                                 try
                                 {
-                                    if (!new FileInfo(text2).Directory.Exists)
+                                    if (!string.IsNullOrWhiteSpace(text2))
                                     {
-                                        new FileInfo(text2).Directory.Create();
+                                        if (!new FileInfo(text2).Directory.Exists)
+                                        {
+                                            new FileInfo(text2).Directory.Create();
+                                        }
                                     }
                                 }
                                 catch (Exception Error) { LogToFileAddons.OpenLog("VERIFY HASH File Info", string.Empty, Error, string.Empty, true); }

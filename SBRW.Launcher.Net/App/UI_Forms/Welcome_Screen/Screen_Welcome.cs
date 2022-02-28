@@ -341,7 +341,7 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(cdnListText))
+                if (!string.IsNullOrWhiteSpace(cdnListText) && sender != null)
                 {
                     Font font = (sender as ComboBox).Font;
                     Brush backgroundColor;
@@ -393,7 +393,7 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(langListText))
+                if (!string.IsNullOrWhiteSpace(langListText) && sender != null)
                 {
                     Font font = (sender as ComboBox).Font;
                     Brush backgroundColor;

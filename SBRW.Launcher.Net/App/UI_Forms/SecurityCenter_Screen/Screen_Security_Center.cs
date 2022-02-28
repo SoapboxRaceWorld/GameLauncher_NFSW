@@ -69,7 +69,7 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         ///<summary>Disable Button: Permission Set</summary>
         private static bool DisableButtonPRAA { get; set; } = true;
         ///<summary>RPC: Which State to do once Form Closes</summary>
-        public static string RPCStateCache { get; set; }
+        public static string RPCStateCache { get; set; } = string.Empty;
 
         /// <summary>
         /// Sets the Color for Buttons
@@ -133,8 +133,8 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         {
             if (!UnixOS.Detected() && Product_Version.GetWindowsNumber() >= 10)
             {
-                ManagementObjectSearcher ObjectPath = null;
-                ManagementObjectCollection ObjectCollection = null;
+                ManagementObjectSearcher? ObjectPath = null;
+                ManagementObjectCollection? ObjectCollection = null;
 
                 try
                 {
@@ -194,8 +194,8 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         {
             if (!UnixOS.Detected())
             {
-                ManagementObjectSearcher ObjectPath = null;
-                ManagementObjectCollection ObjectCollection = null;
+                ManagementObjectSearcher? ObjectPath = null;
+                ManagementObjectCollection? ObjectCollection = null;
 
                 try
                 {
@@ -1858,9 +1858,12 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
             ButtonClose.MouseDown += new MouseEventHandler(ButtonClose_MouseDown);
             ButtonClose.Click += new EventHandler(ButtonClose_Click);
             /* Window */
-            MouseMove += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Move);
-            MouseUp += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Up);
-            MouseDown += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Down);
+            if (Screen_Main.Screen_Instance != null)
+            {
+                MouseMove += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Move);
+                MouseUp += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Up);
+                MouseDown += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Down);
+            }
         }
         /// <summary>
         /// 
@@ -1873,7 +1876,7 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
             {
                 Presence_Launcher.Status(RPCStateCache, null);
                 DisableButtonFRAPI = DisableButtonDRAPI = DisableButtonDRAPI = DisableButtonPRC = false;
-                if (!string.IsNullOrWhiteSpace(RPCStateCache))
+                if (!string.IsNullOrWhiteSpace(RPCStateCache) && Screen_Main.Screen_Instance != null)
                 {
                     if (RPCStateCache.Contains("Settings"))
                     {

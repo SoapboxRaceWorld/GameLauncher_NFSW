@@ -200,12 +200,14 @@ namespace SBRW.Launcher.Net
                         try
                         {
                             Uri URLCall = new Uri(URLs.File + "/LZMA.dll");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             WebClient Client = new WebClient
                             {
                                 Encoding = Encoding.UTF8,
                                 CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                             };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
                             Client.Headers.Add("user-agent", "SBRW Launcher " +
                                 Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
@@ -301,7 +303,7 @@ namespace SBRW.Launcher.Net
                                             try
                                             {
                                                 FileVersionInfo Version_Info = FileVersionInfo.GetVersionInfo(Split_File_Version[0]);
-                                                string[] Version_Split = Version_Info.ProductVersion.Split('+');
+                                                string[] Version_Split = (Version_Info.ProductVersion??string.Empty).Split('+');
                                                 string File_Version = Version_Split[0];
 
                                                 if (File_Version == "")
