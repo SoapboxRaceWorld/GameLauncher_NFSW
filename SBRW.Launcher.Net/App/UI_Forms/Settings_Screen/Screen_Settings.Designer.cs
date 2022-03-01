@@ -336,7 +336,7 @@
             this.CheckBox_Alt_WebCalls.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_Alt_WebCalls.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Alt_WebCalls.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_Alt_WebCalls.Location = new System.Drawing.Point(295, 359);
+            this.CheckBox_Alt_WebCalls.Location = new System.Drawing.Point(295, 357);
             this.CheckBox_Alt_WebCalls.Name = "CheckBox_Alt_WebCalls";
             this.CheckBox_Alt_WebCalls.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Alt_WebCalls.TabIndex = 64;

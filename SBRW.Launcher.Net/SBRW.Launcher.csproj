@@ -6,16 +6,17 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>disable</ImplicitUsings>
-	<ApplicationHighDpiMode>DpiUnaware</ApplicationHighDpiMode>
-	<LangVersion>8.0</LangVersion>
+    <ApplicationHighDpiMode>DpiUnaware</ApplicationHighDpiMode>
+    <LangVersion>8.0</LangVersion>
     <!-- Required: Full Debugging -->
-	<DebugType>full</DebugType>
-	<DebugSymbols>true</DebugSymbols>
-	<AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
-	<Version>2.1.9.0002</Version>
-	<ApplicationManifest>app.manifest</ApplicationManifest>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+    <Version>2.1.9.0003</Version>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>SBRW.ico</ApplicationIcon>
   </PropertyGroup>
-	
+
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>

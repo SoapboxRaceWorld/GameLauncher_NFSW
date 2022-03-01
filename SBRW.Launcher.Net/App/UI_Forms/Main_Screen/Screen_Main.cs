@@ -3196,7 +3196,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 NotifyIcon_Notification.ContextMenu = ContextMenu;
                 ContextMenu = null;
 #endif
-                NotifyIcon_Notification.Icon = new Icon(Icon, Icon.Width, Icon.Height);
+                //NotifyIcon_Notification.Icon = new Icon(Icon, Icon.Width, Icon.Height);
                 NotifyIcon_Notification.Text = "SBRW Launcher";
                 NotifyIcon_Notification.Visible = true;
 
