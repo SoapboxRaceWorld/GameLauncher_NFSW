@@ -31,7 +31,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Screen_Main));
             System.Drawing.Drawing2D.Blend blend1 = new System.Drawing.Drawing2D.Blend();
             System.Drawing.Drawing2D.Blend blend2 = new System.Drawing.Drawing2D.Blend();
             this.Picture_Logo = new System.Windows.Forms.PictureBox();
@@ -567,7 +566,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // 
             // NotifyIcon_Notification
             // 
-            this.NotifyIcon_Notification.Icon = ((System.Drawing.Icon)(resources.GetObject("NotifyIcon_Notification.Icon")));
             this.NotifyIcon_Notification.Text = "notifyIcon1";
             this.NotifyIcon_Notification.Visible = true;
             // 
