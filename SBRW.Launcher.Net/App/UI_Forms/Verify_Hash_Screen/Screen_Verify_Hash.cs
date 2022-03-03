@@ -73,6 +73,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
             IsVerifyHashOpen = true;
             Presence_Launcher.Status("Verify", null);
             InitializeComponent();
+            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             SetVisuals();
             this.Closing += (x, CloseForm) =>
             {

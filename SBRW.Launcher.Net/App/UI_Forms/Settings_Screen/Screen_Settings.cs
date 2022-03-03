@@ -1725,6 +1725,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 #pragma warning restore CS8618
         {
             InitializeComponent();
+            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             Set_Visuals();
             this.Closing += (x, y) =>
             {

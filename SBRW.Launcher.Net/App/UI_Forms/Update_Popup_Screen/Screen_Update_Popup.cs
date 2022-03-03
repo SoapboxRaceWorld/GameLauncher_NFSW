@@ -65,6 +65,7 @@ namespace SBRW.Launcher.App.UI_Forms.Update_Popup_Screen
         {
             Presence_Launcher.Status("Start Up", "New Version Is Available: " + LauncherUpdateCheck.LatestLauncherBuild);
             InitializeComponent();
+            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             SetVisuals();
 
             if (VisualsAPIChecker.GitHubAPI)

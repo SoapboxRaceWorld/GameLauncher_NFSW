@@ -1871,6 +1871,7 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         public Screen_Security_Center()
         {
             InitializeComponent();
+            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             SetVisuals();
             this.Closing += (x, y) =>
             {

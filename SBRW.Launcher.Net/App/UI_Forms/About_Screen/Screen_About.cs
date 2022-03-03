@@ -41,6 +41,7 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
         {
             IsAboutOpen = true;
             InitializeComponent();
+            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             SetVisuals();
             this.Closing += (x, y) =>
             {

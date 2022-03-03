@@ -3559,6 +3559,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public Screen_Main()
         {
             InitializeComponent();
+            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             Set_Visuals();
             this.Closing += (x, y) =>
             {

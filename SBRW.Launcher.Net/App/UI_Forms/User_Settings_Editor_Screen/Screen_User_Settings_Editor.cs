@@ -69,6 +69,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             XML_File.Read(2);
             ResolutionsListUpdater.Get();
             InitializeComponent();
+            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             SetVisuals();
             this.Closing += (x, y) =>
             {
