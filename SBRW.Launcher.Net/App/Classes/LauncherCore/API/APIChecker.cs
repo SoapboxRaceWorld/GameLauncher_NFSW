@@ -119,19 +119,19 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
 
         public static void PingAPIStatus()
         {
+            LogToFileAddons.Parent_Log_Screen(1, "API", "Checking Status");
             if (!(InsiderKit.EnableInsiderBetaTester.Allowed() || InsiderKit.EnableInsiderDeveloper.Allowed()))
             {
-                Log.Checking("API: Checking Status");
-                Log.Checking("API Status: WorldUnited");
+                LogToFileAddons.Parent_Log_Screen(2, "API", "Checking WorldUnited Status");
                 switch (UnitedSC = API_Core.StatusCheck(URLs.Main + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
                         UnitedSL = RetrieveJSON(URLs.Main + "/serverlist.json", "SL", UnitedSC);
                         if (UnitedSL) { UnitedCDNL = RetrieveJSON(URLs.Main + "/cdn_list.json", "CDNL", UnitedSC); }
-                        Log.Completed("API Status: WorldUnited");
+                        LogToFileAddons.Parent_Log_Screen(3, "API", "WorldUnited Status Check");
                         break;
                     default:
-                        Log.Completed("API Status: WorldUnited");
+                        LogToFileAddons.Parent_Log_Screen(3, "API", "WorldUnited Status Check");
                         break;
                 }
             }
@@ -142,7 +142,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
 
             if (!UnitedAPI())
             {
-                Log.Checking("API Status: DavidCarbon");
+                LogToFileAddons.Parent_Log_Screen(2, "API", "Checking DavidCarbon Status");
                 switch (CarbonSC = API_Core.StatusCheck(URLs.Static + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
@@ -150,10 +150,10 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                         else { CarbonSL = true; }
                         if (!UnitedCDNL) { CarbonCDNL = RetrieveJSON(URLs.Static + "/cdn_list.json", "CDNL", CarbonSC); }
                         else { CarbonCDNL = true; }
-                        Log.Completed("API Status: DavidCarbon");
+                        LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon Status Check");
                         break;
                     default:
-                        Log.Completed("API Status: DavidCarbon");
+                        LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon Status Check");
                         break;
                 }
             }
@@ -164,7 +164,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
 
             if (!CarbonAPI())
             {
-                Log.Checking("API Status: DavidCarbon [Second]");
+                LogToFileAddons.Parent_Log_Screen(2, "API", "Checking DavidCarbon [Second] Status");
                 switch (CarbonTwoSC = API_Core.StatusCheck(URLs.Static_Alt + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
@@ -172,10 +172,10 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                         else { CarbonTwoSL = true; }
                         if (!CarbonCDNL) { CarbonTwoCDNL = RetrieveJSON(URLs.Static_Alt + "/cdn_list.json", "CDNL", CarbonTwoSC); }
                         else { CarbonTwoCDNL = true; }
-                        Log.Completed("API Status: DavidCarbon [Second]");
+                        LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon [Second] Status Check");
                         break;
                     default:
-                        Log.Completed("API Status: DavidCarbon [Second]");
+                        LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon [Second] Status Check");
                         break;
                 }
             }
@@ -186,10 +186,10 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
 
             if (!CarbonAPITwo())
             {
-                Log.Checking("API Status: Local Cache");
-                var Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "Lists");
-                var Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Game_Servers.json");
-                var CDN_List_Cache = Path.Combine(Launcher_Data_Folder, "Content_Delivery_Networks.json");
+                LogToFileAddons.Parent_Log_Screen(2, "API", "Checking Local Cache");
+                string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "Lists");
+                string Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Game_Servers.json");
+                string CDN_List_Cache = Path.Combine(Launcher_Data_Folder, "Content_Delivery_Networks.json");
 
                 if (File.Exists(Server_List_Cache))
                 {
@@ -199,12 +199,12 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                     }
                     else
                     {
-                        Log.Error("API Status: Invalid Game Servers Cache File");
+                        LogToFileAddons.Parent_Log_Screen(5, "API", "Invalid Game Servers Cache File");
                     }
                 }
                 else
                 {
-                    Log.Error("API Status: No Game Servers Cache File Found");
+                    LogToFileAddons.Parent_Log_Screen(5, "API", "No Game Servers Cache File Found");
                 }
 
                 if (File.Exists(CDN_List_Cache))
@@ -215,12 +215,12 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                     }
                     else
                     {
-                        Log.Error("API Status: Invalid Content Delivery Networks Cache File");
+                        LogToFileAddons.Parent_Log_Screen(5, "API", "Invalid Content Delivery Networks Cache File");
                     }
                 }
                 else
                 {
-                    Log.Error("API Status: No Content Delivery Networks Cache File Found");
+                    LogToFileAddons.Parent_Log_Screen(5, "API", "No Content Delivery Networks Cache File Found");
                 }
             }
             else
@@ -228,8 +228,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                 Local_Cached_SL = Local_Cached_CDNL = true;
             }
 
-            Log.Checking("API: Test #2");
-
+            LogToFileAddons.Parent_Log_Screen(2, "API", "Checking API Results");
             /* Check If Launcher Failed to Connect to any APIs */
             if (!Local_Cached_API())
             {
@@ -243,12 +242,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                 }
                 else
                 {
-                    Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and will Continue");
+                    LogToFileAddons.Parent_Log_Screen(4, "API PROMPT CHECK", 
+                        "User has Bypassed 'No Internet Connection' Check and will Continue");
                     MessageBox.Show(Translations.Database("VisualsAPIChecker_TextBox_No_API_P3"),
                         Translations.Database("VisualsAPIChecker_TextBox_No_API_P4"));
                 }
             }
-            Log.Completed("API: Test #2 Done");
+            LogToFileAddons.Parent_Log_Screen(3, "API", "Done Checking API Results");
 
             if (FunctionStatus.LauncherForceClose)
             {
@@ -258,7 +258,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
             {
                 FunctionStatus.IsVisualAPIsChecked = true;
 
-                Log.Info("LIST CORE: Moved to Function");
+                LogToFileAddons.Parent_Log_Screen(1, "LIST CORE", "Moved to Function");
                 /* (Start Process) Check ServerList Status */
                 ServerListUpdater.GetList();
             }
@@ -270,7 +270,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
 
         private static bool RetrieveJSON(string JSONUrl, string Function, APIStatus API_Name, bool ByPass_Online = false, string ByPass_List = "")
         {
-            Log.Checking("JSON LIST: Retriving " + JSONUrl);
+            LogToFileAddons.Parent_Log_Screen(2, "JSON LIST", "Retriving JSON LIST " + JSONUrl);
             try
             {
                 if (!ByPass_Online)
@@ -299,12 +299,17 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                     {
                         OnlineListJson = Client.DownloadString(URLCall);
                         API_Name = APIStatus.Online;
-                        Log.UrlCall("JSON LIST: Retrieved " + JSONUrl);
+                        LogToFileAddons.Parent_Log_Screen(6, "JSON LIST", "Retrieved " + JSONUrl);
                     }
                     catch (WebException Error)
                     {
                         APIStatus API_Status = API_Core.StatusCodes(JSONUrl, Error, Error.Response as HttpWebResponse);
                         API_Name = API_Status;
+
+                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                        {
+                            LogToFileAddons.Parent_Log_Screen(5, "JSON LIST", Error.InnerException.Message);
+                        }
 
                         return false;
                     }
@@ -312,6 +317,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                     {
                         LogToFileAddons.OpenLog("JSON LIST", string.Empty, Error, string.Empty, true);
                         API_Name = APIStatus.Unknown;
+
+                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                        {
+                            LogToFileAddons.Parent_Log_Screen(5, "JSON LIST", Error.InnerException.Message, false, true);
+                        }
 
                         return false;
                     }
@@ -321,6 +331,8 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                         {
                             Client.Dispose();
                         }
+
+                        GC.Collect();
                     }
                 }
                 else
@@ -342,13 +354,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                         default:
                             break;
                     }
-                    Log.Completed("JSON LIST: Valid " + JSONUrl);
+                    LogToFileAddons.Parent_Log_Screen(3, "JSON LIST", "Valid " + JSONUrl);
 
                     return true;
                 }
                 else
                 {
-                    Log.Completed("JSON LIST: Invalid " + JSONUrl);
+                    LogToFileAddons.Parent_Log_Screen(3, "JSON LIST", "Invalid " + JSONUrl);
                     return false;
                 }
             }
@@ -362,6 +374,8 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                 {
                     OnlineListJson = string.Empty;
                 }
+
+                GC.Collect();
             }
         }
     }

@@ -28,7 +28,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 
         public static void GetList()
         {
-            Log.Checking("SERVER LIST CORE: Creating Server List");
+            LogToFileAddons.Parent_Log_Screen(2, "SERVER LIST CORE", "Creating Server List");
             Presence_Launcher.Status("Start Up", "Creating Server List");
 
             List<Json_List_Server> serverInfos = new List<Json_List_Server>();
@@ -42,9 +42,10 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 
                 if (VisualsAPIChecker.CarbonAPITwo())
                 {
-                    var Time_Check = DateTime.Now.Date;
-                    var Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "Lists");
-                    var Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
+                    DateTime Time_Check = DateTime.Now.Date;
+                    string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "Lists");
+                    string Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
+
                     if (File.Exists(Time_Stamp))
                     {
                         try
@@ -55,6 +56,10 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                         {
 
                         }
+                        finally
+                        {
+                            GC.Collect();
+                        }
                     }
 
                     if ((Time_Check < DateTime.Now.Date) || !File.Exists(Time_Stamp))
@@ -63,10 +68,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                         {
                             Directory.CreateDirectory(Launcher_Data_Folder);
                         }
-                        var Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Game_Servers.json");
-                        File.WriteAllText(Server_List_Cache, CachedJSONList);
-                        var CDN_List_Cache = Path.Combine(Launcher_Data_Folder, "Content_Delivery_Networks.json");
-                        File.WriteAllText(CDN_List_Cache, CDNListUpdater.CachedJSONList);
+                        
+                        File.WriteAllText(Path.Combine(Launcher_Data_Folder, "Game_Servers.json"), CachedJSONList);
+                        File.WriteAllText(Path.Combine(Launcher_Data_Folder, "Content_Delivery_Networks.json"), CDNListUpdater.CachedJSONList);
                         File.WriteAllText(Time_Stamp, DateTime.Now.ToString());
                     }
                 }
@@ -74,6 +78,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("SERVER LIST CORE", string.Empty, Error, string.Empty, true);
+
+                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                {
+                    LogToFileAddons.Parent_Log_Screen(5, "SERVER LIST CORE", Error.InnerException.Message, false, true);
+                }
             }
             finally
             {
@@ -81,13 +90,15 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                 {
                     CachedJSONList = string.Empty;
                 }
+
+                GC.Collect();
             }
 
             if (File.Exists(Locations.LauncherCustomServers))
             {
                 try
                 {
-                    var fileItems = JsonConvert.DeserializeObject<List<Json_List_Server>>
+                    List<Json_List_Server> fileItems = JsonConvert.DeserializeObject<List<Json_List_Server>>
                     (File.ReadAllText(Locations.LauncherCustomServers)) ?? new List<Json_List_Server>();
 
                     if (fileItems.Count > 0)
@@ -107,6 +118,15 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                 catch (Exception Error)
                 {
                     LogToFileAddons.OpenLog("SERVER LIST CORE", string.Empty, Error, string.Empty, true);
+
+                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                    {
+                        LogToFileAddons.Parent_Log_Screen(5, "SERVER LIST CORE", Error.InnerException.Message, false, true);
+                    }
+                }
+                finally
+                {
+                    GC.Collect();
                 }
             }
 
@@ -186,24 +206,34 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                                 CleanList.Add(CList);
                             }
                         }
-                        Log.Completed("SERVER LIST CORE: Server List Done");
+
+                        LogToFileAddons.Parent_Log_Screen(3, "SERVER LIST CORE", "Done");
                     }
                     else
                     {
-                        Log.Completed("SERVER LIST CORE: Server List has no Elements");
+                        LogToFileAddons.Parent_Log_Screen(3, "SERVER LIST CORE", "Server List has no Elements");
                     }
                 }
                 else
                 {
-                    Log.Completed("SERVER LIST CORE: Server List is NULL");
+                    LogToFileAddons.Parent_Log_Screen(3, "SERVER LIST CORE", "Server List is NULL");
                 }
             }
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("SERVER LIST CORE", string.Empty, Error, string.Empty, true);
+
+                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                {
+                    LogToFileAddons.Parent_Log_Screen(5, "SERVER LIST CORE", Error.InnerException.Message, false, true);
+                }
+            }
+            finally
+            {
+                GC.Collect();
             }
 
-            Log.Info("LAUNCHER UPDATER: Moved to Function");
+            LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Moved to Function");
             /* (Start Process) Check If Updater Exists or Requires an Update */
             UpdaterExecutable.Check();
         }
@@ -227,6 +257,15 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("COUNTRYNAME", string.Empty, Error, string.Empty, true);
+
+                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                {
+                    LogToFileAddons.Parent_Log_Screen(5, "COUNTRYNAME", Error.InnerException.Message, false, true);
+                }
+            }
+            finally
+            {
+                GC.Collect();
             }
 
             return "Unknown";
@@ -279,6 +318,10 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
             {
                 LogToFileAddons.OpenLog("Server Name Provider", string.Empty, Error, string.Empty, true);
                 return "Unknown";
+            }
+            finally
+            {
+                GC.Collect();
             }
         }
     }

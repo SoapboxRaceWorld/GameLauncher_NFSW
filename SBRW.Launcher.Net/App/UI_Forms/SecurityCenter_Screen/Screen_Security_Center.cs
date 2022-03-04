@@ -1858,11 +1858,11 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
             ButtonClose.MouseDown += new MouseEventHandler(ButtonClose_MouseDown);
             ButtonClose.Click += new EventHandler(ButtonClose_Click);
             /* Window */
-            if (Screen_Main.Screen_Instance != null)
+            if (Parent_Screen.Screen_Instance != null)
             {
-                MouseMove += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Move);
-                MouseUp += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Up);
-                MouseDown += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Down);
+                MouseMove += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Move);
+                MouseUp += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Up);
+                MouseDown += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Down);
             }
         }
         /// <summary>

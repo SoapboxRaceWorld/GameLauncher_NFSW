@@ -178,7 +178,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Logger
                     }
                     else
                     {
-                        Parent_Screen.Screen_TextBox_LiveLog.Text = "[" + Log_Type_String + "] " + Log_Full_String + "\n";
+                        Parent_Screen.Screen_TextBox_LiveLog.AppendText(Environment.NewLine + "[" + Log_Type_String + "] " + Log_Full_String);
                     }
                 }
             }

@@ -990,9 +990,9 @@ namespace SBRW.Launcher.App.UI_Forms
             /* Set Theme Colors & Images     /
             /********************************/
 
-            BackColor = Color_Screen.BG_Splash;
-            TransparencyKey = Color_Screen.BG_Splash;
-            BackgroundImage = Image_Other.Logo_Splash;
+            TransparencyKey = Color_Screen.BG_Settings;
+            BackgroundImage = Image_Background.Settings;
+            PictureBox_Screen_Splash.Image = new Bitmap(Image_Other.Logo_Splash);
 
             /*******************************/
             /* Set Window Name              /

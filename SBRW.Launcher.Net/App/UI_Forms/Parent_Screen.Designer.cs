@@ -42,10 +42,13 @@
             // 
             // Panel_Form_Screens
             // 
-            this.Panel_Form_Screens.Location = new System.Drawing.Point(784, 386);
+            this.Panel_Form_Screens.BackColor = System.Drawing.Color.Transparent;
+            this.Panel_Form_Screens.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Panel_Form_Screens.Location = new System.Drawing.Point(0, 0);
             this.Panel_Form_Screens.Name = "Panel_Form_Screens";
             this.Panel_Form_Screens.Size = new System.Drawing.Size(891, 529);
             this.Panel_Form_Screens.TabIndex = 0;
+            this.Panel_Form_Screens.Visible = false;
             // 
             // PictureBox_Screen_Splash
             // 
@@ -76,10 +79,11 @@
             this.TextBox_Live_Log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.TextBox_Live_Log.Size = new System.Drawing.Size(500, 135);
             this.TextBox_Live_Log.TabIndex = 35;
-            this.TextBox_Live_Log.Text = "This is a Test";
+            this.TextBox_Live_Log.Text = "This is a Test (Line 0)\r\nThis is a Test (Line 1)";
             // 
             // Panel_Splash_Screen
             // 
+            this.Panel_Splash_Screen.BackColor = System.Drawing.Color.Transparent;
             this.Panel_Splash_Screen.Controls.Add(this.PictureBox_Screen_Splash);
             this.Panel_Splash_Screen.Controls.Add(this.GroupBox_Changelog);
             this.Panel_Splash_Screen.Location = new System.Drawing.Point(180, 72);
@@ -95,6 +99,7 @@
             // Parent_Screen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.Panel_Splash_Screen);
             this.Controls.Add(this.Panel_Form_Screens);

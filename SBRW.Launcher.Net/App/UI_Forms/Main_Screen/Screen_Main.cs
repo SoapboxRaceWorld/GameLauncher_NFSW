@@ -3363,13 +3363,16 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             LinkLabel_Forgot_Password.LinkClicked += new LinkLabelLinkClickedEventHandler(FunctionEvents.ForgotPassword_LinkClicked);
 
-            MouseMove += new MouseEventHandler(Move_Window_Mouse_Move);
-            MouseUp += new MouseEventHandler(Move_Window_Mouse_Up);
-            MouseDown += new MouseEventHandler(Move_Window_Mouse_Down);
+            if (Parent_Screen.Screen_Instance != null)
+            {
+                MouseMove += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Move);
+                MouseUp += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Up);
+                MouseDown += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Down);
 
-            Picture_Logo.MouseMove += new MouseEventHandler(Move_Window_Mouse_Move);
-            Picture_Logo.MouseUp += new MouseEventHandler(Move_Window_Mouse_Up);
-            Picture_Logo.MouseDown += new MouseEventHandler(Move_Window_Mouse_Down);
+                Picture_Logo.MouseMove += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Move);
+                Picture_Logo.MouseUp += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Up);
+                Picture_Logo.MouseDown += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Down);
+            }
 
             Button_Play_OR_Update.MouseEnter += new EventHandler(PlayButton_MouseEnter);
             Button_Play_OR_Update.MouseLeave += new EventHandler(PlayButton_MouseLeave);

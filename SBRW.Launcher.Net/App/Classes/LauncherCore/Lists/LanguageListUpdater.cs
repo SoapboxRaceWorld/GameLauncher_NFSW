@@ -7,6 +7,7 @@ using SBRW.Launcher.Core.Discord.RPC_;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SBRW.Launcher.Core.Extension.Validation_.Json_.Newtonsoft_;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 {
@@ -17,7 +18,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 
         public static void GetList()
         {
-            Log.Checking("LIST CORE: Creating Language List");
+            LogToFileAddons.Parent_Log_Screen(2, "LIST CORE", "Creating Language List");
             Presence_Launcher.Status("Start Up", "Creating Language List");
 
             List<Json_List_Language> langInfos = new List<Json_List_Language>();
@@ -44,58 +45,91 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("LIST CORE", string.Empty, Error, string.Empty, true);
-            }
-
-            try
-            {
-                langInfos.AddRange(JsonConvert.DeserializeObject<List<Json_List_Language>>(json_language));
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("LIST CORE", string.Empty, Error, string.Empty, true);
-            }
-
-            try
-            {
-                foreach (Json_List_Language NoCatList in langInfos)
+                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
                 {
-                    if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
+                    LogToFileAddons.Parent_Log_Screen(5, "LIST CORE", Error.InnerException.Message, false, true);
+                }
+            }
+            finally
+            {
+                GC.Collect();
+            }
+
+            if (Is_Json.Valid(json_language))
+            {
+                try
+                {
+#pragma warning disable CS8604 // Null Safe Check Done Above
+                    langInfos.AddRange(JsonConvert.DeserializeObject<List<Json_List_Language>>(json_language));
+#pragma warning restore CS8604 // Possible null reference argument.
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("LIST CORE Deserialize", string.Empty, Error, string.Empty, true);
+                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
                     {
-                        NoCategoryList.Add(NoCatList);
+                        LogToFileAddons.Parent_Log_Screen(5, "LIST CORE Deserialize", Error.InnerException.Message, false, true);
                     }
                 }
-
-                List<Json_List_Language> RawList = new List<Json_List_Language>();
-
-                foreach (var langItemGroup in langInfos.GroupBy(s => s.Category))
+                finally
                 {
-                    if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{langItemGroup.Key} Mirrors")) == -1)
+                    GC.Collect();
+                }
+
+                try
+                {
+                    foreach (Json_List_Language NoCatList in langInfos)
                     {
-                        RawList.Add(new Json_List_Language
+                        if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
                         {
-                            Name = $"<GROUP>{langItemGroup.Key} Languages",
-                            IsSpecial = true
-                        });
+                            NoCategoryList.Add(NoCatList);
+                        }
                     }
-                    RawList.AddRange(langItemGroup.ToList());
-                }
 
-                foreach (Json_List_Language CList in RawList)
-                {
-                    if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
+                    List<Json_List_Language> RawList = new List<Json_List_Language>();
+
+                    foreach (var langItemGroup in langInfos.GroupBy(s => s.Category))
                     {
-                        CleanList.Add(CList);
+                        if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{langItemGroup.Key} Mirrors")) == -1)
+                        {
+                            RawList.Add(new Json_List_Language
+                            {
+                                Name = $"<GROUP>{langItemGroup.Key} Languages",
+                                IsSpecial = true
+                            });
+                        }
+                        RawList.AddRange(langItemGroup.ToList());
+                    }
+
+                    foreach (Json_List_Language CList in RawList)
+                    {
+                        if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
+                        {
+                            CleanList.Add(CList);
+                        }
                     }
                 }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("LIST CORE Compile", string.Empty, Error, string.Empty, true);
+                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                    {
+                        LogToFileAddons.Parent_Log_Screen(5, "LIST CORE Compile", Error.InnerException.Message, false, true);
+                    }
+                }
+                finally
+                {
+                    GC.Collect();
+                }
+
+                LogToFileAddons.Parent_Log_Screen(3, "LIST CORE", "Done");
             }
-            catch (Exception Error)
+            else
             {
-                LogToFileAddons.OpenLog("LIST CORE", string.Empty, Error, string.Empty, true);
+                LogToFileAddons.Parent_Log_Screen(5, "LIST CORE", "Invalid JSON String");
             }
 
-            Log.Checking("LIST CORE: Done");
-
-            Log.Info("API: Moved to Function");
+            LogToFileAddons.Parent_Log_Screen(1, "API", "Moved to Function");
             /* Run the API Checks to Make Sure it Visually Displayed Correctly */
             VisualsAPIChecker.PingAPIStatus();
         }

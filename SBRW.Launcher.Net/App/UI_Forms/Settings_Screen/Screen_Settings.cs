@@ -1636,11 +1636,11 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             LinkLabel_CDN_Current.LinkClicked += new LinkLabelLinkClickedEventHandler(SettingsCDNCurrent_LinkClicked);
             LinkLabel_Game_Path.LinkClicked += new LinkLabelLinkClickedEventHandler(SettingsGameFilesCurrent_LinkClicked);
 
-            if (Screen_Main.Screen_Instance != null)
+            if (Parent_Screen.Screen_Instance != null)
             {
-                MouseMove += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Move);
-                MouseUp += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Up);
-                MouseDown += new MouseEventHandler(Screen_Main.Screen_Instance.Move_Window_Mouse_Down);
+                MouseMove += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Move);
+                MouseUp += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Up);
+                MouseDown += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Down);
             }
 
             Load += new EventHandler(Screen_Settings_Load);

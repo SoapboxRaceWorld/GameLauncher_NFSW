@@ -23,6 +23,7 @@ using SBRW.Launcher.App.UI_Forms.Splash_Screen;
 using SBRW.Launcher.App.UI_Forms.Update_Popup_Screen;
 using SBRW.Launcher.Core.Theme;
 using System.Net.Cache;
+using SBRW.Launcher.App.UI_Forms;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -50,18 +51,20 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
 
         public static void Latest()
         {
-            Log.Checking("LAUNCHER UPDATE: Is Version Up to Date or not");
+            LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER UPDATE", "Is Version Up to Date or not");
             Presence_Launcher.Status("Start Up", "Checking Latest Launcher Release Information");
             try
             {
                 Uri URLCall = new Uri((EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed()) ?
                     URLs.GitHub_Launcher_Beta : URLs.GitHub_Launcher_Stable);
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 var Client = new WebClient
                 {
                     Encoding = Encoding.UTF8,
                     CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                 };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                 if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                 { 
@@ -81,11 +84,19 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                 catch (WebException Error)
                 {
                     API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
-                        Error, (HttpWebResponse)Error.Response);
+                        Error, Error.Response as HttpWebResponse);
+                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                    {
+                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATE [GITHUB]", Error.InnerException.Message, false, true);
+                    }
                 }
                 catch (Exception Error)
                 {
                     LogToFileAddons.OpenLog("LAUNCHER UPDATE [GITHUB]", string.Empty, Error, string.Empty, true);
+                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                    {
+                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATE [GITHUB]", Error.InnerException.Message, false, true);
+                    }
                 }
                 finally
                 {
@@ -93,34 +104,45 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                     {
                         Client.Dispose();
                     }
+
+                    GC.Collect();
                 }
 
                 if (Is_Json.Valid(VersionJSON) && VisualsAPIChecker.GitHubAPI)
                 {
+#pragma warning disable CS8602 // Null Safe Check Done Above
                     LatestLauncherBuild = (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed()) ?
                         JsonConvert.DeserializeObject<List<GitHubRelease>>(VersionJSON)[0].TagName :
                         JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON).TagName;
-                    Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + LatestLauncherBuild);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                    LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATE", "GitHub Latest Version -> " + LatestLauncherBuild);
                     ValidJSONDownload = true;
                 }
                 else
                 {
-                    Log.Error("LAUNCHER UPDATE: Failed to retrieve Latest Build information from GitHub");
+                    LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATE", "Failed to retrieve Latest Build information from GitHub");
                     ValidJSONDownload = false;
                 }
             }
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("LAUNCHER UPDATE [GITHUB]", string.Empty, Error, string.Empty, true);
+                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                {
+                    LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATE [GITHUB]", Error.InnerException.Message, false, true);
+                }
             }
-
-            Log.Completed("LAUNCHER UPDATE: Done");
+            finally
+            {
+                GC.Collect();
+            }
+            LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER UPDATE", "Done");
 
             if (!UpdateStatusResult())
             {
-                Log.Info("FIRST TIME RUN: Moved to Function");
+                LogToFileAddons.Parent_Log_Screen(1, "FIRST TIME RUN", "Moved to Function");
                 /* Do First Time Run Checks */
-                FunctionStatus.FirstTimeRun();
+                Parent_Screen.First_Time_Run();
             }
             else
             {
@@ -147,7 +169,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
 
                 if (Revisions < 0)
                 {
-                    Log.Info("LAUNCHER POPUP: Checking if Popup is Required");
+                    LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER POPUP", "Checking if Popup is Required");
 
                     if (Save_Settings.Live_Data.Update_Version_Skip != LatestLauncherBuild)
                     {
@@ -180,17 +202,17 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                     }
                     else
                     {
-                        Log.Completed("LAUNCHER POPUP: User Saved Skip Version Detected");
+                        LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER POPUP", "User Saved Skip Version Detected");
                     }
                 }
                 else
                 {
-                    Log.Completed("LAUNCHER POPUP: Update to Date");
+                    LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER POPUP", "Update to Date");
                 }
             }
             else
             {
-                Log.Completed("LAUNCHER POPUP: Unable to run Update Popup (Null String)");
+                LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER POPUP", "Unable to run Update Popup (Null String)");
             }
 
             if (!string.IsNullOrWhiteSpace(VersionJSON))
