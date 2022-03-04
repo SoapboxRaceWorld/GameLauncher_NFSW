@@ -23,6 +23,11 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Components
                 {
                     LogToFileAddons.OpenLog("Hardware Info", String.Empty, Error, String.Empty, true);
                 }
+                finally
+                {
+                    GC.Collect();
+                }
+
                 return _cpuName;
             }
         }
@@ -40,6 +45,11 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Components
                 {
                     LogToFileAddons.OpenLog("Hardware Info", String.Empty, Error, String.Empty, true);
                 }
+                finally
+                {
+                    GC.Collect();
+                }
+
                 return (memKb / 1024).ToString();
             }
         }
@@ -59,6 +69,10 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Components
                 {
                     LogToFileAddons.OpenLog("Hardware Info", String.Empty, Error, String.Empty, true);
                 }
+                finally
+                {
+                    GC.Collect();
+                }
 
                 return _cardName;
             }
@@ -75,6 +89,10 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Components
                 catch (Exception Error)
                 {
                     LogToFileAddons.OpenLog("Hardware Info", String.Empty, Error, String.Empty, true);
+                }
+                finally
+                {
+                    GC.Collect();
                 }
 
                 return _driverVersion;
@@ -104,6 +122,10 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Components
             catch
             {
                 return false;
+            }
+            finally
+            {
+                GC.Collect();
             }
         }
     }

@@ -24,6 +24,8 @@ using System.Threading;
 using System.Windows.Forms;
 using SBRW.Launcher.App.Classes.InsiderKit;
 using SBRW.Launcher.Core.Extra.XML_;
+using System.Linq;
+using System.Net.Sockets;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Global
 {
@@ -88,6 +90,10 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
             {
                 return false;
             }
+            finally
+            {
+                GC.Collect();
+            }
 
             return true;
         }
@@ -124,19 +130,44 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
         }
 
         /* Converts Host Name to a IP (ex. http://localhost -> 192.168.1.69 */
-        public static string HostName2IP(string hostname)
+        public static string HostName2IP(string hostname, bool Beta_Search = false)
         {
-            IPHostEntry iphost = Dns.GetHostEntry(hostname);
-            IPAddress[] addresses = iphost.AddressList;
-            return addresses[0].ToString();
+            try 
+            {
+                if (!string.IsNullOrWhiteSpace(hostname))
+                {
+                    if (Beta_Search)
+                    {
+                        return Dns.GetHostEntry(hostname).AddressList
+                        .Where(IPA => IPA.AddressFamily == AddressFamily.InterNetwork).Select(x => x.ToString()).First().ToString();
+                    }
+                    else
+                    {
+                        IPHostEntry iphost = Dns.GetHostEntry(hostname);
+                        IPAddress[] addresses = iphost.AddressList;
+
+                        return addresses[0].ToString();
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+                GC.Collect();
+            }
+
+            return hostname;
         }
 
         /// <summary>
         /// Used to Force Close Launcher when Launcher encounters an error during Startup
         /// </summary>
         /// <param name="Notes">Required: Where the Launcher is Closing From</param>
-        /// <param name="Boolen">True: Restarts Launcher | False: Closes Launcher</param>
-        public static void ErrorCloseLauncher(string Notes, bool Boolen)
+        /// <param name="Force_Restart">True: Restarts Launcher | False: Closes Launcher</param>
+        public static void ErrorCloseLauncher(string Notes, bool Force_Restart)
         {
             Screen_Splash.ThreadStatus("Stop");
 
@@ -165,287 +196,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                 }
             }
 
-            if (Boolen)
+            if (Force_Restart)
             {
                 Application.Restart();
             }
             else
             {
                 Application.Exit();
-            }
-        }
-
-        public static void FirstTimeRun()
-        {
-            if (!LauncherUpdateCheck.UpdatePopupStoppedSplashScreen)
-            {
-                LoadingComplete = true;
-                Screen_Splash.ThreadStatus("Stop");
-            }
-
-            if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
-            {
-                Log.Core("LAUNCHER: Checking InstallationDirectory: " + Save_Settings.Live_Data.Game_Path);
-            }
-
-            Log.Checking("LAUNCHER: Checking Game Installation");
-            if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
-            {
-                Presence_Launcher.Status("Start Up", "Doing First Time Run");
-                Log.Core("LAUNCHER: First run!");
-
-                try
-                {
-                    Form welcome = new Screen_Welcome();
-                    DialogResult welcomereply = welcome.ShowDialog();
-
-                    if (welcomereply != DialogResult.OK)
-                    {
-                        LauncherForceClose = true;
-                    }
-                    else
-                    {
-                        Save_Settings.Live_Data.Launcher_CDN = SelectedCDN.CDNUrl;
-                        Save_Settings.Save();
-                    }
-                }
-                catch
-                {
-                    Log.Warning("LAUNCHER: CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
-                    Save_Settings.Live_Data.Launcher_CDN = "http://localhost";
-                    Log.Core("LAUNCHER: Installation Directory was Empty! Creating and Setting Directory at " + Locations.GameFilesFailSafePath);
-                    Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                    Save_Settings.Save();
-                }
-
-                if (LauncherForceClose)
-                {
-                    ErrorCloseLauncher("Closing From Welcome Dialog", false);
-                }
-                else
-                {
-                    if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
-                    {
-                        Presence_Launcher.Status("Start Up", "User Selecting/Inputting Game Files Folder");
-
-                        try
-                        {
-                            if (!UnixOS.Detected())
-                            {
-                                string GameFolderPath = string.Empty;
-
-                                OpenFileDialog FolderDialog = new OpenFileDialog
-                                {
-                                    InitialDirectory = "C:\\",
-                                    ValidateNames = false,
-                                    CheckFileExists = false,
-                                    CheckPathExists = true,
-                                    AutoUpgradeEnabled = false,
-                                    Title = "Select the location to Find or Download nfsw.exe",
-                                    FileName = "   Select Game Files Folder"
-                                };
-
-                                if (FolderDialog.ShowDialog() == DialogResult.OK)
-                                {
-                                    if (!string.IsNullOrWhiteSpace(FolderDialog.FileName))
-                                    {
-                                        GameFolderPath = Path.GetDirectoryName(FolderDialog.FileName)??string.Empty;
-                                    }
-                                }
-
-                                FolderDialog.Dispose();
-
-                                if (!string.IsNullOrWhiteSpace(GameFolderPath))
-                                {
-                                    Presence_Launcher.Status("Start Up", "Verifying Game Files Folder Location");
-
-                                    if (!HasWriteAccessToFolder(GameFolderPath))
-                                    {
-                                        Log.Error("FOLDER SELECT DIALOG: Not enough permissions. Exiting.");
-                                        string ErrorMessage = "You don't have enough permission to select this path as the Installation folder. " +
-                                            "Please select another directory.";
-                                        MessageBox.Show(null, ErrorMessage, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                        LauncherForceClose = true;
-                                        LauncherForceCloseReason = ErrorMessage;
-                                    }
-                                    else
-                                    {
-                                        if (GameFolderPath.Length == 3)
-                                        {
-                                            Directory.CreateDirectory("Game Files");
-                                            Log.Warning("FOLDER SELECT DIALOG: Installing NFSW in root of the harddisk is not allowed.");
-                                            MessageBox.Show(null, string.Format("Installing NFSW in root of the harddisk is not allowed. " +
-                                                "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
-                                                "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                                            Save_Settings.Save();
-                                            XML_File.Save(1);
-                                        }
-                                        else if (GameFolderPath == Locations.LauncherFolder)
-                                        {
-                                            Directory.CreateDirectory("Game Files");
-                                            Log.Warning("FOLDER SELECT DIALOG: Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
-                                            MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n " +
-                                                "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
-                                                "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                                            Save_Settings.Save();
-                                            XML_File.Save(1);
-                                        }
-                                        else
-                                        {
-                                            Log.Core("FOLDER SELECT DIALOG: Directory Set: " + GameFolderPath);
-                                            Save_Settings.Live_Data.Game_Path = GameFolderPath;
-                                            Save_Settings.Save();
-                                            XML_File.Save(1);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    LauncherForceClose = true;
-                                }
-                            }
-                            else
-                            {
-                                if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
-                                {
-                                    try
-                                    {
-                                        Save_Settings.Live_Data.Game_Path = Path.GetFullPath("GameFiles");
-                                    }
-                                    catch
-                                    {
-                                        Save_Settings.Live_Data.Game_Path = "GameFiles";
-                                    }
-                                }
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
-                            {
-                                if (!Directory.Exists(Save_Settings.Live_Data.Game_Path))
-                                {
-                                    Log.Core("FOLDER SELECT DIALOG: Created Game Files Directory: " + Save_Settings.Live_Data.Game_Path);
-                                    Directory.CreateDirectory(Save_Settings.Live_Data.Game_Path);
-                                }
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
-                            {
-                                Log.Checking("CLEANLINKS: Game Path");
-                                if (File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, Locations.NameModLinks)))
-                                {
-                                    ModNetHandler.CleanLinks(Save_Settings.Live_Data.Game_Path);
-                                    Log.Completed("CLEANLINKS: Done");
-                                }
-                                else
-                                {
-                                    Log.Completed("CLEANLINKS: Not Present");
-                                }
-                            }
-                        }
-                        catch (Exception Error)
-                        {
-                            LauncherForceClose = true;
-                            LauncherForceCloseReason = Error.Message;
-                            LogToFileAddons.OpenLog("FOLDER SELECT DIALOG", string.Empty, Error, string.Empty, true);
-                        }
-                    }
-                }
-            }
-            Log.Completed("LAUNCHER: Game Installation Path Done");
-
-            if (LauncherForceClose)
-            {
-                ErrorCloseLauncher("Closing From Folder Dialog", false);
-            }
-            else
-            {
-                if (!UnixOS.Detected())
-                {
-                    Log.Checking("LAUNCHER: Checking Game Path Location");
-                    Presence_Launcher.Status("Start Up", "Checking Game Files Folder Location");
-
-                    switch (CheckFolder(Save_Settings.Live_Data.Game_Path))
-                    {
-                        case FolderType.IsSameAsLauncherFolder:
-                            Directory.CreateDirectory("Game Files");
-                            Log.Error("LAUNCHER: Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
-                            MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n" +
-                                "Instead, we will install it at {0}.", Locations.GameFilesFailSafePath),
-                                "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                            break;
-                        case FolderType.IsTempFolder:
-                        case FolderType.IsUsersFolders:
-                        case FolderType.IsProgramFilesFolder:
-                        case FolderType.IsWindowsFolder:
-                        case FolderType.IsRootFolder:
-                            string constructMsg = string.Empty;
-                            constructMsg += "Using this location for Game Files is not allowed.\n\n";
-                            constructMsg += "The following locations are also NOT allowed:\n";
-                            constructMsg += "• X:\\nfsw.exe (Root of Drive, such as C:\\ or D:\\, must be in a folder)\n";
-                            constructMsg += "• C:\\Program Files\n";
-                            constructMsg += "• C:\\Program Files (x86)\n";
-                            constructMsg += "• C:\\Users (Includes 'Desktop', 'Documents', 'Downloads')\n";
-                            constructMsg += "• C:\\Windows\n\n";
-                            constructMsg += "Instead, we will install the NFSW Game at " + Locations.GameFilesFailSafePath;
-                            try
-                            {
-                                if (!Directory.Exists(Locations.GameFilesFailSafePath))
-                                {
-                                    Log.Core("FOLDER SELECT DIALOG: Created Game Files Directory: " + Locations.GameFilesFailSafePath);
-                                    Directory.CreateDirectory(Locations.GameFilesFailSafePath);
-                                }
-                            }
-                            catch { }
-                            MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            Log.Error("LAUNCHER: Installing NFSW in a Restricted Location is not allowed.");
-                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                            break;
-                    }
-                    Save_Settings.Save();
-                    Log.Completed("LAUNCHER: Done Checking Game Path Location");
-                }
-
-                /* Check If Launcher Failed to Connect to any APIs */
-                if (!VisualsAPIChecker.CarbonAPITwo())
-                {
-                    Presence_Launcher.Status("Start Up", "Launcher Encountered API Errors");
-
-                    DialogResult restartAppNoApis = MessageBox.Show(null, "There is no internet connection, Launcher might crash." +
-                        "\n\nClick Yes to Close GameLauncher" +
-                        "\nor" +
-                        "\nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                    if (restartAppNoApis == DialogResult.Yes)
-                    {
-                        LauncherForceClose = true;
-                    }
-                }
-
-                if (LauncherForceClose)
-                {
-                    ErrorCloseLauncher("Closing From API Error", false);
-                }
-                else
-                {
-                    try
-                    {
-                        Log.Info("MAINSCREEN: Program Started");
-                        Application.Run(new Screen_Main());
-                    }
-                    catch (COMException Error)
-                    {
-                        LogToFileAddons.OpenLog("Main Screen [Application Run]", "Launcher Encounterd an Error.", Error, "Error", false);
-                        ErrorCloseLauncher("Main Screen [Application Run]", false);
-                    }
-                    catch (Exception Error)
-                    {
-                        LogToFileAddons.OpenLog("Main Screen [Application Run]", "Launcher Encounterd an Error.", Error, "Error", false);
-                        ErrorCloseLauncher("Main Screen [Application Run]", false);
-                    }
-                }
             }
         }
         /* Moved "runAsAdmin" Code to Gist */

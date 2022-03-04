@@ -33,7 +33,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
     /// <see cref="//https://stackoverflow.com/questions/12206314/detect-if-visual-c-redistributable-for-visual-studio-2012-is-installed"/>
     public static class RedistributablePackage
     {
-        private static string InstalledVersion { get; set; }
+        private static string InstalledVersion { get; set; } = string.Empty;
         /// <summary>
         /// Check if a Microsoft Redistributable Package is installed.
         /// </summary>
@@ -105,7 +105,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
         {
             if (!UnixOS.Detected())
             {
-                Log.Checking("REDISTRIBUTABLE: Is Installed or Not");
+                LogToFileAddons.Parent_Log_Screen(2, "REDISTRIBUTABLE", "Is Installed or Not");
                 Presence_Launcher.Status("Start Up", "Checking Redistributable Package Visual Code 2015 to 2019");
 
                 if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
@@ -120,11 +120,13 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                         try
                         {
                             Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x86.exe");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var Client = new WebClient()
                             {
                                 CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                             };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                             if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                             {
@@ -143,11 +145,19 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                             catch (WebException Error)
                             {
                                 API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
-                                    Error, (HttpWebResponse)Error.Response);
+                                    Error, Error.Response as HttpWebResponse);
+                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE", Error.InnerException.Message, false, true);
+                                }
                             }
                             catch (Exception Error)
                             {
                                 LogToFileAddons.OpenLog("REDISTRIBUTABLE", string.Empty, Error, string.Empty, true);
+                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE", Error.InnerException.Message, false, true);
+                                }
                             }
                             finally
                             {
@@ -155,24 +165,40 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                 {
                                     Client.Dispose();
                                 }
+
+                                GC.Collect();
                             }
                         }
                         catch (Exception Error)
                         {
                             LogToFileAddons.OpenLog("REDISTRIBUTABLE", string.Empty, Error, string.Empty, true);
+                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                            {
+                                LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE", Error.InnerException.Message, false, true);
+                            }
+                        }
+                        finally
+                        {
+                            GC.Collect();
                         }
 
                         if (File.Exists("VC_redist.x86.exe"))
                         {
                             try
                             {
-                                var proc = Process.Start(new ProcessStartInfo
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                                Process proc = Process.Start(new ProcessStartInfo
                                 {
                                     Verb = "runas",
                                     Arguments = "/quiet",
                                     FileName = "VC_redist.x86.exe"
                                 });
-                                proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
+                                if (proc != null)
+                                {
+                                    proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
+                                }
 
                                 if (proc == null)
                                 {
@@ -192,8 +218,8 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                     if (proc.ExitCode != 0)
                                     {
                                         Error_Free = false;
-                                        Log.Error("REDISTRIBUTABLE INSTALLER [EXIT CODE]: " + proc.ExitCode.ToString() +
-                                            " HEX: (0x" + proc.ExitCode.ToString("X") + ")");
+                                        LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE INSTALLER [EXIT CODE]", proc.ExitCode.ToString() +
+                                            " HEX: (0x" + proc.ExitCode.ToString("X") + ")", false, true);
                                         MessageBox.Show(Translations.Database("Redistributable_VC_P7") + " " + proc.ExitCode.ToString() +
                                             " (0x" + proc.ExitCode.ToString("X") + ")" +
                                             "\n" + Translations.Database("Redistributable_VC_P8"),
@@ -207,15 +233,25 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                             catch (Exception Error)
                             {
                                 LogToFileAddons.OpenLog("REDISTRIBUTABLE x86 Process", string.Empty, Error, string.Empty, true);
+                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x86 Process", Error.InnerException.Message, false, true);
+                                }
                                 Error_Free = false;
                                 MessageBox.Show(Translations.Database("Redistributable_VC_P9"),
                                     Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
                             }
+                            finally
+                            {
+                                GC.Collect();
+                            }
                         }
                         else
                         {
                             Error_Free = false;
+                            LogToFileAddons.Parent_Log_Screen(5, Translations.Database("Redistributable_VC_P10"),
+                                Translations.Database("Redistributable_VC_P5"));
                             MessageBox.Show(Translations.Database("Redistributable_VC_P10"),
                                 Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
@@ -224,13 +260,15 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                     else
                     {
                         Error_Free = false;
+                        LogToFileAddons.Parent_Log_Screen(5, Translations.Database("Redistributable_VC_P8"),
+                                Translations.Database("Redistributable_VC_P5"));
                         MessageBox.Show(Translations.Database("Redistributable_VC_P8"), Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    Log.Info("REDISTRIBUTABLE: 32-bit 2015-2019 VC++ Redistributable Package is Installed");
+                    LogToFileAddons.Parent_Log_Screen(1, "REDISTRIBUTABLE", "32-bit 2015-2019 VC++ Redistributable Package is Installed");
                 }
 
                 if (Environment.Is64BitOperatingSystem)
@@ -247,11 +285,13 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                             try
                             {
                                 Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x64.exe");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 var Client = new WebClient()
                                 {
                                     CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                                 };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                                 if (!Launcher_Value.Launcher_Alternative_Webcalls())
                                 {
@@ -270,11 +310,19 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                 catch (WebException Error)
                                 {
                                     API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
-                                        Error, (HttpWebResponse)Error.Response);
+                                        Error, Error.Response as HttpWebResponse);
+                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                    {
+                                        LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x64", Error.InnerException.Message, false, true);
+                                    }
                                 }
                                 catch (Exception Error)
                                 {
                                     LogToFileAddons.OpenLog("REDISTRIBUTABLE", string.Empty, Error, string.Empty, true);
+                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                    {
+                                        LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x64", Error.InnerException.Message, false, true);
+                                    }
                                 }
                                 finally
                                 {
@@ -282,11 +330,21 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                     {
                                         Client.Dispose();
                                     }
+
+                                    GC.Collect();
                                 }
                             }
                             catch (Exception Error)
                             {
                                 LogToFileAddons.OpenLog("REDISTRIBUTABLE x64", string.Empty, Error, string.Empty, true);
+                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x64", Error.InnerException.Message, false, true);
+                                }
+                            }
+                            finally
+                            {
+                                GC.Collect();
                             }
 
                             if (File.Exists("VC_redist.x64.exe"))
@@ -300,11 +358,16 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                         FileName = "VC_redist.x64.exe"
                                     });
 
-                                    proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
+                                    if (proc != null)
+                                    {
+                                        proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
+                                    }
 
                                     if (proc == null)
                                     {
                                         Error_Free = false;
+                                        LogToFileAddons.Parent_Log_Screen(5, Translations.Database("Redistributable_VC_P6"),
+                                            Translations.Database("Redistributable_VC_P5"));
                                         MessageBox.Show(Translations.Database("Redistributable_VC_P6"),
                                             Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                             MessageBoxIcon.Error);
@@ -320,7 +383,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                         if (proc.ExitCode != 0)
                                         {
                                             Error_Free = false;
-                                            Log.Error("REDISTRIBUTABLE INSTALLER [EXIT CODE]: " + proc.ExitCode.ToString() +
+                                            LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE INSTALLER [EXIT CODE]", proc.ExitCode.ToString() +
                                                 " HEX: (0x" + proc.ExitCode.ToString("X") + ")");
                                             MessageBox.Show(Translations.Database("Redistributable_VC_P7") + " " + proc.ExitCode.ToString() +
                                                 " (0x" + proc.ExitCode.ToString("X") + ")" +
@@ -334,16 +397,26 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                 }
                                 catch (Exception Error)
                                 {
-                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE x64 Process", string.Empty, Error, string.Empty, true);
+                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE x64 INSTALLER", string.Empty, Error, string.Empty, true);
+                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                    {
+                                        LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x64 INSTALLER", Error.InnerException.Message, false, true);
+                                    }
                                     Error_Free = false;
                                     MessageBox.Show(Translations.Database("Redistributable_VC_P9"),
                                         Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                         MessageBoxIcon.Error);
                                 }
+                                finally
+                                {
+                                    GC.Collect();
+                                }
                             }
                             else
                             {
                                 Error_Free = false;
+                                LogToFileAddons.Parent_Log_Screen(5, Translations.Database("Redistributable_VC_P10"),
+                                    Translations.Database("Redistributable_VC_P5"));
                                 MessageBox.Show(Translations.Database("Redistributable_VC_P10"),
                                     Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                         MessageBoxIcon.Error);
@@ -352,6 +425,8 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                         else
                         {
                             Error_Free = false;
+                            LogToFileAddons.Parent_Log_Screen(5, Translations.Database("Redistributable_VC_P8"),
+                                    Translations.Database("Redistributable_VC_P5"));
                             MessageBox.Show(Translations.Database("Redistributable_VC_P8"),
                                 Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
@@ -359,14 +434,14 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                     }
                     else
                     {
-                        Log.Info("REDISTRIBUTABLE: 64-bit 2015-2019 VC++ Redistributable Package is Installed");
+                        LogToFileAddons.Parent_Log_Screen(1, "REDISTRIBUTABLE", "64-bit 2015-2019 VC++ Redistributable Package is Installed");
                     }
                 }
 
-                Log.Completed("REDISTRIBUTABLE: Done");
+                LogToFileAddons.Parent_Log_Screen(3, "REDISTRIBUTABLE", "Done");
             }
 
-            Log.Info("LIST: Moved to Function");
+            LogToFileAddons.Parent_Log_Screen(1, "LIST", "Moved to Function");
             /* (Start Process) Sets Up Langauge List */
             LanguageListUpdater.GetList();
         }

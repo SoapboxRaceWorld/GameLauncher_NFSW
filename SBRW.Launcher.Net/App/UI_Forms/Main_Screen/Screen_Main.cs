@@ -71,7 +71,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public static Screen_Main? Screen_Instance { get; set; }
         public static Panel? Screen_Panel_Forms { get; set; }
         private bool Launcher_Restart { get; set; }
-        private Point Mouse_Down_Point { get; set; } = Point.Empty;
         private bool LoginEnabled { get; set; }
         private bool ServerEnabled { get; set; }
         private bool Builtinserver { get; set; }
@@ -112,25 +111,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public static string Custom_SBRW_Pack { get { return Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack"); } }
         public static BackgroundWorker? BackgroundWorker_One { get; set; }
 
-        public void Move_Window_Mouse_Down(object sender, MouseEventArgs e)
-        {
-            if (e.Y <= 90) Mouse_Down_Point = new Point(e.X, e.Y);
-        }
 
-        public void Move_Window_Mouse_Up(object sender, MouseEventArgs e)
-        {
-            Mouse_Down_Point = Point.Empty;
-            Opacity = 1;
-        }
-
-        public void Move_Window_Mouse_Move(object sender, MouseEventArgs e)
-        {
-            if (Mouse_Down_Point.IsEmpty) { return; }
-            Form Main_Local_Window = this as Form;
-            Main_Local_Window.Location = new Point(Main_Local_Window.Location.X + (e.X - Mouse_Down_Point.X), Main_Local_Window.Location.Y + (e.Y - Mouse_Down_Point.Y));
-            InformationCache.ParentScreenLocation = new Point(Main_Local_Window.Location.X + (e.X - Mouse_Down_Point.X), Main_Local_Window.Location.Y + (e.Y - Mouse_Down_Point.Y));
-            Opacity = 0.9;
-        }
 
         private void ButtonClose_MouseDown(object sender, EventArgs e)
         {

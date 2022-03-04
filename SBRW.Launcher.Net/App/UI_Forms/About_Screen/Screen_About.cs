@@ -146,20 +146,20 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
                     }
                     PatchNoteBlocks.Add(block);
                 }
+
+                Label[] PatchTitleObjects = { PatchTitle1, PatchTitle2, PatchTitle3 };
+                Label[] PatchTextObjects = { PatchText1, PatchText2, PatchText3 };
+
+                for (int i = 0; i < PatchNoteBlocks.Count; i++)
+                {
+                    PatchTitleObjects[i].Text = PatchNoteBlocks[i].Title;
+                    PatchTextObjects[i].Text = PatchNoteBlocks[i].Text;
+                }
             }
             catch
             {
                 PatchContainerPanel.Visible = false;
                 MessageBox.Show("The launcher was unable to retrieve 'About' info from the server!");
-            }
-
-            Label[] PatchTitleObjects = { PatchTitle1, PatchTitle2, PatchTitle3 };
-            Label[] PatchTextObjects = { PatchText1, PatchText2, PatchText3 };
-
-            for (int i = 0; i < PatchNoteBlocks.Count; i++)
-            {
-                PatchTitleObjects[i].Text = PatchNoteBlocks[i].Title;
-                PatchTextObjects[i].Text = PatchNoteBlocks[i].Text;
             }
         }
 
