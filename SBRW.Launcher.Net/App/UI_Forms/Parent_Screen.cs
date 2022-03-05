@@ -28,10 +28,12 @@ using SBRW.Launcher.Core.Required.Certificate;
 using SBRW.Launcher.Core.Required.System.Windows_;
 using SBRW.Launcher.Core.Theme;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -45,6 +47,11 @@ namespace SBRW.Launcher.App.UI_Forms
         public static Panel? Screen_Panel_Forms { get; set; }
         public static TextBox? Screen_TextBox_LiveLog { get; set; }
         private static int Clock_Tick_Count { get; set; }
+        #endregion
+
+        #region Screen Login Variables
+        public static BackgroundWorker? BackgroundWorker_One { get; set; }
+        public static bool Launcher_Restart { get; set; }
         #endregion
 
         #region Parent Screen Load and Shown
@@ -972,6 +979,111 @@ namespace SBRW.Launcher.App.UI_Forms
         }
         #endregion
 
+        #region App Close Functions
+        private void ClosingTasks()
+        {
+            Save_Settings.Save();
+            Save_Account.Save();
+
+            try
+            {
+                if (Screen_Main.LZMA_Downloader != null)
+                {
+                    Screen_Main.LZMA_Downloader.Stop();
+                }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("CDN DOWNLOADER [LZMA]", string.Empty, Error, string.Empty, true);
+            }
+
+            try
+            {
+                if (Screen_Main.Pack_SBRW_Unpacker != null)
+                {
+                    Screen_Main.Pack_SBRW_Unpacker.Cancel = true;
+                }
+
+                if (Screen_Main.Pack_SBRW_Downloader != null)
+                {
+                    Screen_Main.Pack_SBRW_Downloader.Cancel = true;
+                }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("CDN DOWNLOADER", string.Empty, Error, string.Empty, true);
+            }
+
+            try
+            {
+                if (BackgroundWorker_One != null)
+                {
+                    if (BackgroundWorker_One.IsBusy)
+                    {
+                        BackgroundWorker_One.CancelAsync();
+                    }
+                }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("BackgroundWorker_One", string.Empty, Error, string.Empty, true);
+            }
+
+            try
+            {
+                if (FunctionStatus.LauncherBattlePass)
+                {
+                    Process.GetProcessById(Screen_Main.NfswPid).Kill();
+                }
+                else
+                {
+                    Process[] allOfThem = Process.GetProcessesByName("nfsw");
+
+                    if (allOfThem != null && allOfThem.Any())
+                    {
+                        foreach (var oneProcess in allOfThem)
+                        {
+                            Process.GetProcessById(oneProcess.Id).Kill();
+                        }
+                    }
+                }
+            }
+            catch { }
+
+            if (Presence_Launcher.Running())
+            {
+                Presence_Launcher.Stop("Close");
+            }
+
+            if (Proxy_Settings.Running())
+            {
+                Proxy_Server.Instance.Stop("Main Screen");
+            }
+
+            if (File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, Locations.NameModLinks)) && !FunctionStatus.LauncherBattlePass)
+            {
+                ModNetHandler.CleanLinks(Save_Settings.Live_Data.Game_Path);
+            }
+        }
+
+        public void Button_Close_Click(object? sender, EventArgs? e)
+        {
+            ClosingTasks();
+
+            /* Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well) 
+             * If the Boolen is true it will restart the Application
+             */
+            if (Launcher_Restart)
+            {
+                Application.Restart();
+            }
+            else
+            {
+                try { this.Close(); } catch { }
+            }
+        }
+        #endregion
+
         public Parent_Screen()
         {
             InitializeComponent();
@@ -998,10 +1110,12 @@ namespace SBRW.Launcher.App.UI_Forms
             /* Set Window Name              /
             /*******************************/
 
+            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             Text = "SBRW Launcher: v" + Application.ProductVersion;
 
             this.Closing += (x, y) =>
             {
+                ClosingTasks();
                 GC.Collect();
             };
             #endregion

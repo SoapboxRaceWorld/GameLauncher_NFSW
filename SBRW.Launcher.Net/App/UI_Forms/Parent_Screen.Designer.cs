@@ -76,10 +76,10 @@
             this.TextBox_Live_Log.Location = new System.Drawing.Point(6, 17);
             this.TextBox_Live_Log.Multiline = true;
             this.TextBox_Live_Log.Name = "TextBox_Live_Log";
+            this.TextBox_Live_Log.ReadOnly = true;
             this.TextBox_Live_Log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.TextBox_Live_Log.Size = new System.Drawing.Size(500, 135);
             this.TextBox_Live_Log.TabIndex = 35;
-            this.TextBox_Live_Log.Text = "This is a Test (Line 0)\r\nThis is a Test (Line 1)";
             // 
             // Panel_Splash_Screen
             // 

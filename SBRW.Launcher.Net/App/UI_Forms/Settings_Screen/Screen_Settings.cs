@@ -780,10 +780,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             if (Save_Settings.Live_Data.Launcher_LZMA_Downloader != (CheckBox_LZMA_Downloader.Checked ? "1" : "0"))
             {
                 Save_Settings.Live_Data.Launcher_LZMA_Downloader = CheckBox_LZMA_Downloader.Checked ? "1" : "0";
-                if (Screen_Main.BackgroundWorker_One != null)
+                if (Parent_Screen.BackgroundWorker_One != null)
                 {
-                    Screen_Main.BackgroundWorker_One.CancelAsync();
-                    Screen_Main.BackgroundWorker_One.RunWorkerAsync();
+                    Parent_Screen.BackgroundWorker_One.CancelAsync();
+                    Parent_Screen.BackgroundWorker_One.RunWorkerAsync();
                 }
             }
 

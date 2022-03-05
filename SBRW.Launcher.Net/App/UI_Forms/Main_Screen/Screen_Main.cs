@@ -70,7 +70,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
     {
         public static Screen_Main? Screen_Instance { get; set; }
         public static Panel? Screen_Panel_Forms { get; set; }
-        private bool Launcher_Restart { get; set; }
         private bool LoginEnabled { get; set; }
         private bool ServerEnabled { get; set; }
         private bool Builtinserver { get; set; }
@@ -82,16 +81,16 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public static string GetTempName { get; set; } = Path.GetTempFileName();
 
         private static int LastSelectedServerId { get; set; }
-        private static int NfswPid { get; set; }
-        private static Thread? Nfswstarted { get; set; }
+        public static int NfswPid { get; set; }
+        public static Thread? Nfswstarted { get; set; }
         private static bool StillCheckingLastServer { get; set; }
         private static bool ServerChangeTriggered { get; set; }
 
         private static DateTime DownloadStartTime { get; set; }
         
-        private static Download_LZMA_Data? LZMA_Downloader { get; set; }
-        private static Download_Queue? Pack_SBRW_Downloader { get; set; }
-        private static Download_Extract? Pack_SBRW_Unpacker { get; set; }
+        public static Download_LZMA_Data? LZMA_Downloader { get; set; }
+        public static Download_Queue? Pack_SBRW_Downloader { get; set; }
+        public static Download_Extract? Pack_SBRW_Unpacker { get; set; }
         private static int Pack_SBRW_Downloader_Time_Span { get; set; }
 
 
@@ -109,9 +108,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public static int CurrentModFileCount { get; set; }
         public static int TotalModFileCount { get; set; }
         public static string Custom_SBRW_Pack { get { return Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack"); } }
-        public static BackgroundWorker? BackgroundWorker_One { get; set; }
-
-
 
         private void ButtonClose_MouseDown(object sender, EventArgs e)
         {
@@ -529,111 +525,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             LoginToken = string.Empty;
         }
 
-        private void ClosingTasks()
-        {
-            Save_Settings.Save();
-            Save_Account.Save();
-
-            try
-            {
-                if (LZMA_Downloader != null)
-                {
-                    LZMA_Downloader.Stop();
-                }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("CDN DOWNLOADER [LZMA]", string.Empty, Error, string.Empty, true);
-            }
-
-            try
-            {
-                if (Pack_SBRW_Unpacker != null)
-                {
-                    Pack_SBRW_Unpacker.Cancel = true;
-                }
-
-                if (Pack_SBRW_Downloader != null)
-                {
-                    Pack_SBRW_Downloader.Cancel = true;
-                }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("CDN DOWNLOADER", string.Empty, Error, string.Empty, true);
-            }
-
-            try
-            {
-                if (BackgroundWorker_One != null)
-                {
-                    if (BackgroundWorker_One.IsBusy)
-                    {
-                        BackgroundWorker_One.CancelAsync();
-                    }
-                }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("BackgroundWorker_One", string.Empty, Error, string.Empty, true);
-            }
-
-            try
-            {
-                if (FunctionStatus.LauncherBattlePass)
-                {
-                    Process.GetProcessById(NfswPid).Kill();
-                }
-                else
-                {
-                    Process[] allOfThem = Process.GetProcessesByName("nfsw");
-
-                    if (allOfThem != null && allOfThem.Any())
-                    {
-                        foreach (var oneProcess in allOfThem)
-                        {
-                            Process.GetProcessById(oneProcess.Id).Kill();
-                        }
-                    }
-                }
-            }
-            catch { }
-
-            if (Presence_Launcher.Running())
-            {
-                Presence_Launcher.Stop("Close");
-            }
-
-            if (Proxy_Settings.Running())
-            {
-                Proxy_Server.Instance.Stop("Main Screen");
-            }
-
-            try { NotifyIcon_Notification.Dispose(); } catch { }
-
-            if (File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, Locations.NameModLinks)) && !FunctionStatus.LauncherBattlePass)
-            {
-                ModNetHandler.CleanLinks(Save_Settings.Live_Data.Game_Path);
-            }
-        }
-
-        private void Button_Close_Click(object? sender, EventArgs? e)
-        {
-            ClosingTasks();
-
-            /* Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well) 
-             * If the Boolen is true it will restart the Application
-             */
-            if (Launcher_Restart)
-            {
-                Application.Restart();
-            }
-            else
-            {
-                try { this.Close(); } catch { }
-            }
-        }
-
         /* SETTINGS PAGE LAYOUT */
         private void SettingsButton_Click(object sender, EventArgs e)
         {
@@ -864,7 +755,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         ContextMenu = new ContextMenu();
                         ContextMenu.MenuItems.Add(new MenuItem("Running Out of Time", (b, n) => { Process.Start("https://youtu.be/vq9-bmoI-RI"); }));
                         ContextMenu.MenuItems.Add("-");
-                        ContextMenu.MenuItems.Add(new MenuItem("Close Game and Launcher", Button_Close_Click));
+                        if (Parent_Screen.Screen_Instance != null)
+                        {
+                            ContextMenu.MenuItems.Add(new MenuItem("Close Game and Launcher", Parent_Screen.Screen_Instance.Button_Close_Click));
+                        }
 #endif
                         Update();
                         Refresh();
@@ -956,7 +850,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (exitCode == 0 && !Launcher_Value.Game_In_Event_Bug && AC_Core.Stop_Check())
                     {
-                        Button_Close_Click(null, null);
+                        if (Parent_Screen.Screen_Instance != null)
+                        {
+                            Parent_Screen.Screen_Instance.Button_Close_Click(null, null);
+                        }
                     }
                     else if (AC_Core.Stop_Check())
                     {
@@ -991,9 +888,13 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                             if (restartApp == DialogResult.Yes)
                             {
-                                Launcher_Restart = true;
+                                Parent_Screen.Launcher_Restart = true;
                             }
-                            this.Button_Close_Click(null, null);
+
+                            if (Parent_Screen.Screen_Instance != null)
+                            {
+                                Parent_Screen.Screen_Instance.Button_Close_Click(null, null);
+                            }
                         }));
                     }
                 };
@@ -3130,13 +3031,13 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 try
                 {
                     Log.Core("CORE: 'GetServerInformation' from all Servers in Server List and Download Selected Server Banners");
-                    BackgroundWorker_One = new BackgroundWorker
+                    Parent_Screen.BackgroundWorker_One = new BackgroundWorker
                     {
                         WorkerSupportsCancellation = true,
                         WorkerReportsProgress = true
                     };
-                    BackgroundWorker_One.DoWork += new DoWorkEventHandler(BackgroundWorker_One_DoWork);
-                    BackgroundWorker_One.RunWorkerAsync();
+                    Parent_Screen.BackgroundWorker_One.DoWork += new DoWorkEventHandler(BackgroundWorker_One_DoWork);
+                    Parent_Screen.BackgroundWorker_One.RunWorkerAsync();
                 }
                 catch (Exception Error)
                 {
@@ -3172,7 +3073,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     ContextMenu.MenuItems.Add(new MenuItem("Obsolete", (N, O) => { Process.Start("https://www.youtube.com/watch?v=LutDfASARmE"); }));
                 }
                 ContextMenu.MenuItems.Add("-");
-                ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", Button_Close_Click));
+                if (Parent_Screen.Screen_Instance != null)
+                {
+                    ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", Parent_Screen.Screen_Instance.Button_Close_Click));
+                }
 
                 NotifyIcon_Notification.ContextMenu = ContextMenu;
                 ContextMenu = null;
@@ -3324,7 +3228,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Button_Close.MouseLeave += new EventHandler(ButtonClose_MouseLeaveANDMouseUp);
             Button_Close.MouseUp += new MouseEventHandler(ButtonClose_MouseLeaveANDMouseUp);
             Button_Close.MouseDown += new MouseEventHandler(ButtonClose_MouseDown);
-            Button_Close.Click += new EventHandler(Button_Close_Click);
+            if (Parent_Screen.Screen_Instance != null)
+            {
+                Button_Close.Click += new EventHandler(Parent_Screen.Screen_Instance.Button_Close_Click);
+            }
 
             Button_Settings.MouseEnter += new EventHandler(ButtonSettings_MouseEnter);
             Button_Settings.MouseLeave += new EventHandler(ButtonSettings_MouseLeaveANDMouseUp);
@@ -3536,19 +3443,17 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Screen_Panel_Forms.Controls.Clear();
                 Screen_Panel_Forms.Visible = false;
             }
-            
-            Text = "SBRW Launcher: v" + Application.ProductVersion;
+
+            if (Parent_Screen.Screen_Instance != null)
+            {
+                Parent_Screen.Screen_Instance.Text = "SBRW Launcher: v" + Application.ProductVersion;
+            }
         }
 
         public Screen_Main()
         {
             InitializeComponent();
-            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             Set_Visuals();
-            this.Closing += (x, y) =>
-            {
-                ClosingTasks();
-            };
             Screen_Instance = this;
             Screen_Panel_Forms = Panel_Form_Screens;
         }
