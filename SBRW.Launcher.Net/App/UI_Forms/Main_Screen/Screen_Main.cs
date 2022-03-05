@@ -2836,7 +2836,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 NotifyIcon_Notification.ShowBalloonTip(5000);
                             }
                         };
-                        Pack_SBRW_Unpacker.Custom_Unpack(D_Live_Events.Download_Location ?? Path.Combine(Save_Settings.Live_Data.Game_Path, ".Launcher", "GameFiles.sbrwpack"), Save_Settings.Live_Data.Game_Path);
+                        Pack_SBRW_Unpacker.Custom_Unpack(D_Live_Events.Download_Location ?? Path.Combine(Save_Settings.Live_Data.Game_Path, ".Launcher", "Downloads", "GameFiles.sbrwpack"), Save_Settings.Live_Data.Game_Path);
                     }
                     else
                     {
