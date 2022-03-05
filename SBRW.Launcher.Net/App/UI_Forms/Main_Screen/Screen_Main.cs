@@ -2845,7 +2845,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
             };
             /* Main Note: Current Revision File Size (in long) is: 3862102244 */
-            Pack_SBRW_Downloader.Download(Save_Settings.Live_Data.Launcher_CDN, Save_Settings.Live_Data.Game_Path, 3862102244);
+            Pack_SBRW_Downloader.Download(Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack", Save_Settings.Live_Data.Game_Path, 3862102244);
         }
         #endregion
 
