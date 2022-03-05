@@ -243,7 +243,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About this SBRW Launcher";
-            this.Load += new System.EventHandler(this.PatchNotes_Load);
             this.PatchContainerPanel.ResumeLayout(false);
             this.PatchPanel2.ResumeLayout(false);
             this.PatchPanel1.ResumeLayout(false);

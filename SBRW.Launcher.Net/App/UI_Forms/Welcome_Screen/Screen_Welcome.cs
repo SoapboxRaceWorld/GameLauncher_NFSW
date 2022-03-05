@@ -1,5 +1,6 @@
 ﻿using SBRW.Launcher.App.Classes.LauncherCore.APICheckers;
 using SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite;
+using SBRW.Launcher.App.Classes.LauncherCore.Global;
 using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.LauncherCore.Support;
@@ -144,15 +145,10 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             ComboBox_Game_Language.SelectedIndexChanged += new EventHandler(GameLangSource_SelectedIndexChanged);
 
             Load += new EventHandler(WelcomeScreen_Load);
+            Shown += new EventHandler(WelcomeScreen_Shown);
             Button_Save.Click += new EventHandler(Save_Click);
             Button_API_Bypass.Click += new EventHandler(APIErrorButton_Click);
             Button_Save.DialogResult = DialogResult.OK;
-
-            Shown += (x, y) =>
-            {
-                Application.OpenForms[this.Name].Activate();
-                this.BringToFront();
-            };
         }
 
         private void CDNSource_SelectedIndexChanged(object sender, EventArgs e)
@@ -221,6 +217,13 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
         {
             SettingsFormElements(false);
             APIErrorFormElements(false);
+        }
+
+        private void WelcomeScreen_Shown(object sender, EventArgs e)
+        {
+            Application.OpenForms[this.Name].Activate();
+            this.BringToFront();
+
             CheckListStatus();
 
             /********************************/
@@ -344,7 +347,7 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
 
                 if (!string.IsNullOrWhiteSpace(cdnListText) && sender != null)
                 {
-                    Font font = (sender as ComboBox).Font;
+                    Font font = ((ComboBox)sender).Font;
                     Brush backgroundColor;
                     Brush textColor;
 
@@ -396,7 +399,7 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
 
                 if (!string.IsNullOrWhiteSpace(langListText) && sender != null)
                 {
-                    Font font = (sender as ComboBox).Font;
+                    Font font = ((ComboBox)sender).Font;
                     Brush backgroundColor;
                     Brush textColor;
 

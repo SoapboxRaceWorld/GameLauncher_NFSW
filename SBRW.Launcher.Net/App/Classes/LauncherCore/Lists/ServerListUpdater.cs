@@ -276,7 +276,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
          *  if so use that, otherwise it will see if the ServerList has provide one
          *  if not then it will see if its a custom server, which will provide "Custom"
          *  otherwise it will be "uknown" **/
-        public static string ServerName(string State)
+        public static string ServerName(string State, string FailSafe_Server_Name = "", Json_Server_Info? Server_Json_Data = null)
         {
             try
             {
@@ -300,14 +300,18 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                         case "Settings":
                             return "The Selected Server";
                         case "Select Server":
-                            if (Screen_Custom_Server.ServerJsonData != null &&
-                                !string.IsNullOrWhiteSpace(Screen_Custom_Server.ServerJsonData.Server_Name))
+                            if (Server_Json_Data != null &&
+                                !string.IsNullOrWhiteSpace(Server_Json_Data.Server_Name))
                             {
-                                return Screen_Custom_Server.ServerJsonData.Server_Name;
+                                return Server_Json_Data.Server_Name;
+                            }
+                            else if (!string.IsNullOrWhiteSpace(FailSafe_Server_Name))
+                            {
+                                return FailSafe_Server_Name;
                             }
                             else
                             {
-                                return Screen_Custom_Server.ServerName;
+                                return "Unknown";
                             }
                         default:
                             return "Custom";

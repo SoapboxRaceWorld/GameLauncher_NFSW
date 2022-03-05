@@ -32,7 +32,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
     {
         private static bool IsVerifyHashOpen { get; set; }
         /* VerifyHash */
-        public string[][] ScannedHashes { get; set; }
+        public string[][] ScannedHashes { get; set; } = new string[0][];
         public int FilesToScan { get; set; }
         public int BadFiles { get; set; }
         public int TotalFilesScanned { get; set; }

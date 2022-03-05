@@ -852,7 +852,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     {
                         if (Parent_Screen.Screen_Instance != null)
                         {
-                            Parent_Screen.Screen_Instance.Button_Close_Click(null, null);
+                            Parent_Screen.Screen_Instance.Button_Close_Click(new object(), new EventArgs());
                         }
                     }
                     else if (AC_Core.Stop_Check())
@@ -893,7 +893,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                             if (Parent_Screen.Screen_Instance != null)
                             {
-                                Parent_Screen.Screen_Instance.Button_Close_Click(null, null);
+                                Parent_Screen.Screen_Instance.Button_Close_Click(new object(), new EventArgs());
                             }
                         }));
                     }
@@ -1283,7 +1283,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             ServerModInfo = string.Empty;
 
                             /* Set and Get for RemoteRPC Files */
+#pragma warning disable CS8602 // Null Safe Check Done Before This Section
                             Uri URLCall_A = new Uri(json2.basePath + "/cars.json");
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
                             ServicePointManager.FindServicePoint(URLCall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var CarsJson = new WebClient
@@ -1443,6 +1445,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     {
                                         string name = Path.GetFileName(file);
 
+#pragma warning disable CS8602 // Null Safe Check Done Before This Section
                                         if (json3.entries.All(en => en.Name != name))
                                         {
                                             try
@@ -1455,6 +1458,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                                 LogToFileAddons.OpenLog("SERVER MOD CACHE", string.Empty, Error, string.Empty, true);
                                             }
                                         }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                                     }
 
                                     /* (OLD-FILENAME.mods != NEW-FILENAME.mods)
@@ -1465,6 +1469,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                      */
                                     int ExtractedServerFolderRunTime = 0;
 
+#pragma warning disable CS8602 // Null Safe Check Done Before This Section
                                     foreach (ServerModFileEntry modfile in json3.entries)
                                     {
                                         string ModCachedFile = Path.Combine(ModFolderCache, modfile.Name);
@@ -1505,6 +1510,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                         Application.DoEvents();
                                     }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
                                     if (ModFilesDownloadUrls.Count != 0)
                                     {
@@ -1989,7 +1995,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Button_Login.Enabled = true;
                             Button_Register.Enabled = true;
                             Launcher_Value.Launcher_Select_Server_Category = ((Json_List_Server)ComboBox_Server_List.SelectedItem).Category ?? string.Empty;
-                            Session_Timer.Remaining = (Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0) ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 2 * 60 * 60;
+                            Session_Timer.Remaining = ((Launcher_Value.Launcher_Select_Server_JSON != null) && 
+                            Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0) ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 2 * 60 * 60;
 
                             if (Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "DEV" ||
                             Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "OFFLINE")
@@ -2282,10 +2289,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                             FunctionStatus.IsVerifyHashDisabled = true;
 
-                            if (Screen_Instance != null)
+                            if (Parent_Screen.Screen_Instance != null)
                             {
-                                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
-                                Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
+                                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
+                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
                             }
                         }
                         else
@@ -2327,9 +2334,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             ProgressBar_Extracting.SafeInvokeAction(() =>
             ProgressBar_Extracting.Width = 0, this);
 
-            if (Screen_Instance != null)
+            if (Parent_Screen.Screen_Instance != null)
             {
-                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
+                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
             }
 
             string GameExePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe");
@@ -2349,10 +2356,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Failsafe CDN Detected".ToUpper(), this);
                     Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Please Choose a CDN from Settings Screen".ToUpper(), this);
 
-                    if (Screen_Instance != null)
+                    if (Parent_Screen.Screen_Instance != null)
                     {
-                        Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
-                        Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
+                        Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
+                        Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
                     }
                 }
                 /* Use Local Packed Archive for Install Source - DavidCarbon */
@@ -2396,9 +2403,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             ProgressBar_Extracting.SafeInvokeAction(() =>
             ProgressBar_Extracting.Width = 0, this);
 
-            if (Screen_Instance != null)
+            if (Parent_Screen.Screen_Instance != null)
             {
-                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
+                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
             }
 
             string SpecificTracksFilePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Tracks", "STREAML5RA_98.BUN");
@@ -2431,9 +2438,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 ProgressBar_Extracting.SafeInvokeAction(() =>
                 ProgressBar_Extracting.Width = 0, this);
 
-                if (Screen_Instance != null)
+                if (Parent_Screen.Screen_Instance != null)
                 {
-                    Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
+                    Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
                 }
 
                 try
@@ -2536,16 +2543,16 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", (int)(100 * downloadCurrent / compressedLength)));
 
-                if (Screen_Instance != null)
+                if (Parent_Screen.Screen_Instance != null)
                 {
-                    Taskbar_Progress.SetValue(Screen_Instance.Handle, (int)(100 * downloadCurrent / compressedLength), 100);
+                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, (int)(100 * downloadCurrent / compressedLength), 100);
                 }
             }
             catch
             {
-                if (Screen_Instance != null)
+                if (Parent_Screen.Screen_Instance != null)
                 {
-                    Taskbar_Progress.SetValue(Screen_Instance.Handle, 0, 100);
+                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 0, 100);
                 }
 
                 ProgressBar_Preload.SafeInvokeAction(() =>
@@ -2555,9 +2562,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }, this);
             }
 
-            if (Screen_Instance != null)
+            if (Parent_Screen.Screen_Instance != null)
             {
-                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
             }
         }
 
@@ -2589,10 +2596,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             EnablePlayButton();
 
-            if (Screen_Instance != null)
+            if (Parent_Screen.Screen_Instance != null)
             {
-                Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
-                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
+                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
             }
         }
 
@@ -2626,10 +2633,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             FunctionStatus.IsVerifyHashDisabled = true;
 
-            if (Screen_Instance != null)
+            if (Parent_Screen.Screen_Instance != null)
             {
-                Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
-                Taskbar_Progress.SetState(Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Error);
+                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
+                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Error);
             }
             
             if (Error != null)
@@ -2734,9 +2741,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Pack_SBRW_Downloader_Time_Span = Time_Clock.Seconds;
                     }
 
-                    if (Screen_Instance != null)
+                    if (Parent_Screen.Screen_Instance != null)
                     {
-                        Taskbar_Progress.SetValue(Screen_Instance.Handle, (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total), 100);
+                        Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total), 100);
                     }
 
                     Label_Download_Information.SafeInvokeAction(() =>
@@ -2750,9 +2757,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 if (D_Live_Events.Complete)
                 {
-                    if (Screen_Instance != null)
+                    if (Parent_Screen.Screen_Instance != null)
                     {
-                        Taskbar_Progress.SetValue(Screen_Instance.Handle, 100, 100);
+                        Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
                     }
 
                     ProgressBar_Preload.SafeInvokeAction(() =>
@@ -2794,15 +2801,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                 Presence_Launcher.Status("Unpack Game Files", string.Format("Unpacking Game: {0}%", U_Live_Events.Extract_Percentage));
 
-                                if (Screen_Instance != null)
+                                if (Parent_Screen.Screen_Instance != null)
                                 {
-                                    Taskbar_Progress.SetValue(Screen_Instance.Handle, U_Live_Events.Extract_Percentage, 100);
+                                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, U_Live_Events.Extract_Percentage, 100);
                                 }
 
                                 Label_Download_Information_Support.SafeInvokeAction(() =>
                                 Label_Download_Information_Support.Text = "[" + U_Live_Events.File_Current + " / " + U_Live_Events.File_Total + "]", this);
 
-                                if (!string.IsNullOrWhiteSpace(U_Live_Events.File_Current_Name))
+                                if ((U_Live_Events.File_Current_Name != null) && !string.IsNullOrWhiteSpace(U_Live_Events.File_Current_Name))
                                 {
                                     Label_Download_Information.SafeInvokeAction(() =>
                                     Label_Download_Information.Text = ("Unpacking " + U_Live_Events.File_Current_Name.Replace(Pack_SBRW_Unpacker.File_Extension_Replacement, string.Empty)).ToUpper(), this);
@@ -2853,10 +2860,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private void MainScreen_Load(object sender, EventArgs e)
         {
             Log.Visuals("CORE: Loading Main Screen");
-            FunctionStatus.CenterScreen(this);
             Application.OpenForms[this.Name].Activate();
-            Log.Core("CORE: Setting Parent Window location");
-            InformationCache.ParentScreenLocation = Location;
 
             if (!string.IsNullOrWhiteSpace(InsiderInfo.BuildNumber()))
             {
@@ -3279,6 +3283,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Picture_Logo.MouseMove += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Move);
                 Picture_Logo.MouseUp += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Up);
                 Picture_Logo.MouseDown += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Down);
+
+                Label_Debug_Language.MouseMove += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Move);
+                Label_Debug_Language.MouseUp += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Up);
+                Label_Debug_Language.MouseDown += new MouseEventHandler(Parent_Screen.Screen_Instance.Move_Window_Mouse_Down);
             }
 
             Button_Play_OR_Update.MouseEnter += new EventHandler(PlayButton_MouseEnter);
@@ -3414,25 +3422,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 GC.Collect();
             };
-
-            if (!UnixOS.Detected())
-            {
-                try
-                {
-                    string CursorFile = (!UnixOS.Detected()) ? Path.GetTempFileName() : Path.Combine(Locations.LauncherFolder, "Cursor.ani");
-                    File.WriteAllBytes(CursorFile, ExtractResource.AsByte("Core.Theme.Resources.Cursors.Cursor.ani"));
-                    Cursor mycursor = new Cursor(Cursor.Current.Handle);
-                    IntPtr colorcursorhandle = DLL_Cursor.LoadCursorFromFile(CursorFile);
-                    mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField,
-                        null, mycursor, new object[] { colorcursorhandle });
-                    Cursor = mycursor;
-                    File.Delete(CursorFile);
-                }
-                catch (Exception Error)
-                {
-                    LogToFileAddons.OpenLog("CURSOR", string.Empty, Error, string.Empty, true);
-                }
-            }
         }
 #endregion
 

@@ -535,9 +535,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
                 Screen_Security_Center.RPCStateCache = "Settings";
                 Custom_Instance_Settings.Show();
-                if (Screen_Main.Screen_Instance != null)
+                if (Parent_Screen.Screen_Instance != null)
                 {
-                    Screen_Main.Screen_Instance.Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
+                    Parent_Screen.Screen_Instance.Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
                 }
             }
             catch (Exception Error)
@@ -1164,7 +1164,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 
                 if (!string.IsNullOrWhiteSpace(cdnListText) && sender != null)
                 {
-                    Font font = (sender as ComboBox).Font;
+                    Font font = ((ComboBox)sender).Font;
                     Brush backgroundColor;
                     Brush textColor;
 
@@ -1238,7 +1238,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 
                 if (!string.IsNullOrWhiteSpace(langListText) && sender != null)
                 {
-                    Font font = (sender as ComboBox).Font;
+                    Font font = ((ComboBox)sender).Font;
                     Brush backgroundColor;
                     Brush textColor;
 
@@ -1457,12 +1457,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             /*******************************/
 
             Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
-
-            /*******************************/
-            /* Set Initial position & Icon  /
-            /*******************************/
-
-            FunctionStatus.CenterParent(this);
 
             /*******************************/
             /* Set Background Image         /
@@ -1714,9 +1708,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         {
             Screen_Panel_Forms.Controls.Clear();
             Screen_Panel_Forms.Visible = false;
-            if (Screen_Main.Screen_Instance != null)
+            if (Parent_Screen.Screen_Instance != null)
             {
-                Screen_Main.Screen_Instance.Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
+                Parent_Screen.Screen_Instance.Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
             }
         }
 
@@ -1725,7 +1719,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 #pragma warning restore CS8618
         {
             InitializeComponent();
-            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             Set_Visuals();
             this.Closing += (x, y) =>
             {

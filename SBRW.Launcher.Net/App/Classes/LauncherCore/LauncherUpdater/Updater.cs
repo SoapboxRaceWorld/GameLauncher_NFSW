@@ -19,7 +19,6 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
-using SBRW.Launcher.App.UI_Forms.Splash_Screen;
 using SBRW.Launcher.App.UI_Forms.Update_Popup_Screen;
 using SBRW.Launcher.Core.Theme;
 using System.Net.Cache;
@@ -34,10 +33,10 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
         public Label description { get; set; }
 
         public static string CurrentLauncherBuild { get; set; } = Application.ProductVersion;
-        public static string LatestLauncherBuild { get; set; }
+        public static string LatestLauncherBuild { get; set; } = string.Empty;
         public static bool UpgradeAvailable { get; set; }
         private static bool SkipAvailableUpgrade { get; set; }
-        public static string VersionJSON { get; set; }
+        public static string VersionJSON { get; set; } = string.Empty;
         private static bool ValidJSONDownload { get; set; }
         public static int Revisions { get; set; }
         public static bool UpdatePopupStoppedSplashScreen { get; set; }
@@ -174,7 +173,6 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                     if (Save_Settings.Live_Data.Update_Version_Skip != LatestLauncherBuild)
                     {
                         FunctionStatus.LoadingComplete = true;
-                        Screen_Splash.ThreadStatus("Stop");
                         UpdatePopupStoppedSplashScreen = true;
 
                         DialogResult UserResult = new Screen_Update_Popup().ShowDialog();

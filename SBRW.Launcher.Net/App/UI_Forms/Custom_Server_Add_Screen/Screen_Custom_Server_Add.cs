@@ -152,19 +152,21 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                     if (ServerInformationData == null)
                     {
                         ButtonControls(true);
-                        ServerInfomationJSON = null;
+                        ServerInfomationJSON = string.Empty;
                         return;
                     }
                     else
                     {
                         string ServerID = string.Empty;
                         Uri newModNetUri = new Uri(FormattedURL + "/Modding/GetModInfo");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                         ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var Client = new WebClient
                         {
                             Encoding = Encoding.UTF8,
                             CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                         if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                         { 
@@ -179,7 +181,8 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                         try
                         {
                             GetModInfo ServerGetInfo = JsonConvert.DeserializeObject<GetModInfo>(Client.DownloadString(newModNetUri));
-                            ServerID = string.IsNullOrWhiteSpace(ServerGetInfo.serverID) ? Result.Host : ServerGetInfo.serverID;
+                            ServerID = (ServerGetInfo != null) ? string.IsNullOrWhiteSpace(ServerGetInfo.serverID) ? 
+                                Result.Host : ServerGetInfo.serverID : Result.Host;
                         }
                         catch (Exception Error)
                         {
@@ -197,7 +200,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                         try
                         {
                             StreamReader sr = new StreamReader(Locations.LauncherCustomServers);
-                            String oldcontent = sr.ReadToEnd();
+                            string oldcontent = sr.ReadToEnd();
                             sr.Close();
 
                             if (string.IsNullOrWhiteSpace(oldcontent))
@@ -207,18 +210,21 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
 
                             var Servers = JsonConvert.DeserializeObject<List<Json_List_Server>>(oldcontent);
 
-                            Servers.Add(new Json_List_Server
+                            if (Servers != null)
                             {
-                                Name = Strings.Encode(Textbox_Server_Name.Text),
-                                IPAddress = FormattedURL,
-                                IsSpecial = false,
-                                ID = ServerID,
-                                Category = string.IsNullOrWhiteSpace(Strings.Encode(TextBox_Server_Category.Text)) ? "Custom" : Strings.Encode(TextBox_Server_Category.Text)
-                            });
+                                Servers.Add(new Json_List_Server
+                                {
+                                    Name = Strings.Encode(Textbox_Server_Name.Text),
+                                    IPAddress = FormattedURL,
+                                    IsSpecial = false,
+                                    ID = ServerID,
+                                    Category = string.IsNullOrWhiteSpace(Strings.Encode(TextBox_Server_Category.Text)) ? "Custom" : Strings.Encode(TextBox_Server_Category.Text)
+                                });
 
-                            File.WriteAllText(Locations.LauncherCustomServers, JsonConvert.SerializeObject(Servers));
+                                File.WriteAllText(Locations.LauncherCustomServers, JsonConvert.SerializeObject(Servers));
 
-                            MessageBox.Show(null, "The New server will be added on the next start of the Launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show(null, "The New server will be added on the next start of the Launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
                         }
                         catch (Exception Error)
                         {
@@ -229,14 +235,14 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                         }
                         finally
                         {
-                            if (ServerID != null)
+                            if (!string.IsNullOrWhiteSpace(ServerID))
                             {
-                                ServerID = null;
+                                ServerID = string.Empty;
                             }
 
-                            if (ServerInfomationJSON != null)
+                            if (!string.IsNullOrWhiteSpace(ServerInfomationJSON))
                             {
-                                ServerInfomationJSON = null;
+                                ServerInfomationJSON = string.Empty;
                             }
                         }
 

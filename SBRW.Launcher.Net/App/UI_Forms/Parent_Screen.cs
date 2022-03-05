@@ -34,6 +34,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -54,186 +55,182 @@ namespace SBRW.Launcher.App.UI_Forms
         public static bool Launcher_Restart { get; set; }
         #endregion
 
-        #region Parent Screen Load and Shown
-        private void Parent_Screen_Load(object sender, EventArgs e)
+        #region Dragable Form Window & Functions
+        public void Move_Window_Mouse_Down(object sender, MouseEventArgs e)
+        {
+            if (e.Y <= 90) Mouse_Down_Point = new Point(e.X, e.Y);
+        }
+
+        public void Move_Window_Mouse_Up(object sender, MouseEventArgs e)
+        {
+            Mouse_Down_Point = Point.Empty;
+            Opacity = 1;
+        }
+
+        public void Move_Window_Mouse_Move(object sender, MouseEventArgs e)
+        {
+            if (Mouse_Down_Point.IsEmpty) { return; }
+            Form Main_Local_Window = this as Form;
+            Main_Local_Window.Location = new Point(Main_Local_Window.Location.X + (e.X - Mouse_Down_Point.X), Main_Local_Window.Location.Y + (e.Y - Mouse_Down_Point.Y));
+            InformationCache.ParentScreenLocation = new Point(Main_Local_Window.Location.X + (e.X - Mouse_Down_Point.X), Main_Local_Window.Location.Y + (e.Y - Mouse_Down_Point.Y));
+            Opacity = 0.9;
+        }
+
+        public void Position_Window_Set()
         {
             FunctionStatus.CenterScreen(this);
         }
+        #endregion
 
-        private void Parent_Screen_Shown(object sender, EventArgs e)
+        #region Parent Screen Load and Shown
+        private void Parent_Screen_Load(object sender, EventArgs e)
         {
-            #region Application Start Process
             if (e != null)
             {
-                Presence_Launcher.Start("Start Up", "576154452348633108");
+                Position_Window_Set();
+            } 
+        }
 
-                if (!UnixOS.Detected())
+        #region Application Start Process
+        private void Parent_Screen_Shown(object sender, EventArgs e)
+        {
+            if (e == null)
+            {
+                return;
+            }
+
+            LogToFileAddons.Parent_Log_Screen(11, "LAUNCHER", "Set Parent Window location");
+
+            Presence_Launcher.Start("Start Up", "576154452348633108");
+
+            if (!UnixOS.Detected())
+            {
+                Presence_Launcher.Status("Start Up", "Checking .NET Framework");
+                try
                 {
-                    Presence_Launcher.Status("Start Up", "Checking .NET Framework");
-                    try
+                    /* Check if User has a compatible .NET Framework Installed */
+                    if (int.TryParse(Registry_Core.Read("Release", @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\"), out int NetFrame_Version))
                     {
-                        /* Check if User has a compatible .NET Framework Installed */
-                        if (int.TryParse(Registry_Core.Read("Release", @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\"), out int NetFrame_Version))
+                        /* For now, allow edge case of Windows 8.0 to run .NET 4.6.1 where upgrading to 8.1 is not possible */
+                        if (Product_Version.GetWindowsNumber() == 6.2 && NetFrame_Version <= 394254)
                         {
-                            /* For now, allow edge case of Windows 8.0 to run .NET 4.6.1 where upgrading to 8.1 is not possible */
-                            if (Product_Version.GetWindowsNumber() == 6.2 && NetFrame_Version <= 394254)
+                            if (MessageBox.Show(null, Translations.Database("Program_TextBox_NetFrame_P1") +
+                            " .NETFramework, Version=v4.6.1 \n\n" + Translations.Database("Program_TextBox_NetFrame_P2"),
+                            "GameLauncher.exe - " + Translations.Database("Program_TextBox_NetFrame_P3"),
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                             {
-                                if (MessageBox.Show(null, Translations.Database("Program_TextBox_NetFrame_P1") +
-                                " .NETFramework, Version=v4.6.1 \n\n" + Translations.Database("Program_TextBox_NetFrame_P2"),
-                                "GameLauncher.exe - " + Translations.Database("Program_TextBox_NetFrame_P3"),
-                                MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
-                                {
-                                    Process.Start("https://dotnet.microsoft.com/download/dotnet-framework/net461");
-                                }
+                                Process.Start("https://dotnet.microsoft.com/download/dotnet-framework/net461");
+                            }
 
-                                FunctionStatus.LauncherForceClose = true;
-                            }
-                            /* Otherwise, all other OS Versions should have 4.6.2 as a Minimum Version */
-                            else if (NetFrame_Version <= 394802)
+                            FunctionStatus.LauncherForceClose = true;
+                        }
+                        /* Otherwise, all other OS Versions should have 4.6.2 as a Minimum Version */
+                        else if (NetFrame_Version <= 394802)
+                        {
+                            if (MessageBox.Show(null, Translations.Database("Program_TextBox_NetFrame_P1") +
+                            " .NETFramework, Version=v4.6.2 \n\n" + Translations.Database("Program_TextBox_NetFrame_P2"),
+                            "GameLauncher.exe - " + Translations.Database("Program_TextBox_NetFrame_P3"),
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                             {
-                                if (MessageBox.Show(null, Translations.Database("Program_TextBox_NetFrame_P1") +
-                                " .NETFramework, Version=v4.6.2 \n\n" + Translations.Database("Program_TextBox_NetFrame_P2"),
-                                "GameLauncher.exe - " + Translations.Database("Program_TextBox_NetFrame_P3"),
-                                MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
-                                {
-                                    Process.Start("https://dotnet.microsoft.com/download/dotnet-framework");
-                                }
+                                Process.Start("https://dotnet.microsoft.com/download/dotnet-framework");
+                            }
 
-                                FunctionStatus.LauncherForceClose = true;
-                            }
-                            else
-                            {
-                                LogToFileAddons.Parent_Log_Screen(7, "NET-FRAMEWORK", "Supported Installed Version");
-                            }
+                            FunctionStatus.LauncherForceClose = true;
                         }
                         else
                         {
-                            LogToFileAddons.Parent_Log_Screen(4, "NET-FRAMEWORK", "Failed to Parse Version");
+                            LogToFileAddons.Parent_Log_Screen(7, "NET-FRAMEWORK", "Supported Installed Version");
                         }
                     }
-                    catch
+                    else
                     {
-                        FunctionStatus.LauncherForceClose = true;
-                    }
-                    finally
-                    {
-                        GC.Collect();
+                        LogToFileAddons.Parent_Log_Screen(4, "NET-FRAMEWORK", "Failed to Parse Version");
                     }
                 }
-
-                if (FunctionStatus.LauncherForceClose)
+                catch
                 {
-                    FunctionStatus.ErrorCloseLauncher("Closing From .NET Framework Check", false);
+                    FunctionStatus.LauncherForceClose = true;
                 }
-                else
+                finally
                 {
-                    Log.Start();
-                    Log_Location.RemoveLegacyLogs();
+                    GC.Collect();
+                }
+            }
 
-                    LogToFileAddons.Parent_Log_Screen(1, "CURRENT DATE", Time_Clock.GetTime("Date"));
-                    LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER MIGRATION", "Appdata and/or Roaming Folders");
-                    /* Deletes Folders that will Crash the Launcher (Cleanup Migration) */
+            if (FunctionStatus.LauncherForceClose)
+            {
+                FunctionStatus.ErrorCloseLauncher("Closing From .NET Framework Check", false);
+            }
+            else
+            {
+                Log.Start();
+                Log_Location.RemoveLegacyLogs();
+
+                LogToFileAddons.Parent_Log_Screen(1, "CURRENT DATE", Time_Clock.GetTime("Date"));
+                LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER MIGRATION", "Appdata and/or Roaming Folders");
+                /* Deletes Folders that will Crash the Launcher (Cleanup Migration) */
+                try
+                {
+                    if (!Directory.Exists(Locations.RoamingAppDataFolder_Launcher))
+                    {
+                        Directory.CreateDirectory(Locations.RoamingAppDataFolder_Launcher);
+                    }
+                    if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World")))
+                    {
+                        Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World"), true);
+                    }
+                    if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World")))
+                    {
+                        Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World"), true);
+                    }
+                    if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld")))
+                    {
+                        Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld"), true);
+                    }
+                    if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld")))
+                    {
+                        Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld"), true);
+                    }
+                    if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg")))
+                    {
+                        Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg"), true);
+                    }
+                    if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg")))
+                    {
+                        Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg"), true);
+                    }
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("LAUNCHER MIGRATION", string.Empty, Error, string.Empty, true);
+                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                    {
+                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER MIGRATION", Error.InnerException.Message, false, true);
+                    }
+                }
+                finally
+                {
+                    LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER MIGRATION", "Done");
+                    GC.Collect();
+                }
+
+                LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER XML", "If File Exists or Not");
+                Presence_Launcher.Status("Start Up", "Checking if UserSettings XML Exists");
+                /* Create Default Configuration Files (if they don't already exist) */
+                if (!File.Exists(Locations.UserSettingsXML))
+                {
                     try
                     {
-                        if (!Directory.Exists(Locations.RoamingAppDataFolder_Launcher))
+                        if (!Directory.Exists(Locations.UserSettingsFolder))
                         {
-                            Directory.CreateDirectory(Locations.RoamingAppDataFolder_Launcher);
+                            Directory.CreateDirectory(Locations.UserSettingsFolder);
                         }
-                        if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World")))
-                        {
-                            Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World"), true);
-                        }
-                        if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World")))
-                        {
-                            Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World"), true);
-                        }
-                        if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld")))
-                        {
-                            Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld"), true);
-                        }
-                        if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld")))
-                        {
-                            Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld"), true);
-                        }
-                        if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg")))
-                        {
-                            Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg"), true);
-                        }
-                        if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg")))
-                        {
-                            Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg"), true);
-                        }
+
+                        File.WriteAllBytes(Locations.UserSettingsXML, ExtractResource.AsByte("GameLauncher.Resources.UserSettings.UserSettings.xml"));
                     }
                     catch (Exception Error)
                     {
-                        LogToFileAddons.OpenLog("LAUNCHER MIGRATION", string.Empty, Error, string.Empty, true);
-                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                        {
-                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER MIGRATION", Error.InnerException.Message, false, true);
-                        }
-                    }
-                    finally
-                    {
-                        LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER MIGRATION", "Done");
-                        GC.Collect();
-                    }
-
-                    LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER XML", "If File Exists or Not");
-                    Presence_Launcher.Status("Start Up", "Checking if UserSettings XML Exists");
-                    /* Create Default Configuration Files (if they don't already exist) */
-                    if (!File.Exists(Locations.UserSettingsXML))
-                    {
-                        try
-                        {
-                            if (!Directory.Exists(Locations.UserSettingsFolder))
-                            {
-                                Directory.CreateDirectory(Locations.UserSettingsFolder);
-                            }
-
-                            File.WriteAllBytes(Locations.UserSettingsXML, ExtractResource.AsByte("GameLauncher.Resources.UserSettings.UserSettings.xml"));
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("LAUNCHER XML", string.Empty, Error, string.Empty, true);
-                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                            {
-                                LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER XML", Error.InnerException.Message, false, true);
-                            }
-                        }
-                        finally
-                        {
-                            GC.Collect();
-                        }
-                    }
-                    LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER XML", "Done");
-
-                    LogToFileAddons.Parent_Log_Screen(8, 
-                        EnableInsiderDeveloper.Allowed()? "DEV TEST " : (EnableInsiderBetaTester.Allowed()? "BETA TEST " : ""), 
-                        "GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
-
-                    LogToFileAddons.Parent_Log_Screen(2, "OS", "Detecting");
-                    Presence_Launcher.Status("Start Up", "Checking Operating System");
-                    try
-                    {
-                        if (UnixOS.Detected())
-                        {
-                            LogToFileAddons.Parent_Log_Screen(7, "Detected OS", Launcher_Value.System_OS_Name = UnixOS.FullName());
-                        }
-                        else
-                        {
-                            LogToFileAddons.Parent_Log_Screen(7, "Detected OS", Launcher_Value.System_OS_Name = Product_Version.ConvertWindowsNumberToName());
-                            LogToFileAddons.Parent_Log_Screen(7, "Windows Build", Product_Version.GetWindowsBuildNumber().ToString());
-                            LogToFileAddons.Parent_Log_Screen(7, "NT Version", Environment.OSVersion.VersionString);
-                            LogToFileAddons.Parent_Log_Screen(7, "Video Card", HardwareInfo.GPU.CardName());
-                            LogToFileAddons.Parent_Log_Screen(7, "Driver Version", HardwareInfo.GPU.DriverVersion());
-                        }
-                        LogToFileAddons.Parent_Log_Screen(3, "OS", "Detected");
-                    }
-                    catch (Exception Error)
-                    {
-                        LogToFileAddons.OpenLog("SYSTEM", string.Empty, Error, string.Empty, true);
-                        FunctionStatus.LauncherForceCloseReason = "Code: 0\n" + Translations.Database("Program_TextBox_System_Detection") + "\n" + Error.Message;
-                        FunctionStatus.LauncherForceClose = true;
+                        LogToFileAddons.OpenLog("LAUNCHER XML", string.Empty, Error, string.Empty, true);
                         if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
                         {
                             LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER XML", Error.InnerException.Message, false, true);
@@ -243,349 +240,387 @@ namespace SBRW.Launcher.App.UI_Forms
                     {
                         GC.Collect();
                     }
+                }
+                LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER XML", "Done");
 
-                    if (FunctionStatus.LauncherForceClose)
+                LogToFileAddons.Parent_Log_Screen(8,
+                    EnableInsiderDeveloper.Allowed() ? "DEV TEST " : (EnableInsiderBetaTester.Allowed() ? "BETA TEST " : ""),
+                    "GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
+
+                LogToFileAddons.Parent_Log_Screen(2, "OS", "Detecting");
+                Presence_Launcher.Status("Start Up", "Checking Operating System");
+                try
+                {
+                    if (UnixOS.Detected())
                     {
-                        FunctionStatus.ErrorCloseLauncher("Closing From Operating System Check", false);
+                        LogToFileAddons.Parent_Log_Screen(7, "Detected OS", Launcher_Value.System_OS_Name = UnixOS.FullName());
                     }
                     else
                     {
-                        /* Set Launcher Directory */
-                        LogToFileAddons.Parent_Log_Screen(2, "SETUP", "Setting Launcher Folder Directory");
-                        Directory.SetCurrentDirectory(Locations.LauncherFolder);
-                        LogToFileAddons.Parent_Log_Screen(3, "SETUP", "Current Directory now Set at -> " + Locations.LauncherFolder);
+                        LogToFileAddons.Parent_Log_Screen(7, "Detected OS", Launcher_Value.System_OS_Name = Product_Version.ConvertWindowsNumberToName());
+                        LogToFileAddons.Parent_Log_Screen(7, "Windows Build", Product_Version.GetWindowsBuildNumber().ToString());
+                        LogToFileAddons.Parent_Log_Screen(7, "NT Version", Environment.OSVersion.VersionString);
+                        LogToFileAddons.Parent_Log_Screen(7, "Video Card", HardwareInfo.GPU.CardName());
+                        LogToFileAddons.Parent_Log_Screen(7, "Driver Version", HardwareInfo.GPU.DriverVersion());
+                    }
+                    LogToFileAddons.Parent_Log_Screen(3, "OS", "Detected");
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("SYSTEM", string.Empty, Error, string.Empty, true);
+                    FunctionStatus.LauncherForceCloseReason = "Code: 0\n" + Translations.Database("Program_TextBox_System_Detection") + "\n" + Error.Message;
+                    FunctionStatus.LauncherForceClose = true;
+                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                    {
+                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER XML", Error.InnerException.Message, false, true);
+                    }
+                }
+                finally
+                {
+                    GC.Collect();
+                }
 
-                        if (!UnixOS.Detected())
+                if (FunctionStatus.LauncherForceClose)
+                {
+                    FunctionStatus.ErrorCloseLauncher("Closing From Operating System Check", false);
+                }
+                else
+                {
+                    /* Set Launcher Directory */
+                    LogToFileAddons.Parent_Log_Screen(2, "SETUP", "Setting Launcher Folder Directory");
+                    Directory.SetCurrentDirectory(Locations.LauncherFolder);
+                    LogToFileAddons.Parent_Log_Screen(3, "SETUP", "Current Directory now Set at -> " + Locations.LauncherFolder);
+
+                    if (!UnixOS.Detected())
+                    {
+                        LogToFileAddons.Parent_Log_Screen(2, "FOLDER LOCATION", "Checking Launcher Folder Directory");
+                        Presence_Launcher.Status("Start Up", "Checking Launcher Folder Locations");
+
+                        switch (FunctionStatus.CheckFolder(Locations.LauncherFolder))
                         {
-                            LogToFileAddons.Parent_Log_Screen(2, "FOLDER LOCATION", "Checking Launcher Folder Directory");
-                            Presence_Launcher.Status("Start Up", "Checking Launcher Folder Locations");
+                            case FolderType.IsTempFolder:
+                            case FolderType.IsUsersFolders:
+                            case FolderType.IsProgramFilesFolder:
+                            case FolderType.IsWindowsFolder:
+                            case FolderType.IsRootFolder:
+                                string Constructed_Msg = string.Empty;
 
-                            switch (FunctionStatus.CheckFolder(Locations.LauncherFolder))
-                            {
-                                case FolderType.IsTempFolder:
-                                case FolderType.IsUsersFolders:
-                                case FolderType.IsProgramFilesFolder:
-                                case FolderType.IsWindowsFolder:
-                                case FolderType.IsRootFolder:
-                                    string Constructed_Msg = string.Empty;
+                                Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher") + "\n\n";
+                                Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P2") + "\n";
+                                Constructed_Msg += "• X:\\GameLauncher.exe " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P3") + "\n";
+                                Constructed_Msg += "• C:\\Program Files\n";
+                                Constructed_Msg += "• C:\\Program Files (x86)\n";
+                                Constructed_Msg += "• C:\\Users " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P4") + "\n";
+                                Constructed_Msg += "• C:\\Windows\n\n";
+                                Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P5") + "\n";
+                                Constructed_Msg += "• 'C:\\Soapbox Race World' " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P6") + " 'C:\\SBRW'\n";
+                                Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P7") + "\n\n";
 
-                                    Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher") + "\n\n";
-                                    Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P2") + "\n";
-                                    Constructed_Msg += "• X:\\GameLauncher.exe " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P3") + "\n";
-                                    Constructed_Msg += "• C:\\Program Files\n";
-                                    Constructed_Msg += "• C:\\Program Files (x86)\n";
-                                    Constructed_Msg += "• C:\\Users " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P4") + "\n";
-                                    Constructed_Msg += "• C:\\Windows\n\n";
-                                    Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P5") + "\n";
-                                    Constructed_Msg += "• 'C:\\Soapbox Race World' " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P6") + " 'C:\\SBRW'\n";
-                                    Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P7") + "\n\n";
-
-                                    MessageBox.Show(null, Constructed_Msg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    FunctionStatus.LauncherForceClose = true;
-                                    break;
-                            }
-
-                            LogToFileAddons.Parent_Log_Screen(3, "FOLDER LOCATION", "Done");
+                                MessageBox.Show(null, Constructed_Msg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                FunctionStatus.LauncherForceClose = true;
+                                break;
                         }
 
-                        if (FunctionStatus.LauncherForceClose)
+                        LogToFileAddons.Parent_Log_Screen(3, "FOLDER LOCATION", "Done");
+                    }
+
+                    if (FunctionStatus.LauncherForceClose)
+                    {
+                        FunctionStatus.ErrorCloseLauncher("Closing From Invalid Launcher Location", false);
+                    }
+                    else
+                    {
+                        if (!FunctionStatus.HasWriteAccessToFolder(Locations.LauncherFolder))
                         {
-                            FunctionStatus.ErrorCloseLauncher("Closing From Invalid Launcher Location", false);
+                            FunctionStatus.LauncherForceClose = true;
+                            FunctionStatus.LauncherForceCloseReason = Translations.Database("Program_TextBox_Folder_Write_Test");
+                            FunctionStatus.ErrorCloseLauncher("Closing From No Write Access", false);
                         }
                         else
                         {
-                            if (!FunctionStatus.HasWriteAccessToFolder(Locations.LauncherFolder))
+                            LogToFileAddons.Parent_Log_Screen(3, "WRITE TEST", "Passed");
+                            /* Location Migration */
+                            if (!UnixOS.Detected())
                             {
-                                FunctionStatus.LauncherForceClose = true;
-                                FunctionStatus.LauncherForceCloseReason = Translations.Database("Program_TextBox_Folder_Write_Test");
-                                FunctionStatus.ErrorCloseLauncher("Closing From No Write Access", false);
-                            }
-                            else
-                            {
-                                LogToFileAddons.Parent_Log_Screen(3, "WRITE TEST", "Passed");
-                                /* Location Migration */
-                                if (!UnixOS.Detected())
+                                LogToFileAddons.Parent_Log_Screen(2, "Account File Migration", "Doing Migration");
+                                Presence_Launcher.Status("Start Up", "Doing Ini File Migration");
+                                if (File.Exists(Ini_Location.Name_Account_Ini))
                                 {
-                                    LogToFileAddons.Parent_Log_Screen(2, "Account File Migration", "Doing Migration");
-                                    Presence_Launcher.Status("Start Up", "Doing Ini File Migration");
-                                    if (File.Exists(Ini_Location.Name_Account_Ini))
+                                    try
                                     {
-                                        try
+                                        if (File.Exists(Ini_Location.Launcher_Account))
                                         {
-                                            if (File.Exists(Ini_Location.Launcher_Account))
-                                            {
-                                                File.Move(Ini_Location.Launcher_Account,
-                                                    Path.Combine(Locations.RoamingAppDataFolder_Launcher, Time_Folder.DateAndTime() + "_" + Ini_Location.Name_Account_Ini));
-                                            }
+                                            File.Move(Ini_Location.Launcher_Account,
+                                                Path.Combine(Locations.RoamingAppDataFolder_Launcher, Time_Folder.DateAndTime() + "_" + Ini_Location.Name_Account_Ini));
+                                        }
 
-                                            File.Move(Ini_Location.Name_Account_Ini, Ini_Location.Launcher_Account);
-                                        }
-                                        catch (Exception Error)
+                                        File.Move(Ini_Location.Name_Account_Ini, Ini_Location.Launcher_Account);
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        LogToFileAddons.OpenLog("Account File Migration", string.Empty, Error, string.Empty, true);
+                                        FunctionStatus.LauncherForceClose = true;
+                                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
                                         {
-                                            LogToFileAddons.OpenLog("Account File Migration", string.Empty, Error, string.Empty, true);
-                                            FunctionStatus.LauncherForceClose = true;
-                                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                                            {
-                                                LogToFileAddons.Parent_Log_Screen(5, "Account File Migration", Error.InnerException.Message, false, true);
-                                            }
-                                        }
-                                        finally
-                                        {
-                                            GC.Collect();
+                                            LogToFileAddons.Parent_Log_Screen(5, "Account File Migration", Error.InnerException.Message, false, true);
                                         }
                                     }
-                                    else
+                                    finally
                                     {
-                                        LogToFileAddons.Parent_Log_Screen(3, "Account File Migration", "Already Migrated");
+                                        GC.Collect();
                                     }
-
-                                    LogToFileAddons.Parent_Log_Screen(3, "Account File Migration", "Done");
-                                }
-
-                                if (FunctionStatus.LauncherForceClose)
-                                {
-                                    ///@DavidCarbon or @Zacam - Remember to Translate This!
-                                    FunctionStatus.LauncherForceCloseReason = "Failed to Successfully Migrate Ini File(s)";
-                                    FunctionStatus.ErrorCloseLauncher("Closing Ini Migration", false);
                                 }
                                 else
                                 {
-                                    LogToFileAddons.Parent_Log_Screen(2, "INI FILES", "Doing Nullsafe");
-                                    Presence_Launcher.Status("Start Up", "Doing NullSafe ini Files");
-                                    Save_Settings.NullSafe();
-                                    Save_Account.NullSafe();
-                                    LogToFileAddons.Parent_Log_Screen(3, "INI FILES", "Done");
-                                    /* Sets up Theming */
-                                    Theming.CheckIfThemeExists();
+                                    LogToFileAddons.Parent_Log_Screen(3, "Account File Migration", "Already Migrated");
+                                }
 
-                                    LogToFileAddons.Parent_Log_Screen(12, "APPLICATION", "Setting Language");
-                                    CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Translations.UI(Translations.Application_Language = Save_Settings.Live_Data.Launcher_Language.ToLower(), true));
-                                    LogToFileAddons.Parent_Log_Screen(3, "APPLICATION", "Done Setting Language '" + Translations.UI(Translations.Application_Language) + "'");
+                                LogToFileAddons.Parent_Log_Screen(3, "Account File Migration", "Done");
+                            }
 
-                                    /* Windows 7 TLS Check */
-                                    if (Product_Version.GetWindowsNumber() == 6.1)
-                                    {
-                                        LogToFileAddons.Parent_Log_Screen(2, "SSL/TLS", "Windows 7 Detected");
-                                        Presence_Launcher.Status("Start Up", "Checking Windows 7 SSL/TLS");
+                            if (FunctionStatus.LauncherForceClose)
+                            {
+                                ///@DavidCarbon or @Zacam - Remember to Translate This!
+                                FunctionStatus.LauncherForceCloseReason = "Failed to Successfully Migrate Ini File(s)";
+                                FunctionStatus.ErrorCloseLauncher("Closing Ini Migration", false);
+                            }
+                            else
+                            {
+                                LogToFileAddons.Parent_Log_Screen(2, "INI FILES", "Doing Nullsafe");
+                                Presence_Launcher.Status("Start Up", "Doing NullSafe ini Files");
+                                Save_Settings.NullSafe();
+                                Save_Account.NullSafe();
+                                LogToFileAddons.Parent_Log_Screen(3, "INI FILES", "Done");
+                                /* Sets up Theming */
+                                Theming.CheckIfThemeExists();
 
-                                        try
-                                        {
-                                            string MessageBoxPopupTLS = string.Empty;
+                                LogToFileAddons.Parent_Log_Screen(12, "APPLICATION", "Setting Language");
+                                CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Translations.UI(Translations.Application_Language = Save_Settings.Live_Data.Launcher_Language.ToLower(), true));
+                                LogToFileAddons.Parent_Log_Screen(3, "APPLICATION", "Done Setting Language '" + Translations.UI(Translations.Application_Language) + "'");
 
-                                            if (string.IsNullOrWhiteSpace(Registry_Core.Read("DisabledByDefault", @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client")))
-                                            {
-                                                MessageBoxPopupTLS = Translations.Database("Program_TextBox_W7_TLS_P1") + "\n\n";
-
-                                                MessageBoxPopupTLS += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n  /SCHANNEL/Protocols/TLS 1.2/Client\n";
-                                                MessageBoxPopupTLS += "- Value: DisabledByDefault -> 0\n\n";
-
-                                                MessageBoxPopupTLS += Translations.Database("Program_TextBox_W7_TLS_P2") + "\n\n";
-                                                MessageBoxPopupTLS += Translations.Database("Program_TextBox_W7_TLS_P3");
-
-                                                /* There is only 'OK' Available because this IS Required */
-                                                if (MessageBox.Show(null, MessageBoxPopupTLS, "SBRW Launcher",
-                                                    MessageBoxButtons.OK, MessageBoxIcon.Warning) == DialogResult.OK)
-                                                {
-                                                    Registry_Core.Write("DisabledByDefault", 0x0,
-                                                        @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
-                                                    MessageBox.Show(null, Translations.Database("Program_TextBox_W7_TLS_P4"),
-                                                        "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                                }
-
-                                                LogToFileAddons.Parent_Log_Screen(3, "SSL/TLS", "Added Registry Key");
-                                            }
-                                            else
-                                            {
-                                                LogToFileAddons.Parent_Log_Screen(3, "SSL/TLS", "Done");
-                                            }
-                                        }
-                                        catch (Exception Error)
-                                        {
-                                            LogToFileAddons.OpenLog("SSL/TLS", string.Empty, Error, string.Empty, true);
-                                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                                            {
-                                                LogToFileAddons.Parent_Log_Screen(5, "SSL/TLS", Error.InnerException.Message, false, true);
-                                            }
-                                        }
-                                        finally
-                                        {
-                                            GC.Collect();
-                                        }
-                                    }
-
-                                    /* Windows 7 HotFix Check */
-                                    if (Product_Version.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Win_7_Patches))
-                                    {
-                                        LogToFileAddons.Parent_Log_Screen(2, "HotFixes", "Windows 7 Detected");
-                                        Presence_Launcher.Status("Start Up", "Checking Windows 7 HotFixes");
-
-                                        try
-                                        {
-                                            if (!ManagementSearcher.GetInstalledHotFix("KB3020369") || !ManagementSearcher.GetInstalledHotFix("KB3125574"))
-                                            {
-                                                string MessageBoxPopupKB = string.Empty;
-                                                MessageBoxPopupKB = Translations.Database("Program_TextBox_W7_KB_P1") + "\n";
-                                                MessageBoxPopupKB += Translations.Database("Program_TextBox_W7_KB_P2") + "\n\n";
-
-                                                if (!ManagementSearcher.GetInstalledHotFix("KB3020369"))
-                                                {
-                                                    MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_KB_P3") + " KB3020369\n";
-                                                }
-
-                                                if (!ManagementSearcher.GetInstalledHotFix("KB3125574"))
-                                                {
-                                                    MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_KB_P3") + " KB3125574\n";
-                                                }
-                                                MessageBoxPopupKB += "\n" + Translations.Database("Program_TextBox_W7_KB_P4") + "\n";
-
-                                                if (MessageBox.Show(null, MessageBoxPopupKB, "SBRW Launcher",
-                                                    MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
-                                                {
-                                                    /* Since it's Informational we just need to know if they clicked 'OK' */
-                                                    Save_Settings.Live_Data.Win_7_Patches = "1";
-                                                }
-                                                else
-                                                {
-                                                    /* or if they clicked 'Cancel' */
-                                                    Save_Settings.Live_Data.Win_7_Patches = "0";
-                                                }
-
-                                                Save_Settings.Save();
-                                            }
-
-                                            LogToFileAddons.Parent_Log_Screen(3, "HotFixes", "Done");
-                                        }
-                                        catch (Exception Error)
-                                        {
-                                            LogToFileAddons.OpenLog("HotFixes", string.Empty, Error, string.Empty, true);
-                                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                                            {
-                                                LogToFileAddons.Parent_Log_Screen(5, "HotFixes", Error.InnerException.Message, false, true);
-                                            }
-                                        }
-                                        finally
-                                        {
-                                            GC.Collect();
-                                        }
-                                    }
+                                /* Windows 7 TLS Check */
+                                if (Product_Version.GetWindowsNumber() == 6.1)
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(2, "SSL/TLS", "Windows 7 Detected");
+                                    Presence_Launcher.Status("Start Up", "Checking Windows 7 SSL/TLS");
 
                                     try
                                     {
-                                        LogToFileAddons.Parent_Log_Screen(2, "FOLDER", "Launcher Data Folder");
+                                        string MessageBoxPopupTLS = string.Empty;
 
-                                        if (!Directory.Exists(Locations.LauncherDataFolder))
+                                        if (string.IsNullOrWhiteSpace(Registry_Core.Read("DisabledByDefault", @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client")))
                                         {
-                                            Directory.CreateDirectory(Locations.LauncherDataFolder);
-                                        }
-                                    }
-                                    catch (Exception Error)
-                                    {
-                                        LogToFileAddons.OpenLog("FOLDER Launcher Data", string.Empty, Error, string.Empty, true);
-                                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                                        {
-                                            LogToFileAddons.Parent_Log_Screen(5, "FOLDER Launcher Data", Error.InnerException.Message, false, true);
-                                        }
-                                    }
-                                    finally
-                                    {
-                                        LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Launcher Data Done");
-                                        GC.Collect();
-                                    }
+                                            MessageBoxPopupTLS = Translations.Database("Program_TextBox_W7_TLS_P1") + "\n\n";
 
-                                    try
-                                    {
-                                        LogToFileAddons.Parent_Log_Screen(2, "JSON", "Servers File");
+                                            MessageBoxPopupTLS += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n  /SCHANNEL/Protocols/TLS 1.2/Client\n";
+                                            MessageBoxPopupTLS += "- Value: DisabledByDefault -> 0\n\n";
 
-                                        if (File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)) || File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)))
-                                        {
-                                            if (File.Exists(Locations.LauncherCustomServers))
+                                            MessageBoxPopupTLS += Translations.Database("Program_TextBox_W7_TLS_P2") + "\n\n";
+                                            MessageBoxPopupTLS += Translations.Database("Program_TextBox_W7_TLS_P3");
+
+                                            /* There is only 'OK' Available because this IS Required */
+                                            if (MessageBox.Show(null, MessageBoxPopupTLS, "SBRW Launcher",
+                                                MessageBoxButtons.OK, MessageBoxIcon.Warning) == DialogResult.OK)
                                             {
-                                                File.Delete(Locations.LauncherCustomServers);
+                                                Registry_Core.Write("DisabledByDefault", 0x0,
+                                                    @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
+                                                MessageBox.Show(null, Translations.Database("Program_TextBox_W7_TLS_P4"),
+                                                    "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                             }
 
-                                            File.Move(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON),
-                                                Locations.LauncherCustomServers);
-
-                                            LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Renaming Servers File");
-                                        }
-                                        else if (!UnixOS.Detected())
-                                        {
-                                            if (File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)))
-                                            {
-                                                File.Move(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON), Locations.LauncherCustomServers);
-                                            }
-                                        }
-                                        else if (!File.Exists(Locations.LauncherCustomServers))
-                                        {
-                                            try
-                                            {
-                                                File.WriteAllText(Locations.LauncherCustomServers, "[]");
-                                                LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Created Servers File");
-                                            }
-                                            catch (Exception Error)
-                                            {
-                                                LogToFileAddons.OpenLog("JSON SERVER FILE", string.Empty, Error, string.Empty, true);
-                                            }
-                                        }
-                                    }
-                                    catch (Exception Error)
-                                    {
-                                        LogToFileAddons.OpenLog("JSON SERVER FILE", string.Empty, Error, string.Empty, true);
-                                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                                        {
-                                            LogToFileAddons.Parent_Log_Screen(5, "JSON SERVER FILE", Error.InnerException.Message, false, true);
-                                        }
-                                    }
-                                    finally
-                                    {
-                                        LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Done");
-                                        GC.Collect();
-                                    }
-
-                                    if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
-                                    {
-                                        LogToFileAddons.Parent_Log_Screen(2, "CLEANLINKS", "Game Path");
-
-                                        if (File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, Locations.NameModLinks)))
-                                        {
-                                            ModNetHandler.CleanLinks(Save_Settings.Live_Data.Game_Path);
-                                            LogToFileAddons.Parent_Log_Screen(3, "CLEANLINKS", "Done");
+                                            LogToFileAddons.Parent_Log_Screen(3, "SSL/TLS", "Added Registry Key");
                                         }
                                         else
                                         {
-                                            LogToFileAddons.Parent_Log_Screen(3, "CLEANLINKS", "Not Present");
+                                            LogToFileAddons.Parent_Log_Screen(3, "SSL/TLS", "Done");
                                         }
                                     }
-
-                                    LogToFileAddons.Parent_Log_Screen(2, "PROXY", "Checking if Proxy Is Disabled from User Settings! It's value is " + Save_Settings.Live_Data.Launcher_Proxy);
-                                    if (Save_Settings.Live_Data.Launcher_Proxy == "0")
+                                    catch (Exception Error)
                                     {
-                                        LogToFileAddons.Parent_Log_Screen(11, "PROXY", "Starting Proxy (From Startup)");
-                                        Proxy_Server.Instance.Start("Splash Screen [Program.cs]");
-                                        LogToFileAddons.Parent_Log_Screen(3, "PROXY", "Started");
+                                        LogToFileAddons.OpenLog("SSL/TLS", string.Empty, Error, string.Empty, true);
+                                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                        {
+                                            LogToFileAddons.Parent_Log_Screen(5, "SSL/TLS", Error.InnerException.Message, false, true);
+                                        }
+                                    }
+                                    finally
+                                    {
+                                        GC.Collect();
+                                    }
+                                }
+
+                                /* Windows 7 HotFix Check */
+                                if (Product_Version.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Win_7_Patches))
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(2, "HotFixes", "Windows 7 Detected");
+                                    Presence_Launcher.Status("Start Up", "Checking Windows 7 HotFixes");
+
+                                    try
+                                    {
+                                        if (!ManagementSearcher.GetInstalledHotFix("KB3020369") || !ManagementSearcher.GetInstalledHotFix("KB3125574"))
+                                        {
+                                            string MessageBoxPopupKB = string.Empty;
+                                            MessageBoxPopupKB = Translations.Database("Program_TextBox_W7_KB_P1") + "\n";
+                                            MessageBoxPopupKB += Translations.Database("Program_TextBox_W7_KB_P2") + "\n\n";
+
+                                            if (!ManagementSearcher.GetInstalledHotFix("KB3020369"))
+                                            {
+                                                MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_KB_P3") + " KB3020369\n";
+                                            }
+
+                                            if (!ManagementSearcher.GetInstalledHotFix("KB3125574"))
+                                            {
+                                                MessageBoxPopupKB += "- " + Translations.Database("Program_TextBox_W7_KB_P3") + " KB3125574\n";
+                                            }
+                                            MessageBoxPopupKB += "\n" + Translations.Database("Program_TextBox_W7_KB_P4") + "\n";
+
+                                            if (MessageBox.Show(null, MessageBoxPopupKB, "SBRW Launcher",
+                                                MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+                                            {
+                                                /* Since it's Informational we just need to know if they clicked 'OK' */
+                                                Save_Settings.Live_Data.Win_7_Patches = "1";
+                                            }
+                                            else
+                                            {
+                                                /* or if they clicked 'Cancel' */
+                                                Save_Settings.Live_Data.Win_7_Patches = "0";
+                                            }
+
+                                            Save_Settings.Save();
+                                        }
+
+                                        LogToFileAddons.Parent_Log_Screen(3, "HotFixes", "Done");
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        LogToFileAddons.OpenLog("HotFixes", string.Empty, Error, string.Empty, true);
+                                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                        {
+                                            LogToFileAddons.Parent_Log_Screen(5, "HotFixes", Error.InnerException.Message, false, true);
+                                        }
+                                    }
+                                    finally
+                                    {
+                                        GC.Collect();
+                                    }
+                                }
+
+                                try
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(2, "FOLDER", "Launcher Data Folder");
+
+                                    if (!Directory.Exists(Locations.LauncherDataFolder))
+                                    {
+                                        Directory.CreateDirectory(Locations.LauncherDataFolder);
+                                    }
+                                }
+                                catch (Exception Error)
+                                {
+                                    LogToFileAddons.OpenLog("FOLDER Launcher Data", string.Empty, Error, string.Empty, true);
+                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                    {
+                                        LogToFileAddons.Parent_Log_Screen(5, "FOLDER Launcher Data", Error.InnerException.Message, false, true);
+                                    }
+                                }
+                                finally
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Launcher Data Done");
+                                    GC.Collect();
+                                }
+
+                                try
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(2, "JSON", "Servers File");
+
+                                    if (File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)) || File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)))
+                                    {
+                                        if (File.Exists(Locations.LauncherCustomServers))
+                                        {
+                                            File.Delete(Locations.LauncherCustomServers);
+                                        }
+
+                                        File.Move(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON),
+                                            Locations.LauncherCustomServers);
+
+                                        LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Renaming Servers File");
+                                    }
+                                    else if (!UnixOS.Detected())
+                                    {
+                                        if (File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)))
+                                        {
+                                            File.Move(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON), Locations.LauncherCustomServers);
+                                        }
+                                    }
+                                    else if (!File.Exists(Locations.LauncherCustomServers))
+                                    {
+                                        try
+                                        {
+                                            File.WriteAllText(Locations.LauncherCustomServers, "[]");
+                                            LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Created Servers File");
+                                        }
+                                        catch (Exception Error)
+                                        {
+                                            LogToFileAddons.OpenLog("JSON SERVER FILE", string.Empty, Error, string.Empty, true);
+                                        }
+                                    }
+                                }
+                                catch (Exception Error)
+                                {
+                                    LogToFileAddons.OpenLog("JSON SERVER FILE", string.Empty, Error, string.Empty, true);
+                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                    {
+                                        LogToFileAddons.Parent_Log_Screen(5, "JSON SERVER FILE", Error.InnerException.Message, false, true);
+                                    }
+                                }
+                                finally
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Done");
+                                    GC.Collect();
+                                }
+
+                                if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(2, "CLEANLINKS", "Game Path");
+
+                                    if (File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, Locations.NameModLinks)))
+                                    {
+                                        ModNetHandler.CleanLinks(Save_Settings.Live_Data.Game_Path);
+                                        LogToFileAddons.Parent_Log_Screen(3, "CLEANLINKS", "Done");
                                     }
                                     else
                                     {
-                                        LogToFileAddons.Parent_Log_Screen(3, "PROXY", "Disabled");
+                                        LogToFileAddons.Parent_Log_Screen(3, "CLEANLINKS", "Not Present");
                                     }
-
-                                    LogToFileAddons.Parent_Log_Screen(2, "PRELOAD", "Headers");
-                                    Custom_Header.Headers_WHC();
-                                    LogToFileAddons.Parent_Log_Screen(3, "PRELOAD", "Headers");
-                                    Presence_Launcher.Status("Start Up", "Checking Root Certificate Authority");
-                                    Certificate_Store.Latest();
-
-                                    LogToFileAddons.Parent_Log_Screen(1, "REDISTRIBUTABLE", "Moved to Function");
-                                    /* (Starts Function Chain) Check if Redistributable Packages are Installed */
-                                    Redistributable.Check();
                                 }
+
+                                LogToFileAddons.Parent_Log_Screen(2, "PROXY", "Checking if Proxy Is Disabled from User Settings! It's value is " + Save_Settings.Live_Data.Launcher_Proxy);
+                                if (Save_Settings.Live_Data.Launcher_Proxy == "0")
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(11, "PROXY", "Starting Proxy (From Startup)");
+                                    Proxy_Server.Instance.Start("Splash Screen [Program.cs]");
+                                    LogToFileAddons.Parent_Log_Screen(3, "PROXY", "Started");
+                                }
+                                else
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(3, "PROXY", "Disabled");
+                                }
+
+                                LogToFileAddons.Parent_Log_Screen(2, "PRELOAD", "Headers");
+                                Custom_Header.Headers_WHC();
+                                LogToFileAddons.Parent_Log_Screen(3, "PRELOAD", "Headers");
+                                Presence_Launcher.Status("Start Up", "Checking Root Certificate Authority");
+                                Certificate_Store.Latest();
+
+                                LogToFileAddons.Parent_Log_Screen(1, "REDISTRIBUTABLE", "Moved to Function");
+                                /* (Starts Function Chain) Check if Redistributable Packages are Installed */
+                                Redistributable.Check();
                             }
                         }
                     }
                 }
             }
-            #endregion
         }
+        #endregion
         #endregion
 
         #region First Time Run
@@ -910,11 +945,11 @@ namespace SBRW.Launcher.App.UI_Forms
 
                             if (Screen_Panel_Forms != null)
                             {
-                                Screen_Instance.Size = new Size(891, 529);
                                 Screen_Panel_Forms.Visible = true;
                                 Screen_Panel_Forms.Controls.Add(Custom_Instance_Settings);
                                 Custom_Instance_Settings.Show();
-                                FunctionStatus.CenterScreen(Screen_Instance);
+                                Screen_Instance.Size = new Size(891, 529);
+                                Screen_Instance.Position_Window_Set();
                                 LogToFileAddons.Parent_Log_Screen(1, "MAINSCREEN", "Hello World!", true);
                             }
                         }
@@ -938,28 +973,6 @@ namespace SBRW.Launcher.App.UI_Forms
         }
         #endregion
 
-        #region Dragable Form Window
-        public void Move_Window_Mouse_Down(object sender, MouseEventArgs e)
-        {
-            if (e.Y <= 90) Mouse_Down_Point = new Point(e.X, e.Y);
-        }
-
-        public void Move_Window_Mouse_Up(object sender, MouseEventArgs e)
-        {
-            Mouse_Down_Point = Point.Empty;
-            Opacity = 1;
-        }
-
-        public void Move_Window_Mouse_Move(object sender, MouseEventArgs e)
-        {
-            if (Mouse_Down_Point.IsEmpty) { return; }
-            Form Main_Local_Window = this as Form;
-            Main_Local_Window.Location = new Point(Main_Local_Window.Location.X + (e.X - Mouse_Down_Point.X), Main_Local_Window.Location.Y + (e.Y - Mouse_Down_Point.Y));
-            InformationCache.ParentScreenLocation = new Point(Main_Local_Window.Location.X + (e.X - Mouse_Down_Point.X), Main_Local_Window.Location.Y + (e.Y - Mouse_Down_Point.Y));
-            Opacity = 0.9;
-        }
-        #endregion
-
         #region Splash Screen
         private void Clock_Tick(object sender, EventArgs e)
         {
@@ -975,7 +988,7 @@ namespace SBRW.Launcher.App.UI_Forms
                 else if (BackgroundImage != Image_Other.Logo_Splash)
                 {
                     Clock_Tick_Theme_Update = true;
-                    this.SafeInvokeAction(() => BackgroundImage = Image_Other.Logo_Splash, this);
+                    this.SafeInvokeAction(() => PictureBox_Screen_Splash.BackgroundImage = Image_Other.Logo_Splash, this);
                 }
                 else
                 {
@@ -1066,15 +1079,25 @@ namespace SBRW.Launcher.App.UI_Forms
                 Proxy_Server.Instance.Stop("Main Screen");
             }
 
-            if (File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, Locations.NameModLinks)) && !FunctionStatus.LauncherBattlePass)
+            if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
             {
-                ModNetHandler.CleanLinks(Save_Settings.Live_Data.Game_Path);
+                if (File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, Locations.NameModLinks)) && !FunctionStatus.LauncherBattlePass)
+                {
+                    ModNetHandler.CleanLinks(Save_Settings.Live_Data.Game_Path);
+                }
             }
         }
 
-        public void Button_Close_Click(object? sender, EventArgs? e)
+        public void Button_Close_Click(object sender, EventArgs e)
         {
-            ClosingTasks();
+            if (FunctionStatus.LoadingComplete)
+            {
+                ClosingTasks();
+            }
+            else
+            {
+                FunctionStatus.LauncherForceClose = true;
+            }
 
             /* Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well) 
              * If the Boolen is true it will restart the Application
@@ -1085,25 +1108,17 @@ namespace SBRW.Launcher.App.UI_Forms
             }
             else
             {
-                try { this.Close(); } catch { }
+                if (Application.MessageLoop)
+                {
+                    // WinForms Mode
+                    Application.Exit();
+                }
+                else
+                {
+                    // If in Console Mode or if Form is Hidden
+                    Environment.Exit(0);
+                }
             }
-        }
-        #endregion
-
-        #region Image Buttons
-        private void ButtonClose_MouseDown(object sender, EventArgs e)
-        {
-            Button_Close.BackgroundImage = Image_Icon.Close_Click;
-        }
-
-        private void ButtonClose_MouseEnter(object sender, EventArgs e)
-        {
-            Button_Close.BackgroundImage = Image_Icon.Close_Hover;
-        }
-
-        private void ButtonClose_MouseLeaveANDMouseUp(object sender, EventArgs e)
-        {
-            Button_Close.BackgroundImage = Image_Icon.Close;
         }
         #endregion
 
@@ -1119,11 +1134,9 @@ namespace SBRW.Launcher.App.UI_Forms
             Panel_Splash_Screen.MouseUp += new MouseEventHandler(Move_Window_Mouse_Up);
             Panel_Splash_Screen.MouseDown += new MouseEventHandler(Move_Window_Mouse_Down);
 
-            Button_Close.MouseEnter += new EventHandler(ButtonClose_MouseEnter);
-            Button_Close.MouseLeave += new EventHandler(ButtonClose_MouseLeaveANDMouseUp);
-            Button_Close.MouseUp += new MouseEventHandler(ButtonClose_MouseLeaveANDMouseUp);
-            Button_Close.MouseDown += new MouseEventHandler(ButtonClose_MouseDown);
-            Button_Close.Click += new EventHandler(Button_Close_Click);
+            Panel_Form_Screens.MouseMove += new MouseEventHandler(Move_Window_Mouse_Move);
+            Panel_Form_Screens.MouseUp += new MouseEventHandler(Move_Window_Mouse_Up);
+            Panel_Form_Screens.MouseDown += new MouseEventHandler(Move_Window_Mouse_Down);
 
             Load += new EventHandler(Parent_Screen_Load);
             Shown += new EventHandler(Parent_Screen_Shown);
@@ -1150,7 +1163,6 @@ namespace SBRW.Launcher.App.UI_Forms
             BackgroundImage = Image_Background.Settings;
 
             PictureBox_Screen_Splash.BackgroundImage = Image_Other.Logo_Splash;
-            Button_Close.BackgroundImage = Image_Icon.Close;
 
             ForeColor = Color_Winform.Text_Fore_Color;
             BackColor = Color_Winform.BG_Fore_Color;
@@ -1163,7 +1175,7 @@ namespace SBRW.Launcher.App.UI_Forms
             /* Set Window Name              /
             /*******************************/
 
-            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
             Text = "SBRW Launcher: v" + Application.ProductVersion;
 
             this.Closing += (x, y) =>

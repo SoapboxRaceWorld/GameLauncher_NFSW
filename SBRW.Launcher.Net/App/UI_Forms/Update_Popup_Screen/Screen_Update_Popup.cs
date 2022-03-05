@@ -6,6 +6,7 @@ using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.LauncherCore.Support;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
 using SBRW.Launcher.Core.Discord.RPC_;
+using SBRW.Launcher.Core.Extension.Validation_.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Theme;
 using System;
 using System.Collections.Generic;
@@ -72,9 +73,24 @@ namespace SBRW.Launcher.App.UI_Forms.Update_Popup_Screen
             {
                 try
                 {
-                    TextBox_Changelog.Text = (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed()) ?
-                    JsonConvert.DeserializeObject<List<GitHubRelease>>(LauncherUpdateCheck.VersionJSON)[0].Body.Replace("\r", Environment.NewLine) :
-                    JsonConvert.DeserializeObject<GitHubRelease>(LauncherUpdateCheck.VersionJSON).Body.Replace("\r", Environment.NewLine);
+                    if (Is_Json.Valid(LauncherUpdateCheck.VersionJSON))
+                    {
+#pragma warning disable CS8602 // Null Safe Check Done Above
+                        if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
+                        {
+                            TextBox_Changelog.Text = JsonConvert.DeserializeObject<List<GitHubRelease>>(LauncherUpdateCheck.VersionJSON)[0].Body.Replace("\r", Environment.NewLine);
+                        }
+                        else
+                        {
+                            TextBox_Changelog.Text = JsonConvert.DeserializeObject<GitHubRelease>(LauncherUpdateCheck.VersionJSON).Body.Replace("\r", Environment.NewLine);
+                        }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                    }
+                    else
+                    {
+                        TextBox_Changelog.Text = "\nUnable to Phrase Changelog";
+                        GroupBox_Changelog.Text = "Changelog Error:";
+                    }
                 }
                 catch (Exception Error)
                 {

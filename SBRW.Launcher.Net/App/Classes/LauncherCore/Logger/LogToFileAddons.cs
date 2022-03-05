@@ -1,4 +1,5 @@
 ﻿using SBRW.Launcher.App.Classes.LauncherCore.Global;
+using SBRW.Launcher.App.Classes.LauncherCore.Support;
 using SBRW.Launcher.App.UI_Forms;
 using SBRW.Launcher.Core.Extension.Logging_;
 using System;
@@ -171,19 +172,17 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Logger
                         break;
                 }
 
-                if (Parent_Screen.Screen_TextBox_LiveLog != null)
+                if (Parent_Screen.Screen_TextBox_LiveLog != null && !FunctionStatus.LauncherForceClose)
                 {
-                    Task.Run(() => 
+                    if (Log_Clear)
                     {
-                        if (Log_Clear)
-                        {
-                            Parent_Screen.Screen_TextBox_LiveLog.Clear();
-                        }
-                        else
-                        {
-                            Parent_Screen.Screen_TextBox_LiveLog.AppendText(Environment.NewLine + "[" + Log_Type_String + "] " + Log_Full_String);
-                        }
-                    }).ConfigureAwait(false);
+                        Parent_Screen.Screen_TextBox_LiveLog.SafeInvokeAction(() => Parent_Screen.Screen_TextBox_LiveLog.Clear());
+                    }
+                    else
+                    {
+                        Parent_Screen.Screen_TextBox_LiveLog.SafeInvokeAction(() => 
+                        Parent_Screen.Screen_TextBox_LiveLog.AppendText(Environment.NewLine + "[" + Log_Type_String + "] " + Log_Full_String));
+                    }
                 }
             }
             catch (Exception Error)

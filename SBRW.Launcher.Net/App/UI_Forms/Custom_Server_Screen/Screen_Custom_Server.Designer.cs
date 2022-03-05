@@ -125,7 +125,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Screen_Custom_Server";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Please Select a Server - SBRW Launcher";
             this.ResumeLayout(false);
 

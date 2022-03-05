@@ -15,6 +15,7 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
 {
     public partial class Screen_About : Form
     {
+        private static XmlDocument? XML_Doc { get; set; }
         private static bool IsAboutOpen { get; set; }
         private static List<AboutNoteBlock> PatchNoteBlocks { get; set; } = new List<AboutNoteBlock>();
         private static string AboutXMLRevision { get; set; } = "2.1.8.A";
@@ -45,6 +46,7 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
             SetVisuals();
             this.Closing += (x, y) =>
             {
+                PatchNoteBlocks = new List<AboutNoteBlock>();
                 IsAboutOpen = false;
                 GC.Collect();
             };
@@ -117,43 +119,120 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
             PatchButton3.FlatAppearance.BorderColor = Color_Winform_Buttons.Blue_Border_Color;
             PatchButton3.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Blue_Mouse_Over_Back_Color;
 
+            Shown += new EventHandler(PatchNotes_Shown);
         }
 
-        private void FetchPatchNotes()
+        public void OnClickButton(object sender, EventArgs e)
+        {
+            if ((sender != null) && (e != null))
+            {
+                Button button = (Button)sender;
+                switch (button.Name)
+                {
+                    case nameof(PatchButton1):
+                        if (!string.IsNullOrWhiteSpace(PatchNoteBlocks[0].Link))
+                        {
+                            Process.Start(PatchNoteBlocks[0].Link);
+                        }
+                        break;
+                    case nameof(PatchButton2):
+                        if (!string.IsNullOrWhiteSpace(PatchNoteBlocks[1].Link))
+                        {
+                            Process.Start(PatchNoteBlocks[1].Link);
+                        }
+                        break;
+                    case nameof(PatchButton3):
+                        if (!string.IsNullOrWhiteSpace(PatchNoteBlocks[2].Link))
+                        {
+                            Process.Start(PatchNoteBlocks[2].Link);
+                        }
+                        break;
+                }
+            }
+        }
+
+        private void PatchNotes_Shown(object sender, EventArgs e)
         {
             try
             {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(URLs.Static_Alt + AboutXML);
+                FunctionStatus.CenterParent(this);
+                Application.OpenForms[this.Name].Activate();
+                this.BringToFront();
 
-                foreach (XmlNode node in doc.DocumentElement)
+                if (XML_Doc == null)
                 {
-                    AboutNoteBlock block = new AboutNoteBlock();
-                    for (int i = 0; i < node.ChildNodes.Count; i++)
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                block.Title = node.ChildNodes[i].InnerText;
-                                break;
-                            case 1:
-                                block.Text = node.ChildNodes[i].InnerText;
-                                break;
-                            case 2:
-                                block.Link = node.ChildNodes[i].InnerText;
-                                break;
-                        }
-                    }
-                    PatchNoteBlocks.Add(block);
+                    XML_Doc = new XmlDocument();
+                    XML_Doc.Load(URLs.Static_Alt + AboutXML);
                 }
 
-                Label[] PatchTitleObjects = { PatchTitle1, PatchTitle2, PatchTitle3 };
-                Label[] PatchTextObjects = { PatchText1, PatchText2, PatchText3 };
-
-                for (int i = 0; i < PatchNoteBlocks.Count; i++)
+                if (XML_Doc.DocumentElement != null && IsAboutOpen)
                 {
-                    PatchTitleObjects[i].Text = PatchNoteBlocks[i].Title;
-                    PatchTextObjects[i].Text = PatchNoteBlocks[i].Text;
+                    foreach (XmlNode node in XML_Doc.DocumentElement)
+                    {
+                        if (!(node.ChildNodes.Count < 0))
+                        {
+                            AboutNoteBlock block = new AboutNoteBlock();
+
+                            for (int i = 0; i < node.ChildNodes.Count; i++)
+                            {
+                                if (IsAboutOpen)
+                                {
+                                    switch (i)
+                                    {
+                                        case 0:
+                                            block.Title = node.ChildNodes[i].InnerText;
+                                            break;
+                                        case 1:
+                                            block.Text = node.ChildNodes[i].InnerText;
+                                            break;
+                                        case 2:
+                                            block.Link = node.ChildNodes[i].InnerText;
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+
+                            if (IsAboutOpen)
+                            {
+                                PatchNoteBlocks.Add(block);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (IsAboutOpen && PatchNoteBlocks.Count >= 0)
+                    {
+                        Label[] PatchTitleObjects = { PatchTitle1, PatchTitle2, PatchTitle3 };
+                        Label[] PatchTextObjects = { PatchText1, PatchText2, PatchText3 };
+
+                        for (int i = 0; i < PatchNoteBlocks.Count; i++)
+                        {
+                            if (IsAboutOpen)
+                            {
+                                PatchTitleObjects[i].Text = PatchNoteBlocks[i].Title;
+                                PatchTextObjects[i].Text = PatchNoteBlocks[i].Text;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+
                 }
             }
             catch
@@ -161,32 +240,6 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
                 PatchContainerPanel.Visible = false;
                 MessageBox.Show("The launcher was unable to retrieve 'About' info from the server!");
             }
-        }
-
-        public void OnClickButton(object sender, EventArgs e)
-        {
-            try
-            {
-                Button button = (Button)sender;
-                switch (button.Name)
-                {
-                    case nameof(PatchButton1):
-                        Process.Start(PatchNoteBlocks[0].Link);
-                        break;
-                    case nameof(PatchButton2):
-                        Process.Start(PatchNoteBlocks[1].Link);
-                        break;
-                    case nameof(PatchButton3):
-                        Process.Start(PatchNoteBlocks[2].Link);
-                        break;
-                }
-            }
-            catch { }
-        }
-
-        private void PatchNotes_Load(object sender, System.EventArgs e)
-        {
-            FetchPatchNotes();
         }
     }
 }

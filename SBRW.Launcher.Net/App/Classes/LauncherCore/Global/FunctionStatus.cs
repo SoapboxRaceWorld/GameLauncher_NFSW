@@ -1,13 +1,4 @@
-﻿using SBRW.Launcher.App.Classes.LauncherCore.APICheckers;
-using SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite;
-using SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater;
-using SBRW.Launcher.App.Classes.LauncherCore.Lists;
-using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.App.Classes.LauncherCore.ModNet;
-using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
-using SBRW.Launcher.App.UI_Forms.Main_Screen;
-using SBRW.Launcher.App.UI_Forms.Splash_Screen;
-using SBRW.Launcher.App.UI_Forms.Welcome_Screen;
+﻿using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.Core.Extension.Logging_;
 using SBRW.Launcher.Core.Discord.RPC_;
 using SBRW.Launcher.Core.Extra.File_;
@@ -19,13 +10,12 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using SBRW.Launcher.App.Classes.InsiderKit;
-using SBRW.Launcher.Core.Extra.XML_;
 using System.Linq;
 using System.Net.Sockets;
+using SBRW.Launcher.App.UI_Forms;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Global
 {
@@ -99,17 +89,26 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
         }
 
         /* Used to Center WinForms Forms (Parent Screen) */
-        public static void CenterScreen(Form form)
+        public static void CenterScreen(Form Live_Form)
         {
-            form.StartPosition = FormStartPosition.Manual;
-            form.Top = (Screen.PrimaryScreen.Bounds.Height - form.Height) / 2;
-            form.Left = (Screen.PrimaryScreen.Bounds.Width - form.Width) / 2;
+            Live_Form.StartPosition = FormStartPosition.Manual;
+            Live_Form.Top = (Screen.PrimaryScreen.Bounds.Height - Live_Form.Height) / 2;
+            Live_Form.Left = (Screen.PrimaryScreen.Bounds.Width - Live_Form.Width) / 2;
+
+            InformationCache.ParentScreenLocation = Live_Form.Location;
         }
 
-        public static void CenterParent(Form Screen)
+        public static void CenterParent(Form Live_Form)
         {
-            Screen.StartPosition = FormStartPosition.Manual;
-            Screen.Location = InformationCache.ParentScreenLocation;
+            if (!InformationCache.ParentScreenLocation.IsEmpty)
+            {
+                Live_Form.StartPosition = FormStartPosition.Manual;
+                Live_Form.Location = InformationCache.ParentScreenLocation;
+            }
+            else
+            {
+                Live_Form.StartPosition = FormStartPosition.CenterScreen;
+            }
         }
 
         /* Check if Folder Location is Acceptable and Returns a Value
@@ -169,8 +168,6 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
         /// <param name="Force_Restart">True: Restarts Launcher | False: Closes Launcher</param>
         public static void ErrorCloseLauncher(string Notes, bool Force_Restart)
         {
-            Screen_Splash.ThreadStatus("Stop");
-
             if (Presence_Launcher.Running())
             {
                 Presence_Launcher.Stop("Close");
@@ -196,13 +193,20 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                 }
             }
 
-            if (Force_Restart)
+            if (Parent_Screen.Screen_Instance != null)
             {
-                Application.Restart();
+                Parent_Screen.Launcher_Restart = Force_Restart;
+                Parent_Screen.Screen_Instance.Button_Close_Click(new object(), new EventArgs());
+            }
+            else if (Application.MessageLoop)
+            {
+                // WinForms Mode
+                Application.Exit();
             }
             else
             {
-                Application.Exit();
+                // If in Console Mode or if Form is Hidden
+                Environment.Exit(0);
             }
         }
         /* Moved "runAsAdmin" Code to Gist */

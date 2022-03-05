@@ -139,7 +139,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                         Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     }
 
-                    String serverReply = null;
+                    string serverReply = string.Empty;
                     try
                     {
                         serverReply = Client.DownloadString(URLCall);
@@ -147,7 +147,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                     catch (WebException Error)
                     {
                         API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
-                            Error, (HttpWebResponse)Error.Response);
+                            Error, Error.Response as HttpWebResponse);
                     }
                     catch (Exception Error)
                     {
@@ -163,9 +163,11 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
 
                     if (!string.IsNullOrWhiteSpace(serverReply))
                     {
-                        String verify = regex[2];
+                        string verify = regex[2];
 
+#pragma warning disable CS8602 // Null Safe Check Done Above
                         string[] hashes = serverReply.Split('\n');
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                         foreach (string hash in hashes)
                         {
                             var splitChecks = hash.Split(':');
@@ -206,7 +208,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                     Tokens.IPAddress = Launcher_Value.Launcher_Select_Server_Data.IPAddress;
                     Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
-                    Authentication.Client("Register", Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Post, Email, Password, Ticket_Required ? Input_Ticket.Text : null);
+                    Authentication.Client("Register", Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Post, Email, Password, Ticket_Required ? Input_Ticket.Text : string.Empty);
 
                     if (!String.IsNullOrWhiteSpace(Tokens.Success))
                     {

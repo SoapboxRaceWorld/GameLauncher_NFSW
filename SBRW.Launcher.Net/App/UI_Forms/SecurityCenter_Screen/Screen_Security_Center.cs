@@ -1734,12 +1734,6 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         private void SetVisuals()
         {
             /*******************************/
-            /* Set Initial position & Icon  /
-            /*******************************/
-
-            FunctionStatus.CenterParent(this);
-
-            /*******************************/
             /* Set Window Name              /
             /*******************************/
 
@@ -1871,7 +1865,6 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         public Screen_Security_Center()
         {
             InitializeComponent();
-            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             SetVisuals();
             this.Closing += (x, y) =>
             {

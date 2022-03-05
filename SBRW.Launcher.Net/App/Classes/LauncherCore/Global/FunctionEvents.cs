@@ -203,9 +203,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(serverListText))
+                if (!string.IsNullOrWhiteSpace(serverListText) && sender != null)
                 {
-                    Font font = (sender as ComboBox).Font;
+                    Font font = ((ComboBox)sender).Font;
                     Brush backgroundColor;
                     Brush textColor;
 

@@ -151,6 +151,7 @@
             this.Controls.Add(this.Label_CDN_Status_List);
             this.Controls.Add(this.Label_Introduction);
             this.Name = "Screen_Welcome";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Welcome - SBRW Laucher";
             this.ResumeLayout(false);
 
