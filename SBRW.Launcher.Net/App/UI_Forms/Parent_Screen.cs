@@ -46,7 +46,7 @@ namespace SBRW.Launcher.App.UI_Forms
         public static Parent_Screen? Screen_Instance { get; set; }
         public static Panel? Screen_Panel_Forms { get; set; }
         public static TextBox? Screen_TextBox_LiveLog { get; set; }
-        private static int Clock_Tick_Count { get; set; }
+        private static bool Clock_Tick_Theme_Update { get; set; }
         #endregion
 
         #region Screen Login Variables
@@ -57,7 +57,7 @@ namespace SBRW.Launcher.App.UI_Forms
         #region Parent Screen Load and Shown
         private void Parent_Screen_Load(object sender, EventArgs e)
         {
-            
+            FunctionStatus.CenterScreen(this);
         }
 
         private void Parent_Screen_Shown(object sender, EventArgs e)
@@ -910,9 +910,11 @@ namespace SBRW.Launcher.App.UI_Forms
 
                             if (Screen_Panel_Forms != null)
                             {
+                                Screen_Instance.Size = new Size(891, 529);
                                 Screen_Panel_Forms.Visible = true;
                                 Screen_Panel_Forms.Controls.Add(Custom_Instance_Settings);
                                 Custom_Instance_Settings.Show();
+                                FunctionStatus.CenterScreen(Screen_Instance);
                                 LogToFileAddons.Parent_Log_Screen(1, "MAINSCREEN", "Hello World!", true);
                             }
                         }
@@ -963,17 +965,21 @@ namespace SBRW.Launcher.App.UI_Forms
         {
             if (e != null)
             {
-                if (FunctionStatus.LoadingComplete || FunctionStatus.LauncherForceClose)
+                if (FunctionStatus.LoadingComplete || FunctionStatus.LauncherForceClose || Clock_Tick_Theme_Update)
                 {
                     if (Clock.Enabled)
                     {
                         Clock.Stop();
                     }
                 }
-                else if (Clock_Tick_Count == 0)
+                else if (BackgroundImage != Image_Other.Logo_Splash)
                 {
-                    Clock_Tick_Count++;
+                    Clock_Tick_Theme_Update = true;
                     this.SafeInvokeAction(() => BackgroundImage = Image_Other.Logo_Splash, this);
+                }
+                else
+                {
+                    GC.Collect();
                 }
             }
         }
@@ -1084,6 +1090,23 @@ namespace SBRW.Launcher.App.UI_Forms
         }
         #endregion
 
+        #region Image Buttons
+        private void ButtonClose_MouseDown(object sender, EventArgs e)
+        {
+            Button_Close.BackgroundImage = Image_Icon.Close_Click;
+        }
+
+        private void ButtonClose_MouseEnter(object sender, EventArgs e)
+        {
+            Button_Close.BackgroundImage = Image_Icon.Close_Hover;
+        }
+
+        private void ButtonClose_MouseLeaveANDMouseUp(object sender, EventArgs e)
+        {
+            Button_Close.BackgroundImage = Image_Icon.Close;
+        }
+        #endregion
+
         public Parent_Screen()
         {
             InitializeComponent();
@@ -1092,19 +1115,49 @@ namespace SBRW.Launcher.App.UI_Forms
             MouseUp += new MouseEventHandler(Move_Window_Mouse_Up);
             MouseDown += new MouseEventHandler(Move_Window_Mouse_Down);
 
+            Panel_Splash_Screen.MouseMove += new MouseEventHandler(Move_Window_Mouse_Move);
+            Panel_Splash_Screen.MouseUp += new MouseEventHandler(Move_Window_Mouse_Up);
+            Panel_Splash_Screen.MouseDown += new MouseEventHandler(Move_Window_Mouse_Down);
+
+            Button_Close.MouseEnter += new EventHandler(ButtonClose_MouseEnter);
+            Button_Close.MouseLeave += new EventHandler(ButtonClose_MouseLeaveANDMouseUp);
+            Button_Close.MouseUp += new MouseEventHandler(ButtonClose_MouseLeaveANDMouseUp);
+            Button_Close.MouseDown += new MouseEventHandler(ButtonClose_MouseDown);
+            Button_Close.Click += new EventHandler(Button_Close_Click);
+
             Load += new EventHandler(Parent_Screen_Load);
             Shown += new EventHandler(Parent_Screen_Shown);
             Clock.Tick += new EventHandler(Clock_Tick);
             #endregion
 
             #region Custom Theme
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
+
+            Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            TextBox_Live_Log.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            GroupBox_Launcherlog.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+
             /********************************/
             /* Set Theme Colors & Images     /
             /********************************/
 
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
+
             TransparencyKey = Color_Screen.BG_Settings;
             BackgroundImage = Image_Background.Settings;
-            PictureBox_Screen_Splash.Image = new Bitmap(Image_Other.Logo_Splash);
+
+            PictureBox_Screen_Splash.BackgroundImage = Image_Other.Logo_Splash;
+            Button_Close.BackgroundImage = Image_Icon.Close;
+
+            ForeColor = Color_Winform.Text_Fore_Color;
+            BackColor = Color_Winform.BG_Fore_Color;
+
+            GroupBox_Launcherlog.ForeColor = Color_Winform.Text_Fore_Color;
+            TextBox_Live_Log.ForeColor = Color_Winform.Secondary_Text_Fore_Color;
+            TextBox_Live_Log.BackColor = Color_Winform.BG_Darker_Fore_Color;
 
             /*******************************/
             /* Set Window Name              /
@@ -1115,7 +1168,15 @@ namespace SBRW.Launcher.App.UI_Forms
 
             this.Closing += (x, y) =>
             {
-                ClosingTasks();
+                if (FunctionStatus.LoadingComplete)
+                {
+                    ClosingTasks();
+                }
+                else
+                {
+                    FunctionStatus.LauncherForceClose = true;
+                }
+                
                 GC.Collect();
             };
             #endregion
@@ -1124,6 +1185,7 @@ namespace SBRW.Launcher.App.UI_Forms
             Screen_Instance = this;
             Screen_Panel_Forms = Panel_Form_Screens;
             Screen_TextBox_LiveLog = TextBox_Live_Log;
+            Size = new Size(559, 404);
             #endregion
         }
     }

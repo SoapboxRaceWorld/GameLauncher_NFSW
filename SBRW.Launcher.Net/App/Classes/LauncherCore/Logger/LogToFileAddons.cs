@@ -4,6 +4,7 @@ using SBRW.Launcher.Core.Extension.Logging_;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Logger
@@ -172,14 +173,17 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Logger
 
                 if (Parent_Screen.Screen_TextBox_LiveLog != null)
                 {
-                    if (Log_Clear)
+                    Task.Run(() => 
                     {
-                        Parent_Screen.Screen_TextBox_LiveLog.Clear();
-                    }
-                    else
-                    {
-                        Parent_Screen.Screen_TextBox_LiveLog.AppendText(Environment.NewLine + "[" + Log_Type_String + "] " + Log_Full_String);
-                    }
+                        if (Log_Clear)
+                        {
+                            Parent_Screen.Screen_TextBox_LiveLog.Clear();
+                        }
+                        else
+                        {
+                            Parent_Screen.Screen_TextBox_LiveLog.AppendText(Environment.NewLine + "[" + Log_Type_String + "] " + Log_Full_String);
+                        }
+                    }).ConfigureAwait(false);
                 }
             }
             catch (Exception Error)
