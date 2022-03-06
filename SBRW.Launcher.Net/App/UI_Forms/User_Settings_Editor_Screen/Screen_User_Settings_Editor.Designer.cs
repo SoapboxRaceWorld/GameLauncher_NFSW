@@ -271,7 +271,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelGameMusicVol.Name = "labelGameMusicVol";
             this.labelGameMusicVol.Size = new System.Drawing.Size(110, 17);
             this.labelGameMusicVol.TabIndex = 10;
-            this.labelGameMusicVol.Text = "Game Music:";
+            this.labelGameMusicVol.Text = "Event Music:";
             this.labelGameMusicVol.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelCarVol
