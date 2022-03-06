@@ -30,7 +30,6 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Screen_User_Settings_Editor));
             this.labelAudioMode = new System.Windows.Forms.Label();
             this.labelBrightness = new System.Windows.Forms.Label();
             this.labelMasterVol = new System.Windows.Forms.Label();
@@ -120,7 +119,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.Button_Save = new System.Windows.Forms.Button();
             this.ingameGameplayOptions = new System.Windows.Forms.PictureBox();
             this.ingameAudioOptions = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.customOptions = new System.Windows.Forms.PictureBox();
             this.ingameVideoOptions = new System.Windows.Forms.PictureBox();
             this.numericResWidth = new System.Windows.Forms.NumericUpDown();
             this.numericResHeight = new System.Windows.Forms.NumericUpDown();
@@ -186,7 +185,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panelParticleSys.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ingameGameplayOptions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ingameAudioOptions)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.customOptions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ingameVideoOptions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericResWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericResHeight)).BeginInit();
@@ -1353,18 +1352,18 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.ingameAudioOptions.TabIndex = 0;
             this.ingameAudioOptions.TabStop = false;
             // 
-            // pictureBox1
+            // CustomOptions
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.ErrorImage = null;
-            this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(278, 11);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(256, 644);
-            this.pictureBox1.TabIndex = 47;
-            this.pictureBox1.TabStop = false;
+            this.customOptions.BackColor = System.Drawing.Color.Transparent;
+            this.customOptions.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.customOptions.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.customOptions.ErrorImage = null;
+            this.customOptions.InitialImage = null;
+            this.customOptions.Location = new System.Drawing.Point(278, 11);
+            this.customOptions.Name = "CustomOptions";
+            this.customOptions.Size = new System.Drawing.Size(256, 644);
+            this.customOptions.TabIndex = 47;
+            this.customOptions.TabStop = false;
             // 
             // ingameVideoOptions
             // 
@@ -2049,7 +2048,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.Controls.Add(this.labelBrightness);
             this.Controls.Add(this.labelAudioMode);
             this.Controls.Add(this.ingameAudioOptions);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.customOptions);
             this.Controls.Add(this.ingameVideoOptions);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -2079,7 +2078,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panelParticleSys.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ingameGameplayOptions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ingameAudioOptions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.customOptions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ingameVideoOptions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericResWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericResHeight)).EndInit();
@@ -2189,7 +2188,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
         private System.Windows.Forms.NumericUpDown numericResHeight;
         private System.Windows.Forms.PictureBox ingameGameplayOptions;
         private System.Windows.Forms.PictureBox ingameAudioOptions;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox customOptions;
         private System.Windows.Forms.PictureBox ingameVideoOptions;
         private System.Windows.Forms.Panel panelSpeedUnits;
         private System.Windows.Forms.Label labelGPOUnits;

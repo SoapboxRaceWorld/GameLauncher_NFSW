@@ -262,86 +262,72 @@
             // CheckBox_Word_Filter_Check
             // 
             this.CheckBox_Word_Filter_Check.BackColor = System.Drawing.Color.Transparent;
-            this.CheckBox_Word_Filter_Check.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Word_Filter_Check.ForeColor = System.Drawing.Color.White;
             this.CheckBox_Word_Filter_Check.Location = new System.Drawing.Point(38, 335);
             this.CheckBox_Word_Filter_Check.Name = "CheckBox_Word_Filter_Check";
             this.CheckBox_Word_Filter_Check.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Word_Filter_Check.TabIndex = 58;
             this.CheckBox_Word_Filter_Check.Text = "Disable Chat Word Filtering";
-            this.CheckBox_Word_Filter_Check.UseVisualStyleBackColor = false;
             // 
             // CheckBox_Proxy
             // 
             this.CheckBox_Proxy.BackColor = System.Drawing.Color.Transparent;
-            this.CheckBox_Proxy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Proxy.ForeColor = System.Drawing.Color.White;
             this.CheckBox_Proxy.Location = new System.Drawing.Point(38, 357);
             this.CheckBox_Proxy.Name = "CheckBox_Proxy";
             this.CheckBox_Proxy.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Proxy.TabIndex = 59;
             this.CheckBox_Proxy.Text = "Disable Proxy";
-            this.CheckBox_Proxy.UseVisualStyleBackColor = false;
             // 
             // CheckBox_RPC
             // 
             this.CheckBox_RPC.BackColor = System.Drawing.Color.Transparent;
-            this.CheckBox_RPC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_RPC.ForeColor = System.Drawing.Color.White;
             this.CheckBox_RPC.Location = new System.Drawing.Point(38, 379);
             this.CheckBox_RPC.Name = "CheckBox_RPC";
             this.CheckBox_RPC.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_RPC.TabIndex = 60;
             this.CheckBox_RPC.Text = "Disable Discord RPC";
-            this.CheckBox_RPC.UseVisualStyleBackColor = false;
             // 
             // CheckBox_Legacy_Timer
             // 
             this.CheckBox_Legacy_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.CheckBox_Legacy_Timer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Legacy_Timer.ForeColor = System.Drawing.Color.White;
             this.CheckBox_Legacy_Timer.Location = new System.Drawing.Point(295, 379);
             this.CheckBox_Legacy_Timer.Name = "CheckBox_Legacy_Timer";
             this.CheckBox_Legacy_Timer.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Legacy_Timer.TabIndex = 63;
             this.CheckBox_Legacy_Timer.Text = "Enable Legacy Timer";
-            this.CheckBox_Legacy_Timer.UseVisualStyleBackColor = false;
             // 
             // CheckBox_Theme_Support
             // 
             this.CheckBox_Theme_Support.BackColor = System.Drawing.Color.Transparent;
-            this.CheckBox_Theme_Support.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Theme_Support.ForeColor = System.Drawing.Color.White;
             this.CheckBox_Theme_Support.Location = new System.Drawing.Point(295, 335);
             this.CheckBox_Theme_Support.Name = "CheckBox_Theme_Support";
             this.CheckBox_Theme_Support.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Theme_Support.TabIndex = 62;
             this.CheckBox_Theme_Support.Text = "Enable Custom Theme Support";
-            this.CheckBox_Theme_Support.UseVisualStyleBackColor = false;
             // 
             // CheckBox_Opt_Insider
             // 
             this.CheckBox_Opt_Insider.BackColor = System.Drawing.Color.Transparent;
-            this.CheckBox_Opt_Insider.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Opt_Insider.ForeColor = System.Drawing.Color.White;
             this.CheckBox_Opt_Insider.Location = new System.Drawing.Point(556, 335);
             this.CheckBox_Opt_Insider.Name = "CheckBox_Opt_Insider";
             this.CheckBox_Opt_Insider.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Opt_Insider.TabIndex = 61;
             this.CheckBox_Opt_Insider.Text = "Opt Into Beta Launcher Builds";
-            this.CheckBox_Opt_Insider.UseVisualStyleBackColor = false;
             // 
             // CheckBox_Alt_WebCalls
             // 
             this.CheckBox_Alt_WebCalls.BackColor = System.Drawing.Color.Transparent;
-            this.CheckBox_Alt_WebCalls.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_Alt_WebCalls.ForeColor = System.Drawing.Color.White;
             this.CheckBox_Alt_WebCalls.Location = new System.Drawing.Point(295, 357);
             this.CheckBox_Alt_WebCalls.Name = "CheckBox_Alt_WebCalls";
             this.CheckBox_Alt_WebCalls.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Alt_WebCalls.TabIndex = 64;
             this.CheckBox_Alt_WebCalls.Text = "Enable Alternative WebCalls";
-            this.CheckBox_Alt_WebCalls.UseVisualStyleBackColor = false;
             // 
             // Label_Game_Current_Path
             // 
@@ -515,26 +501,22 @@
             // CheckBox_LZMA_Downloader
             // 
             this.CheckBox_LZMA_Downloader.BackColor = System.Drawing.Color.Transparent;
-            this.CheckBox_LZMA_Downloader.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_LZMA_Downloader.ForeColor = System.Drawing.Color.White;
             this.CheckBox_LZMA_Downloader.Location = new System.Drawing.Point(295, 403);
             this.CheckBox_LZMA_Downloader.Name = "CheckBox_LZMA_Downloader";
             this.CheckBox_LZMA_Downloader.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_LZMA_Downloader.TabIndex = 80;
             this.CheckBox_LZMA_Downloader.Text = "Enable LZMA Downloader";
-            this.CheckBox_LZMA_Downloader.UseVisualStyleBackColor = false;
             // 
             // CheckBox_JSON_Update_Cache
             // 
             this.CheckBox_JSON_Update_Cache.BackColor = System.Drawing.Color.Transparent;
-            this.CheckBox_JSON_Update_Cache.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckBox_JSON_Update_Cache.ForeColor = System.Drawing.Color.White;
             this.CheckBox_JSON_Update_Cache.Location = new System.Drawing.Point(38, 403);
             this.CheckBox_JSON_Update_Cache.Name = "CheckBox_JSON_Update_Cache";
             this.CheckBox_JSON_Update_Cache.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_JSON_Update_Cache.TabIndex = 81;
             this.CheckBox_JSON_Update_Cache.Text = "Disable Frequent JSON Cache";
-            this.CheckBox_JSON_Update_Cache.UseVisualStyleBackColor = false;
             // 
             // Screen_Settings
             // 
