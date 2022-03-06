@@ -2770,7 +2770,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     Label_Download_Information_Support.SafeInvokeAction(() =>
                     {
-                        Label_Download_Information_Support.Text = "Downloaded: Core Game Files Package".ToUpper();
+                        Label_Download_Information_Support.Text = "Downloading: SBRW Game Files Package".ToUpper();
                     }, this);
 
                     Label_Download_Information.SafeInvokeAction(() =>
