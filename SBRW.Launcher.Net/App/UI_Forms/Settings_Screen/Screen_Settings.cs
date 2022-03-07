@@ -1185,22 +1185,12 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                         }
                         else
                         {
-                            switch (CDN_Status)
+                            backgroundColor = CDN_Status switch
                             {
-                                case 1:
-                                    /* ONLINE */
-                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Background_ForeColor);
-                                    break;
-                                case 3:
-                                    /* MAINTENANCE */
-                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Ping_Warning);
-                                    break;
-                                default:
-                                    /* OFFLINE */
-                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Ping_Error);
-                                    break;
-                            }
-
+                                1 => new SolidBrush(Color_Winform_Other.DropMenu_Background_ForeColor),/* ONLINE */
+                                3 => new SolidBrush(Color_Winform_Other.DropMenu_Ping_Warning),/* MAINTENANCE */
+                                _ => new SolidBrush(Color_Winform_Other.DropMenu_Ping_Error),/* OFFLINE */
+                            };
                             textColor = new SolidBrush((CDN_Status == 1) ? Color_Winform_Other.DropMenu_Text_ForeColor : Color_Winform_Other.DropMenu_Black);
                         }
 

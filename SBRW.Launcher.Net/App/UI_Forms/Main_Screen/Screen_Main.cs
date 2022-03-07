@@ -1884,29 +1884,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                             try
                             {
-                                /* Scenery Group Display */
-                                string SceneryStatus;
-                                switch (string.Join("", Launcher_Value.Launcher_Select_Server_JSON.Server_Active_Scenery))
+                                string SceneryStatus = string.Join("", Launcher_Value.Launcher_Select_Server_JSON.Server_Active_Scenery) switch
                                 {
-                                    case "SCENERY_GROUP_NEWYEARS":
-                                        SceneryStatus = "Scenery: New Years";
-                                        break;
-                                    case "SCENERY_GROUP_VALENTINES":
-                                        SceneryStatus = "Scenery: Valentines";
-                                        break;
-                                    case "SCENERY_GROUP_OKTOBERFEST":
-                                        SceneryStatus = "Scenery: Oktoberfest";
-                                        break;
-                                    case "SCENERY_GROUP_HALLOWEEN":
-                                        SceneryStatus = "Scenery: Halloween";
-                                        break;
-                                    case "SCENERY_GROUP_CHRISTMAS":
-                                        SceneryStatus = "Scenery: Christmas";
-                                        break;
-                                    default:
-                                        SceneryStatus = "Scenery: Normal";
-                                        break;
-                                }
+                                    "SCENERY_GROUP_NEWYEARS" => "Scenery: New Years",
+                                    "SCENERY_GROUP_VALENTINES" => "Scenery: Valentines",
+                                    "SCENERY_GROUP_OKTOBERFEST" => "Scenery: Oktoberfest",
+                                    "SCENERY_GROUP_HALLOWEEN" => "Scenery: Halloween",
+                                    "SCENERY_GROUP_CHRISTMAS" => "Scenery: Christmas",
+                                    _ => "Scenery: Normal",
+                                };
                                 Label_Server_Scenery.Text = SceneryStatus;
                             }
                             catch { }

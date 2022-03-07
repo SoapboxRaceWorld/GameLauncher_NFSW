@@ -25,27 +25,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Logger
             {
                 if (!Suppress)
                 {
-                    MessageBoxIcon IconBox;
-
-                    switch (Icon)
+                    var IconBox = Icon switch
                     {
-                        case "Error":
-                            IconBox = MessageBoxIcon.Error;
-                            break;
-                        case "Exclamation":
-                            IconBox = MessageBoxIcon.Exclamation;
-                            break;
-                        case "Information":
-                            IconBox = MessageBoxIcon.Information;
-                            break;
-                        case "Warning":
-                            IconBox = MessageBoxIcon.Warning;
-                            break;
-                        default:
-                            IconBox = MessageBoxIcon.None;
-                            break;
-                    }
-
+                        "Error" => MessageBoxIcon.Error,
+                        "Exclamation" => MessageBoxIcon.Exclamation,
+                        "Information" => MessageBoxIcon.Information,
+                        "Warning" => MessageBoxIcon.Warning,
+                        _ => MessageBoxIcon.None,
+                    };
                     string FormattedMessage = string.IsNullOrWhiteSpace(MessageDetails) ? string.Empty : MessageDetails + "\n" + ((Error != null) ? Error.Message + 
                         (Error.GetBaseException() != null && (Error.GetBaseException() != Error) ? "\n" + Error.GetBaseException().Message : string.Empty) : "Unknown Error [Null Exception]") + "\n\n";
 

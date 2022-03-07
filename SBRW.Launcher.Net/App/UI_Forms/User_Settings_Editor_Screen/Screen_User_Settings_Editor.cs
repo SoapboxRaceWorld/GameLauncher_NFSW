@@ -450,15 +450,12 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 switch (Type)
                 {
                     case "ShaderFSAA":
-                        switch (ConvertedValue)
+                        return ConvertedValue switch
                         {
-                            case 0:
-                                return 0;
-                            case 2:
-                                return 1;
-                            default:
-                                return 3;
-                        }
+                            0 => 0,
+                            2 => 1,
+                            _ => 3,
+                        };
                     default:
                         if (ConvertedValue <= 0)
                         {
@@ -480,31 +477,22 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 {
                     case "WorldRoadAniso":
                     case "AnisotropicLevel":
-                        switch (ConvertedValue)
+                        return ConvertedValue switch
                         {
-                            case 0:
-                                return 0;
-                            case 2:
-                                return 1;
-                            case 4:
-                                return 2;
-                            case 8:
-                                return 3;
-                            default:
-                                return 4;
-                        }
+                            0 => 0,
+                            2 => 1,
+                            4 => 2,
+                            8 => 3,
+                            _ => 4,
+                        };
                     case "ShaderDetail":
-                        switch (ConvertedValue)
+                        return ConvertedValue switch
                         {
-                            case 0:
-                                return 0;
-                            case 1:
-                                return 1;
-                            case 2:
-                                return 2;
-                            default:
-                                return 4;
-                        }
+                            0 => 0,
+                            1 => 1,
+                            2 => 2,
+                            _ => 4,
+                        };
                     default:
                         if (ConvertedValue <= 0)
                         {

@@ -74,59 +74,35 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client
 
         public static string ErrorTranslation(int Exit_Code)
         {
-            switch (Exit_Code)
+            return Exit_Code switch
             {
-                case -1073741819:
-                    return "Game Crash: Access Violation (0x" + Exit_Code.ToString("X") + ")";
-                case -1073740940:
-                    return "Game Crash: Heap Corruption (0x" + Exit_Code.ToString("X") + ")";
-                case -1073740791:
-                    return "Game Crash: Stack buffer overflow (0x" + Exit_Code.ToString("X") + ")";
-                case -805306369:
-                    return "Game Crash: Application Hang (0x" + Exit_Code.ToString("X") + ")";
-                case -1073741515:
-                    return "Game Crash: Missing dependency files (0x" + Exit_Code.ToString("X") + ")";
-                case -1073740972:
-                    return "Game Crash: Debugger crash (0x" + Exit_Code.ToString("X") + ")";
-                case -1073741676:
-                    return "Game Crash: Division by Zero (0x" + Exit_Code.ToString("X") + ")";
-                case 1:
-                    return "The process nfsw.exe was killed via Task Manager";
-                case 69:
-                    return "AllocationAssistant encountered an 'Out of Memory' condition";
-                case 2137:
-                    return "Launcher Forced Closed your Game. \nYou are Required to Restart the Game After " +
-                        Time_Conversion.RelativeTime((Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0) ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 7200);
-                case 2017:
-                    return "Server replied with Code: " + Tokens.UserId + " (0x" + Exit_Code.ToString("X") + ")";
-                case -1:
-                    return "No DirectX resources. Please check if GPU has enough VRAM before playing";
-                case -3:
-                    return "The Server was unable to resolve the request";
-                case -4:
-                    return "Another instance is already executed";
-                case -5:
-                    return "DirectX Device was not found. Please install GPU Drivers before playing";
-                case -6:
-                    return "Server was unable to resolve your request";
-                case -7:
-                    /* Known Affected Programs: MSI Dragon Center, Windows 10 1909 (Fix: Update to Latest)*/
-                    return "Corrupted Memory. Please check for interrupting Programs or System Updates.";
+                -1073741819 => "Game Crash: Access Violation (0x" + Exit_Code.ToString("X") + ")",
+                -1073740940 => "Game Crash: Heap Corruption (0x" + Exit_Code.ToString("X") + ")",
+                -1073740791 => "Game Crash: Stack buffer overflow (0x" + Exit_Code.ToString("X") + ")",
+                -805306369 => "Game Crash: Application Hang (0x" + Exit_Code.ToString("X") + ")",
+                -1073741515 => "Game Crash: Missing dependency files (0x" + Exit_Code.ToString("X") + ")",
+                -1073740972 => "Game Crash: Debugger crash (0x" + Exit_Code.ToString("X") + ")",
+                -1073741676 => "Game Crash: Division by Zero (0x" + Exit_Code.ToString("X") + ")",
+                1 => "The process nfsw.exe was killed via Task Manager",
+                69 => "AllocationAssistant encountered an 'Out of Memory' condition",
+                2137 => "Launcher Forced Closed your Game. \nYou are Required to Restart the Game After " +
+Time_Conversion.RelativeTime((Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0) ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 7200),
+                2017 => "Server replied with Code: " + Tokens.UserId + " (0x" + Exit_Code.ToString("X") + ")",
+                -1 => "No DirectX resources. Please check if GPU has enough VRAM before playing",
+                -3 => "The Server was unable to resolve the request",
+                -4 => "Another instance is already executed",
+                -5 => "DirectX Device was not found. Please install GPU Drivers before playing",
+                -6 => "Server was unable to resolve your request",
+                -7 => "Corrupted Memory. Please check for interrupting Programs or System Updates.",/* Known Affected Programs: MSI Dragon Center, Windows 10 1909 (Fix: Update to Latest)*/
                 /* ModLoader */
-                case 1450:
-                    return "ModNet: Unable to load ModLoader. Please Exclude Game Files with your Antivirus Software";
-                case 193:
-                    return "ModNet: Unable to load ModLoader. Please Install Microsoft Visual C++ Runtimes 2015-2019";
-                case 2:
-                    return "ModNet: Game was launched with invalid command line parameters.";
-                case 3:
-                    return "ModNet: .links file should not exist upon startup!";
-                case 4:
-                    return "ModNet: An Unhandled Error Appeared";
+                1450 => "ModNet: Unable to load ModLoader. Please Exclude Game Files with your Antivirus Software",
+                193 => "ModNet: Unable to load ModLoader. Please Install Microsoft Visual C++ Runtimes 2015-2019",
+                2 => "ModNet: Game was launched with invalid command line parameters.",
+                3 => "ModNet: .links file should not exist upon startup!",
+                4 => "ModNet: An Unhandled Error Appeared",
                 /* Generic Error */
-                default:
-                    return "Game Crash with exitcode: " + Exit_Code.ToString() + " (0x" + Exit_Code.ToString("X") + ")";
-            }
+                _ => "Game Crash with exitcode: " + Exit_Code.ToString() + " (0x" + Exit_Code.ToString("X") + ")",
+            };
         }
     }
 }

@@ -225,26 +225,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                         }
                         else
                         {
-                            switch (onlineStatus)
+                            backgroundColor = onlineStatus switch
                             {
-                                case 1:
-                                    /* ONLINE */
-                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Ping_Success);
-                                    break;
-                                case 2:
-                                    /* CHECKING */
-                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Ping_Checking);
-                                    break;
-                                case 3:
-                                    /* GSI ERROR */
-                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Ping_Warning);
-                                    break;
-                                default:
-                                    /* OFFLINE */
-                                    backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Ping_Error);
-                                    break;
-                            }
-
+                                1 => new SolidBrush(Color_Winform_Other.DropMenu_Ping_Success),/* ONLINE */
+                                2 => new SolidBrush(Color_Winform_Other.DropMenu_Ping_Checking),/* CHECKING */
+                                3 => new SolidBrush(Color_Winform_Other.DropMenu_Ping_Warning),/* GSI ERROR */
+                                _ => new SolidBrush(Color_Winform_Other.DropMenu_Ping_Error),/* OFFLINE */
+                            };
                             textColor = new SolidBrush(Color_Winform_Other.DropMenu_Black);
                         }
 

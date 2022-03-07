@@ -33,27 +33,18 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Unix
 
         public static PlatformIDPort ID(int Number)
         {
-            switch (Number)
+            return Number switch
             {
-                case 0:
-                    return PlatformIDPort.Win32S;
-                case 1:
-                    return PlatformIDPort.Win32Windows;
-                case 2:
-                    return PlatformIDPort.Win32NT;
-                case 3:
-                    return PlatformIDPort.WinCE;
-                case 4:
-                    return PlatformIDPort.Unix;
-                case 5:
-                    return PlatformIDPort.Xbox;
-                case 6:
-                    return PlatformIDPort.MacOSX;
-                case 128:
-                    return PlatformIDPort.MonoLegacy;
-                default:
-                    return PlatformIDPort.Unknown;
-            }
+                0 => PlatformIDPort.Win32S,
+                1 => PlatformIDPort.Win32Windows,
+                2 => PlatformIDPort.Win32NT,
+                3 => PlatformIDPort.WinCE,
+                4 => PlatformIDPort.Unix,
+                5 => PlatformIDPort.Xbox,
+                6 => PlatformIDPort.MacOSX,
+                128 => PlatformIDPort.MonoLegacy,
+                _ => PlatformIDPort.Unknown,
+            };
         }
 #endif
         public static bool AmI()
