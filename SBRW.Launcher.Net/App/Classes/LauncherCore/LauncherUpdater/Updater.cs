@@ -172,7 +172,6 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
 
                     if (Save_Settings.Live_Data.Update_Version_Skip != LatestLauncherBuild)
                     {
-                        FunctionStatus.LoadingComplete = true;
                         UpdatePopupStoppedSplashScreen = true;
 
                         DialogResult UserResult = new Screen_Update_Popup().ShowDialog();
@@ -217,6 +216,8 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
             {
                 VersionJSON = string.Empty;
             }
+
+            FunctionStatus.LoadingComplete = true;
 
             return StatusUpdate;
         }

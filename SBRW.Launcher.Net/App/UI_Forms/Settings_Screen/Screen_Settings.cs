@@ -27,6 +27,7 @@ using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Required.System.Windows_;
 using SBRW.Launcher.Core.Theme;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -780,10 +781,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             if (Save_Settings.Live_Data.Launcher_LZMA_Downloader != (CheckBox_LZMA_Downloader.Checked ? "1" : "0"))
             {
                 Save_Settings.Live_Data.Launcher_LZMA_Downloader = CheckBox_LZMA_Downloader.Checked ? "1" : "0";
-                if (Parent_Screen.BackgroundWorker_One != null)
+                if (Screen_Main.Screen_Instance != null)
                 {
-                    Parent_Screen.BackgroundWorker_One.CancelAsync();
-                    Parent_Screen.BackgroundWorker_One.RunWorkerAsync();
+                    Screen_Main.Screen_Instance.Game_Folder_Checks();
                 }
             }
 

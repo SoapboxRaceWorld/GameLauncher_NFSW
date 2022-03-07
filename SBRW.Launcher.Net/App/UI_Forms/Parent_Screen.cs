@@ -1008,7 +1008,10 @@ namespace SBRW.Launcher.App.UI_Forms
             {
                 if (Screen_Main.LZMA_Downloader != null)
                 {
-                    Screen_Main.LZMA_Downloader.Stop();
+                    if (Screen_Main.LZMA_Downloader.Downloading)
+                    {
+                        Screen_Main.LZMA_Downloader.Stop();
+                    }
                 }
             }
             catch (Exception Error)
@@ -1188,7 +1191,11 @@ namespace SBRW.Launcher.App.UI_Forms
                 {
                     FunctionStatus.LauncherForceClose = true;
                 }
-                
+
+                Screen_Instance = null;
+                Screen_Panel_Forms = null;
+                Screen_TextBox_LiveLog = null;
+
                 GC.Collect();
             };
             #endregion
