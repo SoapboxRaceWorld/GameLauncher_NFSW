@@ -274,7 +274,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             PresetLoaded = true;
         }
 
-        private void comboBoxPerformanceLevel_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBoxPerformanceLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
@@ -1268,7 +1268,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             Button_Cancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
             Button_Cancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
 
-            comboBoxPerformanceLevel.SelectedIndexChanged += new EventHandler(comboBoxPerformanceLevel_SelectedIndexChanged);
+            comboBoxPerformanceLevel.SelectedIndexChanged += new EventHandler(ComboBoxPerformanceLevel_SelectedIndexChanged);
 
             PresetButtonMin.CheckedChanged += new EventHandler(PresetButtonMin_CheckedChanged);
             PresetButtonLow.CheckedChanged += new EventHandler(PresetButtonLow_CheckedChanged);
@@ -1505,7 +1505,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             Button_Cancel.Image = Image_Button.Grey_Hover;
         }
 
-        private void labelLauncherVersion_Click(object sender, EventArgs e)
+        private void LabelLauncherVersion_Click(object sender, EventArgs e)
         {
             DialogResult Alert = MessageBox.Show(null, "Do you want my Super Honk?", "FunkyWacky", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
 

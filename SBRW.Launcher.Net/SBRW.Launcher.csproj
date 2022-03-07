@@ -3,6 +3,8 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>net6.0-windows;net461</TargetFrameworks>
+    <!-- NoWarn below suppresses project-wide -->
+    <NoWarn>$(NoWarn);NU1701;SYSLIB0006;SYSLIB0014</NoWarn>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>disable</ImplicitUsings>

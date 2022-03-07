@@ -676,7 +676,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelLauncherVersion.TabIndex = 49;
             this.labelLauncherVersion.Text = "Version: vXX.XX.XX.XXXX";
             this.labelLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.labelLauncherVersion.Click += new System.EventHandler(this.labelLauncherVersion_Click);
+            this.labelLauncherVersion.Click += new System.EventHandler(this.LabelLauncherVersion_Click);
             // 
             // labelVideoOptions
             // 
