@@ -1874,11 +1874,11 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                 {
                     if (RPCStateCache.Contains("Settings"))
                     {
-                        Screen_Settings.Screen_Instance.Clear_Hide_Screen_Form_Panel();
+                        Screen_Settings.Clear_Hide_Screen_Form_Panel();
                     }
                     else if (RPCStateCache.Contains("Ready"))
                     {
-                        Screen_Main.Screen_Instance.Clear_Hide_Screen_Form_Panel();
+                        Screen_Main.Clear_Hide_Screen_Form_Panel();
                     }
                 }
                 RPCStateCache = string.Empty;

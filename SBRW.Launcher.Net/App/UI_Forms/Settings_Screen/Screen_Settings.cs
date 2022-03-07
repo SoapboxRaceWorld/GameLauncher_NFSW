@@ -1345,7 +1345,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         /// <param name="EnabledORDisabled">Enables or Disables the Button</param>
         /// <remarks>Range 0-3 Sets Colored Button.
         /// <code>"0" Checking Blue</code><code>"1" Success Green</code><code>"2" Warning Orange</code><code>"3" Error Red</code></remarks>
-        private void ButtonsColorSet(Button Elements, int Color, bool EnabledORDisabled)
+        private static void ButtonsColorSet(Button Elements, int Color, bool EnabledORDisabled)
         {
             switch (Color)
             {
@@ -1704,7 +1704,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         }
         #endregion
 
-        public void Clear_Hide_Screen_Form_Panel()
+        public static void Clear_Hide_Screen_Form_Panel()
         {
             Screen_Panel_Forms.Controls.Clear();
             Screen_Panel_Forms.Visible = false;
@@ -1751,7 +1751,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 
                 if (Screen_Main.Screen_Instance != null)
                 {
-                    Screen_Main.Screen_Instance.Clear_Hide_Screen_Form_Panel();
+                    Screen_Main.Clear_Hide_Screen_Form_Panel();
                 }
             };
             Screen_Instance = this;

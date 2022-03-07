@@ -2237,7 +2237,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         #region Game Files Downloader Components (LZMA [.dat])
 
-        public void RemoveTracksHighFiles()
+        public static void RemoveTracksHighFiles()
         {
             try
             {
@@ -3598,7 +3598,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         }
 #endregion
 
-        public void Clear_Hide_Screen_Form_Panel()
+        public static void Clear_Hide_Screen_Form_Panel()
         {
             if (Screen_Panel_Forms != null)
             {

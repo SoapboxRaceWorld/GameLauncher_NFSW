@@ -392,7 +392,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             }
         }
 
-        private int CheckValidRange(string Type, string Range, string Value)
+        private static int CheckValidRange(string Type, string Range, string Value)
         {
             int ConvertedValue;
 
@@ -542,7 +542,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
         }
 
         /* Converts Decimal Numbers (ex. 0.52) to 52 */
-        private decimal ConvertDecimalToWholeNumber(string UIName)
+        private static decimal ConvertDecimalToWholeNumber(string UIName)
         {
             decimal Value;
 
@@ -570,7 +570,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
         }
 
         /* Check User Inputed Value and Keep in Within the Value Range of 0-100 or Round to the Nearest Whole Number*/
-        private string ValidWholeNumberRange(string Type, decimal UIName)
+        private static string ValidWholeNumberRange(string Type, decimal UIName)
         {
             decimal Value;
 
@@ -627,7 +627,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
         }
 
         /* Check User Inputed Value and Keep in Within the Value Range of 0-1 with In-between Values */
-        private string ValidDecimalNumberRange(decimal UIName)
+        private static string ValidDecimalNumberRange(decimal UIName)
         {
             decimal Value;
 
