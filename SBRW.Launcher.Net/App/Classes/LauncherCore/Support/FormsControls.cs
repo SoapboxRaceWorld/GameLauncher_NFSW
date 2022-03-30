@@ -93,7 +93,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
                             Log.Function("SafeInvokeAction".ToUpper() + "Control: " + Control_Form.Name + " is being Disposed");
                         }
                     }
-                    else if (!Control_Form.FindForm().IsDisposed)
+                    else if (!Control_Form.FindForm().IsDisposed || !Control_Form.FindForm().Disposing)
                     {
                         Control_Form.FindForm().Controls.Add(Control_Form);
                         SafeInvokeAction(Control_Form, Action_Refresh);

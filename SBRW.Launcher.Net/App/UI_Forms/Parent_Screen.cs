@@ -1109,19 +1109,14 @@ namespace SBRW.Launcher.App.UI_Forms
             {
                 Application.Restart();
             }
-            else
+            else if (Application.MessageLoop)
             {
-                if (Application.MessageLoop)
-                {
-                    // WinForms Mode
-                    Application.Exit();
-                }
-                else
-                {
-                    // If in Console Mode or if Form is Hidden
-                    Environment.Exit(0);
-                }
+                // WinForms Mode
+                Application.Exit();
             }
+
+            // If in Console Mode or if Form is Hidden and/or for Background Threads
+            Environment.Exit(Environment.ExitCode);
         }
         #endregion
 

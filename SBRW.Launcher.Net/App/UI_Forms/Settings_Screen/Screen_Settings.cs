@@ -53,8 +53,11 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         private string NewLauncherPath { get; set; }
         private string NewGameFilesPath { get; set; }
         private string FinalCDNURL { get; set; }
+        private static long Thread_Number_Change_A { get; set; }
         private static Thread? ThreadChangedCDN { get; set; }
+        private static long Thread_Number_Change_B { get; set; }
         private static Thread? ThreadSavedCDN { get; set; }
+        private static long Thread_Number_Change_C { get; set; }
         private static Thread? ThreadChecksums { get; set; }
 
         #region Support Functions
@@ -155,29 +158,38 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 
                 ThreadSavedCDN = new Thread(() =>
                 {
-                    if (!Application.OpenForms[this.Name].IsDisposed)
+                    long Cached_Value = Thread_Number_Change_A;
+
+                    if ((Screen_Instance != null) && Cached_Value == Thread_Number_Change_A)
                     {
                         switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/index.xml", 10))
                         {
                             case APIStatus.Online:
-                                LinkLabel_CDN_Current.SafeInvokeAction(() =>
+                                if (Cached_Value == Thread_Number_Change_A)
                                 {
-                                    LinkLabel_CDN_Current.LinkColor = Color_Text.S_Sucess;
-                                });
-                                Log.UrlCall("SETTINGS PINGING CDN: " + Save_Settings.Live_Data.Launcher_CDN + " Is Online!");
+                                    LinkLabel_CDN_Current.SafeInvokeAction(() =>
+                                    {
+                                        LinkLabel_CDN_Current.LinkColor = Color_Text.S_Sucess;
+                                    });
+                                    Log.UrlCall("SETTINGS PINGING CDN: " + Save_Settings.Live_Data.Launcher_CDN + " Is Online!");
+                                }
                                 break;
                             default:
-                                LinkLabel_CDN_Current.SafeInvokeAction(() =>
+                                if (Cached_Value == Thread_Number_Change_A)
                                 {
-                                    LinkLabel_CDN_Current.LinkColor = Color_Text.S_Error;
-                                });
-                                Log.UrlCall("SETTINGS PINGING CDN: " + Save_Settings.Live_Data.Launcher_CDN + " Is Offline!");
+                                    LinkLabel_CDN_Current.SafeInvokeAction(() =>
+                                    {
+                                        LinkLabel_CDN_Current.LinkColor = Color_Text.S_Error;
+                                    });
+                                    Log.UrlCall("SETTINGS PINGING CDN: " + Save_Settings.Live_Data.Launcher_CDN + " Is Offline!");
+                                }
                                 break;
                         }
                     }
                 });
 
                 ThreadSavedCDN.Start();
+                Thread_Number_Change_A++;
             }
             else
             {
@@ -683,23 +695,36 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                         ThreadChecksums = null;
                     }
 
+                    ButtonsColorSet(Button_Game_Verify_Files, 0, false);
+
                     ThreadChecksums = new Thread(() =>
                     {
-                        ButtonsColorSet(Button_Game_Verify_Files, 0, false);
+                        long Cached_Value = Thread_Number_Change_B;
 
-                        switch (API_Core.StatusCheck(FinalCDNURL + "/unpacked/checksums.dat", 10))
+                        if ((Screen_Instance != null) && Cached_Value == Thread_Number_Change_B)
                         {
-                            case APIStatus.Online:
-                                FunctionStatus.DoesCDNSupportVerifyHash = true;
-                                ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
-                                break;
-                            default:
-                                FunctionStatus.DoesCDNSupportVerifyHash = false;
-                                ButtonsColorSet(Button_Game_Verify_Files, 3, true);
-                                break;
+                            switch (API_Core.StatusCheck(FinalCDNURL + "/unpacked/checksums.dat", 10))
+                            {
+                                case APIStatus.Online:
+                                    if (Cached_Value == Thread_Number_Change_B)
+                                    {
+                                        FunctionStatus.DoesCDNSupportVerifyHash = true;
+                                        ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
+                                    }
+                                    break;
+                                default:
+                                    if (Cached_Value == Thread_Number_Change_B)
+                                    {
+                                        FunctionStatus.DoesCDNSupportVerifyHash = false;
+                                        ButtonsColorSet(Button_Game_Verify_Files, 3, true);
+                                    }
+                                    break;
+                            }
                         }
                     });
+
                     ThreadChecksums.Start();
+                    Thread_Number_Change_B++;
                 }
             }
             else
@@ -783,7 +808,11 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 Save_Settings.Live_Data.Launcher_LZMA_Downloader = CheckBox_LZMA_Downloader.Checked ? "1" : "0";
                 if (Screen_Main.Screen_Instance != null)
                 {
-                    Screen_Main.Screen_Instance.Game_Folder_Checks();
+                    Screen_Main.Screen_Instance.SafeEndInvokeAsyncCatch(Screen_Main.Screen_Instance.SafeBeginInvokeActionAsync(Launcher_X_Form =>
+                    {
+                        Screen_Main.Pack_SBRW_Downloader_Error_Rate = 0;
+                        Screen_Main.Screen_Instance.Game_Folder_Checks();
+                    }));
                 }
             }
 
@@ -1059,31 +1088,40 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 
                         ThreadChangedCDN = new Thread(() =>
                         {
-                            if (!Application.OpenForms[this.Name].IsDisposed)
+                            long Cached_Value = Thread_Number_Change_C;
+
+                            if ((Screen_Instance != null) && Cached_Value == Thread_Number_Change_C)
                             {
-                                switch (API_Core.StatusCheck(((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Url + "/index.xml", 10))
+                                if (Screen_Instance.ComboBox_CDN_List != null)
                                 {
-                                    case APIStatus.Online:
-                                        Label_CDN.SafeInvokeAction(() =>
+                                    ComboBox_CDN_List.SafeInvokeAction(() =>
+                                    {
+                                        switch (API_Core.StatusCheck(((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Url + "/index.xml", 10))
                                         {
-                                            Label_CDN.Text = "CDN: ONLINE";
-                                            Label_CDN.ForeColor = Color_Text.S_Sucess;
-                                        });
-                                        Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Url + " Is Online!");
-                                        break;
-                                    default:
-                                        Label_CDN.SafeInvokeAction(() =>
-                                        {
-                                            Label_CDN.Text = "CDN: OFFLINE";
-                                            Label_CDN.ForeColor = Color_Text.S_Error;
-                                        });
-                                        Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Url + " Is Offline!");
-                                        break;
+                                            case APIStatus.Online:
+                                                Label_CDN.SafeInvokeAction(() =>
+                                                {
+                                                    Label_CDN.Text = "CDN: ONLINE";
+                                                    Label_CDN.ForeColor = Color_Text.S_Sucess;
+                                                });
+                                                Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((Json_List_CDN)Screen_Instance.ComboBox_CDN_List.SelectedItem).Url + " Is Online!");
+                                                break;
+                                            default:
+                                                Label_CDN.SafeInvokeAction(() =>
+                                                {
+                                                    Label_CDN.Text = "CDN: OFFLINE";
+                                                    Label_CDN.ForeColor = Color_Text.S_Error;
+                                                });
+                                                Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Url + " Is Offline!");
+                                                break;
+                                        }
+                                    });
                                 }
                             }
                         });
 
                         ThreadChangedCDN.Start();
+                        Thread_Number_Change_C++;
                     }
                     else
                     {
@@ -1713,6 +1751,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             this.Closing += (x, y) =>
             {
                 Presence_Launcher.Status("Idle Ready", null);
+                Thread_Number_Change_A = Thread_Number_Change_B = Thread_Number_Change_C = 0;
 
                 if (ThreadChangedCDN != null)
                 {

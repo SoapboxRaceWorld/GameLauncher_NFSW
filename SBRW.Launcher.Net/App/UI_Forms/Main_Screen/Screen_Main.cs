@@ -87,7 +87,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public static Download_Queue? Pack_SBRW_Downloader { get; set; }
         public static Download_Extract? Pack_SBRW_Unpacker { get; set; }
         private static int Pack_SBRW_Downloader_Time_Span { get; set; }
-        private static int Pack_SBRW_Downloader_Error_Rate { get; set; }
+        public static int Pack_SBRW_Downloader_Error_Rate { get; set; }
 
 
         private static string JsonGSI { get; set; } = string.Empty;
@@ -902,19 +902,34 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private void Client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e)
         {
-            Label_Download_Information_Support.SafeInvokeAction(() =>
-            Label_Download_Information_Support.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper(), this);
-
-            if (e.TotalBytesToReceive >= 1)
+            try
             {
-                Label_Download_Information.SafeInvokeAction(() =>
-                Label_Download_Information.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + Time_Conversion.FormatFileSize(e.BytesReceived) + " of " + Time_Conversion.FormatFileSize(e.TotalBytesToReceive)).ToUpper(), this);
-
-                ProgressBar_Extracting.SafeInvokeAction(() =>
+                if (sender != null && e != null && !IsDisposed)
                 {
-                    ProgressBar_Extracting.Value = Convert.ToInt32(decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
-                    ProgressBar_Extracting.Width = Convert.ToInt32(decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
-                }, this);
+                    Label_Download_Information_Support.SafeInvokeAction(() =>
+                    Label_Download_Information_Support.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper(), this);
+
+                    if (e.TotalBytesToReceive >= 1)
+                    {
+                        Label_Download_Information.SafeInvokeAction(() =>
+                        Label_Download_Information.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + Time_Conversion.FormatFileSize(e.BytesReceived) + " of " + Time_Conversion.FormatFileSize(e.TotalBytesToReceive)).ToUpper(), this);
+
+                        ProgressBar_Extracting.SafeInvokeAction(() =>
+                        {
+                            ProgressBar_Extracting.Value = Convert.ToInt32(decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
+                            ProgressBar_Extracting.Width = Convert.ToInt32(decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
+                        }, this);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+                Application.DoEvents();
+                GC.Collect();
             }
         }
 
@@ -2363,7 +2378,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
         }
 
-        private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename, int skiptime = 0)
+        private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename = "", int skiptime = 0)
         {
             if (!IsDisposed && LZMA_Downloader != null)
             {
@@ -2453,7 +2468,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     if (LZMA_Downloader.Downloading)
                     {
                         LZMA_Downloader.Stop();
-                    }  
+                    }
                 }
             }
             else if (LZMA_Downloader != null)
@@ -2585,7 +2600,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Label_Download_Information.SafeInvokeAction(() =>
                         Label_Download_Information.Text = string.Format("{0} of {1} : ({3}%) — {2}", Time_Conversion.FormatFileSize(currentCount),
                         Time_Conversion.FormatFileSize(allFilesCount),
-                        Time_Conversion.EstimateFinishTime(currentCount, allFilesCount, DownloadStartTime), (int)(100 * currentCount / allFilesCount)).ToUpper(), this);
+                        Time_Conversion.EstimateFinishTime(currentCount, allFilesCount, DownloadStartTime), 100 * currentCount / allFilesCount).ToUpper(), this);
                     }
                 }
                 catch 
@@ -2690,7 +2705,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         if (Parent_Screen.Screen_Instance != null)
                         {
-                            Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total), 100);
+                            Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                            {
+                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total), 100);
+                            }, Parent_Screen.Screen_Instance);
                         }
 
                         Label_Download_Information.SafeInvokeAction(() =>
@@ -2707,7 +2725,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     {
                         if (Parent_Screen.Screen_Instance != null)
                         {
-                            Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
+                            Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                            {
+                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
+                            }, Parent_Screen.Screen_Instance);
                         }
 
                         ProgressBar_Preload.SafeInvokeAction(() =>
@@ -2760,7 +2781,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                     if (Parent_Screen.Screen_Instance != null)
                                     {
-                                        Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, U_Live_Events.Extract_Percentage, 100);
+                                        Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                                        {
+                                            Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, U_Live_Events.Extract_Percentage, 100);
+                                        }, Parent_Screen.Screen_Instance);
                                     }
 
                                     Label_Download_Information_Support.SafeInvokeAction(() =>
@@ -3454,6 +3478,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             LZMA_Downloader = new Download_LZMA_Data(this, 3, 2, 16)
             {
+                Progress_Update_Frequency = 800,
                 ProgressUpdated = new Download_LZMA_Delegates.Download_LZMA_Progress_Updated(OnDownloadProgress),
                 DownloadFinished = new Download_LZMA_Delegates.Download_LZMA_Finished(DownloadTracksFiles),
                 DownloadFailed = new Download_LZMA_Delegates.Download_LZMA_Failed(OnDownloadFailed),
@@ -3487,7 +3512,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             Shown += (x, y) =>
             {
-                new Thread(() =>
+                Thread Live_Thread = new Thread(() =>
                 {
                     Presence_Launcher.Update();
 
@@ -3512,9 +3537,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     };
 #pragma warning restore SYSLIB0014 // Type or member is obsolete
 
-                                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                                    { 
-                                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                                    if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                                    {
+                                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
                                     }
                                     else
                                     {
@@ -3575,7 +3600,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
                         }
                     }
-                }).Start();
+                });
+
+                Live_Thread.IsBackground = true;
+                Live_Thread.Start();
 
                 Game_Folder_Checks();
 

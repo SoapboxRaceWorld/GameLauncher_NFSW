@@ -51,6 +51,8 @@ namespace SBRW.Launcher.Net
             finally
             {
                 Application.Exit();
+                // If in Console Mode or if Form is Hidden and/or for Background Threads
+                Environment.Exit(Environment.ExitCode);
             }
         }
 
@@ -77,6 +79,8 @@ namespace SBRW.Launcher.Net
             finally
             {
                 Application.Exit();
+                /* If in Console Mode or if Form is Hidden and/or for Background Threads */
+                Environment.Exit(Environment.ExitCode);
             }
         }
 
