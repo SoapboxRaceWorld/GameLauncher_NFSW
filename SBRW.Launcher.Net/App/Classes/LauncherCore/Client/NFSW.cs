@@ -88,6 +88,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client
                 2137 => "Launcher Forced Closed your Game. \nYou are Required to Restart the Game After " +
 Time_Conversion.RelativeTime((Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0) ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 7200),
                 2017 => "Server replied with Code: " + Tokens.UserId + " (0x" + Exit_Code.ToString("X") + ")",
+                2020 => "Game Failed to Start. Launcher closed any leftover instances of the game.",
                 -1 => "No DirectX resources. Please check if GPU has enough VRAM before playing",
                 -3 => "The Server was unable to resolve the request",
                 -4 => "Another instance is already executed",

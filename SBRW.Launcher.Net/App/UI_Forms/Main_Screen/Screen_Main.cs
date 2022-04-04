@@ -97,6 +97,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private string UserId { get; set; } = string.Empty;
         private static int ServerSecondsToShutDown { get; set; }
         private static Ping? CheckMate { get; set; }
+        private static System.Timers.Timer Live_Action_Timer { get; set; }
 
         public static string ModNetFileNameInUse { get; set; } = string.Empty;
         public static Queue<Uri> ModFilesDownloadUrls { get; set; } = new Queue<Uri>();
@@ -287,6 +288,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 Button_Play_OR_Update.BackgroundImage = Image_Button.Play;
                 Button_Play_OR_Update.ForeColor = Color_Text.L_Five;
+                Button_Play_OR_Update.Visible = hideElements;
 
                 Button_Logout.BackgroundImage = Image_Button.Grey;
                 Button_Logout.ForeColor = Color_Text.L_Five;
@@ -602,13 +604,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Button_Play_OR_Update.BackgroundImage = Image_Button.Play;
         }
 
-        private void DisablePlayButton()
+        private bool DisablePlayButton(bool Return_Value = false)
         {
             IsDownloading = false;
             Playenabled = false;
 
             ProgressBar_Extracting.Value = 100;
             ProgressBar_Extracting.Width = 519;
+
+            return Return_Value;
         }
 
         /* Social Panel | Ping or Offline or DEV Servers | */
@@ -670,8 +674,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             { IsBackground = true };
 
             Nfswstarted.Start();
-
-            Presence_Launcher.Status("In-Game", null);
         }
 
         /* Check Serverlist API Status Upon Main Screen load - DavidCarbon */
@@ -785,55 +787,95 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
         }
 
-        private void Game_Live_Data(string UserID, string LoginToken, string ServerIP, Form x)
+        private void Launcher_Close_Check(Form Live_Form, int Process_Exit_Code, int Process_ID = 0, bool Did_Game_Start = false, MessageBoxIcon Icon_Box_Art = MessageBoxIcon.Asterisk)
+        {
+            /* The process is adorable like a puppy, Kill it (https://youtu.be/mY3sM0jtwaA) */
+            Log.Core("LAUNCHER: Killing any left over Processes related to NFSW");
+
+            try
+            {
+                if (Process_ID != 0)
+                {
+                    Process.GetProcessById(NfswPid).Kill();
+                }
+            }
+            catch { }
+
+            try
+            {
+                Process[] allOfThem = Process.GetProcessesByName("nfsw");
+                if (allOfThem != null && allOfThem.Length >= 1)
+                {
+                    foreach (var oneProcess in allOfThem)
+                    {
+                        try
+                        {
+                            Process.GetProcessById(oneProcess.Id).Kill();
+                        }
+                        catch { }
+                    }
+                }
+            }
+            catch { }
+
+            FunctionStatus.LauncherBattlePass = false;
+
+            if (Live_Action_Timer.Enabled)
+            {
+                Live_Action_Timer.Stop();
+            }
+
+            if (Nfswstarted != null)
+            {
+                Nfswstarted.Abort();
+            }
+
+            string Error_Msg = NFSW.ErrorTranslation(Process_Exit_Code);
+
+            if (Did_Game_Start && !string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path) && !FunctionStatus.LauncherBattlePass)
+            {
+                if (File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, Locations.NameModLinks)))
+                {
+                    ModNetHandler.CleanLinks(Save_Settings.Live_Data.Game_Path);
+                }
+            }
+
+            Live_Form.SafeEndInvokeAsyncCatch(Live_Form.SafeBeginInvokeActionAsync(Launcher_X_Form =>
+            {
+                if (Parent_Screen.Screen_Instance != null)
+                {
+                    Parent_Screen.Screen_Instance.WindowState = FormWindowState.Normal;
+                    Parent_Screen.Screen_Instance.ShowInTaskbar = Button_Close.Visible = Button_Logout.Visible = EnablePlayButton(true);
+                    Button_Play_OR_Update.Visible = false;
+                }
+                
+                DisableLogout = false;
+
+                Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
+                Label_Download_Information.Text = Error_Msg.ToUpper();
+
+                if (Did_Game_Start)
+                {
+                    Log.Error("GAME CRASH [EXIT CODE]: " + Process_Exit_Code.ToString() + " HEX: (0x" + Process_Exit_Code.ToString("X") + ")" + " REASON: " + Error_Msg);
+                    ProgressBar_Preload.Value = 100;
+                    ProgressBar_Preload.ForeColor = Color_Text.S_Error;
+                }
+                else
+                {
+                    Log.Core("LAUNCHER: Game failed to Launch. Forcing User to Login again.");
+                }
+
+                MessageBox.Show(null, Error_Msg, "GameLauncher", MessageBoxButtons.OK, Icon_Box_Art);
+            }));
+        }
+
+        private void Game_Live_Data(string UserID, string LoginToken, string ServerIP, Form Live_Form)
         {
             if (Process_Start_Game.Initialize(Save_Settings.Live_Data.Game_Path, ServerIP, LoginToken,
                 UserID, Launcher_Value.Launcher_Select_Server_Data.ID.ToUpper()) != null)
             {
                 FunctionStatus.LauncherBattlePass = Process_Start_Game.Live_Process.EnableRaisingEvents = true;
                 NfswPid = Process_Start_Game.Live_Process.Id;
-
-                /* TIMER HERE */
-                System.Timers.Timer shutdowntimer = new System.Timers.Timer();
-                shutdowntimer.Elapsed += new System.Timers.ElapsedEventHandler(Time_Window.ClockWork_Planet);
-                Time_Window.Session_Alert += (x, D_Live_Events) =>
-                {
-                    if (D_Live_Events != null)
-                    {
-                        try
-                        {
-                            NotifyIcon_Notification.Visible = D_Live_Events.Valid;
-                            NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
-                            NotifyIcon_Notification.BalloonTipTitle = "Force Restart - " + Launcher_Value.Game_Server_Name;
-                            NotifyIcon_Notification.BalloonTipText = "Game will shutdown by " + (D_Live_Events.Session_End_Time ?? DateTime.Now.AddMinutes(5)).ToString("t") + ". Please restart it manually before the launcher does it.";
-                            NotifyIcon_Notification.ShowBalloonTip(TimeSpan.FromMinutes(2).Seconds);
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("NotifyIcon_Notification Timer", string.Empty, Error, "Error", true);
-                        }
-                        finally
-                        {
-                            GC.Collect();
-                        }
-                    }
-                };
-
-                shutdowntimer.Interval = !Proxy_Settings.Running() ? 30000 : 60000;
-                shutdowntimer.Enabled = true;
-
-                Button_Close.SafeInvokeAction(() =>
-                Button_Close.Visible = false, this);
-
-                if (Parent_Screen.Screen_Instance != null)
-                {
-                    Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
-                    {
-                        Parent_Screen.Screen_Instance.WindowState = FormWindowState.Minimized;
-                        Parent_Screen.Screen_Instance.ShowInTaskbar = false;
-                    }, Parent_Screen.Screen_Instance);
-                }
-
                 Process_Start_Game.Live_Process.Exited += (Send, It) =>
                 {
                     NfswPid = 0;
@@ -856,47 +898,66 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     }
                     else if (AC_Core.Stop_Check())
                     {
-                        x.SafeEndInvokeAsyncCatch(x.SafeBeginInvokeActionAsync(Launcher_X_Form =>
-                        {
-                            x.WindowState = FormWindowState.Normal;
-                            x.ShowInTaskbar = true;
-
-                            string Error_Msg = NFSW.ErrorTranslation(exitCode);
-                            Log.Error("GAME CRASH [EXIT CODE]: " + exitCode.ToString() + " HEX: (0x" + exitCode.ToString("X") + ")" + " REASON: " + Error_Msg);
-
-                            Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                            Label_Download_Information.Text = Error_Msg.ToUpper();
-                            ProgressBar_Preload.Value = 100;
-                            ProgressBar_Preload.ForeColor = Color_Text.S_Error;
-
-                            if (NfswPid != 0)
-                            {
-                                try
-                                {
-                                    Process.GetProcessById(NfswPid).Kill();
-                                }
-                                catch { /* ignored */ }
-                            }
-
-                            if (Nfswstarted != null)
-                            {
-                                Nfswstarted.Abort();
-                            }
-                            
-                            DialogResult restartApp = MessageBox.Show(null, Error_Msg + "\nWould you like to restart the GameLauncher?",
-                                "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                            if (restartApp == DialogResult.Yes)
-                            {
-                                Parent_Screen.Launcher_Restart = true;
-                            }
-
-                            if (Parent_Screen.Screen_Instance != null)
-                            {
-                                Parent_Screen.Screen_Instance.Button_Close_Click(new object(), new EventArgs());
-                            }
-                        }));
+                        Launcher_Close_Check(Live_Form, exitCode, NfswPid, true, MessageBoxIcon.Error);
                     }
                 };
+
+                while (Process_Start_Game.Live_Process.MainWindowHandle == IntPtr.Zero && !Process_Start_Game.Live_Process.HasExited)
+                {
+                    /* Loop Here until the game Window Appears */
+                }
+
+                if (!Process_Start_Game.Live_Process.HasExited)
+                {
+                    Presence_Launcher.Status("In-Game", null);
+
+                    /* TIMER HERE */
+                    Live_Action_Timer = new System.Timers.Timer();
+                    Live_Action_Timer.Elapsed += new System.Timers.ElapsedEventHandler(Time_Window.ClockWork_Planet);
+                    Time_Window.Session_Alert += (x, D_Live_Events) =>
+                    {
+                        if (D_Live_Events != null)
+                        {
+                            try
+                            {
+                                NotifyIcon_Notification.Visible = D_Live_Events.Valid;
+                                NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                NotifyIcon_Notification.BalloonTipTitle = "Force Restart - " + Launcher_Value.Game_Server_Name;
+                                NotifyIcon_Notification.BalloonTipText = "Game will shutdown by " + (D_Live_Events.Session_End_Time ?? DateTime.Now.AddMinutes(5)).ToString("t") + ". Please restart it manually before the launcher does it.";
+                                NotifyIcon_Notification.ShowBalloonTip(TimeSpan.FromMinutes(2).Seconds);
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("NotifyIcon_Notification Timer", string.Empty, Error, "Error", true);
+                            }
+                            finally
+                            {
+                                GC.Collect();
+                            }
+                        }
+                    };
+
+                    Live_Action_Timer.Interval = !Proxy_Settings.Running() ? 30000 : 60000;
+                    Live_Action_Timer.Enabled = true;
+
+                    Button_Close.SafeInvokeAction(() =>
+                    Button_Close.Visible = false, this);
+
+                    if (Parent_Screen.Screen_Instance != null)
+                    {
+                        Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                        {
+                            Parent_Screen.Screen_Instance.WindowState = FormWindowState.Minimized;
+                            Parent_Screen.Screen_Instance.ShowInTaskbar = false;
+                        }, Parent_Screen.Screen_Instance);
+                    }
+
+                    Log.Core("LAUNCHER: Game has Fully Launched, Minimized Launcher");
+                }
+                else if (FunctionStatus.LauncherBattlePass)
+                {
+                    Launcher_Close_Check(Live_Form, 2020, NfswPid, true, MessageBoxIcon.Warning);
+                }
             }
         }
 
@@ -2253,46 +2314,13 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         public void DownloadTracksFiles()
         {
-            Label_Download_Information.SafeInvokeAction(() =>
-            Label_Download_Information.Text = "Checking Tracks Files...".ToUpper(), this);
-
-            ProgressBar_Preload.SafeInvokeAction(() =>
-            ProgressBar_Preload.Width = 0, this);
-
-            ProgressBar_Extracting.SafeInvokeAction(() =>
-            ProgressBar_Extracting.Width = 0, this);
-
-            if (Parent_Screen.Screen_Instance != null)
+            if (!IsDisposed || !Disposing)
             {
-                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
-            }
+                Label_Download_Information.SafeInvokeAction(() =>
+                Label_Download_Information.Text = "Checking Tracks Files...".ToUpper(), this);
 
-            string SpecificTracksFilePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Tracks", "STREAML5RA_98.BUN");
-            if (!File.Exists(SpecificTracksFilePath) && (LZMA_Downloader != null))
-            {
-                DownloadStartTime = DateTime.Now;
-                Label_Download_Information_Support.SafeInvokeAction(() =>
-                Label_Download_Information_Support.Text = "Downloading: Tracks Data".ToUpper(), this);
-                Log.Info("DOWNLOAD: Getting Tracks Folder");
-                Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
-                LZMA_Downloader.StartDownload(Save_Settings.Live_Data.Launcher_CDN, "Tracks", Save_Settings.Live_Data.Game_Path, false, false, 615494528);
-            }
-            else
-            {
-                DownloadSpeechFiles();
-            }
-        }
-
-        public void DownloadSpeechFiles()
-        {
-            string speechFile = string.Empty;
-            int speechSize = 0;
-
-            if (InformationCache.EnableLZMADownloader)
-            {
-                Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Looking for correct Speech Files...".ToUpper(), this);
-
-                ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Width = 0, this);
+                ProgressBar_Preload.SafeInvokeAction(() =>
+                ProgressBar_Preload.Width = 0, this);
 
                 ProgressBar_Extracting.SafeInvokeAction(() =>
                 ProgressBar_Extracting.Width = 0, this);
@@ -2302,181 +2330,126 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
                 }
 
-                try
+                string SpecificTracksFilePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Tracks", "STREAML5RA_98.BUN");
+                if (!File.Exists(SpecificTracksFilePath) && (LZMA_Downloader != null))
                 {
-                    speechFile = Download_LZMA_Support.SpeechFiles(Save_Settings.Live_Data.Launcher_Language);
-
-                    Uri URLCall = new Uri(Save_Settings.Live_Data.Launcher_CDN + "/" + speechFile + "/index.xml");
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
-                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    var Client = new WebClient
-                    {
-                        Encoding = Encoding.UTF8,
-                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                    };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
-                    if (!Launcher_Value.Launcher_Alternative_Webcalls())
-                    {
-                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
-                    }
-                    else
-                    {
-                        Client.Headers.Add("user-agent", "SBRW Launcher " +
-                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    }
-
-                    try
-                    {
-                        string response = Client.DownloadString(URLCall);
-
-                        XmlDocument speechFileXml = new XmlDocument();
-                        speechFileXml.LoadXml(response);
-
-                        XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
-                        speechSize = Convert.ToInt32(speechSizeNode.InnerText);
-                    }
-                    catch
-                    {
-                        throw;
-                    }
-                    finally
-                    {
-                        if (Client != null)
-                        {
-                            Client.Dispose();
-                        }
-                    }
+                    DownloadStartTime = DateTime.Now;
+                    Label_Download_Information_Support.SafeInvokeAction(() =>
+                    Label_Download_Information_Support.Text = "Downloading: Tracks Data".ToUpper(), this);
+                    Log.Info("DOWNLOAD: Getting Tracks Folder");
+                    Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
+                    LZMA_Downloader.StartDownload(Save_Settings.Live_Data.Launcher_CDN, "Tracks", Save_Settings.Live_Data.Game_Path, false, false, 615494528);
                 }
-                catch (Exception Error)
+                else
                 {
-                    LogToFileAddons.OpenLog("Download Speech Files", string.Empty, Error, string.Empty, true);
-                    speechFile = Download_LZMA_Support.SpeechFiles();
-                    speechSize = Download_LZMA_Support.SpeechFilesSize();
+                    DownloadSpeechFiles();
                 }
-
-                Label_Download_Information.SafeInvokeAction(() =>
-                Label_Download_Information.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper(), this);
-            }
-
-            string SoundSpeechPath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Sound", "Speech", "copspeechsth_" + speechFile + ".big");
-            if (!File.Exists(SoundSpeechPath) && InformationCache.EnableLZMADownloader && LZMA_Downloader != null)
-            {
-                DownloadStartTime = DateTime.Now;
-                Label_Download_Information_Support.SafeInvokeAction(() =>
-                Label_Download_Information_Support.Text = "Downloading: Language Audio".ToUpper(), this);
-                Log.Info("DOWNLOAD: Getting Speech/Audio Files");
-                Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
-                LZMA_Downloader.StartDownload(Save_Settings.Live_Data.Launcher_CDN, speechFile, Save_Settings.Live_Data.Game_Path, false, false, speechSize);
             }
             else
             {
-                OnDownloadFinished();
-                Label_Download_Information_Support.SafeInvokeAction(() =>
-                Label_Download_Information_Support.Text = string.Empty, this);
-                Log.Info("DOWNLOAD: Game Files Download is Complete!");
+                GC.Collect();
             }
         }
 
-        private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename = "", int skiptime = 0)
+        public void DownloadSpeechFiles()
         {
-            if (!IsDisposed && LZMA_Downloader != null)
+            if (!IsDisposed || !Disposing)
             {
-                if (LZMA_Downloader.Downloading)
+                string speechFile = string.Empty;
+                int speechSize = 0;
+
+                if (InformationCache.EnableLZMADownloader)
                 {
-                    try
-                    {
-                        if (downloadCurrent < compressedLength)
-                        {
-                            Label_Download_Information.SafeInvokeAction(() =>
-                            Label_Download_Information.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(downloadCurrent),
-                            Time_Conversion.FormatFileSize(compressedLength), Time_Conversion.EstimateFinishTime(downloadCurrent, compressedLength,
-                            DownloadStartTime), (int)(100 * downloadCurrent / compressedLength)).ToUpper(), this);
-                        }
-                    }
-                    catch
-                    {
+                    Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Looking for correct Speech Files...".ToUpper(), this);
 
-                    }
-                    finally
+                    ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Width = 0, this);
+
+                    ProgressBar_Extracting.SafeInvokeAction(() =>
+                    ProgressBar_Extracting.Width = 0, this);
+
+                    if (Parent_Screen.Screen_Instance != null)
                     {
-                        GC.Collect();
+                        Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
                     }
 
                     try
                     {
-                        ProgressBar_Preload.SafeInvokeAction(() =>
-                        {
-                            ProgressBar_Preload.Value = (int)(100 * downloadCurrent / compressedLength);
-                            ProgressBar_Preload.Width = (int)(519 * downloadCurrent / compressedLength);
-                        }, this);
+                        speechFile = Download_LZMA_Support.SpeechFiles(Save_Settings.Live_Data.Launcher_Language);
 
-                        Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", (int)(100 * downloadCurrent / compressedLength)));
-
-                        if (Parent_Screen.Screen_Instance != null)
+                        Uri URLCall = new Uri(Save_Settings.Live_Data.Launcher_CDN + "/" + speechFile + "/index.xml");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        var Client = new WebClient
                         {
-                            Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, (int)(100 * downloadCurrent / compressedLength), 100);
+                            Encoding = Encoding.UTF8,
+                            CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                        };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
+
+                        if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                        {
+                            Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
                         }
-                    }
-                    catch
-                    {
+                        else
+                        {
+                            Client.Headers.Add("user-agent", "SBRW Launcher " +
+                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        }
+
                         try
                         {
-                            if (Parent_Screen.Screen_Instance != null)
-                            {
-                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 0, 100);
-                            }
+                            string response = Client.DownloadString(URLCall);
 
-                            ProgressBar_Preload.SafeInvokeAction(() =>
-                            {
-                                ProgressBar_Preload.Value = 0;
-                                ProgressBar_Preload.Width = 0;
-                            }, this);
+                            XmlDocument speechFileXml = new XmlDocument();
+                            speechFileXml.LoadXml(response);
+
+                            XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
+                            speechSize = Convert.ToInt32(speechSizeNode.InnerText);
                         }
                         catch
                         {
-
+                            throw;
                         }
                         finally
                         {
-                            GC.Collect();
+                            if (Client != null)
+                            {
+                                Client.Dispose();
+                            }
                         }
                     }
-                    finally
+                    catch (Exception Error)
                     {
-                        GC.Collect();
+                        LogToFileAddons.OpenLog("Download Speech Files", string.Empty, Error, string.Empty, true);
+                        speechFile = Download_LZMA_Support.SpeechFiles();
+                        speechSize = Download_LZMA_Support.SpeechFilesSize();
                     }
 
-                    try
-                    {
-                        if (Parent_Screen.Screen_Instance != null)
-                        {
-                            Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-                    finally
-                    {
-                        GC.Collect();
-                    }
+                    Label_Download_Information.SafeInvokeAction(() =>
+                    Label_Download_Information.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper(), this);
                 }
-                else if (LZMA_Downloader != null)
+
+                string SoundSpeechPath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Sound", "Speech", "copspeechsth_" + speechFile + ".big");
+                if (!File.Exists(SoundSpeechPath) && InformationCache.EnableLZMADownloader && LZMA_Downloader != null)
                 {
-                    if (LZMA_Downloader.Downloading)
-                    {
-                        LZMA_Downloader.Stop();
-                    }
+                    DownloadStartTime = DateTime.Now;
+                    Label_Download_Information_Support.SafeInvokeAction(() =>
+                    Label_Download_Information_Support.Text = "Downloading: Language Audio".ToUpper(), this);
+                    Log.Info("DOWNLOAD: Getting Speech/Audio Files");
+                    Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
+                    LZMA_Downloader.StartDownload(Save_Settings.Live_Data.Launcher_CDN, speechFile, Save_Settings.Live_Data.Game_Path, false, false, speechSize);
+                }
+                else
+                {
+                    OnDownloadFinished();
+                    Label_Download_Information_Support.SafeInvokeAction(() =>
+                    Label_Download_Information_Support.Text = string.Empty, this);
+                    Log.Info("DOWNLOAD: Game Files Download is Complete!");
                 }
             }
-            else if (LZMA_Downloader != null)
+            else
             {
-                if (LZMA_Downloader.Downloading)
-                {
-                    LZMA_Downloader.Stop();
-                }
+                GC.Collect();
             }
         }
 
@@ -2506,19 +2479,26 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Presence_Launcher.Download = false;
             Presence_Launcher.Status("Idle Ready", null);
 
-            Label_Download_Information.SafeInvokeAction(() =>
-            Label_Download_Information.Text = "Ready!".ToUpper(), this);
-
-            EnablePlayButton();
-
-            if (Parent_Screen.Screen_Instance != null)
+            if (!IsDisposed || !Disposing)
             {
-                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
-                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+                Label_Download_Information.SafeInvokeAction(() =>
+                Label_Download_Information.Text = "Ready!".ToUpper(), this);
+
+                EnablePlayButton();
+
+                if (Parent_Screen.Screen_Instance != null)
+                {
+                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
+                    Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+                }
+            }
+            else
+            {
+                GC.Collect();
             }
         }
 
-        private void EnablePlayButton()
+        private bool EnablePlayButton(bool Return_Value = false)
         {
             IsDownloading = false;
             Playenabled = true;
@@ -2528,6 +2508,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 ProgressBar_Extracting.Value = 100;
                 ProgressBar_Extracting.Width = 519;
             }, this);
+
+            return Return_Value;
         }
 
         private void OnDownloadFailed(Exception Error)
@@ -3478,12 +3460,153 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             LZMA_Downloader = new Download_LZMA_Data(this, 3, 2, 16)
             {
-                Progress_Update_Frequency = 800,
-                ProgressUpdated = new Download_LZMA_Delegates.Download_LZMA_Progress_Updated(OnDownloadProgress),
-                DownloadFinished = new Download_LZMA_Delegates.Download_LZMA_Finished(DownloadTracksFiles),
-                DownloadFailed = new Download_LZMA_Delegates.Download_LZMA_Failed(OnDownloadFailed),
-                ShowMessage = new Download_LZMA_Delegates.Download_LZMA_Show_Message(OnShowMessage),
-                ShowExtract = new Download_LZMA_Delegates.Download_LZMA_Show_Extract(OnShowExtract)
+                Progress_Update_Frequency = 800
+            };
+
+            LZMA_Downloader.Complete += (X_Input, Live_Data) =>
+            {
+                if ((!IsDisposed || !Disposing) && Live_Data.Complete)
+                {
+                    DownloadTracksFiles();
+                }
+            };
+
+            LZMA_Downloader.Live_Extract += (X_Input, Live_Data) =>
+            {
+                if (!IsDisposed || !Disposing)
+                {
+                    try
+                    {
+                        Label_Download_Information.SafeInvokeAction(() =>
+                        Label_Download_Information.Text = string.Format("{0} of {1} : ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.File_Current),
+                        Time_Conversion.FormatFileSize(Live_Data.File_Total),
+                        Time_Conversion.EstimateFinishTime(Live_Data.File_Current, Live_Data.File_Total, DownloadStartTime), Live_Data.Extract_Percentage).ToUpper(), this);
+                    }
+                    catch
+                    {
+
+                    }
+                    finally
+                    {
+                        GC.Collect();
+                    }
+
+                    try
+                    {
+                        ProgressBar_Extracting.SafeInvokeAction(() =>
+                        {
+                            ProgressBar_Extracting.Value = Live_Data.Extract_Percentage;
+                            ProgressBar_Extracting.Width = Live_Data.Extract_Percentage;
+                        }, this);
+                    }
+                    catch
+                    {
+
+                    }
+                    finally
+                    {
+                        GC.Collect();
+                    }
+                }
+            };
+
+            LZMA_Downloader.Live_Progress += (X_Input, Live_Data) =>
+            {
+                if ((!IsDisposed || !Disposing) && LZMA_Downloader != null)
+                {
+                    if (LZMA_Downloader.Downloading)
+                    {
+                        try
+                        {
+                            Label_Download_Information.SafeInvokeAction(() => 
+                            Label_Download_Information.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.File_Size_Total),
+                            Time_Conversion.FormatFileSize(Live_Data.File_Size_Total), Time_Conversion.EstimateFinishTime(Live_Data.File_Size_Current, Live_Data.File_Size_Total,
+                            DownloadStartTime), Live_Data.Download_Percentage).ToUpper(), this);
+                        }
+                        catch
+                        {
+
+                        }
+                        finally
+                        {
+                            GC.Collect();
+                        }
+
+                        try
+                        {
+                            ProgressBar_Preload.SafeInvokeAction(() =>
+                            {
+                                ProgressBar_Preload.Value = Live_Data.Download_Percentage;
+                                ProgressBar_Preload.Width = Live_Data.Download_Percentage;
+                            }, this);
+
+                            Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", Live_Data.Download_Percentage));
+
+                            if (Parent_Screen.Screen_Instance != null)
+                            {
+                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Live_Data.Download_Percentage, 100);
+                            }
+                        }
+                        catch
+                        {
+                            try
+                            {
+                                if (Parent_Screen.Screen_Instance != null)
+                                {
+                                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 0, 100);
+                                }
+
+                                ProgressBar_Preload.SafeInvokeAction(() =>
+                                {
+                                    ProgressBar_Preload.Value = 0;
+                                    ProgressBar_Preload.Width = 0;
+                                }, this);
+                            }
+                            catch
+                            {
+
+                            }
+                            finally
+                            {
+                                GC.Collect();
+                            }
+                        }
+                        finally
+                        {
+                            GC.Collect();
+                        }
+
+                        try
+                        {
+                            if (Parent_Screen.Screen_Instance != null)
+                            {
+                                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+                            }
+                        }
+                        catch
+                        {
+
+                        }
+                        finally
+                        {
+                            GC.Collect();
+                        }
+                    }
+                    else if (LZMA_Downloader != null)
+                    {
+                        if (LZMA_Downloader.Downloading)
+                        {
+                            LZMA_Downloader.Stop();
+                        }
+                    }
+                }
+                else if (LZMA_Downloader != null)
+                {
+                    if (LZMA_Downloader.Downloading)
+                    {
+                        LZMA_Downloader.Stop();
+                    }
+                }
             };
 
             Load += new EventHandler(MainScreen_Load);
