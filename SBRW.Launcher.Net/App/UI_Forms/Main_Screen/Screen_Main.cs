@@ -97,7 +97,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private string UserId { get; set; } = string.Empty;
         private static int ServerSecondsToShutDown { get; set; }
         private static Ping? CheckMate { get; set; }
-        private static System.Timers.Timer Live_Action_Timer { get; set; }
+        private static System.Timers.Timer? Live_Action_Timer { get; set; }
 
         public static string ModNetFileNameInUse { get; set; } = string.Empty;
         public static Queue<Uri> ModFilesDownloadUrls { get; set; } = new Queue<Uri>();
@@ -2570,65 +2570,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
             }
         }
-
-        private void OnShowExtract(string filename, long currentCount, long allFilesCount)
-        {
-            if (Screen_Instance != null)
-            {
-                try
-                {
-                    if (ProgressBar_Preload.Value == 100)
-                    {
-                        Label_Download_Information.SafeInvokeAction(() =>
-                        Label_Download_Information.Text = string.Format("{0} of {1} : ({3}%) — {2}", Time_Conversion.FormatFileSize(currentCount),
-                        Time_Conversion.FormatFileSize(allFilesCount),
-                        Time_Conversion.EstimateFinishTime(currentCount, allFilesCount, DownloadStartTime), 100 * currentCount / allFilesCount).ToUpper(), this);
-                    }
-                }
-                catch 
-                {
-
-                }
-                finally
-                {
-                    GC.Collect();
-                }
-
-                try
-                {
-                    ProgressBar_Extracting.SafeInvokeAction(() =>
-                    {
-                        ProgressBar_Extracting.Value = (int)(100 * currentCount / allFilesCount);
-                        ProgressBar_Extracting.Width = (int)(519 * currentCount / allFilesCount);
-                    }, this);
-                }
-                catch
-                {
-
-                }
-                finally
-                {
-                    GC.Collect();
-                }
-            }
-        }
-
-        private void OnShowMessage(string message, string header)
-        {
-            string TempEmailCache = string.Empty;
-            if (!string.IsNullOrWhiteSpace(Input_Email.Text))
-            {
-                TempEmailCache = Input_Email.Text;
-                Input_Email.SafeInvokeAction(() =>
-                Input_Email.Text = "EMAIL IS HIDDEN", this);
-            }
-            MessageBox.Show(message, header);
-            if (!string.IsNullOrWhiteSpace(TempEmailCache))
-            {
-                Input_Email.SafeInvokeAction(() =>
-                Input_Email.Text = TempEmailCache, this);
-            }
-        }
         #endregion
 
         #region Game Files Downloader (SBRW Pack [.pack.sbrw])
@@ -3473,41 +3414,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             LZMA_Downloader.Live_Extract += (X_Input, Live_Data) =>
             {
-                if (!IsDisposed || !Disposing)
-                {
-                    try
-                    {
-                        Label_Download_Information.SafeInvokeAction(() =>
-                        Label_Download_Information.Text = string.Format("{0} of {1} : ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.File_Current),
-                        Time_Conversion.FormatFileSize(Live_Data.File_Total),
-                        Time_Conversion.EstimateFinishTime(Live_Data.File_Current, Live_Data.File_Total, DownloadStartTime), Live_Data.Extract_Percentage).ToUpper(), this);
-                    }
-                    catch
-                    {
 
-                    }
-                    finally
-                    {
-                        GC.Collect();
-                    }
-
-                    try
-                    {
-                        ProgressBar_Extracting.SafeInvokeAction(() =>
-                        {
-                            ProgressBar_Extracting.Value = Live_Data.Extract_Percentage;
-                            ProgressBar_Extracting.Width = Live_Data.Extract_Percentage;
-                        }, this);
-                    }
-                    catch
-                    {
-
-                    }
-                    finally
-                    {
-                        GC.Collect();
-                    }
-                }
             };
 
             LZMA_Downloader.Live_Progress += (X_Input, Live_Data) =>
@@ -3519,9 +3426,19 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         try
                         {
                             Label_Download_Information.SafeInvokeAction(() => 
-                            Label_Download_Information.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.File_Size_Total),
-                            Time_Conversion.FormatFileSize(Live_Data.File_Size_Total), Time_Conversion.EstimateFinishTime(Live_Data.File_Size_Current, Live_Data.File_Size_Total,
-                            DownloadStartTime), Live_Data.Download_Percentage).ToUpper(), this);
+                            Label_Download_Information.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.Bytes_Received),
+                            Time_Conversion.FormatFileSize(Live_Data.Bytes_To_Receive_Total), Time_Conversion.EstimateFinishTime(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total,
+                            DownloadStartTime), Core.Extension.Numbers_.Math.Clamp(Math.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total) * 100, 0), 0, 100), this));
+
+                            if (EnableInsiderDeveloper.Allowed())
+                            {
+                                Log.Debug("Current Download Percentge: " + Math.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total) * 100, 0));
+                                Log.Debug("Current File (Counted): " + Live_Data.Bytes_Received);
+                                Log.Debug("Total File (Counted): " + Live_Data.Bytes_To_Receive_Total);
+                                Log.Debug("Current Divide Total (Math): " + decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total));
+                                Log.Debug("Math Divide [Function]: " + decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total));
+                                Log.Debug("Math Divide [Round]: " + decimal.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total), MidpointRounding.AwayFromZero).ToString());
+                            }
                         }
                         catch
                         {
@@ -3534,17 +3451,23 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         try
                         {
-                            ProgressBar_Preload.SafeInvokeAction(() =>
+                            ProgressBar_Extracting.SafeInvokeAction(() =>
                             {
-                                ProgressBar_Preload.Value = Live_Data.Download_Percentage;
-                                ProgressBar_Preload.Width = Live_Data.Download_Percentage;
+                                ProgressBar_Extracting.Value = int.Parse(Core.Extension.Numbers_.Math.Clamp(Math.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total) * 100), 0, 100).ToString());
+                                ProgressBar_Extracting.Width = int.Parse(Math.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total) * 519).ToString());
                             }, this);
 
-                            Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", Live_Data.Download_Percentage));
+                            Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", Core.Extension.Numbers_.Math.Clamp(Math.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total) * 100), 0, 100)));
 
                             if (Parent_Screen.Screen_Instance != null)
                             {
-                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Live_Data.Download_Percentage, 100);
+                                if (double.TryParse(Core.Extension.Numbers_.Math.Clamp(Math.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total) * 100), 0, 100).ToString(), out double Converted_Value))
+                                {
+                                    Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                                    {
+                                        Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
+                                    }, Parent_Screen.Screen_Instance);
+                                }
                             }
                         }
                         catch
@@ -3553,7 +3476,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
                                 if (Parent_Screen.Screen_Instance != null)
                                 {
-                                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 0, 100);
+                                    Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                                    {
+                                        Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 0, 100);
+                                    }, Parent_Screen.Screen_Instance);
                                 }
 
                                 ProgressBar_Preload.SafeInvokeAction(() =>
@@ -3580,7 +3506,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             if (Parent_Screen.Screen_Instance != null)
                             {
-                                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+                                Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                                {
+                                    Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+                                }, Parent_Screen.Screen_Instance);
                             }
                         }
                         catch
