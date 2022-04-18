@@ -58,6 +58,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using System.Net.Cache;
+using SBRW.Launcher.Core.Extension.Numbers_;
 
 namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 {
@@ -81,7 +82,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private static bool StillCheckingLastServer { get; set; }
         private static bool ServerChangeTriggered { get; set; }
 
-        private static DateTime DownloadStartTime { get; set; }
+        private static DateTime? DownloadStartTime { get; set; }
         
         public static Download_LZMA_Data? LZMA_Downloader { get; set; }
         public static Download_Queue? Pack_SBRW_Downloader { get; set; }
@@ -3399,7 +3400,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Button_Register.MouseDown += new MouseEventHandler(Greenbutton_click_MouseDown);
             Button_Register.Click += new EventHandler(FunctionEvents.RegisterText_LinkClicked);
 
-            LZMA_Downloader = new Download_LZMA_Data(this, 3, 2, 16)
+            LZMA_Downloader = new Download_LZMA_Data(this, 3, 2, 16, DownloadStartTime??DateTime.Now)
             {
                 Progress_Update_Frequency = 800
             };
@@ -3423,21 +3424,32 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     if (LZMA_Downloader.Downloading)
                     {
+                        decimal Calulated_Division = 0;
+
+                        try
+                        {
+                            Calulated_Division = decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total);
+                        }
+                        catch 
+                        {
+                            
+                        }
+
                         try
                         {
                             Label_Download_Information.SafeInvokeAction(() => 
                             Label_Download_Information.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.Bytes_Received),
                             Time_Conversion.FormatFileSize(Live_Data.Bytes_To_Receive_Total), Time_Conversion.EstimateFinishTime(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total,
-                            DownloadStartTime), Core.Extension.Numbers_.Math.Clamp(Math.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total) * 100, 0), 0, 100), this));
+                            Live_Data.Start_Time), Math_Core.Clamp(Math.Round(Calulated_Division * 100, 0), 0, 100), this));
 
                             if (EnableInsiderDeveloper.Allowed())
                             {
-                                Log.Debug("Current Download Percentge: " + Math.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total) * 100, 0));
+                                Log.Debug("Current Download Percentge: " + Math.Round(Calulated_Division * 100, 0));
                                 Log.Debug("Current File (Counted): " + Live_Data.Bytes_Received);
                                 Log.Debug("Total File (Counted): " + Live_Data.Bytes_To_Receive_Total);
-                                Log.Debug("Current Divide Total (Math): " + decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total));
-                                Log.Debug("Math Divide [Function]: " + decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total));
-                                Log.Debug("Math Divide [Round]: " + decimal.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total), MidpointRounding.AwayFromZero).ToString());
+                                Log.Debug("Current Divide Total (Math): " + Calulated_Division);
+                                Log.Debug("Math Divide [Function]: " + Calulated_Division);
+                                Log.Debug("Math Divide [Round]: " + decimal.Round(Calulated_Division, MidpointRounding.AwayFromZero).ToString());
                             }
                         }
                         catch
@@ -3453,15 +3465,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             ProgressBar_Extracting.SafeInvokeAction(() =>
                             {
-                                ProgressBar_Extracting.Value = int.Parse(Core.Extension.Numbers_.Math.Clamp(Math.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total) * 100), 0, 100).ToString());
-                                ProgressBar_Extracting.Width = int.Parse(Math.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total) * 519).ToString());
+                                ProgressBar_Extracting.Value = int.Parse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString());
+                                ProgressBar_Extracting.Width = int.Parse(Math.Round(Calulated_Division * 519).ToString());
                             }, this);
 
-                            Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", Core.Extension.Numbers_.Math.Clamp(Math.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total) * 100), 0, 100)));
+                            Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100)));
 
                             if (Parent_Screen.Screen_Instance != null)
                             {
-                                if (double.TryParse(Core.Extension.Numbers_.Math.Clamp(Math.Round(decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total) * 100), 0, 100).ToString(), out double Converted_Value))
+                                if (double.TryParse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString(), out double Converted_Value))
                                 {
                                     Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
                                     {
