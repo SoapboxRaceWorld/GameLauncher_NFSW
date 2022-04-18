@@ -2825,6 +2825,141 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 try
                 {
+                    if (LZMA_Downloader == null)
+                    {
+
+                        LZMA_Downloader = new Download_LZMA_Data(this, 3, 2, 16, DownloadStartTime ?? DateTime.Now)
+                        {
+                            Progress_Update_Frequency = 800
+                        };
+
+                        LZMA_Downloader.Internal_Error += (x, D_Live_Events) =>
+                        {
+                            if (D_Live_Events.Recorded_Exception != null && LZMA_Downloader.Downloading)
+                            {
+                                LogToFileAddons.OpenLog("LZMA_SBRW_Downloader", string.Empty, D_Live_Events.Recorded_Exception, string.Empty, true);
+                                OnDownloadFailed(new Exception((Pack_SBRW_Downloader_Error_Rate > 0) ? "Game Files Package Downloader Encountered too many Errors" : "Game Files Package hash does not Match"));
+                            }
+                        };
+
+                        LZMA_Downloader.Complete += (X_Input, Live_Data) =>
+                        {
+                            if ((!IsDisposed || !Disposing) && Live_Data.Complete)
+                            {
+                                Game_Downloaders();
+                            }
+                        };
+
+                        LZMA_Downloader.Live_Progress += (X_Input, Live_Data) =>
+                        {
+                            if ((!IsDisposed || !Disposing) && LZMA_Downloader != null)
+                            {
+                                if (LZMA_Downloader.Downloading)
+                                {
+                                    decimal Calulated_Division = 0;
+
+                                    try
+                                    {
+                                        Calulated_Division = decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total);
+                                    }
+                                    catch
+                                    {
+
+                                    }
+
+                                    try
+                                    {
+                                        Label_Download_Information.SafeInvokeAction(() =>
+                                        Label_Download_Information.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.Bytes_Received),
+                                        Time_Conversion.FormatFileSize(Live_Data.Bytes_To_Receive_Total), Time_Conversion.EstimateFinishTime(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total,
+                                        Live_Data.Start_Time), Math_Core.Clamp(Math.Round(Calulated_Division * 100, 0), 0, 100), this));
+
+                                        if (EnableInsiderDeveloper.Allowed())
+                                        {
+                                            Log.Debug("Current Download Percentge: " + Math.Round(Calulated_Division * 100, 0));
+                                            Log.Debug("Current File (Counted): " + Live_Data.Bytes_Received);
+                                            Log.Debug("Total File (Counted): " + Live_Data.Bytes_To_Receive_Total);
+                                            Log.Debug("Current Divide Total (Math): " + Calulated_Division);
+                                            Log.Debug("Math Divide [Function]: " + Calulated_Division);
+                                            Log.Debug("Math Divide [Round]: " + decimal.Round(Calulated_Division, MidpointRounding.AwayFromZero).ToString());
+                                        }
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                    finally
+                                    {
+                                        GC.Collect();
+                                    }
+
+                                    try
+                                    {
+                                        ProgressBar_Extracting.SafeInvokeAction(() =>
+                                        {
+                                            ProgressBar_Extracting.Value = int.Parse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString());
+                                            ProgressBar_Extracting.Width = int.Parse(Math.Round(Calulated_Division * 519).ToString());
+                                        }, this);
+
+                                        Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100)));
+
+                                        if (Parent_Screen.Screen_Instance != null)
+                                        {
+                                            if (double.TryParse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString(), out double Converted_Value))
+                                            {
+                                                Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                                                {
+                                                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
+                                                }, Parent_Screen.Screen_Instance);
+                                            }
+                                        }
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                    finally
+                                    {
+                                        GC.Collect();
+                                    }
+
+                                    try
+                                    {
+                                        if (Parent_Screen.Screen_Instance != null)
+                                        {
+                                            Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                                            {
+                                                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+                                            }, Parent_Screen.Screen_Instance);
+                                        }
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                    finally
+                                    {
+                                        GC.Collect();
+                                    }
+                                }
+                                else if (LZMA_Downloader != null)
+                                {
+                                    if (LZMA_Downloader.Downloading)
+                                    {
+                                        LZMA_Downloader.Stop();
+                                    }
+                                }
+                            }
+                            else if (LZMA_Downloader != null)
+                            {
+                                if (LZMA_Downloader.Downloading)
+                                {
+                                    LZMA_Downloader.Stop();
+                                }
+                            }
+                        };
+                    }
+
                     this.SafeEndInvokeAsyncCatch(this.SafeBeginInvokeActionAsync(Launcher_X_Form =>
                     {
                         Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Checking Core Files...".ToUpper(), this);
@@ -3400,156 +3535,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Button_Register.MouseDown += new MouseEventHandler(Greenbutton_click_MouseDown);
             Button_Register.Click += new EventHandler(FunctionEvents.RegisterText_LinkClicked);
 
-            LZMA_Downloader = new Download_LZMA_Data(this, 3, 2, 16, DownloadStartTime??DateTime.Now)
-            {
-                Progress_Update_Frequency = 800
-            };
-
-            LZMA_Downloader.Complete += (X_Input, Live_Data) =>
-            {
-                if ((!IsDisposed || !Disposing) && Live_Data.Complete)
-                {
-                    DownloadTracksFiles();
-                }
-            };
-
-            LZMA_Downloader.Live_Extract += (X_Input, Live_Data) =>
-            {
-
-            };
-
-            LZMA_Downloader.Live_Progress += (X_Input, Live_Data) =>
-            {
-                if ((!IsDisposed || !Disposing) && LZMA_Downloader != null)
-                {
-                    if (LZMA_Downloader.Downloading)
-                    {
-                        decimal Calulated_Division = 0;
-
-                        try
-                        {
-                            Calulated_Division = decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total);
-                        }
-                        catch 
-                        {
-                            
-                        }
-
-                        try
-                        {
-                            Label_Download_Information.SafeInvokeAction(() => 
-                            Label_Download_Information.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.Bytes_Received),
-                            Time_Conversion.FormatFileSize(Live_Data.Bytes_To_Receive_Total), Time_Conversion.EstimateFinishTime(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total,
-                            Live_Data.Start_Time), Math_Core.Clamp(Math.Round(Calulated_Division * 100, 0), 0, 100), this));
-
-                            if (EnableInsiderDeveloper.Allowed())
-                            {
-                                Log.Debug("Current Download Percentge: " + Math.Round(Calulated_Division * 100, 0));
-                                Log.Debug("Current File (Counted): " + Live_Data.Bytes_Received);
-                                Log.Debug("Total File (Counted): " + Live_Data.Bytes_To_Receive_Total);
-                                Log.Debug("Current Divide Total (Math): " + Calulated_Division);
-                                Log.Debug("Math Divide [Function]: " + Calulated_Division);
-                                Log.Debug("Math Divide [Round]: " + decimal.Round(Calulated_Division, MidpointRounding.AwayFromZero).ToString());
-                            }
-                        }
-                        catch
-                        {
-
-                        }
-                        finally
-                        {
-                            GC.Collect();
-                        }
-
-                        try
-                        {
-                            ProgressBar_Extracting.SafeInvokeAction(() =>
-                            {
-                                ProgressBar_Extracting.Value = int.Parse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString());
-                                ProgressBar_Extracting.Width = int.Parse(Math.Round(Calulated_Division * 519).ToString());
-                            }, this);
-
-                            Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100)));
-
-                            if (Parent_Screen.Screen_Instance != null)
-                            {
-                                if (double.TryParse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString(), out double Converted_Value))
-                                {
-                                    Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
-                                    {
-                                        Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
-                                    }, Parent_Screen.Screen_Instance);
-                                }
-                            }
-                        }
-                        catch
-                        {
-                            try
-                            {
-                                if (Parent_Screen.Screen_Instance != null)
-                                {
-                                    Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
-                                    {
-                                        Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 0, 100);
-                                    }, Parent_Screen.Screen_Instance);
-                                }
-
-                                ProgressBar_Preload.SafeInvokeAction(() =>
-                                {
-                                    ProgressBar_Preload.Value = 0;
-                                    ProgressBar_Preload.Width = 0;
-                                }, this);
-                            }
-                            catch
-                            {
-
-                            }
-                            finally
-                            {
-                                GC.Collect();
-                            }
-                        }
-                        finally
-                        {
-                            GC.Collect();
-                        }
-
-                        try
-                        {
-                            if (Parent_Screen.Screen_Instance != null)
-                            {
-                                Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
-                                {
-                                    Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
-                                }, Parent_Screen.Screen_Instance);
-                            }
-                        }
-                        catch
-                        {
-
-                        }
-                        finally
-                        {
-                            GC.Collect();
-                        }
-                    }
-                    else if (LZMA_Downloader != null)
-                    {
-                        if (LZMA_Downloader.Downloading)
-                        {
-                            LZMA_Downloader.Stop();
-                        }
-                    }
-                }
-                else if (LZMA_Downloader != null)
-                {
-                    if (LZMA_Downloader.Downloading)
-                    {
-                        LZMA_Downloader.Stop();
-                    }
-                }
-            };
-
             Load += new EventHandler(MainScreen_Load);
             
             /********************************/
@@ -3584,7 +3569,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     {
                         foreach (Json_List_Server Servers in ServerListUpdater.NoCategoryList)
                         {
-                            if (Nfswstarted == null)
+                            if (Nfswstarted != null)
+                            {
+                                break;
+                            }
+                            else
                             {
                                 GC.Collect();
 
