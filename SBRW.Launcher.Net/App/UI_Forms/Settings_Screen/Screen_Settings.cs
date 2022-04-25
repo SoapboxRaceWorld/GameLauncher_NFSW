@@ -806,13 +806,20 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             if (Save_Settings.Live_Data.Launcher_LZMA_Downloader != (CheckBox_LZMA_Downloader.Checked ? "1" : "0"))
             {
                 Save_Settings.Live_Data.Launcher_LZMA_Downloader = CheckBox_LZMA_Downloader.Checked ? "1" : "0";
-                if (Screen_Main.Screen_Instance != null)
+                try
                 {
-                    Screen_Main.Screen_Instance.SafeEndInvokeAsyncCatch(Screen_Main.Screen_Instance.SafeBeginInvokeActionAsync(Launcher_X_Form =>
+                    if (Screen_Main.Screen_Instance != null)
                     {
-                        Screen_Main.Pack_SBRW_Downloader_Error_Rate = 0;
-                        Screen_Main.Screen_Instance.Game_Folder_Checks();
-                    }));
+                        Screen_Main.Screen_Instance.SafeEndInvokeAsyncCatch(Screen_Main.Screen_Instance.SafeBeginInvokeActionAsync(Launcher_X_Form =>
+                        {
+                            Screen_Main.Pack_SBRW_Downloader_Error_Rate = 0;
+                            Screen_Main.Screen_Instance.Game_Folder_Checks();
+                        }));
+                    }
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("SETTINGS to Main Screen Instance", string.Empty, Error, string.Empty, true);
                 }
             }
 

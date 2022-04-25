@@ -11,7 +11,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client
     {
         public static bool DetectByMutex()
         {
-            Mutex detectRunningNFSW = null;
+            Mutex? detectRunningNFSW = null;
             try
             {
                 detectRunningNFSW = new Mutex(false, "Global\\{3E34CEFB-7B34-4e62-8034-33256B8BC2F7}");

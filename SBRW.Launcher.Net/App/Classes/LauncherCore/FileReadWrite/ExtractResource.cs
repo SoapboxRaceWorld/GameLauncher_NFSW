@@ -7,7 +7,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite
 {
     class ExtractResource
     {
-        public static byte[] AsByte(String File_Name)
+        public static byte[]? AsByte(string File_Name)
         {
             if (string.IsNullOrWhiteSpace(File_Name))
             {
@@ -18,20 +18,27 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite
                 try
                 {
                     Assembly TheRun = Assembly.GetExecutingAssembly();
-                    using (Stream LiveStream = TheRun.GetManifestResourceStream(File_Name))
+                    if (TheRun != null)
                     {
-                        if (LiveStream == null) { return null; }
-                        else
+                        using (Stream LiveStream = TheRun.GetManifestResourceStream(File_Name))
                         {
-                            byte[] ba = new byte[LiveStream.Length];
-                            LiveStream.Read(ba, 0, ba.Length);
-                            return ba;
+                            if (LiveStream == null) { return null; }
+                            else
+                            {
+                                byte[] ba = new byte[LiveStream.Length];
+                                LiveStream.Read(ba, 0, ba.Length);
+                                return ba;
+                            }
                         }
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("Extract Resource AsByte", String.Empty, Error, String.Empty, true);
+                    LogToFileAddons.OpenLog("Extract Resource AsByte", string.Empty, Error, string.Empty, true);
                     return null;
                 }
             }

@@ -13,8 +13,8 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
         {
             if (!UnixOS.Detected())
             {
-                ManagementObjectSearcher ObjectPath = null;
-                ManagementObjectCollection ObjectCollection = null;
+                ManagementObjectSearcher? ObjectPath = null;
+                ManagementObjectCollection? ObjectCollection = null;
 
                 try
                 {
@@ -31,15 +31,15 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                 }
                 catch (ManagementException Error)
                 {
-                    LogToFileAddons.OpenLog("Installed KB [M.E.]", String.Empty, Error, String.Empty, true);
+                    LogToFileAddons.OpenLog("Installed KB [M.E.]", string.Empty, Error, string.Empty, true);
                 }
                 catch (COMException Error)
                 {
-                    LogToFileAddons.OpenLog("Installed KB [C.O.M.]", String.Empty, Error, String.Empty, true);
+                    LogToFileAddons.OpenLog("Installed KB [C.O.M.]", string.Empty, Error, string.Empty, true);
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("Installed KB", String.Empty, Error, String.Empty, true);
+                    LogToFileAddons.OpenLog("Installed KB", string.Empty, Error, string.Empty, true);
                 }
                 finally
                 {

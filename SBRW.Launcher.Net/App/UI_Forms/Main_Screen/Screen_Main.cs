@@ -821,9 +821,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             FunctionStatus.LauncherBattlePass = false;
 
-            if (Live_Action_Timer.Enabled)
+            if (Live_Action_Timer != null)
             {
-                Live_Action_Timer.Stop();
+                if (Live_Action_Timer.Enabled)
+                {
+                    Live_Action_Timer.Stop();
+                }
             }
 
             if (Nfswstarted != null)
@@ -2598,7 +2601,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     {
                         LogToFileAddons.OpenLog("Pack_SBRW_Downloader", string.Empty, D_Live_Events.Recorded_Exception, string.Empty, true);
 
-                        if ((Pack_SBRW_Downloader_Error_Rate >= 0) && (Pack_SBRW_Downloader_Error_Rate <= 10))
+                        if (D_Live_Events.Recorded_Exception is WebException)
+                        {
+
+                        }
+                        else if ((Pack_SBRW_Downloader_Error_Rate >= 0) && (Pack_SBRW_Downloader_Error_Rate <= 10))
                         {
                             Pack_SBRW_Downloader_Error_Rate++;
                             Game_Pack_Downloader();
@@ -2997,6 +3004,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         public void Game_Folder_Checks()
         {
+            bool Force_Restart_Download_Request = false;
             Button_Play_OR_Update.SafeInvokeAction(() =>
             {
                 Button_Play_OR_Update.BackgroundImage = Image_Button.Play;
@@ -3081,13 +3089,28 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     }
                 }
             }
-            catch
+            catch (IOException Error)
             {
-                Game_Downloaders();
+                LogToFileAddons.OpenLog("Game Folder Checks [I.O.E.]", string.Empty, Error, string.Empty, true);
+            }
+            catch (UnauthorizedAccessException Error)
+            {
+                LogToFileAddons.OpenLog("Game Folder Checks [U.A.E.]", string.Empty, Error, string.Empty, true);
+            }
+            catch(Exception Error)
+            {
+                Force_Restart_Download_Request = true;
+                LogToFileAddons.OpenLog("Game Folder Checks", string.Empty, Error, string.Empty, true);
             }
             finally
             {
+                //@DavidCarbon or @Launcher_Dev_Team (4-22-2022)
                 GC.Collect();
+            }
+
+            if (Force_Restart_Download_Request)
+            {
+                Game_Downloaders();
             }
         }
         #endregion

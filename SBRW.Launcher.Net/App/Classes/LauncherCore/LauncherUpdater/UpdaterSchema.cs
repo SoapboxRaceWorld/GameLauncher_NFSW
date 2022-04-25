@@ -6,27 +6,27 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
     public class GitHubRelease
     {
         [JsonProperty("tag_name")]
-        public string TagName { get; set; }
+        public string TagName { get; set; } = string.Empty;
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [JsonProperty("assets")]
-        public List<AssetModel> Assets { get; set; }
+        public List<AssetModel> Assets { get; set; } = new List<AssetModel>();
 
         public class AssetModel
         {
             [JsonProperty("name")]
-            public string Name { get; set; }
+            public string Name { get; set; } = string.Empty;
 
             [JsonProperty("browser_download_url")]
-            public string Url { get; set; }
+            public string Url { get; set; } = string.Empty;
         }
 
         [JsonProperty("zipball_url")]
-        public string Url_Zipball { get; set; }
+        public string Url_Zipball { get; set; } = string.Empty;
 
         [JsonProperty("body")]
-        public string Body { get; set; }
+        public string Body { get; set; } = string.Empty;
     }
 }
