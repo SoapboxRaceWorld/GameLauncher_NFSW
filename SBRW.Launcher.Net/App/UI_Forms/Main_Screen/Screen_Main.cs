@@ -2676,7 +2676,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
                         else
                         {
-                            OnDownloadFailed(new Exception((Pack_SBRW_Downloader_Error_Rate > 0) ? "Game Files Package Downloader Encountered too many Errors" : "Game Files Package hash does not Match"));
+                            OnDownloadFailed(new Exception((Pack_SBRW_Downloader_Error_Rate > 0) ? "Game Files Package Downloader Encountered too many Errors" : "Game Files Package hash does not Match", D_Live_Events.Recorded_Exception));
                         }
                     }
                 };
