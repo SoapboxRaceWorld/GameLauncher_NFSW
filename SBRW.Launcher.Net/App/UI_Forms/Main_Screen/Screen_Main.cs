@@ -59,6 +59,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Net.Cache;
 using SBRW.Launcher.Core.Extension.Numbers_;
+using SBRW.Launcher.Core.Extension.Api_;
 
 namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 {
@@ -2603,7 +2604,70 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         if (D_Live_Events.Recorded_Exception is WebException)
                         {
+                            string Status_Code_Explaination = "Unknown";
+                            bool Allow_Restart = true;
+                            switch (API_Core.StatusCodes(Save_Settings.Live_Data.Launcher_CDN, D_Live_Events.Recorded_Exception as WebException, null))
+                            {
+                                /* SSL Chain Validation Error */
+                                case APIStatus.TrustFailure:
+                                case APIStatus.SecureChannelFailure:
+                                case APIStatus.InvaildSSL:
+                                case APIStatus.SSLFailed:
+                                    Status_Code_Explaination = "Unable to Create a Secure Connection." +
+                                    "\nSSL may be invalid, System has blocked connection, or System is unable to handle TLS 1.2 and higher with C# Apps." +
+                                    (UnixOS.Detected() ? "\nCheck if Alternative WebCalls is Enabled to Fix the issue." : "");
+                                    Allow_Restart = false;
+                                    break;
+                                /* The following Error Codes Means Internal Error Had Occurred */
+                                case APIStatus.ProtocolError:
+                                case APIStatus.UnknownError:
+                                case APIStatus.UnknownStatusCode:
+                                case APIStatus.Unknown:
+                                    Status_Code_Explaination = "Internal Error had occurred." +
+                                        "\nCheck Launcher Log for more Details.";
+                                    break;
+                                /* Unable to reach online server */
+                                case APIStatus.Offline:
+                                case APIStatus.NameResolutionFailure:
+                                case APIStatus.OriginUnreachable:
+                                case APIStatus.ServerUnavailable:
+                                    Status_Code_Explaination = "Unable to Connect to CDN." +
+                                        "\nCheck Launcher Log for more Details.";
+                                    Allow_Restart = false;
+                                    break;
+                                /* Not Found, Don't Retry */
+                                case APIStatus.NotFound:
+                                    Status_Code_Explaination = "File Not Found." +
+                                        "\nAsk for Assistance or Change to another CDN.";
+                                    Allow_Restart = false;
+                                    break;
+                                case APIStatus.Forbidden:
+                                    Status_Code_Explaination = "No Permission to Access this File or Server" +
+                                        "\nCheck Launcher Log for more Details." +
+                                        "\nAsk for Assistance or Change to another CDN.";
+                                    Allow_Restart = false;
+                                    break;
+                                /* Generic Error Type */
+                                default:
+                                    Status_Code_Explaination = "A Generic Error was encountered" +
+                                        "\nCheck Launcher Log for more Details.";
+                                    break;
+                            }
 
+                            DialogResult User_Prompt_Box = MessageBox.Show(null, Status_Code_Explaination, "GameLauncher", 
+                                Allow_Restart ? MessageBoxButtons.RetryCancel : MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            if (User_Prompt_Box == DialogResult.Retry)
+                            {
+                                Game_Pack_Downloader();
+                            }
+                            else
+                            {
+                                OnDownloadFailed(D_Live_Events.Recorded_Exception);
+                            }
+                        }
+                        else if (D_Live_Events.Recorded_Exception is IOException)
+                        {
+                            OnDownloadFailed(D_Live_Events.Recorded_Exception);
                         }
                         else if ((Pack_SBRW_Downloader_Error_Rate >= 0) && (Pack_SBRW_Downloader_Error_Rate <= 10))
                         {

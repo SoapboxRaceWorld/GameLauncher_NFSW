@@ -114,7 +114,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                         }
 
                         ServerResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                        using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
+                        using (var sr = new StreamReader(ServerResponse.GetResponseStream(), Encoding.UTF8, false))
                         {
                             ServerErrorCode = (int)ServerResponse.StatusCode;
                             LoginResponse = sr.ReadToEnd();
@@ -136,7 +136,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                 }
                 else
                 {
-                    using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
+                    using (var sr = new StreamReader(ServerResponse.GetResponseStream(), Encoding.UTF8, false))
                     {
                         ServerErrorCode = (int)ServerResponse.StatusCode;
                         ServerErrorResponse = Modern_Auth ? "{\"error\":\"" + ServerResponse.StatusDescription + "\"}" : string.Empty;
@@ -154,7 +154,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                 else
                 {
                     XmlDocument sbrwXml = new XmlDocument();
-                    var msgBoxInfo = string.Empty;
+                    string msgBoxInfo = string.Empty;
                     bool XMLIsErrorFree = true;
 
                     try
