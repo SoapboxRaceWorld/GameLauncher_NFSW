@@ -876,7 +876,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private void Game_Live_Data(string UserID, string LoginToken, string ServerIP, Form Live_Form)
         {
-            if (Process_Start_Game.Initialize(Save_Settings.Live_Data.Game_Path, ServerIP, LoginToken,
+            if (new Process_Start_Game().Initialize(Save_Settings.Live_Data.Game_Path, ServerIP, LoginToken,
                 UserID, Launcher_Value.Launcher_Select_Server_Data.ID.ToUpper()) != null)
             {
                 FunctionStatus.LauncherBattlePass = Process_Start_Game.Live_Process.EnableRaisingEvents = true;
@@ -970,31 +970,81 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         {
             try
             {
-                if (sender != null && e != null && !IsDisposed)
+                if (sender != null && e != null && (!IsDisposed || !Disposing))
                 {
-                    Label_Download_Information_Support.SafeInvokeAction(() =>
-                    Label_Download_Information_Support.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper(), this);
+                    long BytesReceived = e.BytesReceived;
+                    long TotalBytesToReceive = e.TotalBytesToReceive;
 
-                    if (e.TotalBytesToReceive >= 1)
+                    string Text_A = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
+                    if (Label_Download_Information_Support.Text != Text_A)
                     {
-                        Label_Download_Information.SafeInvokeAction(() =>
-                        Label_Download_Information.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + Time_Conversion.FormatFileSize(e.BytesReceived) + " of " + Time_Conversion.FormatFileSize(e.TotalBytesToReceive)).ToUpper(), this);
-
-                        ProgressBar_Extracting.SafeInvokeAction(() =>
+                        Label_Download_Information_Support.SafeBeginInvokeActionAsync(Label_Download_Information_Support =>
                         {
-                            ProgressBar_Extracting.Value = Convert.ToInt32(decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
-                            ProgressBar_Extracting.Width = Convert.ToInt32(decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
-                        }, this);
+                            Label_Download_Information_Support.Text = Text_A;
+                        });
+                    }
+
+                    if (TotalBytesToReceive >= 1)
+                    {
+                        string Text_B = (" Server Mods: " + ModNetFileNameInUse + " - " + (BytesReceived) + " of " + (TotalBytesToReceive)).ToUpper();
+                        if (Label_Download_Information.Text != Text_B)
+                        {
+                            Label_Download_Information.SafeBeginInvokeActionAsync(Label_Download_Information =>
+                            {
+                                Label_Download_Information.Text = Text_B;
+                            });
+                        }
+                        
+                        try
+                        {
+                            decimal Calulated_Division = decimal.Divide(BytesReceived, TotalBytesToReceive);
+
+                            int Number_A = int.Parse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString());
+                            if (ProgressBar_Extracting.Value != Number_A)
+                            {
+                                ProgressBar_Extracting.SafeBeginInvokeActionAsync(ProgressBar_Extracting =>
+                                {
+                                    ProgressBar_Extracting.Value = Number_A;
+                                    ProgressBar_Extracting.Width = int.Parse(Math.Round(Calulated_Division * 519).ToString());
+                                });
+                            }
+                        }
+                        catch
+                        {
+
+                        }
                     }
                 }
             }
-            catch
+            catch (StackOverflowException)
             {
+                if (sender != null && e != null && (!IsDisposed || !Disposing))
+                {
+                    string Text_A = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
+                    if (Label_Download_Information_Support.Text != Text_A)
+                    {
+                        Label_Download_Information_Support.SafeBeginInvokeActionAsync(Label_Download_Information_Support =>
+                        {
+                            Label_Download_Information_Support.Text = Text_A;
+                        });
+                    }
 
+                    string Text_B = (" Server Mods: " + ModNetFileNameInUse).ToUpper();
+                    if (Label_Download_Information.Text != Text_B)
+                    {
+                        Label_Download_Information.SafeBeginInvokeActionAsync(Label_Download_Information =>
+                        {
+                            Label_Download_Information.Text = Text_B;
+                        });
+                    }
+                }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("Client_DownloadProgressChanged_RELOADED", string.Empty, Error, string.Empty, true);
             }
             finally
             {
-                Application.DoEvents();
                 GC.Collect();
             }
         }
@@ -1050,7 +1100,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
                 catch (Exception Error)
                 {
-                    Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
+                    Label_Information_Window.SafeInvokeAction(() => 
+                    Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper());
                     LogToFileAddons.OpenLog("Modnet Server Files", string.Empty, Error, string.Empty, true);
                 }
                 finally
@@ -1059,8 +1110,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     {
                         Client.Dispose();
                     }
-
-                    Application.DoEvents();
                 }
 
                 IsDownloadingModNetFiles = true;
@@ -2061,8 +2110,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Button_Login.Enabled = true;
                             Button_Register.Enabled = true;
                             Launcher_Value.Launcher_Select_Server_Category = ((Json_List_Server)ComboBox_Server_List.SelectedItem).Category ?? string.Empty;
-                            Session_Timer.Remaining = ((Launcher_Value.Launcher_Select_Server_JSON != null) && 
-                            Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0) ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 2 * 60 * 60;
+                            Session_Timer.Remaining = 360;
 
                             if (Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "DEV" ||
                             Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "OFFLINE")
@@ -2596,6 +2644,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Label_Download_Information.Text = "Loading".ToUpper(), this);
 
                 Pack_SBRW_Downloader = new Download_Queue();
+                /* @DavidCarbon or @Zacam (Translation Strings Required) */
                 Pack_SBRW_Downloader.Internal_Error += (x, D_Live_Events) =>
                 {
                     if (D_Live_Events.Recorded_Exception != null && !Pack_SBRW_Downloader.Cancel)
@@ -2698,11 +2747,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Pack_SBRW_Downloader_Time_Span = Time_Clock.Seconds;
                         }
 
-                        if (Parent_Screen.Screen_Instance != null)
+                        if (Parent_Screen.Screen_Instance != null && ulong.TryParse((100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total).ToString(), out ulong Converted_Value))
                         {
                             Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
                             {
-                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total), 100);
+                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
                             }, Parent_Screen.Screen_Instance);
                         }
 
@@ -2774,11 +2823,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                     Presence_Launcher.Status("Unpack Game Files", string.Format("Unpacking Game: {0}%", U_Live_Events.Extract_Percentage));
 
-                                    if (Parent_Screen.Screen_Instance != null)
+                                    if (Parent_Screen.Screen_Instance != null && ulong.TryParse(U_Live_Events.Extract_Percentage.ToString(), out ulong Converted_Value))
                                     {
                                         Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
                                         {
-                                            Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, U_Live_Events.Extract_Percentage, 100);
+                                            Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
                                         }, Parent_Screen.Screen_Instance);
                                     }
 
@@ -2973,7 +3022,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                     if (Parent_Screen.Screen_Instance != null)
                                     {
-                                        if (double.TryParse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString(), out double Converted_Value))
+                                        if (ulong.TryParse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString(), out ulong Converted_Value))
                                         {
                                             Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
                                             {

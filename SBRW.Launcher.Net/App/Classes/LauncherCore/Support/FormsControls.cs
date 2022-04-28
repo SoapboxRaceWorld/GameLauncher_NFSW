@@ -30,6 +30,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
                                 if (Control_Form.InvokeRequired)
                                 {
                                     Control_Form.Invoke(Action_Refresh);
+                                    Control_Form.Refresh();
                                 }
                                 else
                                 {
@@ -82,6 +83,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
                             if (Control_Form.InvokeRequired)
                             {
                                 Control_Form.Invoke(Action_Refresh);
+                                Control_Form.Refresh();
                             }
                             else
                             {
@@ -133,6 +135,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
                         if (@this.InvokeRequired)
                         {
                             @this.Invoke(Action_Refresh);
+                            @this.Refresh();
                         }
                         else
                         {
@@ -164,7 +167,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
         /// Executes the specified delegate asynchronously on the thread that the control's underlying handle was created on.
         /// </summary>
         /// <remarks>Inoke Method: Action</remarks>
-        /// <param name="Control_Form">Name of the Control</param>
+        /// <param name="this">Name of the Control</param>
         /// <param name="Action_Refresh">Parameters to be set for this Control</param>
         /// <returns>An System.IAsyncResult that represents the result of the System.Windows.Forms.Control.BeginInvoke(System.Delegate) operation.</returns>
         static public IAsyncResult SafeBeginInvokeActionAsync<T>(this T @this, Action<T> Action_Refresh) where T : Control
