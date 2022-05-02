@@ -650,6 +650,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
             }
 
+            Launcher_Value.Launcher_Proxy = Proxy_Settings.Running();
+
             Nfswstarted = new Thread(() =>
             {
                 if (Proxy_Settings.Running())
@@ -798,29 +800,44 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 if (Process_ID != 0)
                 {
-                    Process.GetProcessById(NfswPid).Kill();
+                    if (!Process.GetProcessById(NfswPid).HasExited)
+                    {
+                        if (!Process.GetProcessById(NfswPid).CloseMainWindow())
+                        {
+                            Process.GetProcessById(NfswPid).Kill();
+                        }
+                    }
                 }
             }
             catch { }
 
             try
             {
-                Process[] allOfThem = Process.GetProcessesByName("nfsw");
-                if (allOfThem != null && allOfThem.Length >= 1)
+                Process[] Its_The_Law = Process.GetProcessesByName("nfsw");
+                if (Its_The_Law != null)
                 {
-                    foreach (var oneProcess in allOfThem)
+                    if (Its_The_Law.Length > 0)
                     {
-                        try
+                        foreach (Process Papers_Please in Its_The_Law)
                         {
-                            Process.GetProcessById(oneProcess.Id).Kill();
+                            try
+                            {
+                                if (!Process.GetProcessById(Papers_Please.Id).HasExited)
+                                {
+                                    if (!Process.GetProcessById(Papers_Please.Id).CloseMainWindow())
+                                    {
+                                        Process.GetProcessById(Papers_Please.Id).Kill();
+                                    }
+                                }
+                            }
+                            catch { }
                         }
-                        catch { }
                     }
                 }
             }
             catch { }
 
-            FunctionStatus.LauncherBattlePass = false;
+            Launcher_Value.Game_In_Event_Bug = FunctionStatus.LauncherBattlePass = false;
 
             if (Live_Action_Timer != null)
             {
@@ -879,6 +896,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             if (new Process_Start_Game().Initialize(Save_Settings.Live_Data.Game_Path, ServerIP, LoginToken,
                 UserID, Launcher_Value.Launcher_Select_Server_Data.ID.ToUpper()) != null)
             {
+                /* Request a New Session */
+                new Time_Window().Client_Session();
                 FunctionStatus.LauncherBattlePass = Process_Start_Game.Live_Process.EnableRaisingEvents = true;
                 NfswPid = Process_Start_Game.Live_Process.Id;
                 Process_Start_Game.Live_Process.Exited += (Send, It) =>

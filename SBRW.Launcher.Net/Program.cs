@@ -37,12 +37,25 @@ namespace SBRW.Launcher.Net
 
                 try
                 {
-                    Process[] allOfThem = Process.GetProcessesByName("nfsw");
-                    if (allOfThem != null && allOfThem.Length >= 1)
+                    Process[] Its_The_Law = Process.GetProcessesByName("nfsw");
+                    if (Its_The_Law != null)
                     {
-                        foreach (var oneProcess in allOfThem)
+                        if (Its_The_Law.Length > 0)
                         {
-                            Process.GetProcessById(oneProcess.Id).Kill();
+                            foreach (Process Papers_Please in Its_The_Law)
+                            {
+                                try
+                                {
+                                    if (!Process.GetProcessById(Papers_Please.Id).HasExited)
+                                    {
+                                        if (!Process.GetProcessById(Papers_Please.Id).CloseMainWindow())
+                                        {
+                                            Process.GetProcessById(Papers_Please.Id).Kill();
+                                        }
+                                    }
+                                }
+                                catch { }
+                            }
                         }
                     }
                 }
@@ -65,12 +78,25 @@ namespace SBRW.Launcher.Net
 
                 try
                 {
-                    Process[] allOfThem = Process.GetProcessesByName("nfsw");
-                    if (allOfThem != null && allOfThem.Length >= 1)
+                    Process[] Its_The_Law = Process.GetProcessesByName("nfsw");
+                    if (Its_The_Law != null)
                     {
-                        foreach (var oneProcess in allOfThem)
+                        if (Its_The_Law.Length > 0)
                         {
-                            Process.GetProcessById(oneProcess.Id).Kill();
+                            foreach (Process Papers_Please in Its_The_Law)
+                            {
+                                try
+                                {
+                                    if (!Process.GetProcessById(Papers_Please.Id).HasExited)
+                                    {
+                                        if (!Process.GetProcessById(Papers_Please.Id).CloseMainWindow())
+                                        {
+                                            Process.GetProcessById(Papers_Please.Id).Kill();
+                                        }
+                                    }
+                                }
+                                catch { }
+                            }
                         }
                     }
                 }
