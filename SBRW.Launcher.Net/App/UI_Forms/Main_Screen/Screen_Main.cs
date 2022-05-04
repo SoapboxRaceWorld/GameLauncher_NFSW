@@ -997,7 +997,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     string Text_A = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
                     if (Label_Download_Information_Support.Text != Text_A)
                     {
-                        Label_Download_Information_Support.SafeBeginInvokeActionAsync(Label_Download_Information_Support =>
+                        Label_Download_Information_Support.SafeInvokeAction(() =>
                         {
                             Label_Download_Information_Support.Text = Text_A;
                         });
@@ -1005,10 +1005,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (TotalBytesToReceive >= 1)
                     {
-                        string Text_B = (" Server Mods: " + ModNetFileNameInUse + " - " + (BytesReceived) + " of " + (TotalBytesToReceive)).ToUpper();
+                        string Text_B = (" Server Mods: " + ModNetFileNameInUse + " - " + Time_Conversion.FormatFileSize(BytesReceived) + " of " + Time_Conversion.FormatFileSize(TotalBytesToReceive)).ToUpper();
                         if (Label_Download_Information.Text != Text_B)
                         {
-                            Label_Download_Information.SafeBeginInvokeActionAsync(Label_Download_Information =>
+                            Label_Download_Information.SafeInvokeAction(() =>
                             {
                                 Label_Download_Information.Text = Text_B;
                             });
@@ -1021,7 +1021,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             int Number_A = int.Parse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString());
                             if (ProgressBar_Extracting.Value != Number_A)
                             {
-                                ProgressBar_Extracting.SafeBeginInvokeActionAsync(ProgressBar_Extracting =>
+                                ProgressBar_Extracting.SafeInvokeAction(() =>
                                 {
                                     ProgressBar_Extracting.Value = Number_A;
                                     ProgressBar_Extracting.Width = int.Parse(Math.Round(Calulated_Division * 519).ToString());
@@ -1042,7 +1042,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     string Text_A = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
                     if (Label_Download_Information_Support.Text != Text_A)
                     {
-                        Label_Download_Information_Support.SafeBeginInvokeActionAsync(Label_Download_Information_Support =>
+                        Label_Download_Information_Support.SafeInvokeAction(() =>
                         {
                             Label_Download_Information_Support.Text = Text_A;
                         });
@@ -1051,7 +1051,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     string Text_B = (" Server Mods: " + ModNetFileNameInUse).ToUpper();
                     if (Label_Download_Information.Text != Text_B)
                     {
-                        Label_Download_Information.SafeBeginInvokeActionAsync(Label_Download_Information =>
+                        Label_Download_Information.SafeInvokeAction(() =>
                         {
                             Label_Download_Information.Text = Text_B;
                         });
