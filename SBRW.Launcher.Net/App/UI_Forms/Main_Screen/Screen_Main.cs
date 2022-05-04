@@ -2654,248 +2654,265 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         {
             if (Screen_Instance != null)
             {
-                Label_Download_Information_Support.SafeInvokeAction(() =>
-                {
-                    Label_Download_Information_Support.Text = "Downloading: Core Game Files Package".ToUpper();
-                }, this);
-
                 Label_Download_Information.SafeInvokeAction(() =>
                 Label_Download_Information.Text = "Loading".ToUpper(), this);
 
-                Pack_SBRW_Downloader = new Download_Queue();
-                /* @DavidCarbon or @Zacam (Translation Strings Required) */
-                Pack_SBRW_Downloader.Internal_Error += (x, D_Live_Events) =>
+                long Game_Folder_Size = File_and_Folder_Extention.GetDirectorySize(new DirectoryInfo(Save_Settings.Live_Data.Game_Path));
+                /* TODO: Check for other files and Folder Size */
+                if ((Game_Folder_Size == -1) &&
+                    (MessageBox.Show(null, "Seems like we are unable to determine the Games Folder Size" +
+                        "\nDo you have the Game Files Already Downloaded?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes))
                 {
-                    if (D_Live_Events.Recorded_Exception != null && !Pack_SBRW_Downloader.Cancel)
+                    Game_Folder_Size = 3295097405;
+                }
+                
+                if (!File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe")) &&
+                    Game_Folder_Size <= 3295097404)
+                {
+                    Label_Download_Information_Support.SafeInvokeAction(() =>
                     {
-                        LogToFileAddons.OpenLog("Pack_SBRW_Downloader", string.Empty, D_Live_Events.Recorded_Exception, string.Empty, true);
+                        Label_Download_Information_Support.Text = "Downloading: Core Game Files Package".ToUpper();
+                    }, this);
 
-                        if (D_Live_Events.Recorded_Exception is WebException)
+                    Pack_SBRW_Downloader = new Download_Queue();
+                    /* @DavidCarbon or @Zacam (Translation Strings Required) */
+                    Pack_SBRW_Downloader.Internal_Error += (x, D_Live_Events) =>
+                    {
+                        if (D_Live_Events.Recorded_Exception != null && !Pack_SBRW_Downloader.Cancel)
                         {
-                            string Status_Code_Explaination = "Unknown";
-                            bool Allow_Restart = true;
-                            switch (API_Core.StatusCodes(Save_Settings.Live_Data.Launcher_CDN, D_Live_Events.Recorded_Exception as WebException, null))
-                            {
-                                /* SSL Chain Validation Error */
-                                case APIStatus.TrustFailure:
-                                case APIStatus.SecureChannelFailure:
-                                case APIStatus.InvaildSSL:
-                                case APIStatus.SSLFailed:
-                                    Status_Code_Explaination = "Unable to Create a Secure Connection." +
-                                    "\nSSL may be invalid, System has blocked connection, or System is unable to handle TLS 1.2 and higher with C# Apps." +
-                                    (UnixOS.Detected() ? "\nCheck if Alternative WebCalls is Enabled to Fix the issue." : "");
-                                    Allow_Restart = false;
-                                    break;
-                                /* The following Error Codes Means Internal Error Had Occurred */
-                                case APIStatus.ProtocolError:
-                                case APIStatus.UnknownError:
-                                case APIStatus.UnknownStatusCode:
-                                case APIStatus.Unknown:
-                                    Status_Code_Explaination = "Internal Error had occurred." +
-                                        "\nCheck Launcher Log for more Details.";
-                                    break;
-                                /* Unable to reach online server */
-                                case APIStatus.Offline:
-                                case APIStatus.NameResolutionFailure:
-                                case APIStatus.OriginUnreachable:
-                                case APIStatus.ServerUnavailable:
-                                    Status_Code_Explaination = "Unable to Connect to CDN." +
-                                        "\nCheck Launcher Log for more Details.";
-                                    Allow_Restart = false;
-                                    break;
-                                /* Not Found, Don't Retry */
-                                case APIStatus.NotFound:
-                                    Status_Code_Explaination = "File Not Found." +
-                                        "\nAsk for Assistance or Change to another CDN.";
-                                    Allow_Restart = false;
-                                    break;
-                                case APIStatus.Forbidden:
-                                    Status_Code_Explaination = "No Permission to Access this File or Server" +
-                                        "\nCheck Launcher Log for more Details." +
-                                        "\nAsk for Assistance or Change to another CDN.";
-                                    Allow_Restart = false;
-                                    break;
-                                /* Generic Error Type */
-                                default:
-                                    Status_Code_Explaination = "A Generic Error was encountered" +
-                                        "\nCheck Launcher Log for more Details.";
-                                    break;
-                            }
+                            LogToFileAddons.OpenLog("Pack_SBRW_Downloader", string.Empty, D_Live_Events.Recorded_Exception, string.Empty, true);
 
-                            DialogResult User_Prompt_Box = MessageBox.Show(null, Status_Code_Explaination, "GameLauncher", 
-                                Allow_Restart ? MessageBoxButtons.RetryCancel : MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            if (User_Prompt_Box == DialogResult.Retry)
+                            if (D_Live_Events.Recorded_Exception is WebException)
                             {
+                                string Status_Code_Explaination = "Unknown";
+                                bool Allow_Restart = true;
+                                switch (API_Core.StatusCodes(Save_Settings.Live_Data.Launcher_CDN, D_Live_Events.Recorded_Exception as WebException, null))
+                                {
+                                    /* SSL Chain Validation Error */
+                                    case APIStatus.TrustFailure:
+                                    case APIStatus.SecureChannelFailure:
+                                    case APIStatus.InvaildSSL:
+                                    case APIStatus.SSLFailed:
+                                        Status_Code_Explaination = "Unable to Create a Secure Connection." +
+                                        "\nSSL may be invalid, System has blocked connection, or System is unable to handle TLS 1.2 and higher with C# Apps." +
+                                        (UnixOS.Detected() ? "\nCheck if Alternative WebCalls is Enabled to Fix the issue." : "");
+                                        Allow_Restart = false;
+                                        break;
+                                    /* The following Error Codes Means Internal Error Had Occurred */
+                                    case APIStatus.ProtocolError:
+                                    case APIStatus.UnknownError:
+                                    case APIStatus.UnknownStatusCode:
+                                    case APIStatus.Unknown:
+                                        Status_Code_Explaination = "Internal Error had occurred." +
+                                            "\nCheck Launcher Log for more Details.";
+                                        break;
+                                    /* Unable to reach online server */
+                                    case APIStatus.Offline:
+                                    case APIStatus.NameResolutionFailure:
+                                    case APIStatus.OriginUnreachable:
+                                    case APIStatus.ServerUnavailable:
+                                        Status_Code_Explaination = "Unable to Connect to CDN." +
+                                            "\nCheck Launcher Log for more Details.";
+                                        Allow_Restart = false;
+                                        break;
+                                    /* Not Found, Don't Retry */
+                                    case APIStatus.NotFound:
+                                        Status_Code_Explaination = "File Not Found." +
+                                            "\nAsk for Assistance or Change to another CDN.";
+                                        Allow_Restart = false;
+                                        break;
+                                    case APIStatus.Forbidden:
+                                        Status_Code_Explaination = "No Permission to Access this File or Server" +
+                                            "\nCheck Launcher Log for more Details." +
+                                            "\nAsk for Assistance or Change to another CDN.";
+                                        Allow_Restart = false;
+                                        break;
+                                    /* Generic Error Type */
+                                    default:
+                                        Status_Code_Explaination = "A Generic Error was encountered" +
+                                            "\nCheck Launcher Log for more Details.";
+                                        break;
+                                }
+
+                                DialogResult User_Prompt_Box = MessageBox.Show(null, Status_Code_Explaination, "GameLauncher",
+                                    Allow_Restart ? MessageBoxButtons.RetryCancel : MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                if (User_Prompt_Box == DialogResult.Retry)
+                                {
+                                    Game_Pack_Downloader();
+                                }
+                                else
+                                {
+                                    OnDownloadFailed(D_Live_Events.Recorded_Exception);
+                                }
+                            }
+                            else if (D_Live_Events.Recorded_Exception is IOException)
+                            {
+                                OnDownloadFailed(D_Live_Events.Recorded_Exception);
+                            }
+                            else if ((Pack_SBRW_Downloader_Error_Rate >= 0) && (Pack_SBRW_Downloader_Error_Rate <= 10))
+                            {
+                                Pack_SBRW_Downloader_Error_Rate++;
                                 Game_Pack_Downloader();
                             }
                             else
                             {
-                                OnDownloadFailed(D_Live_Events.Recorded_Exception);
+                                OnDownloadFailed(new Exception((Pack_SBRW_Downloader_Error_Rate > 0) ? "Game Files Package Downloader Encountered too many Errors" : "Game Files Package hash does not Match", D_Live_Events.Recorded_Exception));
                             }
                         }
-                        else if (D_Live_Events.Recorded_Exception is IOException)
-                        {
-                            OnDownloadFailed(D_Live_Events.Recorded_Exception);
-                        }
-                        else if ((Pack_SBRW_Downloader_Error_Rate >= 0) && (Pack_SBRW_Downloader_Error_Rate <= 10))
-                        {
-                            Pack_SBRW_Downloader_Error_Rate++;
-                            Game_Pack_Downloader();
-                        }
-                        else
-                        {
-                            OnDownloadFailed(new Exception((Pack_SBRW_Downloader_Error_Rate > 0) ? "Game Files Package Downloader Encountered too many Errors" : "Game Files Package hash does not Match", D_Live_Events.Recorded_Exception));
-                        }
-                    }
-                };
-                Pack_SBRW_Downloader.Live_Progress += (x, D_Live_Events) =>
-                {
-                    if (!Pack_SBRW_Downloader.Cancel)
+                    };
+                    Pack_SBRW_Downloader.Live_Progress += (x, D_Live_Events) =>
                     {
-                        ProgressBar_Extracting.SafeInvokeAction(() =>
+                        if (!Pack_SBRW_Downloader.Cancel)
                         {
-                            ProgressBar_Extracting.Value = (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total);
-                            ProgressBar_Extracting.Width = (int)(519 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total);
-                        }, this);
-
-                        TimeSpan Time_Clock = DateTime.Now - D_Live_Events.Start_Time;
-
-                        if (Pack_SBRW_Downloader_Time_Span != Time_Clock.Seconds)
-                        {
-                            Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", D_Live_Events.Download_Percentage));
-                            Pack_SBRW_Downloader_Time_Span = Time_Clock.Seconds;
-                        }
-
-                        if (Parent_Screen.Screen_Instance != null && ulong.TryParse((100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total).ToString(), out ulong Converted_Value))
-                        {
-                            Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                            ProgressBar_Extracting.SafeInvokeAction(() =>
                             {
-                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
-                            }, Parent_Screen.Screen_Instance);
-                        }
+                                ProgressBar_Extracting.Value = (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total);
+                                ProgressBar_Extracting.Width = (int)(519 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total);
+                            }, this);
 
-                        Label_Download_Information.SafeInvokeAction(() =>
-                        {
-                            Label_Download_Information.Text = (Time_Conversion.FormatFileSize(D_Live_Events.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(D_Live_Events.File_Size_Total) +
-                            " (" + D_Live_Events.Download_Percentage + "%) - " +
-                            Time_Conversion.EstimateFinishTime(D_Live_Events.File_Size_Current, D_Live_Events.File_Size_Total, D_Live_Events.Start_Time)).ToUpper();
-                        }, this);
-                    }
-                };
-                Pack_SBRW_Downloader.Complete += (x, D_Live_Events) =>
-                {
-                    if (D_Live_Events.Complete && x != null)
+                            TimeSpan Time_Clock = DateTime.Now - D_Live_Events.Start_Time;
+
+                            if (Pack_SBRW_Downloader_Time_Span != Time_Clock.Seconds)
+                            {
+                                Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", D_Live_Events.Download_Percentage));
+                                Pack_SBRW_Downloader_Time_Span = Time_Clock.Seconds;
+                            }
+
+                            if (Parent_Screen.Screen_Instance != null && ulong.TryParse((100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total).ToString(), out ulong Converted_Value))
+                            {
+                                Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                                {
+                                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
+                                }, Parent_Screen.Screen_Instance);
+                            }
+
+                            Label_Download_Information.SafeInvokeAction(() =>
+                            {
+                                Label_Download_Information.Text = (Time_Conversion.FormatFileSize(D_Live_Events.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(D_Live_Events.File_Size_Total) +
+                                " (" + D_Live_Events.Download_Percentage + "%) - " +
+                                Time_Conversion.EstimateFinishTime(D_Live_Events.File_Size_Current, D_Live_Events.File_Size_Total, D_Live_Events.Start_Time)).ToUpper();
+                            }, this);
+                        }
+                    };
+                    Pack_SBRW_Downloader.Complete += (x, D_Live_Events) =>
                     {
-                        if (Parent_Screen.Screen_Instance != null)
+                        if (D_Live_Events.Complete && x != null)
                         {
-                            Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                            if (Parent_Screen.Screen_Instance != null)
                             {
-                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
-                            }, Parent_Screen.Screen_Instance);
-                        }
-
-                        ProgressBar_Preload.SafeInvokeAction(() =>
-                        {
-                            ProgressBar_Preload.Value = 100;
-                            ProgressBar_Preload.Width = 519;
-                        }, this);
-
-                        Label_Download_Information_Support.SafeInvokeAction(() =>
-                        {
-                            Label_Download_Information_Support.Text = "Downloading: SBRW Game Files Package".ToUpper();
-                        }, this);
-
-                        Label_Download_Information.SafeInvokeAction(() =>
-                        Label_Download_Information.Text = "Checking Package Integrity".ToUpper(), this);
-
-                        /* Check Local GameFiles Hash */
-                        string Last_Known_Location = D_Live_Events.Download_Location ?? Path.Combine(Save_Settings.Live_Data.Game_Path, ".Launcher", "Downloads", "GameFiles.sbrwpack");
-                        if (Hashes.Hash_SHA(Last_Known_Location) == "88C886B6D131C052365C3D6D14E14F67A4E2C253")
-                        {
-                            Pack_SBRW_Unpacker = new Download_Extract();
-                            Pack_SBRW_Unpacker.Internal_Error += (x, U_Live_Events) =>
-                            {
-                                if (U_Live_Events.Recorded_Exception != null)
+                                Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
                                 {
-                                    LogToFileAddons.OpenLog("Pack_SBRW_Unpacker", string.Empty, U_Live_Events.Recorded_Exception, string.Empty, true);
+                                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
+                                }, Parent_Screen.Screen_Instance);
+                            }
 
-                                    if ((Pack_SBRW_Downloader_Error_Rate >= 0) && (Pack_SBRW_Downloader_Error_Rate <= 10))
-                                    {
-                                        Pack_SBRW_Downloader_Error_Rate++;
-                                        Game_Pack_Downloader();
-                                    }
-                                    else
-                                    {
-                                        OnDownloadFailed(new Exception("Game Files Package Unpacker Encountered too many Errors", U_Live_Events.Recorded_Exception));
-                                    }
-                                }
-                            };
-                            Pack_SBRW_Unpacker.Live_Progress += (x, U_Live_Events) =>
+                            ProgressBar_Preload.SafeInvokeAction(() =>
                             {
-                                if (U_Live_Events != null)
+                                ProgressBar_Preload.Value = 100;
+                                ProgressBar_Preload.Width = 519;
+                            }, this);
+
+                            Label_Download_Information_Support.SafeInvokeAction(() =>
+                            {
+                                Label_Download_Information_Support.Text = "Downloading: SBRW Game Files Package".ToUpper();
+                            }, this);
+
+                            Label_Download_Information.SafeInvokeAction(() =>
+                            Label_Download_Information.Text = "Checking Package Integrity".ToUpper(), this);
+
+                            /* Check Local GameFiles Hash */
+                            string Last_Known_Location = D_Live_Events.Download_Location ?? Path.Combine(Save_Settings.Live_Data.Game_Path, ".Launcher", "Downloads", "GameFiles.sbrwpack");
+                            if (Hashes.Hash_SHA(Last_Known_Location) == "88C886B6D131C052365C3D6D14E14F67A4E2C253")
+                            {
+                                Pack_SBRW_Unpacker = new Download_Extract();
+                                Pack_SBRW_Unpacker.Internal_Error += (x, U_Live_Events) =>
                                 {
-                                    ProgressBar_Extracting.SafeInvokeAction(() =>
+                                    if (U_Live_Events.Recorded_Exception != null)
                                     {
-                                        ProgressBar_Extracting.Value = U_Live_Events.Extract_Percentage;
-                                        ProgressBar_Extracting.Width = (int)(519 * U_Live_Events.File_Current / U_Live_Events.File_Total);
-                                    }, this);
+                                        LogToFileAddons.OpenLog("Pack_SBRW_Unpacker", string.Empty, U_Live_Events.Recorded_Exception, string.Empty, true);
 
-                                    Presence_Launcher.Status("Unpack Game Files", string.Format("Unpacking Game: {0}%", U_Live_Events.Extract_Percentage));
-
-                                    if (Parent_Screen.Screen_Instance != null && ulong.TryParse(U_Live_Events.Extract_Percentage.ToString(), out ulong Converted_Value))
-                                    {
-                                        Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                                        if ((Pack_SBRW_Downloader_Error_Rate >= 0) && (Pack_SBRW_Downloader_Error_Rate <= 10))
                                         {
-                                            Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
-                                        }, Parent_Screen.Screen_Instance);
+                                            Pack_SBRW_Downloader_Error_Rate++;
+                                            Game_Pack_Downloader();
+                                        }
+                                        else
+                                        {
+                                            OnDownloadFailed(new Exception("Game Files Package Unpacker Encountered too many Errors", U_Live_Events.Recorded_Exception));
+                                        }
                                     }
-
-                                    Label_Download_Information_Support.SafeInvokeAction(() =>
-                                    Label_Download_Information_Support.Text = U_Live_Events.Extract_Percentage + "% [" + U_Live_Events.File_Current + " / " + U_Live_Events.File_Total + "]", this);
-
-                                    if ((U_Live_Events.File_Current_Name != null) && !string.IsNullOrWhiteSpace(U_Live_Events.File_Current_Name))
-                                    {
-                                        Label_Download_Information.SafeInvokeAction(() =>
-                                        Label_Download_Information.Text = ("Unpacking " + U_Live_Events.File_Current_Name.Replace(Pack_SBRW_Unpacker.File_Extension_Replacement, string.Empty)).ToUpper(), this);
-                                    }
-                                }
-                            };
-                            Pack_SBRW_Unpacker.Complete += (x, U_Live_Events) =>
-                            {
-                                if (U_Live_Events != null)
+                                };
+                                Pack_SBRW_Unpacker.Live_Progress += (x, U_Live_Events) =>
                                 {
-                                    Label_Download_Information_Support.SafeInvokeAction(() =>
+                                    if (U_Live_Events != null)
                                     {
-                                        Label_Download_Information_Support.Visible = false;
-                                        Label_Download_Information_Support.Text = string.Empty;
-                                    }, this);
+                                        ProgressBar_Extracting.SafeInvokeAction(() =>
+                                        {
+                                            ProgressBar_Extracting.Value = U_Live_Events.Extract_Percentage;
+                                            ProgressBar_Extracting.Width = (int)(519 * U_Live_Events.File_Current / U_Live_Events.File_Total);
+                                        }, this);
 
-                                    IsDownloading = false;
-                                    OnDownloadFinished();
+                                        Presence_Launcher.Status("Unpack Game Files", string.Format("Unpacking Game: {0}%", U_Live_Events.Extract_Percentage));
 
-                                    NotifyIcon_Notification.Visible = true;
-                                    NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
-                                    NotifyIcon_Notification.BalloonTipTitle = "SBRW Launcher";
-                                    NotifyIcon_Notification.BalloonTipText = "Your game is now ready to launch!";
-                                    NotifyIcon_Notification.ShowBalloonTip(5000);
-                                }
-                            };
-                            Pack_SBRW_Unpacker.Custom_Unpack(D_Live_Events.Download_Location ?? Last_Known_Location, Save_Settings.Live_Data.Game_Path);
+                                        if (Parent_Screen.Screen_Instance != null && ulong.TryParse(U_Live_Events.Extract_Percentage.ToString(), out ulong Converted_Value))
+                                        {
+                                            Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                                            {
+                                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
+                                            }, Parent_Screen.Screen_Instance);
+                                        }
+
+                                        Label_Download_Information_Support.SafeInvokeAction(() =>
+                                        Label_Download_Information_Support.Text = U_Live_Events.Extract_Percentage + "% [" + U_Live_Events.File_Current + " / " + U_Live_Events.File_Total + "]", this);
+
+                                        if ((U_Live_Events.File_Current_Name != null) && !string.IsNullOrWhiteSpace(U_Live_Events.File_Current_Name))
+                                        {
+                                            Label_Download_Information.SafeInvokeAction(() =>
+                                            Label_Download_Information.Text = ("Unpacking " + U_Live_Events.File_Current_Name.Replace(Pack_SBRW_Unpacker.File_Extension_Replacement, string.Empty)).ToUpper(), this);
+                                        }
+                                    }
+                                };
+                                Pack_SBRW_Unpacker.Complete += (x, U_Live_Events) =>
+                                {
+                                    if (U_Live_Events != null)
+                                    {
+                                        Label_Download_Information_Support.SafeInvokeAction(() =>
+                                        {
+                                            Label_Download_Information_Support.Visible = false;
+                                            Label_Download_Information_Support.Text = string.Empty;
+                                        }, this);
+
+                                        IsDownloading = false;
+                                        OnDownloadFinished();
+
+                                        NotifyIcon_Notification.Visible = true;
+                                        NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                        NotifyIcon_Notification.BalloonTipTitle = "SBRW Launcher";
+                                        NotifyIcon_Notification.BalloonTipText = "Your game is now ready to launch!";
+                                        NotifyIcon_Notification.ShowBalloonTip(5000);
+                                    }
+                                };
+                                Pack_SBRW_Unpacker.Custom_Unpack(D_Live_Events.Download_Location ?? Last_Known_Location, Save_Settings.Live_Data.Game_Path);
+                            }
+                            else if ((Pack_SBRW_Downloader_Error_Rate >= 0) && (Pack_SBRW_Downloader_Error_Rate <= 10))
+                            {
+                                Pack_SBRW_Downloader_Error_Rate++;
+                                Game_Pack_Downloader();
+                            }
+                            else
+                            {
+                                OnDownloadFailed(new Exception((Pack_SBRW_Downloader_Error_Rate > 0) ? "Game Files Package Downloader Encountered too many Errors" : "Game Files Package hash does not Match"));
+                            }
                         }
-                        else if ((Pack_SBRW_Downloader_Error_Rate >= 0) && (Pack_SBRW_Downloader_Error_Rate <= 10))
-                        {
-                            Pack_SBRW_Downloader_Error_Rate++;
-                            Game_Pack_Downloader();
-                        }
-                        else
-                        {
-                            OnDownloadFailed(new Exception((Pack_SBRW_Downloader_Error_Rate > 0) ? "Game Files Package Downloader Encountered too many Errors" : "Game Files Package hash does not Match"));
-                        }
-                    }
-                };
-                /* Main Note: Current Revision File Size (in long) is: 3862102244 */
-                Pack_SBRW_Downloader.Download(Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack", Save_Settings.Live_Data.Game_Path, 3862102244,
-                    new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore), Save_Settings.Live_Data.Launcher_CDN);
+                    };
+                    /* Main Note: Current Revision File Size (in long) is: 3862102244 */
+                    Pack_SBRW_Downloader.Download(Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack", Save_Settings.Live_Data.Game_Path, 3862102244,
+                        new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore), Save_Settings.Live_Data.Launcher_CDN);
+                }
+                else
+                {
+                    OnDownloadFinished();
+                }
             }
         }
         #endregion
@@ -3162,7 +3179,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     if (d.Name == Path.GetPathRoot(Save_Settings.Live_Data.Game_Path))
                     {
-                        if (d.TotalFreeSpace < 8589934592 || !string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
+                        if (d.TotalFreeSpace < 8000000000 || !string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
                         {
                             ProgressBar_Extracting.SafeInvokeAction(() =>
                             {
