@@ -101,11 +101,11 @@ namespace SBRW.Launcher.App.UI_Forms
 
             LogToFileAddons.Parent_Log_Screen(11, "LAUNCHER", "Set Parent Window location");
 
-            Presence_Launcher.Start("Start Up", "576154452348633108");
+            Presence_Launcher.Start();
 
             if (!UnixOS.Detected())
             {
-                Presence_Launcher.Status("Start Up", "Checking .NET Framework");
+                Presence_Launcher.Status(0, "Checking .NET Framework");
                 try
                 {
                     /* Check if User has a compatible .NET Framework Installed */
@@ -215,7 +215,7 @@ namespace SBRW.Launcher.App.UI_Forms
                 }
 
                 LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER XML", "If File Exists or Not");
-                Presence_Launcher.Status("Start Up", "Checking if UserSettings XML Exists");
+                Presence_Launcher.Status(0, "Checking if UserSettings XML Exists");
                 /* Create Default Configuration Files (if they don't already exist) */
                 if (!File.Exists(Locations.UserSettingsXML))
                 {
@@ -248,7 +248,7 @@ namespace SBRW.Launcher.App.UI_Forms
                     "GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
 
                 LogToFileAddons.Parent_Log_Screen(2, "OS", "Detecting");
-                Presence_Launcher.Status("Start Up", "Checking Operating System");
+                Presence_Launcher.Status(0, "Checking Operating System");
                 try
                 {
                     if (UnixOS.Detected())
@@ -294,7 +294,7 @@ namespace SBRW.Launcher.App.UI_Forms
                     if (!UnixOS.Detected())
                     {
                         LogToFileAddons.Parent_Log_Screen(2, "FOLDER LOCATION", "Checking Launcher Folder Directory");
-                        Presence_Launcher.Status("Start Up", "Checking Launcher Folder Locations");
+                        Presence_Launcher.Status(0, "Checking Launcher Folder Locations");
 
                         switch (FunctionStatus.CheckFolder(Locations.LauncherFolder))
                         {
@@ -343,7 +343,7 @@ namespace SBRW.Launcher.App.UI_Forms
                             if (!UnixOS.Detected())
                             {
                                 LogToFileAddons.Parent_Log_Screen(2, "Account File Migration", "Doing Migration");
-                                Presence_Launcher.Status("Start Up", "Doing Ini File Migration");
+                                Presence_Launcher.Status(0, "Doing Ini File Migration");
                                 if (File.Exists(Ini_Location.Name_Account_Ini))
                                 {
                                     try
@@ -387,7 +387,7 @@ namespace SBRW.Launcher.App.UI_Forms
                             else
                             {
                                 LogToFileAddons.Parent_Log_Screen(2, "INI FILES", "Doing Nullsafe");
-                                Presence_Launcher.Status("Start Up", "Doing NullSafe ini Files");
+                                Presence_Launcher.Status(0, "Doing NullSafe ini Files");
                                 Save_Settings.NullSafe();
                                 Save_Account.NullSafe();
                                 LogToFileAddons.Parent_Log_Screen(3, "INI FILES", "Done");
@@ -402,7 +402,7 @@ namespace SBRW.Launcher.App.UI_Forms
                                 if (Product_Version.GetWindowsNumber() == 6.1)
                                 {
                                     LogToFileAddons.Parent_Log_Screen(2, "SSL/TLS", "Windows 7 Detected");
-                                    Presence_Launcher.Status("Start Up", "Checking Windows 7 SSL/TLS");
+                                    Presence_Launcher.Status(0, "Checking Windows 7 SSL/TLS");
 
                                     try
                                     {
@@ -453,7 +453,7 @@ namespace SBRW.Launcher.App.UI_Forms
                                 if (Product_Version.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Win_7_Patches))
                                 {
                                     LogToFileAddons.Parent_Log_Screen(2, "HotFixes", "Windows 7 Detected");
-                                    Presence_Launcher.Status("Start Up", "Checking Windows 7 HotFixes");
+                                    Presence_Launcher.Status(0, "Checking Windows 7 HotFixes");
 
                                     try
                                     {
@@ -598,7 +598,7 @@ namespace SBRW.Launcher.App.UI_Forms
                                 {
                                     LogToFileAddons.Parent_Log_Screen(11, "PROXY", "Starting Proxy (From Startup)");
                                     Proxy_Server.Instance.Start("Splash Screen [Program.cs]");
-                                    LogToFileAddons.Parent_Log_Screen(3, "PROXY", "Started");
+                                    LogToFileAddons.Parent_Log_Screen(3, "PROXY", (Proxy_Settings.Running() ? "Started" : "Failed to Start") );
                                 }
                                 else
                                 {
@@ -608,7 +608,7 @@ namespace SBRW.Launcher.App.UI_Forms
                                 LogToFileAddons.Parent_Log_Screen(2, "PRELOAD", "Headers");
                                 Custom_Header.Headers_WHC();
                                 LogToFileAddons.Parent_Log_Screen(3, "PRELOAD", "Headers");
-                                Presence_Launcher.Status("Start Up", "Checking Root Certificate Authority");
+                                Presence_Launcher.Status(0, "Checking Root Certificate Authority");
                                 Certificate_Store.Latest();
 
                                 LogToFileAddons.Parent_Log_Screen(1, "REDISTRIBUTABLE", "Moved to Function");
@@ -639,7 +639,7 @@ namespace SBRW.Launcher.App.UI_Forms
             LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER", "Checking Game Installation");
             if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
             {
-                Presence_Launcher.Status("Start Up", "Doing First Time Run");
+                Presence_Launcher.Status(0, "Doing First Time Run");
                 LogToFileAddons.Parent_Log_Screen(11, "LAUNCHER", "First run!");
 
                 try
@@ -674,7 +674,7 @@ namespace SBRW.Launcher.App.UI_Forms
                 {
                     if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
                     {
-                        Presence_Launcher.Status("Start Up", "User Selecting/Inputting Game Files Folder");
+                        Presence_Launcher.Status(0, "User Selecting/Inputting Game Files Folder");
 
                         try
                         {
@@ -705,7 +705,7 @@ namespace SBRW.Launcher.App.UI_Forms
 
                                 if (!string.IsNullOrWhiteSpace(GameFolderPath))
                                 {
-                                    Presence_Launcher.Status("Start Up", "Verifying Game Files Folder Location");
+                                    Presence_Launcher.Status(0, "Verifying Game Files Folder Location");
 
                                     if (!FunctionStatus.HasWriteAccessToFolder(GameFolderPath))
                                     {
@@ -839,7 +839,7 @@ namespace SBRW.Launcher.App.UI_Forms
                 if (!UnixOS.Detected())
                 {
                     LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER", "Checking Game Path Location");
-                    Presence_Launcher.Status("Start Up", "Checking Game Files Folder Location");
+                    Presence_Launcher.Status(0, "Checking Game Files Folder Location");
 
                     switch (FunctionStatus.CheckFolder(Save_Settings.Live_Data.Game_Path))
                     {
@@ -916,7 +916,7 @@ namespace SBRW.Launcher.App.UI_Forms
                 /* Check If Launcher Failed to Connect to any APIs */
                 if (!VisualsAPIChecker.Local_Cached_API())
                 {
-                    Presence_Launcher.Status("Start Up", "Launcher Encountered API Errors");
+                    Presence_Launcher.Status(0, "Launcher Encountered API Errors");
 
                     DialogResult restartAppNoApis = MessageBox.Show(null, "There is no internet connection or local cache, Launcher might crash." +
                         "\n\nClick Yes to Close GameLauncher" +

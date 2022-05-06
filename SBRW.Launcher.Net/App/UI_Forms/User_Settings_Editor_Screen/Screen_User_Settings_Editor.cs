@@ -54,7 +54,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
         public Screen_User_Settings_Editor()
         {
             IsUSXEditorOpen = true;
-            Presence_Launcher.Status("User XML Editor", null);
+            Presence_Launcher.Status(23, null);
             Log.Checking("UXE: Success, a UserSettings.xml file was found!");
             if (new FileInfo(Locations.UserSettingsXML).IsReadOnly == true)
             {
@@ -73,7 +73,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             SetVisuals();
             this.Closing += (x, y) =>
             {
-                Presence_Launcher.Status("Settings", null);
+                Presence_Launcher.Status(22, null);
                 if (IsUSXEditorOpen) { IsUSXEditorOpen = false; }
                 /* This is for Mono Support */
                 if (Hover.Active)

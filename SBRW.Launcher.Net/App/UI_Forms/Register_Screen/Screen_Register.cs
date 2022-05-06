@@ -429,10 +429,10 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             IsRegisterScreenOpen = true;
             InitializeComponent();
             SetVisuals();
-            Presence_Launcher.Status("Register", ServerListUpdater.ServerName("Register"));
+            Presence_Launcher.Status(21, ServerListUpdater.ServerName("Register"));
             this.Closing += (x, y) =>
             {
-                Presence_Launcher.Status("Idle Ready", null);
+                Presence_Launcher.Status(4, null);
                 IsRegisterScreenOpen = false;
                 GC.Collect();
             };

@@ -232,7 +232,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
             /* Check If Launcher Failed to Connect to any APIs */
             if (!Local_Cached_API())
             {
-                Presence_Launcher.Status("Start Up", "Launcher Encountered API Errors");
+                Presence_Launcher.Status(0, "Launcher Encountered API Errors");
 
                 if (MessageBox.Show(null, Translations.Database("VisualsAPIChecker_TextBox_No_API"),
                     Translations.Database("VisualsAPIChecker_TextBox_No_API_P2"),

@@ -717,7 +717,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         /* Launch game */
         private void Game_Check_Launch()
         {
-            Presence_Launcher.Start("New RPC", Presence_Launcher.ApplicationID());
+            Presence_Launcher.Start(false, Presence_Launcher.ApplicationID());
 
             try
             {
@@ -933,7 +933,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 if (!Process_Start_Game.Live_Process.HasExited)
                 {
-                    Presence_Launcher.Status("In-Game", null);
+                    Presence_Launcher.Status(28, string.Empty);
 
                     /* TIMER HERE */
                     Live_Action_Timer = new System.Timers.Timer();
@@ -1205,7 +1205,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 try
                 {
-                    Presence_Launcher.Status("Checking ModNet", null);
+                    Presence_Launcher.Status(5, null);
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
                     Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
@@ -1234,10 +1234,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     }
                     catch (Exception Error)
                     {
-
-
                         Label_Download_Information.Text = ("JSON: Unable to Retrieve ModNet Files Information").ToUpper();
-                        Presence_Launcher.Status("ModNet Files Information Error", null);
+                        Presence_Launcher.Status(8, string.Empty);
                         Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
                         string LogMessage = "There was an error with ModNet JSON Retrieval:";
                         LogToFileAddons.OpenLog("MODNET FILES", LogMessage, Error, "Error", false);
@@ -1255,7 +1253,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     if (string.IsNullOrWhiteSpace(ModulesJSON) || !Is_Json.Valid(ModulesJSON))
                     {
                         Label_Download_Information.Text = ("JSON: Invalid ModNet Files Information").ToUpper();
-                        Presence_Launcher.Status("ModNet Files Information Error", null);
+                        Presence_Launcher.Status(8, string.Empty);
                         Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
                         ModulesJSON = string.Empty;
                         return;
@@ -1323,7 +1321,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         File.Delete(ModNetFilePath);
                                     }
 
-                                    Presence_Launcher.Status("Download ModNet", ModNetList);
+                                    Presence_Launcher.Status(7, ModNetList);
 
                                     Uri URLCall = new Uri(URLs.ModNet + "/launcher-modules/" + ModNetList);
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
@@ -1357,7 +1355,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
                         catch (Exception Error)
                         {
-                            Presence_Launcher.Status("Download ModNet Error", null);
+                            Presence_Launcher.Status(8, null);
                             Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
                             string LogMessage = "There was an error with ModNet Files Check:";
                             LogToFileAddons.OpenLog("MODNET CORE", LogMessage, Error, "Error", false);
@@ -1401,7 +1399,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         catch (Exception Error)
                         {
                             Label_Download_Information.Text = ("JSON: Unable to Retrieve Server Mod Information").ToUpper();
-                            Presence_Launcher.Status("Server Mods Get Information Error", null);
+                            Presence_Launcher.Status(10, null);
                             Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
                             string LogMessage = "There was an error with Server Mod Information Retrieval:";
                             LogToFileAddons.OpenLog("SERVER MOD INFO", LogMessage, Error, "Error", false);
@@ -1419,7 +1417,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         if (string.IsNullOrWhiteSpace(ServerModInfo) || !Is_Json.Valid(ServerModInfo))
                         {
                             Label_Download_Information.Text = ("JSON: Invalid Server Mod Information").ToUpper();
-                            Presence_Launcher.Status("Server Mods Get Information Error", null);
+                            Presence_Launcher.Status(10, null);
                             Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
                             ServerModInfo = string.Empty;
                             return;
@@ -1555,7 +1553,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             catch (Exception Error)
                             {
                                 Label_Download_Information.Text = ("JSON: Unable to Retrieve Server Mod List Information").ToUpper();
-                                Presence_Launcher.Status("Server Mods Get Information Error", null);
+                                Presence_Launcher.Status(10, null);
                                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
                                 string LogMessage = "There was an error with Server Mod List Information Retrieval:";
                                 LogToFileAddons.OpenLog("SERVER MOD JSON", LogMessage, Error, "Error", false);
@@ -1573,7 +1571,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             if (string.IsNullOrWhiteSpace(ServerModListJSON) || !Is_Json.Valid(ServerModListJSON))
                             {
                                 Label_Download_Information.Text = ("JSON: Invalid Server Mod List Information").ToUpper();
-                                Presence_Launcher.Status("Server Mods Get Information Error", null);
+                                Presence_Launcher.Status(10, null);
                                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
                                 ServerModListJSON = string.Empty;
                                 return;
@@ -1663,7 +1661,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     if (ModFilesDownloadUrls.Count != 0)
                                     {
                                         this.DownloadModNetFilesRightNow(ModFolderCache);
-                                        Presence_Launcher.Status("Download Server Mods", null);
+                                        Presence_Launcher.Status(9, null);
                                     }
                                     else
                                     {
@@ -1672,7 +1670,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 }
                                 catch (Exception Error)
                                 {
-                                    Presence_Launcher.Status("Download Server Mods Error", null);
+                                    Presence_Launcher.Status(10, null);
                                     Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
                                     string LogMessage = "There was an error with Server Mods Check:";
                                     LogToFileAddons.OpenLog("SERVER MOD DOWNLOAD", LogMessage, Error, "Error", false);
@@ -1715,7 +1713,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
                 catch (Exception Error)
                 {
-                    Presence_Launcher.Status("Download ModNet Error", null);
+                    Presence_Launcher.Status(8, null);
                     Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
                     string LogMessage = "There was an error downloading ModNet Files:";
                     LogToFileAddons.OpenLog("MODNET FILES", LogMessage, Error, "Error", false);
@@ -2549,7 +2547,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
 
             Presence_Launcher.Download = false;
-            Presence_Launcher.Status("Idle Ready", null);
+            Presence_Launcher.Status(4, null);
 
             if (!IsDisposed || !Disposing)
             {
@@ -2607,7 +2605,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
             }
 
-            Presence_Launcher.Status("Download Game Files Error", null);
+            Presence_Launcher.Status(3, null);
 
             ProgressBar_Extracting.Value = 100;
             ProgressBar_Extracting.Width = 519;
@@ -2774,7 +2772,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                             if (Pack_SBRW_Downloader_Time_Span != Time_Clock.Seconds)
                             {
-                                Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", D_Live_Events.Download_Percentage));
+                                Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", D_Live_Events.Download_Percentage));
                                 Pack_SBRW_Downloader_Time_Span = Time_Clock.Seconds;
                             }
 
@@ -2852,7 +2850,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                             ProgressBar_Extracting.Width = (int)(519 * U_Live_Events.File_Current / U_Live_Events.File_Total);
                                         }, this);
 
-                                        Presence_Launcher.Status("Unpack Game Files", string.Format("Unpacking Game: {0}%", U_Live_Events.Extract_Percentage));
+                                        Presence_Launcher.Status(1, string.Format("Unpacking Game: {0}%", U_Live_Events.Extract_Percentage));
 
                                         if (Parent_Screen.Screen_Instance != null && ulong.TryParse(U_Live_Events.Extract_Percentage.ToString(), out ulong Converted_Value))
                                         {
@@ -3054,7 +3052,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         ProgressBar_Extracting.Width = int.Parse(Math.Round(Calulated_Division * 519).ToString());
                                     }, this);
 
-                                    Presence_Launcher.Status("Download Game Files", string.Format("Downloaded {0}% of the Game!", Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100)));
+                                    Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100)));
 
                                     if (Parent_Screen.Screen_Instance != null)
                                     {

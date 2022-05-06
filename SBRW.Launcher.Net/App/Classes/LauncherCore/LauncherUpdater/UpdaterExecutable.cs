@@ -27,7 +27,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
         public static void Check()
         {
             LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER UPDATER", "Is Version Up to Date or not");
-            Presence_Launcher.Status("Start Up", "Checking Launcher and Updater Release Information");
+            Presence_Launcher.Status(0, "Checking Launcher and Updater Release Information");
 
             /* Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon */
             try

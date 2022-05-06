@@ -299,7 +299,7 @@ namespace SBRW.Launcher.Net
                         {
                             if (No_Java.WaitOne(0, false))
                             {
-                                if (UnixOS.Detected())
+                                if (!UnixOS.Detected() && false)
                                 {
                                     /* MONO Hates this... */
                                     string[] File_List =

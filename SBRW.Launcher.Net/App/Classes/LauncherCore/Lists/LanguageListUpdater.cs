@@ -19,7 +19,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
         public static void GetList()
         {
             LogToFileAddons.Parent_Log_Screen(2, "LIST CORE", "Creating Language List");
-            Presence_Launcher.Status("Start Up", "Creating Language List");
+            Presence_Launcher.Status(0, "Creating Language List");
 
             List<Json_List_Language> langInfos = new List<Json_List_Language>();
 

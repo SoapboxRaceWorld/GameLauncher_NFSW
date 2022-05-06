@@ -29,7 +29,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
         public static void GetList()
         {
             LogToFileAddons.Parent_Log_Screen(2, "SERVER LIST CORE", "Creating Server List");
-            Presence_Launcher.Status("Start Up", "Creating Server List");
+            Presence_Launcher.Status(0, "Creating Server List");
 
             List<Json_List_Server> serverInfos = new List<Json_List_Server>();
 

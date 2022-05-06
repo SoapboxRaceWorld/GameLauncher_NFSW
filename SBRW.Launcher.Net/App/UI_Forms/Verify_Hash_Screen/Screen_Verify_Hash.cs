@@ -71,7 +71,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
         public Screen_Verify_Hash()
         {
             IsVerifyHashOpen = true;
-            Presence_Launcher.Status("Verify", null);
+            Presence_Launcher.Status(24, null);
             InitializeComponent();
             Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             SetVisuals();
@@ -85,7 +85,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                     }
                     else
                     {
-                        Presence_Launcher.Status("Settings", null);
+                        Presence_Launcher.Status(22, null);
                         IsVerifyHashOpen = false;
                         GameScanner(false);
                     }
@@ -93,7 +93,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                 else
                 {
                     IsVerifyHashOpen = false;
-                    Presence_Launcher.Status("Settings", null);
+                    Presence_Launcher.Status(22, null);
                 }
 
                 GC.Collect();
@@ -191,7 +191,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
 
         private void StartGameScanner()
         {
-            Presence_Launcher.Status("Verify Scan", null);
+            Presence_Launcher.Status(25, null);
             Log.Info("VERIFY HASH: Checking and Deleting '.orig' Files and Symbolic Folders");
             ScanProgressText.SafeInvokeAction(() => ScanProgressText.Text = "Removing any '.orig' Files in Game Directory");
 
@@ -573,14 +573,14 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
 
         private void Integrity()
         {
-            Presence_Launcher.Status("Verify Good", null);
+            Presence_Launcher.Status(27, null);
             Save_Settings.Live_Data.Game_Integrity = "Good";
             Save_Settings.Save();
         }
 
         private void CorruptedFilesFound()
         {
-            Presence_Launcher.Status("Verify Bad", null);
+            Presence_Launcher.Status(26, null);
             /* START Show Redownloader Progress*/
             StartScanner.SafeInvokeAction(() => StartScanner.Visible = false);
             StopScanner.SafeInvokeAction(() => StopScanner.Visible = true);
@@ -737,7 +737,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
             {
                 RedownloadErrorCount++;
                 Log_Verify.Downloaded("File: " + CurrentDownloadingFile);
-                Presence_Launcher.Status("Verify Bad", RedownloadedCount + RedownloadErrorCount + " out of " + CurrentCount);
+                Presence_Launcher.Status(26, RedownloadedCount + RedownloadErrorCount + " out of " + CurrentCount);
 
                 DownloadProgressText.SafeInvokeAction(() =>
                 DownloadProgressText.Text = "Failed To Download File [ " + 
@@ -770,7 +770,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
             {
                 RedownloadedCount++;
 
-                Presence_Launcher.Status("Verify Bad", RedownloadedCount + " out of " + CurrentCount);
+                Presence_Launcher.Status(26, RedownloadedCount + " out of " + CurrentCount);
                 Log_Verify.Downloaded("File: " + CurrentDownloadingFile);
 
                 DownloadProgressText.SafeInvokeAction(() =>
@@ -814,7 +814,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
             else if (IsVerifyHashOpen && ForceStopScan)
             {
                 Log.Info("VERIFY HASH: Download Process has Stopped");
-                Presence_Launcher.Status("Verify Bad", RedownloadedCount + " out of " + CurrentCount);
+                Presence_Launcher.Status(26, RedownloadedCount + " out of " + CurrentCount);
 
                 DownloadProgressText.SafeInvokeAction(() =>
                 DownloadProgressText.Text = "Download Stopped on File [ " + 

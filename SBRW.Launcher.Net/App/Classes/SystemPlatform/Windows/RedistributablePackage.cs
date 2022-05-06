@@ -106,7 +106,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
             if (!UnixOS.Detected())
             {
                 LogToFileAddons.Parent_Log_Screen(2, "REDISTRIBUTABLE", "Is Installed or Not");
-                Presence_Launcher.Status("Start Up", "Checking Redistributable Package Visual Code 2015 to 2019");
+                Presence_Launcher.Status(0, "Checking Redistributable Package Visual Code 2015 to 2019");
 
                 if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
                 {

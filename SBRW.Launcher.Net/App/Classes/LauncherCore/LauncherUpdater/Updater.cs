@@ -51,7 +51,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
         public static void Latest()
         {
             LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER UPDATE", "Is Version Up to Date or not");
-            Presence_Launcher.Status("Start Up", "Checking Latest Launcher Release Information");
+            Presence_Launcher.Status(0, "Checking Latest Launcher Release Information");
             try
             {
                 Uri URLCall = new Uri((EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed()) ?
