@@ -432,7 +432,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             Presence_Launcher.Status(21, ServerListUpdater.ServerName("Register"));
             this.Closing += (x, y) =>
             {
-                Presence_Launcher.Status(4, null);
+                Presence_Launcher.Status(4);
                 IsRegisterScreenOpen = false;
                 GC.Collect();
             };

@@ -1757,7 +1757,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Set_Visuals();
             this.Closing += (x, y) =>
             {
-                Presence_Launcher.Status(4, null);
+                Presence_Launcher.Status(4);
                 Thread_Number_Change_A = Thread_Number_Change_B = Thread_Number_Change_C = 0;
 
                 if (ThreadChangedCDN != null)
@@ -1793,7 +1793,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Screen_Instance = this;
             Screen_Panel_Forms = Panel_Form_Screens;
 
-            Presence_Launcher.Status(2, null);
+            Presence_Launcher.Status(22);
         }
     }
 }

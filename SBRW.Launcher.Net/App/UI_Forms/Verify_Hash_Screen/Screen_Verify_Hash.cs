@@ -71,7 +71,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
         public Screen_Verify_Hash()
         {
             IsVerifyHashOpen = true;
-            Presence_Launcher.Status(24, null);
+            Presence_Launcher.Status(24);
             InitializeComponent();
             Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             SetVisuals();
@@ -85,7 +85,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                     }
                     else
                     {
-                        Presence_Launcher.Status(22, null);
+                        Presence_Launcher.Status(22);
                         IsVerifyHashOpen = false;
                         GameScanner(false);
                     }
@@ -93,7 +93,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                 else
                 {
                     IsVerifyHashOpen = false;
-                    Presence_Launcher.Status(22, null);
+                    Presence_Launcher.Status(22);
                 }
 
                 GC.Collect();
@@ -191,7 +191,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
 
         private void StartGameScanner()
         {
-            Presence_Launcher.Status(25, null);
+            Presence_Launcher.Status(25);
             Log.Info("VERIFY HASH: Checking and Deleting '.orig' Files and Symbolic Folders");
             ScanProgressText.SafeInvokeAction(() => ScanProgressText.Text = "Removing any '.orig' Files in Game Directory");
 
@@ -573,14 +573,14 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
 
         private void Integrity()
         {
-            Presence_Launcher.Status(27, null);
+            Presence_Launcher.Status(27);
             Save_Settings.Live_Data.Game_Integrity = "Good";
             Save_Settings.Save();
         }
 
         private void CorruptedFilesFound()
         {
-            Presence_Launcher.Status(26, null);
+            Presence_Launcher.Status(26);
             /* START Show Redownloader Progress*/
             StartScanner.SafeInvokeAction(() => StartScanner.Visible = false);
             StopScanner.SafeInvokeAction(() => StopScanner.Visible = true);

@@ -1874,12 +1874,12 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                 {
                     if (RPCStateCache.Contains("Settings"))
                     {
-                        Presence_Launcher.Status(22, null);
+                        Presence_Launcher.Status(22);
                         Screen_Settings.Clear_Hide_Screen_Form_Panel();
                     }
                     else if (RPCStateCache.Contains("Ready"))
                     {
-                        Presence_Launcher.Status(4, null);
+                        Presence_Launcher.Status(4);
                         Screen_Main.Clear_Hide_Screen_Form_Panel();
                     }
                 }
@@ -1887,7 +1887,7 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                 GC.Collect();
             };
 
-            Presence_Launcher.Status(20, null);
+            Presence_Launcher.Status(20);
         }
     }
 }
