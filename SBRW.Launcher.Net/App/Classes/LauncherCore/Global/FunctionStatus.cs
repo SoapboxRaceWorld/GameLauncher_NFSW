@@ -37,7 +37,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
         public static bool EnableInsiderPreview { get { return Save_Settings.Live_Data.Launcher_Insider == "1"; } }
         public static bool EnableThemeSupport { get { return Save_Settings.Live_Data.Launcher_Theme_Support == "1"; } }
         public static bool EnableLegacyTimer { get { return Save_Settings.Live_Data.Launcher_Legacy_Timer == "1"; } }
+#if DEBUG
         public static bool EnableLZMADownloader { get { return Save_Settings.Live_Data.Launcher_LZMA_Downloader == "1"; } }
+#else
+        public static bool EnableLZMADownloader { get { return Save_Settings.Live_Data.Launcher_LZMA_Downloader != "1"; } }
+#endif
     }
 
     /* This is Used to call Certain Functions (Such as Completion Status or Function Callbacks) */

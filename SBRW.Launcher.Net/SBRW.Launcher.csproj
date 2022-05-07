@@ -53,7 +53,7 @@
     <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
     <PackageReference Include="SBRW.Ini.Parser" Version="2.6.5" />
     <PackageReference Include="SBRW.Launcher.Core" Version="0.0.42" />
-    <PackageReference Include="SBRW.Launcher.Core.Discord" Version="0.0.22" />
+    <PackageReference Include="SBRW.Launcher.Core.Discord" Version="0.0.24" />
     <PackageReference Include="SBRW.Launcher.Core.Downloader" Version="0.1.2" />
     <PackageReference Include="SBRW.Launcher.Core.Extra" Version="0.0.13" />
     <PackageReference Include="SBRW.Launcher.Core.Proxy" Version="0.0.21" />
