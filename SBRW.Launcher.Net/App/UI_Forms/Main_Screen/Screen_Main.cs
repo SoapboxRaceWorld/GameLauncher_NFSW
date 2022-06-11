@@ -2131,7 +2131,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Button_Login.Enabled = true;
                             Button_Register.Enabled = true;
                             Launcher_Value.Launcher_Select_Server_Category = ((Json_List_Server)ComboBox_Server_List.SelectedItem).Category ?? string.Empty;
-                            Session_Timer.Remaining = 360;
+                            Session_Timer.Remaining = ((Launcher_Value.Launcher_Select_Server_JSON != null) &&
+                            Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0) ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 2 * 60 * 60;
 
                             if (Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "DEV" ||
                             Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "OFFLINE")
