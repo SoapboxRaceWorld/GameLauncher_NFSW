@@ -11,6 +11,7 @@ using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
 using SBRW.Launcher.App.UI_Forms.About_Screen;
 using SBRW.Launcher.App.UI_Forms.Main_Screen;
 using SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen;
+using SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen;
 using SBRW.Launcher.App.UI_Forms.USXEditor_Screen;
 using SBRW.Launcher.App.UI_Forms.VerifyHash_Screen;
 using SBRW.Launcher.Core.Cache;
@@ -541,22 +542,29 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         #region Event Functions
         private void Button_Security_Center_Click(object sender, EventArgs e)
         {
-            try
+            if (EnableInsiderDeveloper.Allowed())
             {
-                Screen_Security_Center Custom_Instance_Settings = new Screen_Security_Center() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
-                Panel_Form_Screens.Visible = true;
-                Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
-                Screen_Security_Center.RPCStateCache = "Settings";
-                Custom_Instance_Settings.Show();
-                if (Parent_Screen.Screen_Instance != null)
-                {
-                    Parent_Screen.Screen_Instance.Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
-                }
+                Screen_CDN_Selection.OpenScreen(true);
             }
-            catch (Exception Error)
+            else
             {
-                string ErrorMessage = "Security Center Screen Encountered an Error";
-                LogToFileAddons.OpenLog("Security Center Panel", ErrorMessage, Error, "Exclamation", false);
+                try
+                {
+                    Screen_Security_Center Custom_Instance_Settings = new Screen_Security_Center() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
+                    Panel_Form_Screens.Visible = true;
+                    Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
+                    Screen_Security_Center.RPCStateCache = "Settings";
+                    Custom_Instance_Settings.Show();
+                    if (Parent_Screen.Screen_Instance != null)
+                    {
+                        Parent_Screen.Screen_Instance.Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
+                    }
+                }
+                catch (Exception Error)
+                {
+                    string ErrorMessage = "Security Center Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("Security Center Panel", ErrorMessage, Error, "Exclamation", false);
+                }
             }
         }
         /* Settings Verify Hash */

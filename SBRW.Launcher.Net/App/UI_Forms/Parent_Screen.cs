@@ -1089,6 +1089,22 @@ namespace SBRW.Launcher.App.UI_Forms
                     ModNetHandler.CleanLinks(Save_Settings.Live_Data.Game_Path);
                 }
             }
+
+            try
+            {
+                if (Screen_Main.Screen_Instance != null)
+                {
+                    if (Screen_Main.Screen_Instance.NotifyIcon_Notification.Visible)
+                    {
+                        Screen_Main.Screen_Instance.NotifyIcon_Notification.Visible = false;
+                        Screen_Main.Screen_Instance.NotifyIcon_Notification.Dispose();
+                    }
+                }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("Notification Disposal", string.Empty, Error, string.Empty, true);
+            }
         }
 
         public void Button_Close_Click(object sender, EventArgs e)

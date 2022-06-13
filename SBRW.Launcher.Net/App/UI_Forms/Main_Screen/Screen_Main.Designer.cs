@@ -817,7 +817,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private LinkLabel LinkLabel_Server_Discord;
         private LinkLabel LinkLabel_Server_Facebook;
         private LinkLabel LinkLabel_Server_Twitter;
-        private NotifyIcon NotifyIcon_Notification;
         private Button Button_Select_Server;
         private Core.Theme.Control_ProgressBar ProgressBar_Preload;
         private Core.Theme.Control_ProgressBar ProgressBar_Extracting;
@@ -829,5 +828,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private Button Button_Register;
         private Button Button_Login;
         private Panel Panel_Form_Screens;
+        public NotifyIcon NotifyIcon_Notification;
     }
 }

@@ -4,7 +4,6 @@ using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Api_;
-using SBRW.Launcher.Core.Extension.Logging_;
 using SBRW.Launcher.Core.Extension.Validation_.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Extension.Web_;
 using SBRW.Launcher.Core.Discord.RPC_;
@@ -148,7 +147,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                     case APIStatus.Online:
                         if (!UnitedSL) { CarbonSL = RetrieveJSON(URLs.Static + "/serverlist.json", "SL", CarbonSC); }
                         else { CarbonSL = true; }
-                        if (!UnitedCDNL) { CarbonCDNL = RetrieveJSON(URLs.Static + "/cdn_list.json", "CDNL", CarbonSC); }
+                        if (!UnitedCDNL) { CarbonCDNL = RetrieveJSON(URLs.Static + "/cdnlist.json", "CDNL", CarbonSC); }
                         else { CarbonCDNL = true; }
                         LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon Status Check");
                         break;
@@ -170,7 +169,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
                     case APIStatus.Online:
                         if (!CarbonSL) { CarbonTwoSL = RetrieveJSON(URLs.Static_Alt + "/serverlist.json", "SL", CarbonTwoSC); }
                         else { CarbonTwoSL = true; }
-                        if (!CarbonCDNL) { CarbonTwoCDNL = RetrieveJSON(URLs.Static_Alt + "/cdn_list.json", "CDNL", CarbonTwoSC); }
+                        if (!CarbonCDNL) { CarbonTwoCDNL = RetrieveJSON(URLs.Static_Alt + "/cdnlist.json", "CDNL", CarbonTwoSC); }
                         else { CarbonTwoCDNL = true; }
                         LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon [Second] Status Check");
                         break;
