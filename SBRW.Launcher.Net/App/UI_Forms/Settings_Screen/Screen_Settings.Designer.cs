@@ -49,7 +49,6 @@
             this.CheckBox_Word_Filter_Check = new System.Windows.Forms.CheckBox();
             this.CheckBox_Proxy = new System.Windows.Forms.CheckBox();
             this.CheckBox_RPC = new System.Windows.Forms.CheckBox();
-            this.CheckBox_Legacy_Timer = new System.Windows.Forms.CheckBox();
             this.CheckBox_Theme_Support = new System.Windows.Forms.CheckBox();
             this.CheckBox_Opt_Insider = new System.Windows.Forms.CheckBox();
             this.CheckBox_Alt_WebCalls = new System.Windows.Forms.CheckBox();
@@ -71,7 +70,16 @@
             this.Panel_Form_Screens = new System.Windows.Forms.Panel();
             this.CheckBox_LZMA_Downloader = new System.Windows.Forms.CheckBox();
             this.CheckBox_JSON_Update_Cache = new System.Windows.Forms.CheckBox();
+            this.Panel_Display_Timer = new System.Windows.Forms.Panel();
+            this.Radio_Button_Static_Timer = new System.Windows.Forms.RadioButton();
+            this.Radio_Button_Dynamic_Timer = new System.Windows.Forms.RadioButton();
+            this.Radio_Button_No_Timer = new System.Windows.Forms.RadioButton();
+            this.Label_Display_Timer = new System.Windows.Forms.Label();
+            this.Label_WebClient_Timeout = new System.Windows.Forms.Label();
+            this.NumericUpDown_WebClient_Timeout = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
+            this.Panel_Display_Timer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_WebClient_Timeout)).BeginInit();
             this.SuspendLayout();
             // 
             // Button_Exit
@@ -268,6 +276,7 @@
             this.CheckBox_Word_Filter_Check.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Word_Filter_Check.TabIndex = 58;
             this.CheckBox_Word_Filter_Check.Text = "Disable Chat Word Filtering";
+            this.CheckBox_Word_Filter_Check.UseVisualStyleBackColor = false;
             // 
             // CheckBox_Proxy
             // 
@@ -278,6 +287,7 @@
             this.CheckBox_Proxy.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Proxy.TabIndex = 59;
             this.CheckBox_Proxy.Text = "Disable Proxy";
+            this.CheckBox_Proxy.UseVisualStyleBackColor = false;
             // 
             // CheckBox_RPC
             // 
@@ -288,16 +298,7 @@
             this.CheckBox_RPC.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_RPC.TabIndex = 60;
             this.CheckBox_RPC.Text = "Disable Discord RPC";
-            // 
-            // CheckBox_Legacy_Timer
-            // 
-            this.CheckBox_Legacy_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.CheckBox_Legacy_Timer.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_Legacy_Timer.Location = new System.Drawing.Point(295, 379);
-            this.CheckBox_Legacy_Timer.Name = "CheckBox_Legacy_Timer";
-            this.CheckBox_Legacy_Timer.Size = new System.Drawing.Size(222, 18);
-            this.CheckBox_Legacy_Timer.TabIndex = 63;
-            this.CheckBox_Legacy_Timer.Text = "Enable Legacy Timer";
+            this.CheckBox_RPC.UseVisualStyleBackColor = false;
             // 
             // CheckBox_Theme_Support
             // 
@@ -308,16 +309,18 @@
             this.CheckBox_Theme_Support.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Theme_Support.TabIndex = 62;
             this.CheckBox_Theme_Support.Text = "Enable Custom Theme Support";
+            this.CheckBox_Theme_Support.UseVisualStyleBackColor = false;
             // 
             // CheckBox_Opt_Insider
             // 
             this.CheckBox_Opt_Insider.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_Opt_Insider.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_Opt_Insider.Location = new System.Drawing.Point(556, 335);
+            this.CheckBox_Opt_Insider.Location = new System.Drawing.Point(295, 405);
             this.CheckBox_Opt_Insider.Name = "CheckBox_Opt_Insider";
             this.CheckBox_Opt_Insider.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Opt_Insider.TabIndex = 61;
             this.CheckBox_Opt_Insider.Text = "Opt Into Beta Launcher Builds";
+            this.CheckBox_Opt_Insider.UseVisualStyleBackColor = false;
             // 
             // CheckBox_Alt_WebCalls
             // 
@@ -328,6 +331,7 @@
             this.CheckBox_Alt_WebCalls.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Alt_WebCalls.TabIndex = 64;
             this.CheckBox_Alt_WebCalls.Text = "Enable Alternative WebCalls";
+            this.CheckBox_Alt_WebCalls.UseVisualStyleBackColor = false;
             // 
             // Label_Game_Current_Path
             // 
@@ -492,7 +496,7 @@
             // 
             this.Panel_Form_Screens.BackColor = System.Drawing.Color.Transparent;
             this.Panel_Form_Screens.ForeColor = System.Drawing.Color.Transparent;
-            this.Panel_Form_Screens.Location = new System.Drawing.Point(0, 0);
+            this.Panel_Form_Screens.Location = new System.Drawing.Point(861, 335);
             this.Panel_Form_Screens.Name = "Panel_Form_Screens";
             this.Panel_Form_Screens.Size = new System.Drawing.Size(891, 529);
             this.Panel_Form_Screens.TabIndex = 79;
@@ -502,11 +506,12 @@
             // 
             this.CheckBox_LZMA_Downloader.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_LZMA_Downloader.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_LZMA_Downloader.Location = new System.Drawing.Point(295, 403);
+            this.CheckBox_LZMA_Downloader.Location = new System.Drawing.Point(295, 381);
             this.CheckBox_LZMA_Downloader.Name = "CheckBox_LZMA_Downloader";
             this.CheckBox_LZMA_Downloader.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_LZMA_Downloader.TabIndex = 80;
             this.CheckBox_LZMA_Downloader.Text = "Enable LZMA Downloader";
+            this.CheckBox_LZMA_Downloader.UseVisualStyleBackColor = false;
             // 
             // CheckBox_JSON_Update_Cache
             // 
@@ -517,6 +522,96 @@
             this.CheckBox_JSON_Update_Cache.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_JSON_Update_Cache.TabIndex = 81;
             this.CheckBox_JSON_Update_Cache.Text = "Disable Frequent JSON Cache";
+            this.CheckBox_JSON_Update_Cache.UseVisualStyleBackColor = false;
+            // 
+            // Panel_Display_Timer
+            // 
+            this.Panel_Display_Timer.BackColor = System.Drawing.Color.Transparent;
+            this.Panel_Display_Timer.Controls.Add(this.Radio_Button_Static_Timer);
+            this.Panel_Display_Timer.Controls.Add(this.Radio_Button_Dynamic_Timer);
+            this.Panel_Display_Timer.Controls.Add(this.Radio_Button_No_Timer);
+            this.Panel_Display_Timer.Location = new System.Drawing.Point(556, 357);
+            this.Panel_Display_Timer.Name = "Panel_Display_Timer";
+            this.Panel_Display_Timer.Size = new System.Drawing.Size(299, 18);
+            this.Panel_Display_Timer.TabIndex = 142;
+            this.Panel_Display_Timer.Tag = "SkidMarks";
+            // 
+            // Radio_Button_Static_Timer
+            // 
+            this.Radio_Button_Static_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Radio_Button_Static_Timer.ForeColor = System.Drawing.Color.Blue;
+            this.Radio_Button_Static_Timer.Location = new System.Drawing.Point(5, 3);
+            this.Radio_Button_Static_Timer.Name = "Radio_Button_Static_Timer";
+            this.Radio_Button_Static_Timer.Size = new System.Drawing.Size(95, 18);
+            this.Radio_Button_Static_Timer.TabIndex = 95;
+            this.Radio_Button_Static_Timer.TabStop = true;
+            this.Radio_Button_Static_Timer.Tag = "MaxSkidMarks0";
+            this.Radio_Button_Static_Timer.Text = "Static";
+            this.Radio_Button_Static_Timer.UseVisualStyleBackColor = true;
+            // 
+            // Radio_Button_Dynamic_Timer
+            // 
+            this.Radio_Button_Dynamic_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Radio_Button_Dynamic_Timer.ForeColor = System.Drawing.Color.Blue;
+            this.Radio_Button_Dynamic_Timer.Location = new System.Drawing.Point(106, 3);
+            this.Radio_Button_Dynamic_Timer.Name = "Radio_Button_Dynamic_Timer";
+            this.Radio_Button_Dynamic_Timer.Size = new System.Drawing.Size(99, 18);
+            this.Radio_Button_Dynamic_Timer.TabIndex = 96;
+            this.Radio_Button_Dynamic_Timer.TabStop = true;
+            this.Radio_Button_Dynamic_Timer.Tag = "MaxSkidMarks1";
+            this.Radio_Button_Dynamic_Timer.Text = "Dynamic";
+            this.Radio_Button_Dynamic_Timer.UseVisualStyleBackColor = true;
+            // 
+            // Radio_Button_No_Timer
+            // 
+            this.Radio_Button_No_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Radio_Button_No_Timer.ForeColor = System.Drawing.Color.Blue;
+            this.Radio_Button_No_Timer.Location = new System.Drawing.Point(211, 3);
+            this.Radio_Button_No_Timer.Name = "Radio_Button_No_Timer";
+            this.Radio_Button_No_Timer.Size = new System.Drawing.Size(85, 18);
+            this.Radio_Button_No_Timer.TabIndex = 97;
+            this.Radio_Button_No_Timer.TabStop = true;
+            this.Radio_Button_No_Timer.Tag = "MaxSkidMarks2";
+            this.Radio_Button_No_Timer.Text = "None";
+            this.Radio_Button_No_Timer.UseVisualStyleBackColor = true;
+            // 
+            // Label_Display_Timer
+            // 
+            this.Label_Display_Timer.BackColor = System.Drawing.Color.Transparent;
+            this.Label_Display_Timer.ForeColor = System.Drawing.Color.DarkGray;
+            this.Label_Display_Timer.Location = new System.Drawing.Point(556, 335);
+            this.Label_Display_Timer.Name = "Label_Display_Timer";
+            this.Label_Display_Timer.Size = new System.Drawing.Size(299, 14);
+            this.Label_Display_Timer.TabIndex = 143;
+            this.Label_Display_Timer.Text = "Title Window Display Timer:";
+            this.Label_Display_Timer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // Label_WebClient_Timeout
+            // 
+            this.Label_WebClient_Timeout.BackColor = System.Drawing.Color.Transparent;
+            this.Label_WebClient_Timeout.ForeColor = System.Drawing.Color.DarkGray;
+            this.Label_WebClient_Timeout.Location = new System.Drawing.Point(556, 381);
+            this.Label_WebClient_Timeout.Name = "Label_WebClient_Timeout";
+            this.Label_WebClient_Timeout.Size = new System.Drawing.Size(299, 14);
+            this.Label_WebClient_Timeout.TabIndex = 144;
+            this.Label_WebClient_Timeout.Text = "Web Client Timeout:";
+            this.Label_WebClient_Timeout.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // NumericUpDown_WebClient_Timeout
+            // 
+            this.NumericUpDown_WebClient_Timeout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.NumericUpDown_WebClient_Timeout.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.NumericUpDown_WebClient_Timeout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.NumericUpDown_WebClient_Timeout.Location = new System.Drawing.Point(556, 403);
+            this.NumericUpDown_WebClient_Timeout.Maximum = new decimal(new int[] {
+            179,
+            0,
+            0,
+            0});
+            this.NumericUpDown_WebClient_Timeout.Name = "NumericUpDown_WebClient_Timeout";
+            this.NumericUpDown_WebClient_Timeout.Size = new System.Drawing.Size(61, 19);
+            this.NumericUpDown_WebClient_Timeout.TabIndex = 145;
+            this.NumericUpDown_WebClient_Timeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // Screen_Settings
             // 
@@ -524,6 +619,10 @@
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.NumericUpDown_WebClient_Timeout);
+            this.Controls.Add(this.Label_WebClient_Timeout);
+            this.Controls.Add(this.Label_Display_Timer);
+            this.Controls.Add(this.Panel_Display_Timer);
             this.Controls.Add(this.Panel_Form_Screens);
             this.Controls.Add(this.Label_Version_Build);
             this.Controls.Add(this.Label_Theme_Author);
@@ -542,7 +641,6 @@
             this.Controls.Add(this.CheckBox_JSON_Update_Cache);
             this.Controls.Add(this.CheckBox_LZMA_Downloader);
             this.Controls.Add(this.CheckBox_Alt_WebCalls);
-            this.Controls.Add(this.CheckBox_Legacy_Timer);
             this.Controls.Add(this.CheckBox_Theme_Support);
             this.Controls.Add(this.CheckBox_Opt_Insider);
             this.Controls.Add(this.CheckBox_RPC);
@@ -573,6 +671,8 @@
             this.Text = "Settings - SBRW Launcher";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
+            this.Panel_Display_Timer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_WebClient_Timeout)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -599,7 +699,6 @@
         private System.Windows.Forms.CheckBox CheckBox_Word_Filter_Check;
         private System.Windows.Forms.CheckBox CheckBox_Proxy;
         private System.Windows.Forms.CheckBox CheckBox_RPC;
-        private System.Windows.Forms.CheckBox CheckBox_Legacy_Timer;
         private System.Windows.Forms.CheckBox CheckBox_Theme_Support;
         private System.Windows.Forms.CheckBox CheckBox_Opt_Insider;
         private System.Windows.Forms.CheckBox CheckBox_Alt_WebCalls;
@@ -621,5 +720,12 @@
         private System.Windows.Forms.Panel Panel_Form_Screens;
         private System.Windows.Forms.CheckBox CheckBox_LZMA_Downloader;
         private System.Windows.Forms.CheckBox CheckBox_JSON_Update_Cache;
+        private System.Windows.Forms.Panel Panel_Display_Timer;
+        private System.Windows.Forms.RadioButton Radio_Button_Static_Timer;
+        private System.Windows.Forms.RadioButton Radio_Button_Dynamic_Timer;
+        private System.Windows.Forms.RadioButton Radio_Button_No_Timer;
+        private System.Windows.Forms.Label Label_Display_Timer;
+        private System.Windows.Forms.Label Label_WebClient_Timeout;
+        private System.Windows.Forms.NumericUpDown NumericUpDown_WebClient_Timeout;
     }
 }

@@ -199,6 +199,22 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         }
         #endregion
         #region Loading
+        private void Display_Timer_Button()
+        {
+            if (Save_Settings.Live_Data.Launcher_Display_Timer == "1")
+            {
+                Radio_Button_Dynamic_Timer.Checked = true;
+            }
+            else if (Save_Settings.Live_Data.Launcher_Display_Timer == "2")
+            {
+                Radio_Button_No_Timer.Checked = true;
+            }
+            else
+            {
+                Radio_Button_Static_Timer.Checked = true;
+            }
+        }
+
         private void Screen_Settings_Load(object sender, EventArgs e)
         {
 
@@ -230,9 +246,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             CheckBox_Alt_WebCalls.Checked = InformationCache.EnableAltWebCalls;
             CheckBox_Opt_Insider.Checked = InformationCache.EnableInsiderPreview;
             CheckBox_Theme_Support.Checked = InformationCache.EnableThemeSupport;
-            CheckBox_Legacy_Timer.Checked = InformationCache.EnableLegacyTimer;
             CheckBox_LZMA_Downloader.Checked = InformationCache.EnableLZMADownloader;
             CheckBox_JSON_Update_Cache.Checked = InformationCache.DisableFrequencyJSONUpdate;
+            Display_Timer_Button();
 
             /*******************************/
             /* Enable/Disable Visuals       /
@@ -599,6 +615,21 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         /*******************************/
         /* On Button/Dropdown Functions /
         /*******************************/
+        private string Display_Timer_Button_Selection()
+        {
+            if (Radio_Button_Dynamic_Timer.Checked)
+            {
+                return "1";
+            }
+            else if (Radio_Button_No_Timer.Checked)
+            {
+                return "2";
+            }
+            else
+            {
+                return "0";
+            }
+        }
 
         /* Settings Save */
         private void SettingsSave_Click(object sender, EventArgs e)
@@ -805,10 +836,23 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 Launcher_Value.Launcher_Alternative_Webcalls(Save_Settings.Live_Data.Launcher_WebClient_Method == "WebClient");
             }
 
-            if (Save_Settings.Live_Data.Launcher_Legacy_Timer != (CheckBox_Legacy_Timer.Checked ? "1" : "0"))
+            if (Save_Settings.Live_Data.Launcher_Display_Timer != Display_Timer_Button_Selection())
             {
-                Save_Settings.Live_Data.Launcher_Legacy_Timer = CheckBox_Legacy_Timer.Checked ? "1" : "0";
-                Time_Window.Legacy = CheckBox_Legacy_Timer.Checked;
+                Save_Settings.Live_Data.Launcher_Display_Timer = Display_Timer_Button_Selection();
+            }
+
+            if (Save_Settings.Live_Data.Launcher_WebCall_TimeOut_Time != NumericUpDown_WebClient_Timeout.Value.ToString())
+            {
+                Save_Settings.Live_Data.Launcher_WebCall_TimeOut_Time = NumericUpDown_WebClient_Timeout.Value.ToString();
+
+                if (NumericUpDown_WebClient_Timeout.Value > 0)
+                {
+                    Launcher_Value.Launcher_WebCall_Timeout_Enable = true;
+                }
+                else
+                {
+                    Launcher_Value.Launcher_WebCall_Timeout_Enable = false;
+                }
             }
 
             if (Save_Settings.Live_Data.Launcher_LZMA_Downloader != (CheckBox_LZMA_Downloader.Checked ? "1" : "0"))
@@ -1545,9 +1589,14 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             CheckBox_Alt_WebCalls.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             CheckBox_Opt_Insider.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             CheckBox_Theme_Support.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
-            CheckBox_Legacy_Timer.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             CheckBox_LZMA_Downloader.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             CheckBox_JSON_Update_Cache.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            Radio_Button_Static_Timer.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            Radio_Button_Dynamic_Timer.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            Radio_Button_No_Timer.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            Label_Display_Timer.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            Label_WebClient_Timeout.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            NumericUpDown_WebClient_Timeout.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Label_Game_Current_Path.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             LinkLabel_Game_Path.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_CDN_Current.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
@@ -1596,6 +1645,12 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Label_CDN.ForeColor = Color_Text.L_Five;
             Label_Game_Settings.ForeColor = Color_Text.L_Five;
             Label_API_Status.ForeColor = Color_Text.L_Five;
+            Label_Display_Timer.ForeColor = Color_Text.L_Five;
+            Label_WebClient_Timeout.ForeColor = Color_Text.L_Five;
+
+            /* Input Boxes */
+            NumericUpDown_WebClient_Timeout.ForeColor = Color_Winform_Other.DropMenu_Text_ForeColor;
+            NumericUpDown_WebClient_Timeout.BackColor = Color_Winform_Other.DropMenu_Background_ForeColor;
 
             /* Check boxes */
             CheckBox_Word_Filter_Check.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
@@ -1604,9 +1659,13 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             CheckBox_Alt_WebCalls.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
             CheckBox_Opt_Insider.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
             CheckBox_Theme_Support.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
-            CheckBox_Legacy_Timer.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
             CheckBox_LZMA_Downloader.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
             CheckBox_JSON_Update_Cache.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
+
+            /* Radio Buttons */
+            Radio_Button_Static_Timer.ForeColor = Color_Winform.Text_Fore_Color;
+            Radio_Button_Dynamic_Timer.ForeColor = Color_Winform.Text_Fore_Color;
+            Radio_Button_No_Timer.ForeColor = Color_Winform.Text_Fore_Color;
 
             /* Bottom Left */
             Label_Version_Build.ForeColor = Color_Text.L_Five;
@@ -1724,9 +1783,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             ToolTip_Hover.SetToolTip(CheckBox_Opt_Insider, "Unchecked: Only Official \"Release\" Builds will prompt Updates\n" +
                 "Checked: Insider/Beta Build\'s will be available to the Updater");
             ToolTip_Hover.SetToolTip(CheckBox_Theme_Support, "Enables supporting External Themes for the Launcher");
+            /* @Zacam: Update Text to reflect new options 
             ToolTip_Hover.SetToolTip(CheckBox_Legacy_Timer, "Setting for Legacy Timer:\n" +
                 "If Checked, this restores count down timer on Window Title\n" +
-                "If Unchecked, displays the time on when the session ends");
+                "If Unchecked, displays the time on when the session ends"); */
             ToolTip_Hover.SetToolTip(CheckBox_Alt_WebCalls, "Changes the internal method used by Launcher for Communications\n" +
                 "Unchecked: Uses \'standard\' WebClient calls\n" +
                 "Checked: Uses WebClientWithTimeout");

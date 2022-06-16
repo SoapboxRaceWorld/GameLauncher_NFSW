@@ -902,6 +902,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 /* Request a New Session */
                 new Time_Window().Client_Session();
+                Session_Timer.Remaining = Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0 ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 2 * 60 * 60;
                 FunctionStatus.LauncherBattlePass = Process_Start_Game.Live_Process.EnableRaisingEvents = true;
                 NfswPid = Process_Start_Game.Live_Process.Id;
                 Process_Start_Game.Live_Process.Exited += (Send, It) =>
@@ -964,6 +965,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
                         }
                     };
+
+                    /* 0 = Static Timer, 1 = Dynamic Timer, 2 = No Timer */
+                    if (Save_Settings.Live_Data.Launcher_Display_Timer == "1")
+                    {
+                        Time_Window.Legacy = true;
+                    }
+                    else if (Save_Settings.Live_Data.Launcher_Display_Timer == "2")
+                    {
+                        /* Notes: This actually does not Display Timers on the Title Window and 'Time_Window.Live_Stream' will be renamed in the future */
+                        Time_Window.Live_Stream = true;
+                    }
+                    else
+                    {
+                        Time_Window.Live_Stream = Time_Window.Legacy = false;
+                    }
 
                     Live_Action_Timer.Interval = !Proxy_Settings.Running() ? 30000 : 60000;
                     Live_Action_Timer.Enabled = true;
@@ -2131,8 +2147,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Button_Login.Enabled = true;
                             Button_Register.Enabled = true;
                             Launcher_Value.Launcher_Select_Server_Category = ((Json_List_Server)ComboBox_Server_List.SelectedItem).Category ?? string.Empty;
-                            Session_Timer.Remaining = ((Launcher_Value.Launcher_Select_Server_JSON != null) &&
-                            Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0) ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 2 * 60 * 60;
 
                             if (Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "DEV" ||
                             Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "OFFLINE")

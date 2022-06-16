@@ -1,15 +1,11 @@
 ﻿using Newtonsoft.Json;
 using SBRW.Launcher.App.Classes.LauncherCore.Global;
 using SBRW.Launcher.App.Classes.LauncherCore.Lists;
-using SBRW.Launcher.App.Classes.LauncherCore.Lists.JSON;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.LauncherCore.Support;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
 using SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen;
-using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Api_;
-using SBRW.Launcher.Core.Extension.Validation_.Json_.Newtonsoft_;
-using SBRW.Launcher.Core.Extension.Web_;
 using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Theme;
 using System;
@@ -17,9 +13,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
-using System.Net.Cache;
 using System.Net.NetworkInformation;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 

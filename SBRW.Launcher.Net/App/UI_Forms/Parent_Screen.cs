@@ -532,7 +532,7 @@ namespace SBRW.Launcher.App.UI_Forms
                                 {
                                     LogToFileAddons.Parent_Log_Screen(2, "JSON", "Servers File");
 
-                                    if (File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)) || File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)))
+                                    if (File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)))
                                     {
                                         if (File.Exists(Locations.LauncherCustomServers))
                                         {
