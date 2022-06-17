@@ -36,7 +36,6 @@
             this.Button_Change_Game_Path = new System.Windows.Forms.Button();
             this.Button_Game_Verify_Files = new System.Windows.Forms.Button();
             this.Label_CDN = new System.Windows.Forms.Label();
-            this.ComboBox_CDN_List = new System.Windows.Forms.ComboBox();
             this.ComboBox_Language_List = new System.Windows.Forms.ComboBox();
             this.Label_Game_Settings = new System.Windows.Forms.Label();
             this.Button_Game_User_Settings = new System.Windows.Forms.Button();
@@ -77,6 +76,7 @@
             this.Label_Display_Timer = new System.Windows.Forms.Label();
             this.Label_WebClient_Timeout = new System.Windows.Forms.Label();
             this.NumericUpDown_WebClient_Timeout = new System.Windows.Forms.NumericUpDown();
+            this.Button_CDN_List = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.Panel_Display_Timer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_WebClient_Timeout)).BeginInit();
@@ -155,19 +155,8 @@
             this.Label_CDN.Name = "Label_CDN";
             this.Label_CDN.Size = new System.Drawing.Size(320, 14);
             this.Label_CDN.TabIndex = 47;
-            this.Label_CDN.Text = "CDN: PINGING";
+            this.Label_CDN.Text = "CDN:";
             this.Label_CDN.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // ComboBox_CDN_List
-            // 
-            this.ComboBox_CDN_List.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.ComboBox_CDN_List.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBox_CDN_List.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ComboBox_CDN_List.FormattingEnabled = true;
-            this.ComboBox_CDN_List.Location = new System.Drawing.Point(38, 132);
-            this.ComboBox_CDN_List.Name = "ComboBox_CDN_List";
-            this.ComboBox_CDN_List.Size = new System.Drawing.Size(287, 24);
-            this.ComboBox_CDN_List.TabIndex = 48;
             // 
             // ComboBox_Language_List
             // 
@@ -613,12 +602,24 @@
             this.NumericUpDown_WebClient_Timeout.TabIndex = 145;
             this.NumericUpDown_WebClient_Timeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // Button_CDN_List
+            // 
+            this.Button_CDN_List.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.Button_CDN_List.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button_CDN_List.Location = new System.Drawing.Point(38, 132);
+            this.Button_CDN_List.Name = "Button_CDN_List";
+            this.Button_CDN_List.Size = new System.Drawing.Size(154, 25);
+            this.Button_CDN_List.TabIndex = 146;
+            this.Button_CDN_List.Text = "CDN Picker";
+            this.Button_CDN_List.UseVisualStyleBackColor = false;
+            // 
             // Screen_Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.Button_CDN_List);
             this.Controls.Add(this.NumericUpDown_WebClient_Timeout);
             this.Controls.Add(this.Label_WebClient_Timeout);
             this.Controls.Add(this.Label_Display_Timer);
@@ -655,7 +656,6 @@
             this.Controls.Add(this.Button_Game_User_Settings);
             this.Controls.Add(this.Label_Game_Settings);
             this.Controls.Add(this.ComboBox_Language_List);
-            this.Controls.Add(this.ComboBox_CDN_List);
             this.Controls.Add(this.Label_CDN);
             this.Controls.Add(this.Button_Game_Verify_Files);
             this.Controls.Add(this.Button_Change_Game_Path);
@@ -686,7 +686,6 @@
         private System.Windows.Forms.Button Button_Change_Game_Path;
         private System.Windows.Forms.Button Button_Game_Verify_Files;
         private System.Windows.Forms.Label Label_CDN;
-        private System.Windows.Forms.ComboBox ComboBox_CDN_List;
         private System.Windows.Forms.ComboBox ComboBox_Language_List;
         private System.Windows.Forms.Label Label_Game_Settings;
         private System.Windows.Forms.Button Button_Game_User_Settings;
@@ -704,10 +703,8 @@
         private System.Windows.Forms.CheckBox CheckBox_Alt_WebCalls;
         private System.Windows.Forms.Label Label_Game_Current_Path;
         private System.Windows.Forms.Label Label_API_Status;
-        private System.Windows.Forms.Label Label_CDN_Current;
         private System.Windows.Forms.Label Label_Launcher_Path;
         private System.Windows.Forms.LinkLabel LinkLabel_Game_Path;
-        private System.Windows.Forms.LinkLabel LinkLabel_CDN_Current;
         private System.Windows.Forms.LinkLabel LinkLabel_Launcher_Path;
         private System.Windows.Forms.Label Label_API_Status_One;
         private System.Windows.Forms.Label Label_API_Status_Two;
@@ -727,5 +724,8 @@
         private System.Windows.Forms.Label Label_Display_Timer;
         private System.Windows.Forms.Label Label_WebClient_Timeout;
         private System.Windows.Forms.NumericUpDown NumericUpDown_WebClient_Timeout;
+        private System.Windows.Forms.Button Button_CDN_List;
+        public System.Windows.Forms.Label Label_CDN_Current;
+        public System.Windows.Forms.LinkLabel LinkLabel_CDN_Current;
     }
 }

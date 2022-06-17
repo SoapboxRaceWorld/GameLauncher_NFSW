@@ -1,10 +1,9 @@
 ﻿using SBRW.Launcher.App.Classes.LauncherCore.APICheckers;
-using SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite;
-using SBRW.Launcher.App.Classes.LauncherCore.Global;
 using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.LauncherCore.Support;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
+using SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen;
 using SBRW.Launcher.Core.Extension.Logging_;
 using SBRW.Launcher.Core.Extra.File_;
 using SBRW.Launcher.Core.Extra.Ini_;
@@ -20,35 +19,18 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
 {
     public partial class Screen_Welcome : Form
     {
-        private static bool IsWelcomeScreenOpen { get; set; }
+#pragma warning disable CS8618
+        public static Screen_Welcome Screen_Instance { get; set; }
+#pragma warning restore CS8618
         private bool StatusCheck { get; set; }
-
-        public static void OpenScreen()
-        {
-            if (IsWelcomeScreenOpen || Application.OpenForms["Screen_Welcome"] != null)
-            {
-                if (Application.OpenForms["Screen_Welcome"] != null) { Application.OpenForms["Screen_Welcome"].Activate(); }
-            }
-            else
-            {
-                try { new Screen_Welcome().ShowDialog(); }
-                catch (Exception Error)
-                {
-                    string ErrorMessage = "Welcome Screen Encountered an Error";
-                    LogToFileAddons.OpenLog("Welcome Screen", ErrorMessage, Error, "Exclamation", false);
-                }
-            }
-        }
 
         public Screen_Welcome()
         {
-            IsWelcomeScreenOpen = true;
             InitializeComponent();
             Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             SetVisuals();
             this.Closing += (x, CloseForm) =>
             {
-                IsWelcomeScreenOpen = false;
                 GC.Collect();
             };
         }
@@ -103,10 +85,9 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             Label_CDN_Source.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Label_Game_Language.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             ComboBox_Game_Language.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
-            ComboBox_CDN_Sources.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Button_Save.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Label_CDN_Status_List.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
-            Button_API_Bypass.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            Button_CDN_Sources.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Label_Version.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
 
             /********************************/
@@ -122,10 +103,10 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             Label_CDN_Source.ForeColor = Color_Winform.Text_Fore_Color;
             Label_Game_Language.ForeColor = Color_Winform.Text_Fore_Color;
 
-            Button_API_Bypass.ForeColor = Color_Winform_Buttons.Blue_Fore_Color;
-            Button_API_Bypass.BackColor = Color_Winform_Buttons.Blue_Back_Color;
-            Button_API_Bypass.FlatAppearance.BorderColor = Color_Winform_Buttons.Blue_Border_Color;
-            Button_API_Bypass.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Blue_Mouse_Over_Back_Color;
+            Button_CDN_Sources.ForeColor = Color_Winform_Buttons.Blue_Fore_Color;
+            Button_CDN_Sources.BackColor = Color_Winform_Buttons.Blue_Back_Color;
+            Button_CDN_Sources.FlatAppearance.BorderColor = Color_Winform_Buttons.Blue_Border_Color;
+            Button_CDN_Sources.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Blue_Mouse_Over_Back_Color;
 
             Button_Save.ForeColor = Color_Winform_Buttons.Blue_Fore_Color;
             Button_Save.BackColor = Color_Winform_Buttons.Blue_Back_Color;
@@ -138,30 +119,16 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             /* Events                        /
             /********************************/
 
-            ComboBox_CDN_Sources.DrawItem += new DrawItemEventHandler(CDNSource_DrawItem);
-            ComboBox_CDN_Sources.SelectedIndexChanged += new EventHandler(CDNSource_SelectedIndexChanged);
-
             ComboBox_Game_Language.DrawItem += new DrawItemEventHandler(GameLangSource_DrawItem);
             ComboBox_Game_Language.SelectedIndexChanged += new EventHandler(GameLangSource_SelectedIndexChanged);
 
             Load += new EventHandler(WelcomeScreen_Load);
             Shown += new EventHandler(WelcomeScreen_Shown);
             Button_Save.Click += new EventHandler(Save_Click);
-            Button_API_Bypass.Click += new EventHandler(APIErrorButton_Click);
+            Button_CDN_Sources.Click += new EventHandler(Button_CDN_Selection_Click);
             Button_Save.DialogResult = DialogResult.OK;
-        }
 
-        private void CDNSource_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (((Json_List_CDN)ComboBox_CDN_Sources.SelectedItem).IsSpecial)
-                {
-                    ComboBox_CDN_Sources.SelectedIndex = 1;
-                    return;
-                }
-            }
-            catch { }
+            Screen_Instance = this;
         }
 
         private void GameLangSource_SelectedIndexChanged(object sender, EventArgs e)
@@ -197,26 +164,21 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
                 }
             }
 
-            if (StatusCheck)
-            {
-                Label_Introduction.Text = "Looks like the Game Launcher failed to Reach our APIs.\n" +
-                    "Clicking 'Manual Bypass' will allow you to continue with the Error";
-                APIErrorFormElements();
-            }
-            else
-            {
-                APIErrorFormElements(false);
-                SettingsFormElements(true);
-                Label_Introduction.Text = "Howdy!\n" +
+            Button_Save.Visible = false;
+            Label_Introduction.Text = "Howdy!\n" +
                     "Looks like this is the first time this launcher has been started.\n" +
                     "Please select from the options below in order to continue this setup.";
+
+            if (StatusCheck)
+            {
+                Button_CDN_Sources.Text = "Fail Safe CDN";
             }
         }
 
         private void WelcomeScreen_Load(object sender, EventArgs e)
         {
-            SettingsFormElements(false);
-            APIErrorFormElements(false);
+            ComboBox_Game_Language.DisplayMember = "Name";
+            ComboBox_Game_Language.DataSource = LanguageListUpdater.CleanList;
         }
 
         private void WelcomeScreen_Shown(object sender, EventArgs e)
@@ -269,29 +231,7 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
                 LogToFileAddons.OpenLog("WELCOME SCREEN", string.Empty, Error, string.Empty, true);
             }
 
-            if (!string.IsNullOrWhiteSpace(((Json_List_CDN)ComboBox_CDN_Sources.SelectedItem).Url))
-            {
-                string ChoosenCDN = ((Json_List_CDN)ComboBox_CDN_Sources.SelectedItem).Url;
-                string FinalCDNURL;
-
-                if (ChoosenCDN.EndsWith("/"))
-                {
-                    char[] charsToTrim = { '/' };
-                    FinalCDNURL = ChoosenCDN.TrimEnd(charsToTrim);
-                }
-                else
-                {
-                    FinalCDNURL = ((Json_List_CDN)ComboBox_CDN_Sources.SelectedItem).Url;
-                }
-
-                SelectedCDN.CDNUrl = FinalCDNURL;
-
-                QuitWithoutSaving_Click(sender, e);
-            }
-            else
-            {
-                MessageBox.Show(null, "Please Choose a CDN. \n\n(╯°□°）╯︵ ┻━┻", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            QuitWithoutSaving_Click(sender, e);
         }
 
         private void QuitWithoutSaving_Click(object sender, EventArgs e)
@@ -299,85 +239,18 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             this.Close();
         }
 
-        private void APIErrorButton_Click(object sender, EventArgs e)
+        private void Button_CDN_Selection_Click(object sender, EventArgs e)
         {
-            APIErrorFormElements(false);
-            SettingsFormElements();
-            Label_Introduction.Text = "Howdy!\n" +
-                "Looks like this is the first time this launcher has been started.\n" +
-                "Please select from the options below in order to continue this setup.";
-        }
-
-        private void APIErrorFormElements(bool hideElements = true)
-        {
-            Button_API_Bypass.Visible = hideElements;
-        }
-
-        private void SettingsFormElements(bool hideElements = true)
-        {
-            ComboBox_CDN_Sources.DisplayMember = "Name";
-            ComboBox_CDN_Sources.DataSource = CDNListUpdater.CleanList;
-
-            ComboBox_Game_Language.DisplayMember = "Name";
-            ComboBox_Game_Language.DataSource = LanguageListUpdater.CleanList;
-
-            Label_Game_Language.Visible = hideElements;
-            ComboBox_Game_Language.Visible = hideElements;
-            Label_CDN_Source.Visible = hideElements;
-            ComboBox_CDN_Sources.Visible = hideElements;
-            Button_Save.Visible = hideElements;
-        }
-
-        public void CDNSource_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            try
+            if (!StatusCheck)
             {
-                string cdnListText = string.Empty;
-
-                if (sender is ComboBox cb)
-                {
-                    if (e.Index != -1 && cb.Items != null)
-                    {
-                        if (cb.Items[e.Index] is Json_List_CDN si)
-                        {
-                            cdnListText = si.Name;
-                        }
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(cdnListText) && sender != null)
-                {
-                    Font font = ((ComboBox)sender).Font;
-                    Brush backgroundColor;
-                    Brush textColor;
-
-                    if (cdnListText.StartsWith("<GROUP>"))
-                    {
-                        font = new Font(font, FontStyle.Bold);
-                        e.Graphics.FillRectangle(new SolidBrush(Color_Winform_Other.DropMenu_Category_Background_ForeColor), e.Bounds);
-                        e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font,
-                            new SolidBrush(Color_Winform_Other.DropMenu_Category_Text_ForeColor), e.Bounds);
-                    }
-                    else
-                    {
-                        font = new Font(font, FontStyle.Bold);
-                        if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
-                        {
-                            backgroundColor = SystemBrushes.Highlight;
-                            textColor = SystemBrushes.HighlightText;
-                        }
-                        else
-                        {
-                            backgroundColor = new SolidBrush(Color_Winform_Other.DropMenu_Background_ForeColor);
-                            textColor = new SolidBrush(Color_Winform_Other.DropMenu_Text_ForeColor);
-                        }
-
-                        e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                        e.Graphics.DrawString(cdnListText, font, textColor, e.Bounds);
-                    }
-                }
+                Screen_CDN_Selection.OpenScreen(1);
             }
-            catch { }
+            else if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN))
+            {
+                Save_Settings.Live_Data.Launcher_CDN = "http://localhost";
+            }
+
+            Button_Save.Visible = true;
         }
 
         private void GameLangSource_DrawItem(object sender, DrawItemEventArgs e)

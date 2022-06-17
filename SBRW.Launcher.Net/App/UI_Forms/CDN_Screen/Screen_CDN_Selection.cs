@@ -5,7 +5,10 @@ using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.LauncherCore.Support;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
 using SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen;
+using SBRW.Launcher.App.UI_Forms.Settings_Screen;
+using SBRW.Launcher.App.UI_Forms.Welcome_Screen;
 using SBRW.Launcher.Core.Extension.Api_;
+using SBRW.Launcher.Core.Extra.File_;
 using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Theme;
 using System;
@@ -22,14 +25,13 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
     public partial class Screen_CDN_Selection : Form
     {
         private static bool IsSelectServerOpen { get; set; }
-        private static bool CustomServersOnly { get; set; }
         private static int ID { get; set; } = 1;
         private static readonly Dictionary<int, Json_List_CDN> ServerListBook = new Dictionary<int, Json_List_CDN>();
-
+        private static int Screen_Mode_Update { get; set; }
         /* Used to ping the Server in ms */
         public static Queue<string> ServersToPing { get; set; } = new Queue<string>();
 
-        public static void OpenScreen(bool CSO)
+        public static void OpenScreen(int Screen_Mode = 0)
         {
             if (IsSelectServerOpen || Application.OpenForms["Screen_CDN_Selection"] != null)
             {
@@ -39,13 +41,13 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
             {
                 try
                 {
-                    CustomServersOnly = CSO;
+                    Screen_Mode_Update = Screen_Mode;
                     new Screen_CDN_Selection().ShowDialog();
                 }
                 catch (Exception Error)
                 {
-                    string ErrorMessage = "Select Server Screen Encountered an Error";
-                    LogToFileAddons.OpenLog("Select Server", ErrorMessage, Error, "Exclamation", false);
+                    string ErrorMessage = "Select CDN Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("Select CDN", ErrorMessage, Error, "Exclamation", false);
                 }
             }
         }
@@ -79,7 +81,7 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                 ListView_Server_List.Columns[5].Width = 60;
                 ListView_Server_List.Columns[5].TextAlign = HorizontalAlignment.Center;
 
-                foreach (Json_List_CDN substring in CDNListUpdater.NoCategoryList_LZMA)
+                foreach (Json_List_CDN substring in CDNListUpdater.CleanList)
                 {
                     try
                     {
@@ -279,15 +281,15 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
             Button_Server_Add.FlatAppearance.BorderColor = Color_Winform_Buttons.Blue_Border_Color;
             Button_Server_Add.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Blue_Mouse_Over_Back_Color;
 
-            Button_Server_Remove.ForeColor = CustomServersOnly ? Color_Winform_Buttons.Blue_Fore_Color : Color_Winform_Buttons.Gray_Fore_Color;
-            Button_Server_Remove.BackColor = CustomServersOnly ? Color_Winform_Buttons.Blue_Back_Color : Color_Winform_Buttons.Gray_Back_Color;
-            Button_Server_Remove.FlatAppearance.BorderColor = CustomServersOnly ? Color_Winform_Buttons.Blue_Border_Color : Color_Winform_Buttons.Green_BorderColorButton;
-            Button_Server_Remove.FlatAppearance.MouseOverBackColor = CustomServersOnly ? Color_Winform_Buttons.Blue_Mouse_Over_Back_Color : Color_Winform_Buttons.Gray_Mouse_Over_Back_Color;
+            Button_Server_Remove.ForeColor = Color_Winform_Buttons.Gray_Fore_Color;
+            Button_Server_Remove.BackColor = Color_Winform_Buttons.Gray_Back_Color;
+            Button_Server_Remove.FlatAppearance.BorderColor = Color_Winform_Buttons.Green_BorderColorButton;
+            Button_Server_Remove.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Gray_Mouse_Over_Back_Color;
 
-            Button_Server_Select.ForeColor = !CustomServersOnly ? Color_Winform_Buttons.Blue_Fore_Color : Color_Winform_Buttons.Gray_Fore_Color;
-            Button_Server_Select.BackColor = !CustomServersOnly ? Color_Winform_Buttons.Blue_Back_Color : Color_Winform_Buttons.Gray_Back_Color;
-            Button_Server_Select.FlatAppearance.BorderColor = !CustomServersOnly ? Color_Winform_Buttons.Blue_Border_Color : Color_Winform_Buttons.Gray_Border_Color;
-            Button_Server_Select.FlatAppearance.MouseOverBackColor = !CustomServersOnly ? Color_Winform_Buttons.Blue_Mouse_Over_Back_Color : Color_Winform_Buttons.Gray_Mouse_Over_Back_Color;
+            Button_Server_Select.ForeColor = Color_Winform_Buttons.Blue_Fore_Color;
+            Button_Server_Select.BackColor = Color_Winform_Buttons.Blue_Back_Color;
+            Button_Server_Select.FlatAppearance.BorderColor = Color_Winform_Buttons.Blue_Border_Color;
+            Button_Server_Select.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Blue_Mouse_Over_Back_Color;
 
             Button_Close.ForeColor = Color_Winform_Buttons.Blue_Fore_Color;
             Button_Close.BackColor = Color_Winform_Buttons.Blue_Back_Color;
@@ -298,7 +300,7 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
             /* Functions                     /
             /********************************/
 
-            Text = (CustomServersOnly ? "Saved Custom Servers" : "Please Select a Server") + " - SBRW Launcher";
+            Text = "Please Select a CDN - SBRW Launcher";
 
             ListView_Server_List.AllowColumnReorder = false;
             ListView_Server_List.ColumnWidthChanging += (handler, args) =>
@@ -309,10 +311,7 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
 
             ListView_Server_List.DoubleClick += new EventHandler((handler, args) =>
             {
-                if (!CustomServersOnly)
-                {
-                    SelectedGameServerToRemember();
-                }
+                SelectedGameServerToRemember();
             });
             Button_Server_Select.Click += new EventHandler(Button_Server_Select_Click);
             Button_Server_Remove.Click += new EventHandler(Button_Server_Remove_Click);
@@ -337,28 +336,12 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
 
         private void Button_Server_Select_Click(object sender, EventArgs e)
         {
-            if (!CustomServersOnly)
-            {
-                SelectedGameServerToRemember();
-            }
-            else
-            {
-                MessageBox.Show(null, "Click on a Server to Remove it from Your Custom Saved List",
-                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            SelectedGameServerToRemember();
         }
 
         private void Button_Server_Remove_Click(object sender, EventArgs e)
         {
-            if (CustomServersOnly)
-            {
-                SelectedGameServerToRemove();
-            }
-            else
-            {
-                MessageBox.Show(null, "This feature will Unlocked After This Screen",
-                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            SelectedGameServerToRemove();
         }
 
         private void Button_Close_Click(object sender, EventArgs e)
@@ -370,7 +353,38 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
         {
             if (ListView_Server_List.SelectedItems.Count == 1)
             {
-                this.Close();
+                Json_List_CDN Selected_CDN = ServerListBook[ListView_Server_List.SelectedIndices[0] + 1];
+                if (string.IsNullOrWhiteSpace(Selected_CDN.Url))
+                {
+                    MessageBox.Show(null, "Selected CDN does not have a Valid URL. Please Choose Another CDN.",
+                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if (Selected_CDN.Url.StartsWith("https://") || Selected_CDN.Url.StartsWith("http://"))
+                {
+                    switch (Screen_Mode_Update)
+                    {
+                        case 1:
+                            LogToFileAddons.Parent_Log_Screen(0, "LAUNCHER", "Selected CDN: " + Selected_CDN.Name);
+                            Save_Settings.Live_Data.Launcher_CDN = Selected_CDN.Url.EndsWith("/") ? Selected_CDN.Url.TrimEnd('/') : Selected_CDN.Url;
+                            Save_Settings.Save();
+                            Screen_Welcome.Screen_Instance.Button_Save.Visible = true;
+                            break;
+                        case 2:
+                            Screen_Settings.Screen_Instance.Label_CDN_Current.Text = "NEW SELECTED CDN:";
+                            Screen_Settings.Screen_Instance.LinkLabel_CDN_Current.Text = Selected_CDN.Url.EndsWith("/") ? Selected_CDN.Url.TrimEnd('/') : Selected_CDN.Url;
+                            Screen_Settings.Screen_Instance.New_Choosen_CDN = Selected_CDN.Url.EndsWith("/") ? Selected_CDN.Url.TrimEnd('/') : Selected_CDN.Url;
+                            break;
+                        default:
+                            Save_Settings.Live_Data.Launcher_CDN = Selected_CDN.Url.EndsWith("/") ? Selected_CDN.Url.TrimEnd('/') : Selected_CDN.Url;
+                            break;
+                    }
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show(null, "Selected CDN does not have a Valid URL. Please Choose Another CDN.",
+                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
 
@@ -413,7 +427,7 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                 ID = 1;
                 ServerListBook.Clear();
                 ServersToPing.Clear();
-                CustomServersOnly = IsSelectServerOpen = false;
+                IsSelectServerOpen = false;
                 GC.Collect();
             };
         }

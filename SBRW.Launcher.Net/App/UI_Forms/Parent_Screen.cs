@@ -651,19 +651,22 @@ namespace SBRW.Launcher.App.UI_Forms
                     {
                         FunctionStatus.LauncherForceClose = true;
                     }
-                    else
-                    {
-                        Save_Settings.Live_Data.Launcher_CDN = SelectedCDN.CDNUrl;
-                        Save_Settings.Save();
-                    }
                 }
                 catch
                 {
-                    LogToFileAddons.Parent_Log_Screen(4, "LAUNCHER", "CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
-                    Save_Settings.Live_Data.Launcher_CDN = "http://localhost";
-                    LogToFileAddons.Parent_Log_Screen(11, "LAUNCHER", "Installation Directory was Empty! Creating and Setting Directory at " + Locations.GameFilesFailSafePath);
-                    Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                    Save_Settings.Save();
+                    if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN))
+                    {
+                        LogToFileAddons.Parent_Log_Screen(4, "LAUNCHER", "CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
+                        Save_Settings.Live_Data.Launcher_CDN = "http://localhost";
+                        Save_Settings.Save();
+                    }
+
+                    if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
+                    {
+                        LogToFileAddons.Parent_Log_Screen(11, "LAUNCHER", "Installation Directory was Empty! Creating and Setting Directory at " + Locations.GameFilesFailSafePath);
+                        Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                        Save_Settings.Save();
+                    }
                 }
 
                 if (FunctionStatus.LauncherForceClose)

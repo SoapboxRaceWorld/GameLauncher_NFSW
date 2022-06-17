@@ -56,6 +56,7 @@
             this.Button_Server_Add.TabIndex = 1;
             this.Button_Server_Add.Text = "Add CDN";
             this.Button_Server_Add.UseVisualStyleBackColor = true;
+            this.Button_Server_Add.Visible = false;
             // 
             // Button_Server_Remove
             // 
@@ -66,6 +67,7 @@
             this.Button_Server_Remove.TabIndex = 2;
             this.Button_Server_Remove.Text = "Remove";
             this.Button_Server_Remove.UseVisualStyleBackColor = true;
+            this.Button_Server_Remove.Visible = false;
             // 
             // Button_Server_Select
             // 

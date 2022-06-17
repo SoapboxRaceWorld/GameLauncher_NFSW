@@ -4,7 +4,6 @@ using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using Newtonsoft.Json;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Hash_;
-using SBRW.Launcher.Core.Extension.Logging_;
 using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Discord.RPC_;
 using System;
@@ -13,7 +12,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using SBRW.Launcher.App.UI_Forms.Custom_Server_Screen;
 using SBRW.Launcher.App.Classes.LauncherCore.APICheckers;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Lists

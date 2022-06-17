@@ -1,6 +1,5 @@
 ﻿using SBRW.Launcher.App.Classes.InsiderKit;
 using SBRW.Launcher.App.Classes.LauncherCore.APICheckers;
-using SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite;
 using SBRW.Launcher.App.Classes.LauncherCore.Global;
 using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
@@ -23,12 +22,10 @@ using SBRW.Launcher.Core.Extra.File_;
 using SBRW.Launcher.Core.Extra.Ini_;
 using SBRW.Launcher.Core.Extra.XML_;
 using SBRW.Launcher.Core.Proxy.Nancy_;
-using SBRW.Launcher.Core.Recommended.Time_;
 using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Required.System.Windows_;
 using SBRW.Launcher.Core.Theme;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -53,7 +50,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         private bool RestartRequired { get; set; }
         private string NewLauncherPath { get; set; }
         private string NewGameFilesPath { get; set; }
-        private string FinalCDNURL { get; set; }
+        public string New_Choosen_CDN { get; set; }
         private static long Thread_Number_Change_A { get; set; }
         private static Thread? ThreadChangedCDN { get; set; }
         private static long Thread_Number_Change_B { get; set; }
@@ -317,20 +314,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             try
             {
                 Log.Info("SETTINGS VERIFYHASH: Checking Characters in URL");
-                if (Save_Settings.Live_Data.Launcher_CDN.EndsWith("/"))
-                {
-                    char[] charsToTrim = { '/' };
-                    FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN.TrimEnd(charsToTrim);
-                    Log.Info("SETTINGS VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
-                }
-                else
-                {
-                    FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN;
-                }
+                Save_Settings.Live_Data.Launcher_CDN = Save_Settings.Live_Data.Launcher_CDN.EndsWith("/") ? Save_Settings.Live_Data.Launcher_CDN.TrimEnd('/') : Save_Settings.Live_Data.Launcher_CDN;
             }
             catch (Exception Error)
             {
-                FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN;
                 LogToFileAddons.OpenLog("SETTINGS CDN URL TRIM", string.Empty, Error, string.Empty, true);
             }
 
@@ -357,7 +344,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                         {
                             if (!Application.OpenForms[this.Name].Disposing)
                             {
-                                switch (API_Core.StatusCheck(FinalCDNURL + "/unpacked/checksums.dat", 10))
+                                switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/unpacked/checksums.dat", 10))
                                 {
                                     case APIStatus.Online:
                                         FunctionStatus.DoesCDNSupportVerifyHash = true;
@@ -394,115 +381,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         }
         #endregion
         #region ComboxList Setup
-        private void RememberLastCDN()
-        {
-            if ((InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList) != null)
-            {
-                if ((InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList).Any())
-                {
-                    /* Last Selected CDN */
-                    Log.Core("SETTINGS CDNLIST: Checking...");
-                    Log.Core("SETTINGS CDNLIST: Setting first server in list");
-                    Log.Core("SETTINGS CDNLIST: Checking if server is set on INI File");
-
-                    try
-                    {
-                        if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN))
-                        {
-                            string FinalCDNURL;
-
-                            if (Save_Settings.Live_Data.Launcher_CDN.EndsWith("/"))
-                            {
-                                char[] charsToTrim = { '/' };
-                                FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN.TrimEnd(charsToTrim);
-                            }
-                            else
-                            {
-                                FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN;
-                            }
-
-                            Log.Core("SETTINGS CDNLIST: Found something!");
-                            Log.Core("SETTINGS CDNLIST: Checking if CDN exists on our database");
-
-                            if ((InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList).FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
-                            {
-                                Log.Core("SETTINGS CDNLIST: CDN found! Checking ID");
-                                int index = (InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList).FindIndex(i => string.Equals(i.Url, FinalCDNURL));
-
-                                Log.Core("SETTINGS CDNLIST: ID is " + index);
-                                if (index >= 0)
-                                {
-                                    Log.Core("SETTINGS CDNLIST: ID set correctly");
-                                    ComboBox_CDN_List.SelectedIndex = index;
-                                }
-                                else if (index < 0)
-                                {
-                                    Log.Warning("SETTINGS CDNLIST: Checking ID Against OLD Standard");
-                                    RememberLastCDNOldStandard();
-                                }
-                            }
-                            else
-                            {
-                                Log.Warning("SETTINGS CDNLIST: Unable to find anything, assuming default");
-                                ComboBox_CDN_List.SelectedIndex = 1;
-                                Log.Warning("SETTINGS CDNLIST: Unknown entry value is " + FinalCDNURL);
-                            }
-                        }
-                        else
-                        {
-                            ComboBox_CDN_List.SelectedIndex = 1;
-                        }
-                    }
-                    catch (Exception Error)
-                    {
-                        LogToFileAddons.OpenLog("SETTINGS CDNLIST", string.Empty, Error, string.Empty, true);
-                    }
-                }
-            }
-        }
-
-        /* This is for Main API which still includes a trailing slash - DavidCarbon */
-        private void RememberLastCDNOldStandard()
-        {
-            /* Last Selected CDN */
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN))
-                {
-                    string FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN + "/";
-
-                    if ((InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList).FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
-                    {
-                        var index = (InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList).FindIndex(i => string.Equals(i.Url, FinalCDNURL));
-
-                        if (index >= 0)
-                        {
-                            Log.Warning("SETTINGS CDNLIST: Found ID Based on OLD Standard");
-                            ComboBox_CDN_List.SelectedIndex = index;
-                        }
-                        else if (index < 0)
-                        {
-                            Log.Warning("SETTINGS CDNLIST: Failed to Detect Standard!");
-                            ComboBox_CDN_List.SelectedIndex = 1;
-                            Log.Warning("SETTINGS CDNLIST: Displaying First CDN in List!");
-                        }
-                    }
-                    else
-                    {
-                        ComboBox_CDN_List.SelectedIndex = 1;
-                    }
-                }
-                else
-                {
-                    ComboBox_CDN_List.SelectedIndex = 1;
-                }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("SETTINGS CDNLIST", string.Empty, Error, string.Empty, true);
-            }
-        }
-
         private void RememberLastLanguage()
         {
             /* Last Selected CDN */
@@ -556,31 +434,37 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         }
         #endregion
         #region Event Functions
-        private void Button_Security_Center_Click(object sender, EventArgs e)
+        private void Button_CDN_Selector_Click(object sender, EventArgs e)
         {
-            if (EnableInsiderDeveloper.Allowed())
+            if (VisualsAPIChecker.CarbonAPITwo())
             {
-                Screen_CDN_Selection.OpenScreen(true);
+                Screen_CDN_Selection.OpenScreen(2);
             }
             else
             {
-                try
+                ButtonsColorSet(Button_CDN_List, 4, true);
+                MessageBox.Show(null, "Launcher failed to reach any APIs. CDN Selection Screen is not available.", 
+                    "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        private void Button_Security_Center_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Screen_Security_Center Custom_Instance_Settings = new Screen_Security_Center() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
+                Panel_Form_Screens.Visible = true;
+                Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
+                Screen_Security_Center.RPCStateCache = "Settings";
+                Custom_Instance_Settings.Show();
+                if (Parent_Screen.Screen_Instance != null)
                 {
-                    Screen_Security_Center Custom_Instance_Settings = new Screen_Security_Center() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
-                    Panel_Form_Screens.Visible = true;
-                    Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
-                    Screen_Security_Center.RPCStateCache = "Settings";
-                    Custom_Instance_Settings.Show();
-                    if (Parent_Screen.Screen_Instance != null)
-                    {
-                        Parent_Screen.Screen_Instance.Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
-                    }
+                    Parent_Screen.Screen_Instance.Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
                 }
-                catch (Exception Error)
-                {
-                    string ErrorMessage = "Security Center Screen Encountered an Error";
-                    LogToFileAddons.OpenLog("Security Center Panel", ErrorMessage, Error, "Exclamation", false);
-                }
+            }
+            catch (Exception Error)
+            {
+                string ErrorMessage = "Security Center Screen Encountered an Error";
+                LogToFileAddons.OpenLog("Security Center Panel", ErrorMessage, Error, "Exclamation", false);
             }
         }
         /* Settings Verify Hash */
@@ -706,65 +590,49 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 }
             }
 
-            if (ComboBox_CDN_List.SelectedItem != null && !string.IsNullOrWhiteSpace(((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Url))
+            if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN) && Save_Settings.Live_Data.Launcher_CDN != New_Choosen_CDN)
             {
-                string SelectedCDNFromList = ((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Url;
-                string LocalFinalCDNURL;
+                Save_Settings.Live_Data.Launcher_CDN = New_Choosen_CDN.EndsWith("/") ? New_Choosen_CDN.TrimEnd('/') : New_Choosen_CDN;
+                Label_CDN_Current.Text = "CHANGED CDN:";
+                LinkLabel_CDN_Current.Text = Save_Settings.Live_Data.Launcher_CDN;
+                RestartRequired = true;
 
-                if (SelectedCDNFromList.EndsWith("/"))
+                if (ThreadChecksums != null)
                 {
-                    char[] charsToTrim = { '/' };
-                    LocalFinalCDNURL = SelectedCDNFromList.TrimEnd(charsToTrim);
-                }
-                else
-                {
-                    LocalFinalCDNURL = ((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Url;
+                    ThreadChecksums.Abort();
+                    ThreadChecksums = null;
                 }
 
-                if (Save_Settings.Live_Data.Launcher_CDN != LocalFinalCDNURL)
+                ButtonsColorSet(Button_Game_Verify_Files, 0, false);
+
+                ThreadChecksums = new Thread(() =>
                 {
-                    Label_CDN_Current.Text = "CHANGED CDN";
-                    LinkLabel_CDN_Current.Text = LocalFinalCDNURL;
-                    FinalCDNURL = Save_Settings.Live_Data.Launcher_CDN = LocalFinalCDNURL;
-                    RestartRequired = true;
+                    long Cached_Value = Thread_Number_Change_B;
 
-                    if (ThreadChecksums != null)
+                    if ((Screen_Instance != null) && Cached_Value == Thread_Number_Change_B)
                     {
-                        ThreadChecksums.Abort();
-                        ThreadChecksums = null;
-                    }
-
-                    ButtonsColorSet(Button_Game_Verify_Files, 0, false);
-
-                    ThreadChecksums = new Thread(() =>
-                    {
-                        long Cached_Value = Thread_Number_Change_B;
-
-                        if ((Screen_Instance != null) && Cached_Value == Thread_Number_Change_B)
+                        switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/unpacked/checksums.dat", 10))
                         {
-                            switch (API_Core.StatusCheck(FinalCDNURL + "/unpacked/checksums.dat", 10))
-                            {
-                                case APIStatus.Online:
-                                    if (Cached_Value == Thread_Number_Change_B)
-                                    {
-                                        FunctionStatus.DoesCDNSupportVerifyHash = true;
-                                        ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
-                                    }
-                                    break;
-                                default:
-                                    if (Cached_Value == Thread_Number_Change_B)
-                                    {
-                                        FunctionStatus.DoesCDNSupportVerifyHash = false;
-                                        ButtonsColorSet(Button_Game_Verify_Files, 3, true);
-                                    }
-                                    break;
-                            }
+                            case APIStatus.Online:
+                                if (Cached_Value == Thread_Number_Change_B)
+                                {
+                                    FunctionStatus.DoesCDNSupportVerifyHash = true;
+                                    ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
+                                }
+                                break;
+                            default:
+                                if (Cached_Value == Thread_Number_Change_B)
+                                {
+                                    FunctionStatus.DoesCDNSupportVerifyHash = false;
+                                    ButtonsColorSet(Button_Game_Verify_Files, 3, true);
+                                }
+                                break;
                         }
-                    });
+                    }
+                });
 
-                    ThreadChecksums.Start();
-                    Thread_Number_Change_B++;
-                }
+                ThreadChecksums.Start();
+                Thread_Number_Change_B++;
             }
             else
             {
@@ -1120,88 +988,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             //new DebugScreen().ShowDialog();
         }
 
-        /* Settings CDN Dropdown Menu Index */
-        private void ComboBox_CDN_List_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (ComboBox_CDN_List.SelectedItem != null)
-                {
-                    if (((Json_List_CDN)ComboBox_CDN_List.SelectedItem).IsSpecial || ((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Offline)
-                    {
-                        ComboBox_CDN_List.SelectedIndex = LastSelectedCdnId;
-                    }
-                    else if (!string.IsNullOrWhiteSpace(((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Url ?? string.Empty))
-                    {
-                        LastSelectedCdnId = ComboBox_CDN_List.SelectedIndex;
-
-                        if (ThreadChangedCDN != null)
-                        {
-                            ThreadChangedCDN.Abort();
-                            ThreadChangedCDN = null;
-                        }
-
-                        Label_CDN.Text = "CDN: PINGING";
-                        Label_CDN.ForeColor = Color_Text.L_Two;
-                        Log.Info("SETTINGS PINGING CHANGED CDN: Checking Changed CDN from Drop Down List");
-
-                        ThreadChangedCDN = new Thread(() =>
-                        {
-                            long Cached_Value = Thread_Number_Change_C;
-
-                            if ((Screen_Instance != null) && Cached_Value == Thread_Number_Change_C)
-                            {
-                                if (Screen_Instance.ComboBox_CDN_List != null)
-                                {
-                                    ComboBox_CDN_List.SafeInvokeAction(() =>
-                                    {
-                                        switch (API_Core.StatusCheck(((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Url + "/index.xml", 10))
-                                        {
-                                            case APIStatus.Online:
-                                                Label_CDN.SafeInvokeAction(() =>
-                                                {
-                                                    Label_CDN.Text = "CDN: ONLINE";
-                                                    Label_CDN.ForeColor = Color_Text.S_Sucess;
-                                                });
-                                                Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((Json_List_CDN)Screen_Instance.ComboBox_CDN_List.SelectedItem).Url + " Is Online!");
-                                                break;
-                                            default:
-                                                Label_CDN.SafeInvokeAction(() =>
-                                                {
-                                                    Label_CDN.Text = "CDN: OFFLINE";
-                                                    Label_CDN.ForeColor = Color_Text.S_Error;
-                                                });
-                                                Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((Json_List_CDN)ComboBox_CDN_List.SelectedItem).Url + " Is Offline!");
-                                                break;
-                                        }
-                                    });
-                                }
-                            }
-                        });
-
-                        ThreadChangedCDN.Start();
-                        Thread_Number_Change_C++;
-                    }
-                    else
-                    {
-                        Label_CDN.Text = "CDN:";
-                        Label_CDN.ForeColor = Color_Text.L_Five;
-                        Log.Error("SETTINGS PINGING CHANGED CDN: '((CDNObject)SettingsCDNPick.SelectedItem).Url)' has an Empty CDN URL");
-                    }
-                }
-                else
-                {
-                    Label_CDN.Text = "CDN:";
-                    Label_CDN.ForeColor = Color_Text.L_Five;
-                }
-            }
-            catch { }
-            finally
-            {
-                GC.Collect();
-            }
-        }
-
         private void ComboBox_Language_List_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -1224,84 +1010,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         #endregion
         #region Theme, Text, and Function Setter
         #region Draw and Regular Events
-        /// <summary>
-        /// Sets the Category for the CDN Drop Down Menu with its set of Colors
-        /// </summary>
-        /// <remarks>Dropdown Menu Visual</remarks>
-        private void ComboBox_CDN_List_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            try
-            {
-                string cdnListText = string.Empty;
-                long CDN_Status = 0;
-
-                if (sender is ComboBox cb)
-                {
-                    if (e.Index != -1 && cb.Items != null)
-                    {
-                        if (cb.Items[e.Index] is Json_List_CDN si)
-                        {
-                            cdnListText = si.Name;
-
-                            if (si.Offline)
-                            {
-                                CDN_Status = 0;
-                            }
-                            else if (si.Maintenance)
-                            {
-                                CDN_Status = 3;
-                            }
-                            else
-                            {
-                                CDN_Status = 1;
-                            }
-                        }
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(cdnListText) && sender != null)
-                {
-                    Font font = ((ComboBox)sender).Font;
-                    Brush backgroundColor;
-                    Brush textColor;
-
-                    if (cdnListText.StartsWith("<GROUP>"))
-                    {
-                        font = new Font(font, FontStyle.Bold);
-                        e.Graphics.FillRectangle(new SolidBrush(Color_Winform_Other.DropMenu_Category_Background_ForeColor), e.Bounds);
-                        e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font,
-                            new SolidBrush(Color_Winform_Other.DropMenu_Category_Text_ForeColor), e.Bounds);
-                    }
-                    else
-                    {
-                        font = new Font(font, FontStyle.Bold);
-                        if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
-                        {
-                            backgroundColor = SystemBrushes.Highlight;
-                            textColor = SystemBrushes.HighlightText;
-                        }
-                        else
-                        {
-                            backgroundColor = CDN_Status switch
-                            {
-                                1 => new SolidBrush(Color_Winform_Other.DropMenu_Background_ForeColor),/* ONLINE */
-                                3 => new SolidBrush(Color_Winform_Other.DropMenu_Ping_Warning),/* MAINTENANCE */
-                                _ => new SolidBrush(Color_Winform_Other.DropMenu_Ping_Error),/* OFFLINE */
-                            };
-                            textColor = new SolidBrush((CDN_Status == 1) ? Color_Winform_Other.DropMenu_Text_ForeColor : Color_Winform_Other.DropMenu_Black);
-                        }
-
-                        e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                        e.Graphics.DrawString("    " + cdnListText, font, textColor, e.Bounds);
-                    }
-                }
-            }
-            catch { }
-            finally
-            {
-                GC.Collect();
-            }
-        }
         /// <summary>
         /// Sets the Category for the Language Drop Down Menu with its set of Colors
         /// </summary>
@@ -1575,9 +1283,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Button_Change_Game_Path.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Button_Game_Verify_Files.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_CDN.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
-            ComboBox_CDN_List.Font = new Font(FormsFont.Primary(), SecondaryFontSize, FontStyle.Regular);
             Label_Game_Settings.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             ComboBox_Language_List.Font = new Font(FormsFont.Primary(), SecondaryFontSize, FontStyle.Regular);
+            Button_CDN_List.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
             Button_Game_User_Settings.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Button_Clear_Crash_Logs.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
             Button_Launcher_logs.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
@@ -1628,6 +1336,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             ButtonsColorSet(Button_Clear_NFSWO_Logs, 0, false);
             ButtonsColorSet(Button_Clear_Server_Mods, 0, false);
             ButtonsColorSet(Button_Security_Center, 0, true);
+            ButtonsColorSet(Button_CDN_List, VisualsAPIChecker.CarbonAPITwo() ? 0 : 4, true);
 
             /* Label Links */
             LinkLabel_Game_Path.LinkColor = Color_Winform_Other.Link_Settings;
@@ -1687,9 +1396,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 CDNListUpdater.GetList();
             }
 
-            ComboBox_CDN_List.DisplayMember = "Name";
-            ComboBox_CDN_List.DataSource = InformationCache.EnableLZMADownloader ? CDNListUpdater.CleanList_LZMA : CDNListUpdater.CleanList;
-
             ComboBox_Language_List.DisplayMember = "Name";
             ComboBox_Language_List.DataSource = LanguageListUpdater.CleanList;
 
@@ -1698,9 +1404,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             /* Events                        /
             /********************************/
 
-            ComboBox_CDN_List.DrawItem += new DrawItemEventHandler(ComboBox_CDN_List_DrawItem);
-            ComboBox_CDN_List.SelectedIndexChanged += new EventHandler(ComboBox_CDN_List_SelectedIndexChanged);
-            ComboBox_CDN_List.MouseWheel += new MouseEventHandler(DropDownMenu_MouseWheel);
             ComboBox_Language_List.DrawItem += new DrawItemEventHandler(ComboBox_Language_List_DrawItem);
             ComboBox_Language_List.SelectedIndexChanged += new EventHandler(ComboBox_Language_List_SelectedIndexChanged);
             ComboBox_Language_List.MouseWheel += new MouseEventHandler(DropDownMenu_MouseWheel);
@@ -1715,6 +1418,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Button_Exit.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
             Button_Exit.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
 
+            Button_CDN_List.Click += new EventHandler(Button_CDN_Selector_Click);
             Button_Security_Center.Click += new EventHandler(Button_Security_Center_Click);
             Button_Game_Verify_Files.Click += new EventHandler(Button_Game_Verify_Files_Click);
             Button_Save.Click += new EventHandler(SettingsSave_Click);
@@ -1762,7 +1466,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 
             ToolTip_Hover.SetToolTip(Button_Change_Game_Path, "Change the location of where the \'nfsw.exe\' that the Launcher will run");
             ToolTip_Hover.SetToolTip(Button_Game_Verify_Files, "Checks and Restores GameFiles back to \"Stock\"");
-            ToolTip_Hover.SetToolTip(ComboBox_CDN_List, "Download Location for Fetching the base GameFiles\n" +
+            ToolTip_Hover.SetToolTip(Button_CDN_List, "Download Location for Fetching the base GameFiles\n" +
                 "Can also be a Soruce for VerifyHash to get replacement files");
             ToolTip_Hover.SetToolTip(ComboBox_Language_List, "Controls the In-Game Lanuguage setting\n" +
                 "This also includes setting the Default Chat joined In-Game");
@@ -1799,7 +1503,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 
             Shown += (x, y) =>
             {
-                RememberLastCDN();
                 RememberLastLanguage();
                 PingSavedCDN();
                 PingAPIStatus();

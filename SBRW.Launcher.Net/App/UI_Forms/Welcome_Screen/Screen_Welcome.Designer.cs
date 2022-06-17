@@ -28,15 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Screen_Welcome));
             this.Label_Introduction = new System.Windows.Forms.Label();
             this.Label_CDN_Status_List = new System.Windows.Forms.Label();
             this.Label_Game_Language = new System.Windows.Forms.Label();
             this.ComboBox_Game_Language = new System.Windows.Forms.ComboBox();
             this.Label_CDN_Source = new System.Windows.Forms.Label();
-            this.Button_API_Bypass = new System.Windows.Forms.Button();
             this.Button_Save = new System.Windows.Forms.Button();
             this.Label_Version = new System.Windows.Forms.Label();
-            this.ComboBox_CDN_Sources = new System.Windows.Forms.ComboBox();
+            this.Button_CDN_Sources = new System.Windows.Forms.Button();
+            this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
             this.SuspendLayout();
             // 
             // Label_Introduction
@@ -94,16 +95,6 @@
             this.Label_CDN_Source.Text = "CDN / Download Source:";
             this.Label_CDN_Source.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // Button_API_Bypass
-            // 
-            this.Button_API_Bypass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Button_API_Bypass.Location = new System.Drawing.Point(143, 255);
-            this.Button_API_Bypass.Name = "Button_API_Bypass";
-            this.Button_API_Bypass.Size = new System.Drawing.Size(126, 26);
-            this.Button_API_Bypass.TabIndex = 31;
-            this.Button_API_Bypass.Text = "Manual Bypass";
-            this.Button_API_Bypass.UseVisualStyleBackColor = true;
-            // 
             // Button_Save
             // 
             this.Button_Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -125,26 +116,34 @@
             this.Label_Version.Text = "Version: vXX.XX.XX.XXXX";
             this.Label_Version.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // ComboBox_CDN_Sources
+            // Button_CDN_Sources
             // 
-            this.ComboBox_CDN_Sources.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.ComboBox_CDN_Sources.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBox_CDN_Sources.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ComboBox_CDN_Sources.FormattingEnabled = true;
-            this.ComboBox_CDN_Sources.Location = new System.Drawing.Point(95, 210);
-            this.ComboBox_CDN_Sources.Name = "ComboBox_CDN_Sources";
-            this.ComboBox_CDN_Sources.Size = new System.Drawing.Size(220, 24);
-            this.ComboBox_CDN_Sources.TabIndex = 34;
+            this.Button_CDN_Sources.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button_CDN_Sources.Location = new System.Drawing.Point(95, 210);
+            this.Button_CDN_Sources.Name = "Button_CDN_Sources";
+            this.Button_CDN_Sources.Size = new System.Drawing.Size(220, 26);
+            this.Button_CDN_Sources.TabIndex = 35;
+            this.Button_CDN_Sources.Text = "CDN Selector Screen";
+            this.Button_CDN_Sources.UseVisualStyleBackColor = true;
+            // 
+            // printPreviewDialog1
+            // 
+            this.printPreviewDialog1.AutoScrollMargin = new System.Drawing.Size(0, 0);
+            this.printPreviewDialog1.AutoScrollMinSize = new System.Drawing.Size(0, 0);
+            this.printPreviewDialog1.ClientSize = new System.Drawing.Size(400, 300);
+            this.printPreviewDialog1.Enabled = true;
+            this.printPreviewDialog1.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreviewDialog1.Icon")));
+            this.printPreviewDialog1.Name = "printPreviewDialog1";
+            this.printPreviewDialog1.Visible = false;
             // 
             // Screen_Welcome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(414, 364);
-            this.Controls.Add(this.ComboBox_CDN_Sources);
+            this.Controls.Add(this.Button_CDN_Sources);
             this.Controls.Add(this.Label_Version);
             this.Controls.Add(this.Button_Save);
-            this.Controls.Add(this.Button_API_Bypass);
             this.Controls.Add(this.Label_CDN_Source);
             this.Controls.Add(this.ComboBox_Game_Language);
             this.Controls.Add(this.Label_Game_Language);
@@ -164,9 +163,9 @@
         private System.Windows.Forms.Label Label_Game_Language;
         private System.Windows.Forms.ComboBox ComboBox_Game_Language;
         private System.Windows.Forms.Label Label_CDN_Source;
-        private System.Windows.Forms.Button Button_API_Bypass;
-        private System.Windows.Forms.Button Button_Save;
         private System.Windows.Forms.Label Label_Version;
-        private System.Windows.Forms.ComboBox ComboBox_CDN_Sources;
+        private System.Windows.Forms.Button Button_CDN_Sources;
+        private System.Windows.Forms.PrintPreviewDialog printPreviewDialog1;
+        public System.Windows.Forms.Button Button_Save;
     }
 }
