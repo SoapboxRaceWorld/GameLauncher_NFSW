@@ -969,16 +969,16 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     /* 0 = Static Timer, 1 = Dynamic Timer, 2 = No Timer */
                     if (Save_Settings.Live_Data.Launcher_Display_Timer == "1")
                     {
-                        Time_Window.Legacy = true;
+                        Time_Window.Timer_Dynamic = true;
                     }
                     else if (Save_Settings.Live_Data.Launcher_Display_Timer == "2")
                     {
                         /* Notes: This actually does not Display Timers on the Title Window and 'Time_Window.Live_Stream' will be renamed in the future */
-                        Time_Window.Live_Stream = true;
+                        Time_Window.Timer_None = true;
                     }
                     else
                     {
-                        Time_Window.Live_Stream = Time_Window.Legacy = false;
+                        Time_Window.Timer_None = Time_Window.Timer_Dynamic = false;
                     }
 
                     Live_Action_Timer.Interval = !Proxy_Settings.Running() ? 30000 : 60000;
