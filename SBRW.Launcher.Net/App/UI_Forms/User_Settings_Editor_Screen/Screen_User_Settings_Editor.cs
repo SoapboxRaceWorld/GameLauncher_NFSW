@@ -9,7 +9,6 @@ using System.IO;
 using System.Windows.Forms;
 using SBRW.Launcher.App.Classes.LauncherCore.Global;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite;
 using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
 using SBRW.Launcher.Core.Theme;
@@ -20,11 +19,11 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
 {
     public partial class Screen_User_Settings_Editor : Form
     {
-        private static bool IsUSXEditorOpen = false;
-        public static bool FileReadOnly = false;
-        public static int AmountofCenterTimes = 0;
-        public static bool ResolutionsListLoaded = false;
-        public static bool PresetLoaded = false;
+        private static bool IsUSXEditorOpen { get; set; }
+        public static bool FileReadOnly { get; set; }
+        public static int AmountofCenterTimes { get; set; }
+        public static bool ResolutionsListLoaded { get; set; }
+        public static bool PresetLoaded { get; set; }
 
         public static void OpenScreen()
         {
@@ -123,6 +122,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                     SetCorrectElementValues("VisualTreatment", "0");
                     SetCorrectElementValues("WaterSimEnable", "0");
                     SetCorrectElementValues("PostProcessingEnable", "0");
+                    SetCorrectElementValues("RainEnable", "0");
 
                     Log.Info("USXE: Selected Minimum Preset");
                     break;
@@ -151,6 +151,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                     SetCorrectElementValues("VisualTreatment", "0");
                     SetCorrectElementValues("WaterSimEnable", "0");
                     SetCorrectElementValues("PostProcessingEnable", "0");
+                    SetCorrectElementValues("RainEnable", "0");
 
                     Log.Info("USXE: Selected Low Preset");
                     break;
@@ -179,6 +180,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                     SetCorrectElementValues("VisualTreatment", "0");
                     SetCorrectElementValues("WaterSimEnable", "0");
                     SetCorrectElementValues("PostProcessingEnable", "0");
+                    SetCorrectElementValues("RainEnable", "0");
 
                     Log.Info("USXE: Selected Medium Preset");
                     break;
@@ -207,6 +209,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                     SetCorrectElementValues("VisualTreatment", "1");
                     SetCorrectElementValues("WaterSimEnable", "1");
                     SetCorrectElementValues("PostProcessingEnable", "0");
+                    SetCorrectElementValues("RainEnable", "1");
 
                     Log.Info("USXE: Selected High Preset");
                     break;
@@ -235,6 +238,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                     SetCorrectElementValues("VisualTreatment", "1");
                     SetCorrectElementValues("WaterSimEnable", "1");
                     SetCorrectElementValues("PostProcessingEnable", "1");
+                    SetCorrectElementValues("RainEnable", "1");
 
                     Log.Info("USXE: Selected Maxium Preset");
                     break;
@@ -263,6 +267,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                     SetCorrectElementValues("VisualTreatment", XML_File.XML_Settings_Data.VisualTreatment);
                     SetCorrectElementValues("WaterSimEnable", XML_File.XML_Settings_Data.WaterSimEnable);
                     SetCorrectElementValues("PostProcessingEnable", XML_File.XML_Settings_Data.PostProcessingEnable);
+                    SetCorrectElementValues("RainEnable", XML_File.XML_Settings_Data.RainEnable);
 
                     Log.Info("USXE: Selected Custom Preset");
                     break;
@@ -282,14 +287,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
 
                 if (comboBoxPerformanceLevel.SelectedIndex == 5)
                 {
-                    if (Product_Version.GetWindowsNumber() >= 10)
-                    {
-                        Size = new Size(562, 726);
-                    }
-                    else
-                    {
-                        Size = new Size(552, 712);
-                    }
+                    Size = new Size(831, 712);
                     comboResolutions.Visible = false;
 
                     if (AmountofCenterTimes == 0)
@@ -366,6 +364,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             XML_File.XML_Settings_Data.WaterSimEnable = (radioWaterSimulationOff.Checked == true) ? "0" : "1";
             XML_File.XML_Settings_Data.MaxSkidMarks = SelectedElement("MaxSkidMarks");
             XML_File.XML_Settings_Data.PostProcessingEnable = (radioPostProcOff.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.RainEnable = (radioButton_Rain_Off.Checked == true) ? "0" : "1";
 
             XML_File.XML_Settings_Data.PerformanceLevel = comboBoxPerformanceLevel.SelectedValue.ToString();
             XML_File.XML_Settings_Data.BaseTextureFilter = comboBoxBaseTextureFilter.SelectedValue.ToString();
@@ -753,6 +752,16 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                             radioPostProcOn.Checked = true;
                         }
                         break;
+                    case "RainEnable":
+                        if (ComparisonValue == "0")
+                        {
+                            radioButton_Rain_Off.Checked = true;
+                        }
+                        else
+                        {
+                            radioButton_Rain_On.Checked = true;
+                        }
+                        break;
                     default:
                         Log.Error("USXE: Unknown Function Call [Element: '" + Element + "' ComparisonValue: '" + ComparisonValue + "']");
                         break;
@@ -816,6 +825,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             labelBaseTextures.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold | FontStyle.Underline);
             LabelGraphicPreset.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold | FontStyle.Underline);
             /* Sub-Titles */
+            Label_Rain.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
             labelPerfLevel.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
             labelResolution.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
             labelBrightness.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
@@ -891,6 +901,8 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             radioCarDetailLODOff.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
             radioBaseTextureLODOn.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
             radioBaseTextureLODOff.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
+            radioButton_Rain_On.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
+            radioButton_Rain_Off.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
             /* Preset Radio Buttons */
             PresetButtonMin.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
             PresetButtonLow.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
@@ -944,6 +956,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             labelBaseTextures.ForeColor = Color_Winform.Secondary_Text_Fore_Color;
             LabelGraphicPreset.ForeColor = Color_Winform.Secondary_Text_Fore_Color;
             /* Sub-Titles */
+            Label_Rain.ForeColor = Color_Winform.Text_Fore_Color;
             labelPerfLevel.ForeColor = Color_Winform_Other.Link;
             labelResolution.ForeColor = Color_Winform.Text_Fore_Color;
             labelBrightness.ForeColor = Color_Winform.Text_Fore_Color;
@@ -1018,6 +1031,8 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             radioCarDetailLODOff.ForeColor = Color_Winform.Text_Fore_Color;
             radioBaseTextureLODOn.ForeColor = Color_Winform.Text_Fore_Color;
             radioBaseTextureLODOff.ForeColor = Color_Winform.Text_Fore_Color;
+            radioButton_Rain_On.ForeColor = Color_Winform.Text_Fore_Color;
+            radioButton_Rain_Off.ForeColor = Color_Winform.Text_Fore_Color;
             /* Preset Radio Buttons */
             PresetButtonMin.ForeColor = Color_Winform.Text_Fore_Color;
             PresetButtonLow.ForeColor = Color_Winform.Text_Fore_Color;
@@ -1357,6 +1372,15 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 radioMpH.Checked = true;
             }
 
+            if (XML_File.XML_Settings_Data.RainEnable == "0")
+            {
+                radioButton_Rain_Off.Checked = true;
+            }
+            else
+            {
+                radioButton_Rain_On.Checked = true;
+            }
+
             string SavedResolution = XML_File.XML_Settings_Data.ScreenWidth + "x" + XML_File.XML_Settings_Data.ScreenHeight;
             if (!string.IsNullOrWhiteSpace(SavedResolution))
             {
@@ -1400,7 +1424,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
 
             Shown += (x, y) =>
             {
-                Application.OpenForms["USXEditor"].Activate();
+                Application.OpenForms[this.Name].Activate();
                 this.BringToFront();
             };
         }

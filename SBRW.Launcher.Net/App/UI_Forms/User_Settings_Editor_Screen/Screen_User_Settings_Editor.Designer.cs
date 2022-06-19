@@ -168,6 +168,12 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.Hover = new System.Windows.Forms.ToolTip(this.components);
             this.LabelGraphicPreset = new System.Windows.Forms.Label();
             this.pixelAspectFloat = new System.Windows.Forms.NumericUpDown();
+            this.customOptions2 = new System.Windows.Forms.PictureBox();
+            this.ingameWorldDetails = new System.Windows.Forms.PictureBox();
+            this.Label_Rain = new System.Windows.Forms.Label();
+            this.radioButton_Rain_On = new System.Windows.Forms.RadioButton();
+            this.radioButton_Rain_Off = new System.Windows.Forms.RadioButton();
+            this.panelRain = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSFxVol)).BeginInit();
@@ -199,6 +205,9 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panel1.SuspendLayout();
             this.PresetPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pixelAspectFloat)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.customOptions2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ingameWorldDetails)).BeginInit();
+            this.panelRain.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelAudioMode
@@ -353,7 +362,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelBaseTextures.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
             this.labelBaseTextures.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.labelBaseTextures.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelBaseTextures.Location = new System.Drawing.Point(280, 562);
+            this.labelBaseTextures.Location = new System.Drawing.Point(552, 119);
             this.labelBaseTextures.Name = "labelBaseTextures";
             this.labelBaseTextures.Size = new System.Drawing.Size(244, 16);
             this.labelBaseTextures.TabIndex = 20;
@@ -365,7 +374,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelFilterLvl.BackColor = System.Drawing.Color.Transparent;
             this.labelFilterLvl.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelFilterLvl.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelFilterLvl.Location = new System.Drawing.Point(288, 581);
+            this.labelFilterLvl.Location = new System.Drawing.Point(560, 138);
             this.labelFilterLvl.Name = "labelFilterLvl";
             this.labelFilterLvl.Size = new System.Drawing.Size(120, 18);
             this.labelFilterLvl.TabIndex = 21;
@@ -389,7 +398,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelAntialiasing.BackColor = System.Drawing.Color.Transparent;
             this.labelAntialiasing.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelAntialiasing.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelAntialiasing.Location = new System.Drawing.Point(288, 633);
+            this.labelAntialiasing.Location = new System.Drawing.Point(560, 190);
             this.labelAntialiasing.Name = "labelAntialiasing";
             this.labelAntialiasing.Size = new System.Drawing.Size(120, 18);
             this.labelAntialiasing.TabIndex = 23;
@@ -402,7 +411,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelCarDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
             this.labelCarDetail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.labelCarDetail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelCarDetail.Location = new System.Drawing.Point(280, 491);
+            this.labelCarDetail.Location = new System.Drawing.Point(552, 48);
             this.labelCarDetail.Name = "labelCarDetail";
             this.labelCarDetail.Size = new System.Drawing.Size(244, 16);
             this.labelCarDetail.TabIndex = 24;
@@ -414,7 +423,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelCarEnvMap.BackColor = System.Drawing.Color.Transparent;
             this.labelCarEnvMap.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelCarEnvMap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelCarEnvMap.Location = new System.Drawing.Point(288, 510);
+            this.labelCarEnvMap.Location = new System.Drawing.Point(560, 67);
             this.labelCarEnvMap.Name = "labelCarEnvMap";
             this.labelCarEnvMap.Size = new System.Drawing.Size(120, 18);
             this.labelCarEnvMap.TabIndex = 25;
@@ -438,7 +447,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelGlobalDetail.BackColor = System.Drawing.Color.Transparent;
             this.labelGlobalDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelGlobalDetail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelGlobalDetail.Location = new System.Drawing.Point(288, 337);
+            this.labelGlobalDetail.Location = new System.Drawing.Point(295, 343);
             this.labelGlobalDetail.Name = "labelGlobalDetail";
             this.labelGlobalDetail.Size = new System.Drawing.Size(120, 18);
             this.labelGlobalDetail.TabIndex = 27;
@@ -451,7 +460,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelWorldDetails.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
             this.labelWorldDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.labelWorldDetails.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelWorldDetails.Location = new System.Drawing.Point(280, 318);
+            this.labelWorldDetails.Location = new System.Drawing.Point(287, 324);
             this.labelWorldDetails.Name = "labelWorldDetails";
             this.labelWorldDetails.Size = new System.Drawing.Size(244, 16);
             this.labelWorldDetails.TabIndex = 28;
@@ -475,7 +484,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelRoadReflection.BackColor = System.Drawing.Color.Transparent;
             this.labelRoadReflection.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelRoadReflection.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelRoadReflection.Location = new System.Drawing.Point(288, 389);
+            this.labelRoadReflection.Location = new System.Drawing.Point(295, 395);
             this.labelRoadReflection.Name = "labelRoadReflection";
             this.labelRoadReflection.Size = new System.Drawing.Size(120, 18);
             this.labelRoadReflection.TabIndex = 30;
@@ -487,7 +496,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelRoadTexture.BackColor = System.Drawing.Color.Transparent;
             this.labelRoadTexture.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelRoadTexture.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelRoadTexture.Location = new System.Drawing.Point(288, 415);
+            this.labelRoadTexture.Location = new System.Drawing.Point(295, 421);
             this.labelRoadTexture.Name = "labelRoadTexture";
             this.labelRoadTexture.Size = new System.Drawing.Size(120, 18);
             this.labelRoadTexture.TabIndex = 31;
@@ -511,7 +520,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelRoadAniso.BackColor = System.Drawing.Color.Transparent;
             this.labelRoadAniso.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelRoadAniso.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelRoadAniso.Location = new System.Drawing.Point(288, 467);
+            this.labelRoadAniso.Location = new System.Drawing.Point(295, 473);
             this.labelRoadAniso.Name = "labelRoadAniso";
             this.labelRoadAniso.Size = new System.Drawing.Size(120, 18);
             this.labelRoadAniso.TabIndex = 33;
@@ -524,7 +533,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelShaderDetails.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
             this.labelShaderDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.labelShaderDetails.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelShaderDetails.Location = new System.Drawing.Point(280, 65);
+            this.labelShaderDetails.Location = new System.Drawing.Point(282, 48);
             this.labelShaderDetails.Name = "labelShaderDetails";
             this.labelShaderDetails.Size = new System.Drawing.Size(244, 16);
             this.labelShaderDetails.TabIndex = 34;
@@ -536,7 +545,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelFSAA.BackColor = System.Drawing.Color.Transparent;
             this.labelFSAA.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelFSAA.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelFSAA.Location = new System.Drawing.Point(288, 84);
+            this.labelFSAA.Location = new System.Drawing.Point(290, 67);
             this.labelFSAA.Name = "labelFSAA";
             this.labelFSAA.Size = new System.Drawing.Size(120, 18);
             this.labelFSAA.TabIndex = 35;
@@ -548,7 +557,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelShaderDetail.BackColor = System.Drawing.Color.Transparent;
             this.labelShaderDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelShaderDetail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelShaderDetail.Location = new System.Drawing.Point(288, 240);
+            this.labelShaderDetail.Location = new System.Drawing.Point(290, 223);
             this.labelShaderDetail.Name = "labelShaderDetail";
             this.labelShaderDetail.Size = new System.Drawing.Size(120, 18);
             this.labelShaderDetail.TabIndex = 36;
@@ -560,7 +569,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelShadowDetail.BackColor = System.Drawing.Color.Transparent;
             this.labelShadowDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelShadowDetail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelShadowDetail.Location = new System.Drawing.Point(288, 214);
+            this.labelShadowDetail.Location = new System.Drawing.Point(290, 197);
             this.labelShadowDetail.Name = "labelShadowDetail";
             this.labelShadowDetail.Size = new System.Drawing.Size(120, 18);
             this.labelShadowDetail.TabIndex = 37;
@@ -964,7 +973,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.comboBoxBaseTextureFilter.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBoxBaseTextureFilter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxBaseTextureFilter.FormattingEnabled = true;
-            this.comboBoxBaseTextureFilter.Location = new System.Drawing.Point(407, 579);
+            this.comboBoxBaseTextureFilter.Location = new System.Drawing.Point(679, 136);
             this.comboBoxBaseTextureFilter.MaxDropDownItems = 3;
             this.comboBoxBaseTextureFilter.Name = "comboBoxBaseTextureFilter";
             this.comboBoxBaseTextureFilter.Size = new System.Drawing.Size(120, 22);
@@ -978,7 +987,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.comboBoxAnisotropicLevel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBoxAnisotropicLevel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxAnisotropicLevel.FormattingEnabled = true;
-            this.comboBoxAnisotropicLevel.Location = new System.Drawing.Point(407, 631);
+            this.comboBoxAnisotropicLevel.Location = new System.Drawing.Point(679, 188);
             this.comboBoxAnisotropicLevel.Name = "comboBoxAnisotropicLevel";
             this.comboBoxAnisotropicLevel.Size = new System.Drawing.Size(120, 22);
             this.comboBoxAnisotropicLevel.TabIndex = 86;
@@ -991,7 +1000,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.comboBoxCarEnvironmentDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBoxCarEnvironmentDetail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxCarEnvironmentDetail.FormattingEnabled = true;
-            this.comboBoxCarEnvironmentDetail.Location = new System.Drawing.Point(407, 508);
+            this.comboBoxCarEnvironmentDetail.Location = new System.Drawing.Point(679, 65);
             this.comboBoxCarEnvironmentDetail.Name = "comboBoxCarEnvironmentDetail";
             this.comboBoxCarEnvironmentDetail.Size = new System.Drawing.Size(120, 22);
             this.comboBoxCarEnvironmentDetail.TabIndex = 87;
@@ -1004,7 +1013,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.comboBoxWorldRoadAniso.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBoxWorldRoadAniso.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxWorldRoadAniso.FormattingEnabled = true;
-            this.comboBoxWorldRoadAniso.Location = new System.Drawing.Point(407, 465);
+            this.comboBoxWorldRoadAniso.Location = new System.Drawing.Point(414, 471);
             this.comboBoxWorldRoadAniso.Name = "comboBoxWorldRoadAniso";
             this.comboBoxWorldRoadAniso.Size = new System.Drawing.Size(120, 22);
             this.comboBoxWorldRoadAniso.TabIndex = 88;
@@ -1017,7 +1026,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.comboBoxShaderFSAA.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBoxShaderFSAA.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxShaderFSAA.FormattingEnabled = true;
-            this.comboBoxShaderFSAA.Location = new System.Drawing.Point(407, 82);
+            this.comboBoxShaderFSAA.Location = new System.Drawing.Point(409, 65);
             this.comboBoxShaderFSAA.Name = "comboBoxShaderFSAA";
             this.comboBoxShaderFSAA.Size = new System.Drawing.Size(120, 22);
             this.comboBoxShaderFSAA.TabIndex = 89;
@@ -1030,7 +1039,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.comboBoxShadowDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBoxShadowDetail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxShadowDetail.FormattingEnabled = true;
-            this.comboBoxShadowDetail.Location = new System.Drawing.Point(407, 212);
+            this.comboBoxShadowDetail.Location = new System.Drawing.Point(409, 195);
             this.comboBoxShadowDetail.Name = "comboBoxShadowDetail";
             this.comboBoxShadowDetail.Size = new System.Drawing.Size(120, 22);
             this.comboBoxShadowDetail.TabIndex = 90;
@@ -1043,7 +1052,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.comboBoxShaderDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBoxShaderDetail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxShaderDetail.FormattingEnabled = true;
-            this.comboBoxShaderDetail.Location = new System.Drawing.Point(407, 238);
+            this.comboBoxShaderDetail.Location = new System.Drawing.Point(409, 221);
             this.comboBoxShaderDetail.Name = "comboBoxShaderDetail";
             this.comboBoxShaderDetail.Size = new System.Drawing.Size(120, 22);
             this.comboBoxShaderDetail.TabIndex = 91;
@@ -1056,7 +1065,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.comboBoxWorldRoadTexture.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBoxWorldRoadTexture.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxWorldRoadTexture.FormattingEnabled = true;
-            this.comboBoxWorldRoadTexture.Location = new System.Drawing.Point(407, 413);
+            this.comboBoxWorldRoadTexture.Location = new System.Drawing.Point(414, 419);
             this.comboBoxWorldRoadTexture.Name = "comboBoxWorldRoadTexture";
             this.comboBoxWorldRoadTexture.Size = new System.Drawing.Size(120, 22);
             this.comboBoxWorldRoadTexture.TabIndex = 92;
@@ -1069,7 +1078,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.comboBoxWorldRoadReflection.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBoxWorldRoadReflection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxWorldRoadReflection.FormattingEnabled = true;
-            this.comboBoxWorldRoadReflection.Location = new System.Drawing.Point(407, 387);
+            this.comboBoxWorldRoadReflection.Location = new System.Drawing.Point(414, 393);
             this.comboBoxWorldRoadReflection.Name = "comboBoxWorldRoadReflection";
             this.comboBoxWorldRoadReflection.Size = new System.Drawing.Size(120, 22);
             this.comboBoxWorldRoadReflection.TabIndex = 93;
@@ -1082,7 +1091,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.comboBoxWorldGlobalDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBoxWorldGlobalDetail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxWorldGlobalDetail.FormattingEnabled = true;
-            this.comboBoxWorldGlobalDetail.Location = new System.Drawing.Point(407, 335);
+            this.comboBoxWorldGlobalDetail.Location = new System.Drawing.Point(414, 341);
             this.comboBoxWorldGlobalDetail.Name = "comboBoxWorldGlobalDetail";
             this.comboBoxWorldGlobalDetail.Size = new System.Drawing.Size(120, 22);
             this.comboBoxWorldGlobalDetail.TabIndex = 94;
@@ -1201,7 +1210,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panelCDLODBias.Controls.Add(this.labelCDLODBias);
             this.panelCDLODBias.Controls.Add(this.radioCarDetailLODOn);
             this.panelCDLODBias.Controls.Add(this.radioCarDetailLODOff);
-            this.panelCDLODBias.Location = new System.Drawing.Point(285, 532);
+            this.panelCDLODBias.Location = new System.Drawing.Point(557, 89);
             this.panelCDLODBias.Name = "panelCDLODBias";
             this.panelCDLODBias.Size = new System.Drawing.Size(242, 24);
             this.panelCDLODBias.TabIndex = 125;
@@ -1213,7 +1222,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panelBTLODBias.Controls.Add(this.labelBTLODBias);
             this.panelBTLODBias.Controls.Add(this.radioBaseTextureLODOn);
             this.panelBTLODBias.Controls.Add(this.radioBaseTextureLODOff);
-            this.panelBTLODBias.Location = new System.Drawing.Point(285, 603);
+            this.panelBTLODBias.Location = new System.Drawing.Point(557, 160);
             this.panelBTLODBias.Name = "panelBTLODBias";
             this.panelBTLODBias.Size = new System.Drawing.Size(242, 24);
             this.panelBTLODBias.TabIndex = 126;
@@ -1225,7 +1234,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panelRoadLODBias.Controls.Add(this.labelRoadLODBias);
             this.panelRoadLODBias.Controls.Add(this.radioRoadLODBiasOn);
             this.panelRoadLODBias.Controls.Add(this.radioRoadLODBiasOff);
-            this.panelRoadLODBias.Location = new System.Drawing.Point(285, 437);
+            this.panelRoadLODBias.Location = new System.Drawing.Point(292, 443);
             this.panelRoadLODBias.Name = "panelRoadLODBias";
             this.panelRoadLODBias.Size = new System.Drawing.Size(242, 24);
             this.panelRoadLODBias.TabIndex = 127;
@@ -1237,7 +1246,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panelMotionBlur.Controls.Add(this.labelMotionBlur);
             this.panelMotionBlur.Controls.Add(this.radioMotionBlurOn);
             this.panelMotionBlur.Controls.Add(this.radioMotionBlurOff);
-            this.panelMotionBlur.Location = new System.Drawing.Point(285, 106);
+            this.panelMotionBlur.Location = new System.Drawing.Point(287, 89);
             this.panelMotionBlur.Name = "panelMotionBlur";
             this.panelMotionBlur.Size = new System.Drawing.Size(242, 24);
             this.panelMotionBlur.TabIndex = 128;
@@ -1249,7 +1258,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panelOverbright.Controls.Add(this.labelOverbright);
             this.panelOverbright.Controls.Add(this.radioOverBrightOn);
             this.panelOverbright.Controls.Add(this.radioOverBrightOff);
-            this.panelOverbright.Location = new System.Drawing.Point(285, 132);
+            this.panelOverbright.Location = new System.Drawing.Point(287, 115);
             this.panelOverbright.Name = "panelOverbright";
             this.panelOverbright.Size = new System.Drawing.Size(242, 24);
             this.panelOverbright.TabIndex = 129;
@@ -1261,7 +1270,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panelPostProc.Controls.Add(this.labelPostProc);
             this.panelPostProc.Controls.Add(this.radioPostProcOn);
             this.panelPostProc.Controls.Add(this.radioPostProcOff);
-            this.panelPostProc.Location = new System.Drawing.Point(285, 158);
+            this.panelPostProc.Location = new System.Drawing.Point(287, 141);
             this.panelPostProc.Name = "panelPostProc";
             this.panelPostProc.Size = new System.Drawing.Size(242, 24);
             this.panelPostProc.TabIndex = 130;
@@ -1274,7 +1283,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panelSkidMarks.Controls.Add(this.radioMaxSkidMarksZero);
             this.panelSkidMarks.Controls.Add(this.radioMaxSkidMarksOne);
             this.panelSkidMarks.Controls.Add(this.radioMaxSkidMarksTwo);
-            this.panelSkidMarks.Location = new System.Drawing.Point(285, 359);
+            this.panelSkidMarks.Location = new System.Drawing.Point(292, 365);
             this.panelSkidMarks.Name = "panelSkidMarks";
             this.panelSkidMarks.Size = new System.Drawing.Size(242, 24);
             this.panelSkidMarks.TabIndex = 131;
@@ -1286,7 +1295,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panelParticleSys.Controls.Add(this.labelPartSys);
             this.panelParticleSys.Controls.Add(this.radioParticleSysOn);
             this.panelParticleSys.Controls.Add(this.radioParticleSysOff);
-            this.panelParticleSys.Location = new System.Drawing.Point(285, 184);
+            this.panelParticleSys.Location = new System.Drawing.Point(287, 167);
             this.panelParticleSys.Name = "panelParticleSys";
             this.panelParticleSys.Size = new System.Drawing.Size(242, 24);
             this.panelParticleSys.TabIndex = 132;
@@ -1352,16 +1361,16 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.ingameAudioOptions.TabIndex = 0;
             this.ingameAudioOptions.TabStop = false;
             // 
-            // CustomOptions
+            // customOptions
             // 
             this.customOptions.BackColor = System.Drawing.Color.Transparent;
             this.customOptions.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.customOptions.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.customOptions.ErrorImage = null;
             this.customOptions.InitialImage = null;
-            this.customOptions.Location = new System.Drawing.Point(278, 11);
-            this.customOptions.Name = "CustomOptions";
-            this.customOptions.Size = new System.Drawing.Size(256, 644);
+            this.customOptions.Location = new System.Drawing.Point(280, 42);
+            this.customOptions.Name = "customOptions";
+            this.customOptions.Size = new System.Drawing.Size(260, 263);
             this.customOptions.TabIndex = 47;
             this.customOptions.TabStop = false;
             // 
@@ -1666,7 +1675,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panelVisTreat.Controls.Add(this.labelVisTreat);
             this.panelVisTreat.Controls.Add(this.radioVisualTreatOn);
             this.panelVisTreat.Controls.Add(this.radioVisualTreatOff);
-            this.panelVisTreat.Location = new System.Drawing.Point(285, 262);
+            this.panelVisTreat.Location = new System.Drawing.Point(287, 245);
             this.panelVisTreat.Name = "panelVisTreat";
             this.panelVisTreat.Size = new System.Drawing.Size(242, 24);
             this.panelVisTreat.TabIndex = 133;
@@ -1761,7 +1770,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panel1.Controls.Add(this.labelWaterSimulation);
             this.panel1.Controls.Add(this.radioWaterSimulationOn);
             this.panel1.Controls.Add(this.radioWaterSimulationOff);
-            this.panel1.Location = new System.Drawing.Point(285, 288);
+            this.panel1.Location = new System.Drawing.Point(287, 271);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(242, 24);
             this.panel1.TabIndex = 134;
@@ -1855,7 +1864,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.PresetPanel.Controls.Add(this.PresetButtonMin);
             this.PresetPanel.Controls.Add(this.PresetButtonLow);
             this.PresetPanel.Controls.Add(this.PresetButtonMed);
-            this.PresetPanel.Location = new System.Drawing.Point(285, 35);
+            this.PresetPanel.Location = new System.Drawing.Point(475, 11);
             this.PresetPanel.Name = "PresetPanel";
             this.PresetPanel.Size = new System.Drawing.Size(242, 24);
             this.PresetPanel.TabIndex = 141;
@@ -1939,9 +1948,9 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.LabelGraphicPreset.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
             this.LabelGraphicPreset.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.LabelGraphicPreset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LabelGraphicPreset.Location = new System.Drawing.Point(280, 18);
+            this.LabelGraphicPreset.Location = new System.Drawing.Point(282, 11);
             this.LabelGraphicPreset.Name = "LabelGraphicPreset";
-            this.LabelGraphicPreset.Size = new System.Drawing.Size(244, 16);
+            this.LabelGraphicPreset.Size = new System.Drawing.Size(180, 22);
             this.LabelGraphicPreset.TabIndex = 142;
             this.LabelGraphicPreset.Text = "Graphic Presets";
             this.LabelGraphicPreset.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1962,12 +1971,87 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.pixelAspectFloat.TabIndex = 143;
             this.pixelAspectFloat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // USXEditor
+            // customOptions2
+            // 
+            this.customOptions2.BackColor = System.Drawing.Color.Transparent;
+            this.customOptions2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.customOptions2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.customOptions2.ErrorImage = null;
+            this.customOptions2.InitialImage = null;
+            this.customOptions2.Location = new System.Drawing.Point(549, 41);
+            this.customOptions2.Name = "customOptions2";
+            this.customOptions2.Size = new System.Drawing.Size(256, 178);
+            this.customOptions2.TabIndex = 144;
+            this.customOptions2.TabStop = false;
+            // 
+            // ingameWorldDetails
+            // 
+            this.ingameWorldDetails.BackColor = System.Drawing.Color.Transparent;
+            this.ingameWorldDetails.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ingameWorldDetails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ingameWorldDetails.ErrorImage = null;
+            this.ingameWorldDetails.InitialImage = null;
+            this.ingameWorldDetails.Location = new System.Drawing.Point(280, 317);
+            this.ingameWorldDetails.Name = "ingameWorldDetails";
+            this.ingameWorldDetails.Size = new System.Drawing.Size(260, 215);
+            this.ingameWorldDetails.TabIndex = 145;
+            this.ingameWorldDetails.TabStop = false;
+            // 
+            // Label_Rain
+            // 
+            this.Label_Rain.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Label_Rain.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label_Rain.Location = new System.Drawing.Point(3, 4);
+            this.Label_Rain.Name = "Label_Rain";
+            this.Label_Rain.Size = new System.Drawing.Size(120, 18);
+            this.Label_Rain.TabIndex = 32;
+            this.Label_Rain.Tag = "Rain";
+            this.Label_Rain.Text = "Rain:";
+            this.Label_Rain.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // radioButton_Rain_On
+            // 
+            this.radioButton_Rain_On.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.radioButton_Rain_On.Location = new System.Drawing.Point(126, 4);
+            this.radioButton_Rain_On.Name = "radioButton_Rain_On";
+            this.radioButton_Rain_On.Size = new System.Drawing.Size(44, 18);
+            this.radioButton_Rain_On.TabIndex = 100;
+            this.radioButton_Rain_On.TabStop = true;
+            this.radioButton_Rain_On.Tag = "Rain0";
+            this.radioButton_Rain_On.Text = "On";
+            this.radioButton_Rain_On.UseVisualStyleBackColor = true;
+            // 
+            // radioButton_Rain_Off
+            // 
+            this.radioButton_Rain_Off.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.radioButton_Rain_Off.Location = new System.Drawing.Point(183, 4);
+            this.radioButton_Rain_Off.Name = "radioButton_Rain_Off";
+            this.radioButton_Rain_Off.Size = new System.Drawing.Size(44, 18);
+            this.radioButton_Rain_Off.TabIndex = 103;
+            this.radioButton_Rain_Off.TabStop = true;
+            this.radioButton_Rain_Off.Tag = "Rain1";
+            this.radioButton_Rain_Off.Text = "Off";
+            this.radioButton_Rain_Off.UseVisualStyleBackColor = true;
+            // 
+            // panelRain
+            // 
+            this.panelRain.BackColor = System.Drawing.Color.Transparent;
+            this.panelRain.Controls.Add(this.Label_Rain);
+            this.panelRain.Controls.Add(this.radioButton_Rain_On);
+            this.panelRain.Controls.Add(this.radioButton_Rain_Off);
+            this.panelRain.Location = new System.Drawing.Point(295, 499);
+            this.panelRain.Name = "panelRain";
+            this.panelRain.Size = new System.Drawing.Size(242, 24);
+            this.panelRain.TabIndex = 146;
+            this.panelRain.Tag = "RoadLODBias";
+            // 
+            // Screen_User_Settings_Editor
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(546, 673);
+            this.ClientSize = new System.Drawing.Size(815, 673);
+            this.Controls.Add(this.panelRain);
             this.Controls.Add(this.pixelAspectFloat);
             this.Controls.Add(this.LabelGraphicPreset);
             this.Controls.Add(this.PresetPanel);
@@ -2050,13 +2134,15 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.Controls.Add(this.ingameAudioOptions);
             this.Controls.Add(this.customOptions);
             this.Controls.Add(this.ingameVideoOptions);
+            this.Controls.Add(this.customOptions2);
+            this.Controls.Add(this.ingameWorldDetails);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ForeColor = System.Drawing.Color.Silver;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "USXEditor";
+            this.Name = "Screen_User_Settings_Editor";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SBRW UserSettings XML Editor";
@@ -2092,6 +2178,9 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.panel1.ResumeLayout(false);
             this.PresetPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pixelAspectFloat)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.customOptions2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ingameWorldDetails)).EndInit();
+            this.panelRain.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2235,5 +2324,11 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
         private System.Windows.Forms.Label LabelGraphicPreset;
         private System.Windows.Forms.RadioButton PresetButtonCustom;
         private System.Windows.Forms.NumericUpDown pixelAspectFloat;
+        private System.Windows.Forms.PictureBox customOptions2;
+        private System.Windows.Forms.PictureBox ingameWorldDetails;
+        private System.Windows.Forms.Label Label_Rain;
+        private System.Windows.Forms.RadioButton radioButton_Rain_On;
+        private System.Windows.Forms.RadioButton radioButton_Rain_Off;
+        private System.Windows.Forms.Panel panelRain;
     }
 }

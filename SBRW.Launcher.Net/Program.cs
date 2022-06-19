@@ -5,6 +5,7 @@ using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.SystemPlatform.Components;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
 using SBRW.Launcher.App.UI_Forms;
+using SBRW.Launcher.App.UI_Forms.Main_Screen;
 using SBRW.Launcher.Core.Extension.Logging_;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,22 @@ namespace SBRW.Launcher.Net
         {
             try
             {
+                try
+                {
+                    if (Screen_Main.Screen_Instance != null)
+                    {
+                        if (Screen_Main.Screen_Instance.NotifyIcon_Notification.Visible)
+                        {
+                            Screen_Main.Screen_Instance.NotifyIcon_Notification.Visible = false;
+                            Screen_Main.Screen_Instance.NotifyIcon_Notification.Dispose();
+                        }
+                    }
+                }
+                catch (Exception Error_Y)
+                {
+                    LogToFileAddons.OpenLog("Notification Disposal", string.Empty, Error_Y, string.Empty, true);
+                }
+
                 LogToFileAddons.OpenLog("Thread Exception", Translations.Database("Application_Exception_Thread") + ": ",
                     Error.Exception, "Error", false);
 
@@ -73,6 +90,22 @@ namespace SBRW.Launcher.Net
         {
             try
             {
+                try
+                {
+                    if (Screen_Main.Screen_Instance != null)
+                    {
+                        if (Screen_Main.Screen_Instance.NotifyIcon_Notification.Visible)
+                        {
+                            Screen_Main.Screen_Instance.NotifyIcon_Notification.Visible = false;
+                            Screen_Main.Screen_Instance.NotifyIcon_Notification.Dispose();
+                        }
+                    }
+                }
+                catch (Exception Error_Y)
+                {
+                    LogToFileAddons.OpenLog("Notification Disposal", string.Empty, Error_Y, string.Empty, true);
+                }
+
                 LogToFileAddons.OpenLog("Unhandled Exception", Translations.Database("Application_Exception_Unhandled") + ": ",
                     (Exception)Error.ExceptionObject, "Error", false);
 
@@ -265,13 +298,10 @@ namespace SBRW.Launcher.Net
                             try
                             {
                                 Client.DownloadFile(URLCall, LZMAPath);
+                                LauncherMustRestart = true;
 
-                                if (MessageBox.Show(null, Translations.Database("Program_TextBox_LZMA_Redownloaded"),
-                                    "GameLauncher Restart Required",
-                                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                                {
-                                    LauncherMustRestart = true;
-                                }
+                                MessageBox.Show(null, Translations.Database("Program_TextBox_LZMA_Redownloaded"),
+                                    "GameLauncher Restart Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
                             catch (Exception Error)
                             {

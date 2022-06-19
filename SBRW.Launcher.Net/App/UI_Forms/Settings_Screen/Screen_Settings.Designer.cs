@@ -77,6 +77,8 @@
             this.Label_WebClient_Timeout = new System.Windows.Forms.Label();
             this.NumericUpDown_WebClient_Timeout = new System.Windows.Forms.NumericUpDown();
             this.Button_CDN_List = new System.Windows.Forms.Button();
+            this.Button_Console_Submit = new System.Windows.Forms.Button();
+            this.Input_Console = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.Panel_Display_Timer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_WebClient_Timeout)).BeginInit();
@@ -485,7 +487,7 @@
             // 
             this.Panel_Form_Screens.BackColor = System.Drawing.Color.Transparent;
             this.Panel_Form_Screens.ForeColor = System.Drawing.Color.Transparent;
-            this.Panel_Form_Screens.Location = new System.Drawing.Point(861, 335);
+            this.Panel_Form_Screens.Location = new System.Drawing.Point(0, 0);
             this.Panel_Form_Screens.Name = "Panel_Form_Screens";
             this.Panel_Form_Screens.Size = new System.Drawing.Size(891, 529);
             this.Panel_Form_Screens.TabIndex = 79;
@@ -613,18 +615,43 @@
             this.Button_CDN_List.Text = "CDN Picker";
             this.Button_CDN_List.UseVisualStyleBackColor = false;
             // 
+            // Button_Console_Submit
+            // 
+            this.Button_Console_Submit.BackColor = System.Drawing.SystemColors.Control;
+            this.Button_Console_Submit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button_Console_Submit.ForeColor = System.Drawing.Color.Black;
+            this.Button_Console_Submit.Location = new System.Drawing.Point(213, 18);
+            this.Button_Console_Submit.Name = "Button_Console_Submit";
+            this.Button_Console_Submit.Size = new System.Drawing.Size(78, 24);
+            this.Button_Console_Submit.TabIndex = 148;
+            this.Button_Console_Submit.Text = "Enter";
+            this.Button_Console_Submit.UseVisualStyleBackColor = false;
+            this.Button_Console_Submit.Visible = false;
+            // 
+            // Input_Console
+            // 
+            this.Input_Console.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
+            this.Input_Console.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Input_Console.Location = new System.Drawing.Point(296, 18);
+            this.Input_Console.Name = "Input_Console";
+            this.Input_Console.Size = new System.Drawing.Size(405, 23);
+            this.Input_Console.TabIndex = 149;
+            this.Input_Console.Visible = false;
+            // 
             // Screen_Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.Panel_Form_Screens);
+            this.Controls.Add(this.Input_Console);
+            this.Controls.Add(this.Button_Console_Submit);
             this.Controls.Add(this.Button_CDN_List);
             this.Controls.Add(this.NumericUpDown_WebClient_Timeout);
             this.Controls.Add(this.Label_WebClient_Timeout);
             this.Controls.Add(this.Label_Display_Timer);
             this.Controls.Add(this.Panel_Display_Timer);
-            this.Controls.Add(this.Panel_Form_Screens);
             this.Controls.Add(this.Label_Version_Build);
             this.Controls.Add(this.Label_Theme_Author);
             this.Controls.Add(this.Label_Theme_Name);
@@ -674,6 +701,7 @@
             this.Panel_Display_Timer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_WebClient_Timeout)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -727,5 +755,7 @@
         private System.Windows.Forms.Button Button_CDN_List;
         public System.Windows.Forms.Label Label_CDN_Current;
         public System.Windows.Forms.LinkLabel LinkLabel_CDN_Current;
+        private System.Windows.Forms.Button Button_Console_Submit;
+        private System.Windows.Forms.TextBox Input_Console;
     }
 }

@@ -753,9 +753,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Label_Download_Information.Text = "Loading game. Launcher will minimize once Game has Loaded".ToUpper();
                         Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
 #if NETFRAMEWORK
-
                         ContextMenu = new ContextMenu();
-                        ContextMenu.MenuItems.Add(new MenuItem("Running Out of Time", (b, n) => { Process.Start("https://youtu.be/vq9-bmoI-RI"); }));
+                        
+                        ContextMenu.MenuItems.Add(new MenuItem("Now Loading!!!", (b, n) => { Process.Start("https://www.youtube.com/watch?v=kq3X78ngFAY"); }));
                         ContextMenu.MenuItems.Add("-");
                         if (Parent_Screen.Screen_Instance != null)
                         {
@@ -914,10 +914,39 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (Launcher_Value.Game_In_Event_Bug)
                     {
-                        if (AC_Core.Status) exitCode = 2017;
-                        else exitCode = 2137;
-                    }
+                        if (AC_Core.Status)
+                        {
+                            exitCode = 2017;
+#if NETFRAMEWORK
+                            ContextMenu = new ContextMenu();
+                            ContextMenu.MenuItems.Add(new MenuItem("Ezekiel was Here - Sent from Mars (C&T)", (b, n) => { Process.Start("https://www.youtube.com/watch?v=T-AF81iBCi0"); }));
+                            ContextMenu.MenuItems.Add("-");
+                            if (Parent_Screen.Screen_Instance != null)
+                            {
+                                ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", Parent_Screen.Screen_Instance.Button_Close_Click));
+                            }
 
+                            NotifyIcon_Notification.Text = "SBRW Launcher";
+                            NotifyIcon_Notification.ContextMenu = ContextMenu;
+#endif
+                        }
+                        else
+                        {
+                            exitCode = 2137;
+#if NETFRAMEWORK
+                            ContextMenu = new ContextMenu();
+                            ContextMenu.MenuItems.Add(new MenuItem("One more Minute", (b, n) => { Process.Start("https://youtu.be/HNuOQlt1KEM"); }));
+                            ContextMenu.MenuItems.Add("-");
+                            if (Parent_Screen.Screen_Instance != null)
+                            {
+                                ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", Parent_Screen.Screen_Instance.Button_Close_Click));
+                            }
+
+                            NotifyIcon_Notification.Text = "SBRW Launcher";
+                            NotifyIcon_Notification.ContextMenu = ContextMenu;
+#endif
+                        }
+                    }
                     if (exitCode == 0 && !Launcher_Value.Game_In_Event_Bug && AC_Core.Stop_Check())
                     {
                         if (Parent_Screen.Screen_Instance != null)
@@ -983,6 +1012,19 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     Live_Action_Timer.Interval = !Proxy_Settings.Running() ? 30000 : 60000;
                     Live_Action_Timer.Enabled = true;
+
+#if NETFRAMEWORK
+                    ContextMenu = new ContextMenu();
+                    ContextMenu.MenuItems.Add(new MenuItem("Running Out of Time", (b, n) => { Process.Start("https://youtu.be/vq9-bmoI-RI"); }));
+                    ContextMenu.MenuItems.Add("-");
+                    if (Parent_Screen.Screen_Instance != null)
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("Close Game and Launcher", Parent_Screen.Screen_Instance.Button_Close_Click));
+                    }
+
+                    NotifyIcon_Notification.Text = "SBRW Launcher";
+                    NotifyIcon_Notification.ContextMenu = ContextMenu;
+#endif
 
                     Button_Close.SafeInvokeAction(() =>
                     Button_Close.Visible = false, this);

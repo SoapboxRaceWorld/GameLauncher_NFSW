@@ -434,6 +434,13 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         }
         #endregion
         #region Event Functions
+        private void Label_Version_Build_Click(object sender, EventArgs e)
+        {
+            if (!Button_Console_Submit.Visible && (!this.Disposing || !this.IsDisposed))
+            {
+                Button_Console_Submit.Visible = Input_Console.Visible = true;
+            }
+        }
         private void Button_CDN_Selector_Click(object sender, EventArgs e)
         {
             if (VisualsAPIChecker.CarbonAPITwo())
@@ -983,9 +990,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Screen_About.OpenScreen();
         }
 
-        private void SettingsLauncherVersion_Click(object sender, EventArgs e)
+        private void Console_Enter(object sender, EventArgs e)
         {
-            //new DebugScreen().ShowDialog();
+            FunctionEvents.Console_Commands(Input_Console.Text);
+            Input_Console.Text = string.Empty;
         }
 
         private void ComboBox_Language_List_SelectedIndexChanged(object sender, EventArgs e)
@@ -1321,6 +1329,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Button_Exit.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Label_Theme_Name.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_Theme_Author.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            Button_Console_Submit.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
+            Input_Console.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors & Images     /
@@ -1337,6 +1347,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             ButtonsColorSet(Button_Clear_Server_Mods, 0, false);
             ButtonsColorSet(Button_Security_Center, 0, true);
             ButtonsColorSet(Button_CDN_List, VisualsAPIChecker.CarbonAPITwo() ? 0 : 4, true);
+            ButtonsColorSet(Button_Console_Submit, 1, true);
 
             /* Label Links */
             LinkLabel_Game_Path.LinkColor = Color_Winform_Other.Link_Settings;
@@ -1387,6 +1398,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Button_Exit.Image = Image_Button.Grey;
             Button_Exit.ForeColor = Color_Text.L_One;
 
+            Input_Console.BackColor = Color_Winform_Other.Input;
+            Input_Console.ForeColor = Color_Text.L_Five;
+
             /*******************************/
             /* Load CDN List                /
             /*******************************/
@@ -1418,6 +1432,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Button_Exit.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
             Button_Exit.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
 
+            Button_Console_Submit.Click += new EventHandler(Console_Enter);
             Button_CDN_List.Click += new EventHandler(Button_CDN_Selector_Click);
             Button_Security_Center.Click += new EventHandler(Button_Security_Center_Click);
             Button_Game_Verify_Files.Click += new EventHandler(Button_Game_Verify_Files_Click);
@@ -1428,7 +1443,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Button_Clear_NFSWO_Logs.Click += new EventHandler(SettingsClearCommunicationLogButton_Click);
             Button_Clear_Crash_Logs.Click += new EventHandler(SettingsClearCrashLogsButton_Click);
             Button_About.Click += new EventHandler(SettingsAboutButton_Click);
-            Label_Version_Build.Click += new EventHandler(SettingsLauncherVersion_Click);
+            Label_Version_Build.Click += new EventHandler(Label_Version_Build_Click);
             Button_Change_Game_Path.Click += new EventHandler(SettingsGameFiles_Click);
             Button_Launcher_logs.Click += new EventHandler(SettingsClearLauncherLogsButton_Click);
 

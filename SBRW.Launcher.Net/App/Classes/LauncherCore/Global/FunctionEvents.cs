@@ -1,4 +1,5 @@
-﻿using SBRW.Launcher.App.Classes.LauncherCore.Lists;
+﻿using SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater;
+using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.LauncherCore.Visuals;
 using SBRW.Launcher.App.UI_Forms.Custom_Server_Screen;
@@ -241,6 +242,64 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                 }
             }
             catch { }
+        }
+
+        public static void Console_Commands(string Live_Commands)
+        {
+            try
+            {
+                switch (Live_Commands)
+                {
+                    case "what if...":
+                        Process.Start("https://www.youtube.com/watch?v=OaWYwk7dysc");
+                        break;
+                    case "Don't Look!":
+                        Process.Start("https://www.youtube.com/watch?v=nwqtdwcqrBE");
+                        break;
+                    case "Behind the Scenes":
+                        Process.Start("https://cdn.discordapp.com/attachments/620401560954077214/987989783022272562/unknown.png");
+                        break;
+                    case "Ezekiel":
+                    case "Crash the Server":
+                        Process.Start("https://www.youtube.com/watch?v=T-AF81iBCi0");
+                        break;
+                    case "Ezekiel Extended Mix":
+                    case "Crash the Server Extended Mix":
+                        Process.Start("https://www.youtube.com/watch?v=sReIQTvS1kM");
+                        break;
+                    case "Obsolete":
+                        if (LauncherUpdateCheck.UpgradeAvailable)
+                        {
+                            Process.Start("https://youtu.be/LutDfASARmE");
+                        }
+                        break;
+                    case "A Song Long Ago":
+                        Process.Start("https://youtu.be/zo_C-dk6Xh4");
+                        break;
+                    case "Keygen":
+                    case "Keygen 2013":
+                        Process.Start("https://youtu.be/vCMzIE9p07Y");
+                        break;
+                    case "Who am I?":
+                        Process.Start("https://www.youtube.com/watch?v=6TmlR27izRo");
+                        break;
+                    case "StraightUpHippo":
+                        Process.Start("https://youtu.be/Uc57tO6g--I");
+                        break;
+                    case "Seeing What's Next":
+                    case "Insider":
+                    case "Developer":
+                    case "Beta":
+                        Process.Start("https://youtu.be/F6dVLZIJatk");
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("Console Commands", string.Empty, Error, string.Empty, true);
+            }
         }
     }
 }
