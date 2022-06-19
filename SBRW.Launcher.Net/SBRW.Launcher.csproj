@@ -19,6 +19,9 @@
     <ApplicationIcon>SBRW.ico</ApplicationIcon>
     <PlatformTarget>x86</PlatformTarget>
     <Platforms>AnyCPU;x86</Platforms>
+    <Copyright>© Soapbox Race World</Copyright>
+    <AssemblyVersion>2.1.9.0003</AssemblyVersion>
+    <FileVersion>2.1.9.0003</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
