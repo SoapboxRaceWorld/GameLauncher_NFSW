@@ -14,14 +14,16 @@
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
-    <Version>2.1.9.0003</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>SBRW.ico</ApplicationIcon>
     <PlatformTarget>x86</PlatformTarget>
     <Platforms>AnyCPU;x86</Platforms>
     <Copyright>© Soapbox Race World</Copyright>
-    <AssemblyVersion>2.1.9.0003</AssemblyVersion>
-    <FileVersion>2.1.9.0003</FileVersion>
+    <GlobalVersion>2.1.9.0003</GlobalVersion>
+    <GlobalVersion Condition=" '$(GlobalVersion)' == '' ">2.1.9.$([System.DateTime]::UtcNow.ToString(mmff))</GlobalVersion>
+    <Version>$(GlobalVersion)</Version>
+    <AssemblyVersion>$(GlobalVersion)</AssemblyVersion>
+    <FileVersion>$(GlobalVersion)</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
