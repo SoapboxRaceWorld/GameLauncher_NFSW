@@ -590,7 +590,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN) && Save_Settings.Live_Data.Launcher_CDN != New_Choosen_CDN)
+            if (!string.IsNullOrWhiteSpace(New_Choosen_CDN) && Save_Settings.Live_Data.Launcher_CDN != New_Choosen_CDN)
             {
                 Save_Settings.Live_Data.Launcher_CDN = New_Choosen_CDN.EndsWith("/") ? New_Choosen_CDN.TrimEnd('/') : New_Choosen_CDN;
                 Label_CDN_Current.Text = "CHANGED CDN:";

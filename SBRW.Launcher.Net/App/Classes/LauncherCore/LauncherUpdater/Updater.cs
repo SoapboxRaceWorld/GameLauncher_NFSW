@@ -48,6 +48,60 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
             description = statusDescription;
         }
 
+        private static string Insider_Release_Tag(string JSON_Data)
+        {
+            string Temp_Latest_Launcher_Build = string.Empty;
+
+            if (Is_Json.Valid(JSON_Data))
+            {
+                int Top_Ten = 0;
+                bool Latest_Found_Build = false;
+
+                List<GitHubRelease> Scrollable_List = new List<GitHubRelease>();
+                Scrollable_List.AddRange(JsonConvert.DeserializeObject<List<GitHubRelease>>(JSON_Data));
+
+                if (Scrollable_List.Count > 0)
+                {
+                    foreach (GitHubRelease GH_Releases in Scrollable_List)
+                    {
+                        if (!string.IsNullOrWhiteSpace(GH_Releases.TagName))
+                        {
+                            if (EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed())
+                            {
+                                if (GH_Releases.Pre_Release)
+                                {
+                                    Log.Info("Github Pre-Release Version");
+                                }
+
+                                Log.Info("Github Release Version Tag: " + GH_Releases.TagName);
+                            }
+
+                            if (!GH_Releases.Pre_Release && !Latest_Found_Build)
+                            {
+                                Latest_Found_Build = true;
+                                Temp_Latest_Launcher_Build = GH_Releases.TagName;
+                            }
+
+                            if (CurrentLauncherBuild.CompareTo(GH_Releases.TagName) < 0)
+                            {
+                                return GH_Releases.TagName;
+                            }
+                            else if (Top_Ten >= 10)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                Top_Ten++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Temp_Latest_Launcher_Build;
+        }
+
         public static void Latest()
         {
             LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER UPDATE", "Is Version Up to Date or not");
@@ -111,8 +165,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                 {
 #pragma warning disable CS8602 // Null Safe Check Done Above
                     LatestLauncherBuild = (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed()) ?
-                        JsonConvert.DeserializeObject<List<GitHubRelease>>(VersionJSON)[0].TagName :
-                        JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON).TagName;
+                        Insider_Release_Tag(VersionJSON) : JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON).TagName;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                     LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATE", "GitHub Latest Version -> " + LatestLauncherBuild);
                     ValidJSONDownload = true;

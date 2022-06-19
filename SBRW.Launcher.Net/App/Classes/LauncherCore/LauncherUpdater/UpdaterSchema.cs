@@ -23,6 +23,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
             public string Url { get; set; } = string.Empty;
         }
 
+        [JsonProperty("prerelease")]
+        public bool Pre_Release { get; set; }
+
         [JsonProperty("zipball_url")]
         public string Url_Zipball { get; set; } = string.Empty;
 
