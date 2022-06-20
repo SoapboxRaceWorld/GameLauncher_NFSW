@@ -283,7 +283,7 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
 
             Button_Server_Remove.ForeColor = Color_Winform_Buttons.Gray_Fore_Color;
             Button_Server_Remove.BackColor = Color_Winform_Buttons.Gray_Back_Color;
-            Button_Server_Remove.FlatAppearance.BorderColor = Color_Winform_Buttons.Green_BorderColorButton;
+            Button_Server_Remove.FlatAppearance.BorderColor = Color_Winform_Buttons.Green_Border_Color;
             Button_Server_Remove.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Gray_Mouse_Over_Back_Color;
 
             Button_Server_Select.ForeColor = Color_Winform_Buttons.Blue_Fore_Color;

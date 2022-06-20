@@ -103,6 +103,7 @@
             // Parent_Screen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(563, 404);
             this.Controls.Add(this.Panel_Form_Screens);
@@ -113,6 +114,7 @@
             this.Name = "Parent_Screen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Parent_Screen";
+            this.TransparencyKey = System.Drawing.Color.Fuchsia;
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox_Screen_Splash)).EndInit();
             this.GroupBox_Launcherlog.ResumeLayout(false);
             this.GroupBox_Launcherlog.PerformLayout();

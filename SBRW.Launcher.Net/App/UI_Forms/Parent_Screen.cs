@@ -1176,8 +1176,8 @@ namespace SBRW.Launcher.App.UI_Forms
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
 
-            TransparencyKey = Color_Screen.BG_Settings;
-            BackgroundImage = Image_Background.Settings;
+            TransparencyKey = Color_Screen.BG_Splash;
+            BackgroundImage = Image_Background.Splash;
 
             PictureBox_Screen_Splash.BackgroundImage = Image_Other.Logo_Splash;
 
@@ -1218,7 +1218,6 @@ namespace SBRW.Launcher.App.UI_Forms
             Screen_Instance = this;
             Screen_Panel_Forms = Panel_Form_Screens;
             Screen_TextBox_LiveLog = TextBox_Live_Log;
-            Size = new Size(559, 404);
             #endregion
         }
     }

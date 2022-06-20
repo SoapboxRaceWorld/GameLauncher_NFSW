@@ -651,6 +651,7 @@
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.Panel_Form_Screens);
             this.Controls.Add(this.Input_Console);
             this.Controls.Add(this.Button_Console_Submit);
             this.Controls.Add(this.Button_CDN_List);
@@ -695,7 +696,6 @@
             this.Controls.Add(this.Label_Game_Files);
             this.Controls.Add(this.Button_Save);
             this.Controls.Add(this.Button_Exit);
-            this.Controls.Add(this.Panel_Form_Screens);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;

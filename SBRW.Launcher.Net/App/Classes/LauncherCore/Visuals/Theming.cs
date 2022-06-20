@@ -732,7 +732,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Visuals
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("GreenBorderColorButton")))
                     {
-                        Color_Winform_Buttons.Green_BorderColorButton = Color_Converter.Value(ThemeFile.Key_Read("GreenBorderColorButton"));
+                        Color_Winform_Buttons.Green_Border_Color = Color_Converter.Value(ThemeFile.Key_Read("GreenBorderColorButton"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("GreenForeColorButton")))

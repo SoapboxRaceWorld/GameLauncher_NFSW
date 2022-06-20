@@ -1169,7 +1169,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                     {
                         Elements.ForeColor = Color_Winform_Buttons.Green_Fore_Color;
                         Elements.BackColor = Color_Winform_Buttons.Green_Back_Color;
-                        Elements.FlatAppearance.BorderColor = Color_Winform_Buttons.Green_BorderColorButton;
+                        Elements.FlatAppearance.BorderColor = Color_Winform_Buttons.Green_Border_Color;
                         Elements.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Green_Mouse_Over_Back_Color;
                         Elements.Enabled = EnabledORDisabled;
                     });

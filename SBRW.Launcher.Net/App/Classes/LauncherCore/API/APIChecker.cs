@@ -119,7 +119,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
         public static void PingAPIStatus()
         {
             LogToFileAddons.Parent_Log_Screen(1, "API", "Checking Status");
-            if (!(InsiderKit.EnableInsiderBetaTester.Allowed() || InsiderKit.EnableInsiderDeveloper.Allowed()))
+            if (!InsiderKit.EnableInsiderDeveloper.Allowed())
             {
                 LogToFileAddons.Parent_Log_Screen(2, "API", "Checking WorldUnited Status");
                 switch (UnitedSC = API_Core.StatusCheck(URLs.Main + "/serverlist.json", 15))

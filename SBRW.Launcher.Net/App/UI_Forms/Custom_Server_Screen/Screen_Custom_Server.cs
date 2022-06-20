@@ -414,7 +414,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
 
             Button_Server_Remove.ForeColor = CustomServersOnly ? Color_Winform_Buttons.Blue_Fore_Color : Color_Winform_Buttons.Gray_Fore_Color;
             Button_Server_Remove.BackColor = CustomServersOnly ? Color_Winform_Buttons.Blue_Back_Color : Color_Winform_Buttons.Gray_Back_Color;
-            Button_Server_Remove.FlatAppearance.BorderColor = CustomServersOnly ? Color_Winform_Buttons.Blue_Border_Color : Color_Winform_Buttons.Green_BorderColorButton;
+            Button_Server_Remove.FlatAppearance.BorderColor = CustomServersOnly ? Color_Winform_Buttons.Blue_Border_Color : Color_Winform_Buttons.Green_Border_Color;
             Button_Server_Remove.FlatAppearance.MouseOverBackColor = CustomServersOnly ? Color_Winform_Buttons.Blue_Mouse_Over_Back_Color : Color_Winform_Buttons.Gray_Mouse_Over_Back_Color;
 
             Button_Server_Select.ForeColor = !CustomServersOnly ? Color_Winform_Buttons.Blue_Fore_Color : Color_Winform_Buttons.Gray_Fore_Color;
