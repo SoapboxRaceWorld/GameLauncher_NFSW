@@ -306,7 +306,7 @@
             // 
             this.CheckBox_Opt_Insider.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_Opt_Insider.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_Opt_Insider.Location = new System.Drawing.Point(295, 405);
+            this.CheckBox_Opt_Insider.Location = new System.Drawing.Point(295, 403);
             this.CheckBox_Opt_Insider.Name = "CheckBox_Opt_Insider";
             this.CheckBox_Opt_Insider.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Opt_Insider.TabIndex = 61;
@@ -497,7 +497,7 @@
             // 
             this.CheckBox_LZMA_Downloader.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_LZMA_Downloader.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_LZMA_Downloader.Location = new System.Drawing.Point(295, 381);
+            this.CheckBox_LZMA_Downloader.Location = new System.Drawing.Point(295, 379);
             this.CheckBox_LZMA_Downloader.Name = "CheckBox_LZMA_Downloader";
             this.CheckBox_LZMA_Downloader.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_LZMA_Downloader.TabIndex = 80;
@@ -521,58 +521,62 @@
             this.Panel_Display_Timer.Controls.Add(this.Radio_Button_Static_Timer);
             this.Panel_Display_Timer.Controls.Add(this.Radio_Button_Dynamic_Timer);
             this.Panel_Display_Timer.Controls.Add(this.Radio_Button_No_Timer);
-            this.Panel_Display_Timer.Location = new System.Drawing.Point(556, 357);
+            this.Panel_Display_Timer.Location = new System.Drawing.Point(556, 355);
             this.Panel_Display_Timer.Name = "Panel_Display_Timer";
-            this.Panel_Display_Timer.Size = new System.Drawing.Size(299, 18);
+            this.Panel_Display_Timer.Size = new System.Drawing.Size(288, 22);
             this.Panel_Display_Timer.TabIndex = 142;
-            this.Panel_Display_Timer.Tag = "SkidMarks";
+            this.Panel_Display_Timer.Tag = "DisplayTimer";
             // 
             // Radio_Button_Static_Timer
             // 
+            this.Radio_Button_Static_Timer.BackColor = System.Drawing.Color.Transparent;
             this.Radio_Button_Static_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Radio_Button_Static_Timer.ForeColor = System.Drawing.Color.Blue;
-            this.Radio_Button_Static_Timer.Location = new System.Drawing.Point(5, 3);
+            this.Radio_Button_Static_Timer.Location = new System.Drawing.Point(5, 2);
             this.Radio_Button_Static_Timer.Name = "Radio_Button_Static_Timer";
-            this.Radio_Button_Static_Timer.Size = new System.Drawing.Size(95, 18);
+            this.Radio_Button_Static_Timer.Size = new System.Drawing.Size(90, 18);
             this.Radio_Button_Static_Timer.TabIndex = 95;
             this.Radio_Button_Static_Timer.TabStop = true;
-            this.Radio_Button_Static_Timer.Tag = "MaxSkidMarks0";
+            this.Radio_Button_Static_Timer.Tag = "StaticTimer";
             this.Radio_Button_Static_Timer.Text = "Static";
-            this.Radio_Button_Static_Timer.UseVisualStyleBackColor = true;
+            this.Radio_Button_Static_Timer.UseVisualStyleBackColor = false;
             // 
             // Radio_Button_Dynamic_Timer
             // 
+            this.Radio_Button_Dynamic_Timer.BackColor = System.Drawing.Color.Transparent;
             this.Radio_Button_Dynamic_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Radio_Button_Dynamic_Timer.ForeColor = System.Drawing.Color.Blue;
-            this.Radio_Button_Dynamic_Timer.Location = new System.Drawing.Point(106, 3);
+            this.Radio_Button_Dynamic_Timer.Location = new System.Drawing.Point(99, 2);
             this.Radio_Button_Dynamic_Timer.Name = "Radio_Button_Dynamic_Timer";
-            this.Radio_Button_Dynamic_Timer.Size = new System.Drawing.Size(99, 18);
+            this.Radio_Button_Dynamic_Timer.Size = new System.Drawing.Size(90, 18);
             this.Radio_Button_Dynamic_Timer.TabIndex = 96;
             this.Radio_Button_Dynamic_Timer.TabStop = true;
-            this.Radio_Button_Dynamic_Timer.Tag = "MaxSkidMarks1";
+            this.Radio_Button_Dynamic_Timer.Tag = "DynamicTimer";
             this.Radio_Button_Dynamic_Timer.Text = "Dynamic";
-            this.Radio_Button_Dynamic_Timer.UseVisualStyleBackColor = true;
+            this.Radio_Button_Dynamic_Timer.UseVisualStyleBackColor = false;
             // 
             // Radio_Button_No_Timer
             // 
+            this.Radio_Button_No_Timer.BackColor = System.Drawing.Color.Transparent;
             this.Radio_Button_No_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Radio_Button_No_Timer.ForeColor = System.Drawing.Color.Blue;
-            this.Radio_Button_No_Timer.Location = new System.Drawing.Point(211, 3);
+            this.Radio_Button_No_Timer.Location = new System.Drawing.Point(193, 2);
             this.Radio_Button_No_Timer.Name = "Radio_Button_No_Timer";
-            this.Radio_Button_No_Timer.Size = new System.Drawing.Size(85, 18);
+            this.Radio_Button_No_Timer.Size = new System.Drawing.Size(90, 18);
             this.Radio_Button_No_Timer.TabIndex = 97;
             this.Radio_Button_No_Timer.TabStop = true;
-            this.Radio_Button_No_Timer.Tag = "MaxSkidMarks2";
+            this.Radio_Button_No_Timer.Tag = "NoTimer";
             this.Radio_Button_No_Timer.Text = "None";
-            this.Radio_Button_No_Timer.UseVisualStyleBackColor = true;
+            this.Radio_Button_No_Timer.UseVisualStyleBackColor = false;
             // 
             // Label_Display_Timer
             // 
             this.Label_Display_Timer.BackColor = System.Drawing.Color.Transparent;
+            this.Label_Display_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label_Display_Timer.ForeColor = System.Drawing.Color.DarkGray;
             this.Label_Display_Timer.Location = new System.Drawing.Point(556, 335);
             this.Label_Display_Timer.Name = "Label_Display_Timer";
-            this.Label_Display_Timer.Size = new System.Drawing.Size(299, 14);
+            this.Label_Display_Timer.Size = new System.Drawing.Size(288, 18);
             this.Label_Display_Timer.TabIndex = 143;
             this.Label_Display_Timer.Text = "Title Window Display Timer:";
             this.Label_Display_Timer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -580,10 +584,11 @@
             // Label_WebClient_Timeout
             // 
             this.Label_WebClient_Timeout.BackColor = System.Drawing.Color.Transparent;
+            this.Label_WebClient_Timeout.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label_WebClient_Timeout.ForeColor = System.Drawing.Color.DarkGray;
             this.Label_WebClient_Timeout.Location = new System.Drawing.Point(556, 381);
             this.Label_WebClient_Timeout.Name = "Label_WebClient_Timeout";
-            this.Label_WebClient_Timeout.Size = new System.Drawing.Size(299, 14);
+            this.Label_WebClient_Timeout.Size = new System.Drawing.Size(288, 14);
             this.Label_WebClient_Timeout.TabIndex = 144;
             this.Label_WebClient_Timeout.Text = "Web Client Timeout:";
             this.Label_WebClient_Timeout.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -592,16 +597,18 @@
             // 
             this.NumericUpDown_WebClient_Timeout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.NumericUpDown_WebClient_Timeout.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.NumericUpDown_WebClient_Timeout.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.NumericUpDown_WebClient_Timeout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.NumericUpDown_WebClient_Timeout.Location = new System.Drawing.Point(556, 403);
+            this.NumericUpDown_WebClient_Timeout.Location = new System.Drawing.Point(556, 399);
             this.NumericUpDown_WebClient_Timeout.Maximum = new decimal(new int[] {
             179,
             0,
             0,
             0});
             this.NumericUpDown_WebClient_Timeout.Name = "NumericUpDown_WebClient_Timeout";
-            this.NumericUpDown_WebClient_Timeout.Size = new System.Drawing.Size(61, 19);
+            this.NumericUpDown_WebClient_Timeout.Size = new System.Drawing.Size(61, 17);
             this.NumericUpDown_WebClient_Timeout.TabIndex = 145;
+            this.NumericUpDown_WebClient_Timeout.Tag = "WebClientTimeNumeric";
             this.NumericUpDown_WebClient_Timeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // Button_CDN_List
@@ -644,7 +651,6 @@
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
-            this.Controls.Add(this.Panel_Form_Screens);
             this.Controls.Add(this.Input_Console);
             this.Controls.Add(this.Button_Console_Submit);
             this.Controls.Add(this.Button_CDN_List);
@@ -689,6 +695,7 @@
             this.Controls.Add(this.Label_Game_Files);
             this.Controls.Add(this.Button_Save);
             this.Controls.Add(this.Button_Exit);
+            this.Controls.Add(this.Panel_Form_Screens);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;

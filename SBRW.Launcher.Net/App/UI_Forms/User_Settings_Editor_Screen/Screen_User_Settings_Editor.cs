@@ -287,7 +287,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
 
                 if (comboBoxPerformanceLevel.SelectedIndex == 5)
                 {
-                    Size = new Size(831, 712);
+                    Size = new Size(525, 695);
                     comboResolutions.Visible = false;
 
                     if (AmountofCenterTimes == 0)
@@ -300,11 +300,11 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                 {
                     if (Product_Version.GetWindowsNumber() >= 10)
                     {
-                        Size = new Size(292, 726);
+                        Size = new Size(271, 695);
                     }
                     else
                     {
-                        Size = new Size(282, 712);
+                        Size = new Size(262, 693);
                     }
 
 
