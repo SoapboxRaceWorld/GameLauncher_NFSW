@@ -30,6 +30,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -1211,42 +1212,66 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         }
         private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
         {
-            Button_Save.Image = Image_Button.Green_Hover;
+            if (Button_Save.Image != Image_Button.Green_Hover)
+            {
+                Button_Save.Image = Image_Button.Green_Hover;
+            }
         }
 
         private void Greenbutton_MouseLeave(object sender, EventArgs e)
         {
-            Button_Save.Image = Image_Button.Green;
+            if (Button_Save.Image != Image_Button.Green)
+            {
+                Button_Save.Image = Image_Button.Green;
+            }
         }
 
         private void Greenbutton_hover_MouseUp(object sender, EventArgs e)
         {
-            Button_Save.Image = Image_Button.Green_Hover;
+            if (Button_Save.Image != Image_Button.Green_Hover)
+            {
+                Button_Save.Image = Image_Button.Green_Hover;
+            }
         }
 
         private void Greenbutton_click_MouseDown(object sender, EventArgs e)
         {
-            Button_Save.Image = Image_Button.Green_Click;
+            if (Button_Save.Image != Image_Button.Green_Click)
+            {
+                Button_Save.Image = Image_Button.Green_Click;
+            }
         }
 
         private void Graybutton_click_MouseDown(object sender, EventArgs e)
         {
-            Button_Exit.Image = Image_Button.Green_Click;
+            if (Button_Exit.Image != Image_Button.Grey_Click)
+            {
+                Button_Exit.Image = Image_Button.Grey_Click;
+            }
         }
 
         private void Graybutton_hover_MouseEnter(object sender, EventArgs e)
         {
-            Button_Exit.Image = Image_Button.Green_Hover;
+            if (Button_Exit.Image != Image_Button.Grey_Hover)
+            {
+                Button_Exit.Image = Image_Button.Grey_Hover;
+            }
         }
 
         private void Graybutton_MouseLeave(object sender, EventArgs e)
         {
-            Button_Exit.Image = Image_Button.Grey;
+            if (Button_Exit.Image != Image_Button.Grey)
+            {
+                Button_Exit.Image = Image_Button.Grey;
+            }
         }
 
         private void Graybutton_hover_MouseUp(object sender, EventArgs e)
         {
-            Button_Exit.Image = Image_Button.Grey_Hover;
+            if (Button_Exit.Image != Image_Button.Grey_Hover)
+            {
+                Button_Exit.Image = Image_Button.Grey_Hover;
+            }
         }
         #endregion
         /// <summary>
@@ -1259,6 +1284,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             /* Set Window Name              /
             /*******************************/
 
+            Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
             Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
 
             /*******************************/

@@ -61,6 +61,7 @@ using System.Net.Cache;
 using SBRW.Launcher.Core.Extension.Numbers_;
 using SBRW.Launcher.Core.Extension.Api_;
 using SBRW.Launcher.App.UI_Forms.Register_Screen;
+using System.Reflection;
 
 namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 {
@@ -180,28 +181,43 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private void Password_TextChanged(object sender, EventArgs e)
         {
-            Picture_Input_Email.Image = Image_Other.Text_Border_Email;
-            Picture_Input_Password.Image = Image_Other.Text_Border_Password;
+            if (Picture_Input_Password.Image != Image_Other.Text_Border_Password)
+            {
+                Picture_Input_Email.Image = Image_Other.Text_Border_Email;
+                Picture_Input_Password.Image = Image_Other.Text_Border_Password;
+            }
         }
 
         private void Graybutton_click_MouseDown(object sender, EventArgs e)
         {
-            Button_Logout.BackgroundImage = Image_Button.Grey_Click;
+            if (Button_Logout.BackgroundImage != Image_Button.Grey_Click)
+            {
+                Button_Logout.BackgroundImage = Image_Button.Grey_Click;
+            }
         }
 
         private void Graybutton_hover_MouseEnter(object sender, EventArgs e)
         {
-            Button_Logout.BackgroundImage = Image_Button.Grey_Hover;
+            if (Button_Logout.BackgroundImage != Image_Button.Grey_Hover)
+            {
+                Button_Logout.BackgroundImage = Image_Button.Grey_Hover;
+            }
         }
 
         private void Graybutton_MouseLeave(object sender, EventArgs e)
         {
-            Button_Logout.BackgroundImage = Image_Button.Grey;
+            if (Button_Logout.BackgroundImage != Image_Button.Grey)
+            {
+                Button_Logout.BackgroundImage = Image_Button.Grey;
+            }
         }
 
         private void Graybutton_hover_MouseUp(object sender, EventArgs e)
         {
-            Button_Logout.BackgroundImage = Image_Button.Grey_Hover;
+            if (Button_Logout.BackgroundImage != Image_Button.Grey_Hover)
+            {
+                Button_Logout.BackgroundImage = Image_Button.Grey_Hover;
+            }
         }
 
         private void LoginEnter(object sender, KeyEventArgs e)
@@ -286,13 +302,22 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
 
                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Input_Email.Text).ToUpper();
-                Picture_Information_Window.Image = Image_Other.Information_Window_Success;
+                if (Picture_Information_Window.Image != Image_Other.Information_Window_Success)
+                {
+                    Picture_Information_Window.Image = Image_Other.Information_Window_Success;
+                }
 
-                Button_Play_OR_Update.BackgroundImage = Image_Button.Play;
+                if (Picture_Information_Window.Image != Image_Other.Information_Window_Success)
+                {
+                    Picture_Information_Window.Image = Image_Other.Information_Window_Success;
+                }
                 Button_Play_OR_Update.ForeColor = Color_Text.L_Five;
                 Button_Play_OR_Update.Visible = hideElements;
 
-                Button_Logout.BackgroundImage = Image_Button.Grey;
+                if (Button_Logout.BackgroundImage != Image_Button.Grey)
+                {
+                    Button_Logout.BackgroundImage = Image_Button.Grey;
+                }
                 Button_Logout.ForeColor = Color_Text.L_Five;
             }
 
@@ -321,10 +346,22 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             /* Input Strokes */
             Picture_Input_Email.Visible = hideElements;
-            Picture_Input_Email.Image = Image_Other.Text_Border_Email;
             Picture_Input_Password.Visible = hideElements;
-            Picture_Input_Password.Image = Image_Other.Text_Border_Password;
-            Picture_Information_Window.Image = Image_Other.Information_Window;
+
+            if (Picture_Input_Email.Image != Image_Other.Text_Border_Email)
+            {
+                Picture_Input_Email.Image = Image_Other.Text_Border_Email;
+            }
+
+            if (Picture_Input_Password.Image != Image_Other.Text_Border_Password)
+            {
+                Picture_Input_Password.Image = Image_Other.Text_Border_Password;
+            }
+
+            if (Picture_Information_Window.Image != Image_Other.Information_Window)
+            {
+                Picture_Information_Window.Image = Image_Other.Information_Window;
+            }
         }
 
         private void LoginButton_Click(object? sender, EventArgs? e)
@@ -474,9 +511,18 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             else
             {
                 /* Main Screen Login */
-                Picture_Input_Email.Image = Image_Other.Text_Border_Email_Error;
-                Picture_Input_Password.Image = Image_Other.Text_Border_Password_Error;
-                Picture_Information_Window.Image = Image_Other.Information_Window_Error;
+                if (Picture_Input_Email.Image != Image_Other.Text_Border_Email_Error)
+                {
+                    Picture_Input_Email.Image = Image_Other.Text_Border_Email_Error;
+                }
+                if (Picture_Input_Password.Image != Image_Other.Text_Border_Password_Error)
+                {
+                    Picture_Input_Password.Image = Image_Other.Text_Border_Password_Error;
+                }
+                if (Picture_Information_Window.Image != Image_Other.Information_Window_Error)
+                {
+                    Picture_Information_Window.Image = Image_Other.Information_Window_Error;
+                }
                 Input_Email.Text = "EMAIL IS HIDDEN";
                 MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Input_Email.Text = Email;
@@ -485,30 +531,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private void LoginButton_MouseEnter(object sender, EventArgs e)
         {
-            if (LoginEnabled || Builtinserver)
-            {
-                Button_Login.BackgroundImage = Image_Button.Grey_Hover;
-                Button_Login.ForeColor = Color_Text.L_Five;
-            }
-            else
-            {
-                Button_Login.BackgroundImage = Image_Button.Grey;
-                Button_Login.ForeColor = Color_Text.L_Six;
-            }
+            Button_Login.BackgroundImage = (LoginEnabled || Builtinserver) ? Image_Button.Grey_Hover : Image_Button.Grey;
+            Button_Login.ForeColor = (LoginEnabled || Builtinserver) ? Color_Text.L_Five : Color_Text.L_Six;
         }
 
         private void LoginButton_MouseLeave(object sender, EventArgs e)
         {
-            if (LoginEnabled || Builtinserver)
-            {
-                Button_Login.BackgroundImage = Image_Button.Grey;
-                Button_Login.ForeColor = Color_Text.L_Five;
-            }
-            else
-            {
-                Button_Login.BackgroundImage = Image_Button.Grey;
-                Button_Login.ForeColor = Color_Text.L_Six;
-            }
+            Button_Login.BackgroundImage = (LoginEnabled || Builtinserver) ? Image_Button.Grey : Image_Button.Grey;
+            Button_Login.ForeColor = (LoginEnabled || Builtinserver) ? Color_Text.L_Five : Color_Text.L_Six;
         }
 
         private void LogoutButton_Click(object sender, EventArgs e)
@@ -614,7 +644,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 return;
             }
 
-            Button_Play_OR_Update.BackgroundImage = Image_Button.Play_Hover;
+            if (Button_Play_OR_Update.BackgroundImage != Image_Button.Play_Hover)
+            {
+                Button_Play_OR_Update.BackgroundImage = Image_Button.Play_Hover;
+            }
         }
 
         private void PlayButton_MouseDown(object sender, EventArgs e)
@@ -624,7 +657,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 return;
             }
 
-            Button_Play_OR_Update.BackgroundImage = Image_Button.Play_Click;
+            if (Button_Play_OR_Update.BackgroundImage != Image_Button.Play_Click)
+            {
+                Button_Play_OR_Update.BackgroundImage = Image_Button.Play_Click;
+            }
         }
 
         private void PlayButton_MouseEnter(object sender, EventArgs e)
@@ -634,7 +670,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 return;
             }
 
-            Button_Play_OR_Update.BackgroundImage = Image_Button.Play_Hover;
+            if (Button_Play_OR_Update.BackgroundImage != Image_Button.Play_Hover)
+            {
+                Button_Play_OR_Update.BackgroundImage = Image_Button.Play_Hover;
+            }
         }
 
         private void PlayButton_MouseLeave(object sender, EventArgs e)
@@ -644,7 +683,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 return;
             }
 
-            Button_Play_OR_Update.BackgroundImage = Image_Button.Play;
+            if (Button_Play_OR_Update.BackgroundImage != Image_Button.Play)
+            {
+                Button_Play_OR_Update.BackgroundImage = Image_Button.Play;
+            }
         }
 
         private bool DisablePlayButton(bool Return_Value = false)
@@ -664,16 +706,28 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             /* Hides Social Panel */
             Panel_Server_Information.Visible = false;
             /* Home */
-            Picture_Icon_Server_Home.BackgroundImage = Image_Icon.Home_Disabled;
+            if (Picture_Icon_Server_Home.BackgroundImage != Image_Icon.Home_Disabled)
+            {
+                Picture_Icon_Server_Home.BackgroundImage = Image_Icon.Home_Disabled;
+            }
             LinkLabel_Server_Home.Enabled = false;
             /* Discord */
-            Picture_Icon_Server_Discord.BackgroundImage = Image_Icon.Discord_Disabled;
+            if (Picture_Icon_Server_Discord.BackgroundImage != Image_Icon.Discord_Disabled)
+            {
+                Picture_Icon_Server_Discord.BackgroundImage = Image_Icon.Discord_Disabled;
+            }
             LinkLabel_Server_Discord.Enabled = false;
             /* Facebook */
-            Picture_Icon_Server_Facebook.BackgroundImage = Image_Icon.Facebook_Disabled;
+            if (Picture_Icon_Server_Facebook.BackgroundImage != Image_Icon.Facebook_Disabled)
+            {
+                Picture_Icon_Server_Facebook.BackgroundImage = Image_Icon.Facebook_Disabled;
+            }
             LinkLabel_Server_Facebook.Enabled = false;
             /* Twitter */
-            Picture_Icon_Server_Twitter.BackgroundImage = Image_Icon.Twitter_Disabled;
+            if (Picture_Icon_Server_Twitter.BackgroundImage != Image_Icon.Twitter_Disabled)
+            {
+                Picture_Icon_Server_Twitter.BackgroundImage = Image_Icon.Twitter_Disabled;
+            }
             LinkLabel_Server_Twitter.Enabled = false;
             /* Scenery */
             Label_Server_Scenery.Text = "But It's Me!";
@@ -924,7 +978,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Presence_Launcher.Status(0, "Game Closed with Error Code: " + Process_Exit_Code.ToString());
                     Log.Error("GAME CRASH [EXIT CODE]: " + Process_Exit_Code.ToString() + " HEX: (0x" + Process_Exit_Code.ToString("X") + ")" + " REASON: " + Error_Msg);
                     ProgressBar_Preload.Value = 100;
-                    ProgressBar_Preload.ForeColor = Color_Text.S_Error;
+                    if (ProgressBar_Preload.ForeColor != Color_Text.S_Error)
+                    {
+                        ProgressBar_Preload.ForeColor = Color_Text.S_Error;
+                    }
                 }
                 else
                 {
@@ -1182,7 +1239,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 ModNetFileNameInUse = FileName;
 
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                 var Client = new WebClient
                 {
                     Encoding = Encoding.UTF8,
@@ -1192,7 +1250,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
 
                 if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                { 
+                {
                     Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
                 }
                 else
@@ -1312,7 +1370,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
                     Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                    ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                     var ModNetJsonURI = new WebClient
                     {
                         Encoding = Encoding.UTF8,
@@ -1428,7 +1487,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                     Uri URLCall = new Uri(URLs.ModNet + "/launcher-modules/" + ModNetList);
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                                     var newModNetFilesDownload = new WebClient
                                     {
                                         Encoding = Encoding.UTF8,
@@ -1476,7 +1536,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         Uri newModNetUri = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress + "/Modding/GetModInfo");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                        ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                         var ModInfoJson = new WebClient
                         {
                             Encoding = Encoding.UTF8,
@@ -1536,7 +1597,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Uri URLCall_A = new Uri(json2.basePath + "/cars.json");
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                            ServicePointManager.FindServicePoint(URLCall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            ServicePointManager.FindServicePoint(URLCall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                             var CarsJson = new WebClient
                             {
                                 Encoding = Encoding.UTF8,
@@ -1569,7 +1631,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                             Uri URLCall_B = new Uri(json2.basePath + "/events.json");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                            ServicePointManager.FindServicePoint(URLCall_B).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            ServicePointManager.FindServicePoint(URLCall_B).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                             var EventsJson = new WebClient
                             {
                                 Encoding = Encoding.UTF8,
@@ -1629,7 +1692,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             /* Get Server Mod Index */
                             Uri newIndexFile = new Uri(json2.basePath + "/index.json");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                            ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                             var ServerModsList = new WebClient
                             {
                                 Encoding = Encoding.UTF8,
@@ -1866,12 +1930,16 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private void ComboBox_Server_List_SelectedIndexChanged(object sender, EventArgs e)
         {
             GC.Collect();
-            Picture_Input_Email.Image = Image_Other.Text_Border_Email;
-            Picture_Input_Password.Image = Image_Other.Text_Border_Password;
+            if (Picture_Input_Email.Image != Image_Other.Text_Border_Email)
+            {
+                Picture_Input_Email.Image = Image_Other.Text_Border_Email;
+            }
+            if (Picture_Input_Password.Image != Image_Other.Text_Border_Password)
+            {
+                Picture_Input_Password.Image = Image_Other.Text_Border_Password;
+            }
             /* Disable Certain Functions */
-            LoginEnabled = false;
-            ServerEnabled = false;
-            FunctionStatus.AllowRegistration = false;
+            LoginEnabled = ServerEnabled = FunctionStatus.AllowRegistration = false;
             Launcher_Value.Launcher_Select_Server_JSON = null;
             /* Disable Login & Register Button */
             Button_Login.Enabled = Button_Register.Enabled = false;
@@ -1885,7 +1953,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Label_Status_Game_Server.Text = "Launcher Offline:\n - Unknown";
                 Label_Status_Game_Server.ForeColor = Color_Text.L_Three;
                 Label_Status_Game_Server_Data.Text = string.Empty;
-                Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Unknown;
+                if (Picture_Icon_Server.BackgroundImage != Image_Icon.Server_Unknown)
+                {
+                    Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Unknown;
+                }
                 return;
             }
 
@@ -1904,7 +1975,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Label_Status_Game_Server.Text = "Server Status:\n - Pinging";
             Label_Status_Game_Server.ForeColor = Color_Text.L_Two;
             Label_Status_Game_Server_Data.Text = string.Empty;
-            Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Checking;
+            if (Picture_Icon_Server.BackgroundImage != Image_Icon.Server_Checking)
+            {
+                Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Checking;
+            }
 
             Button_Login.ForeColor = Color_Text.L_Six;
             string Banner_Cache_Folder = Path.Combine(Locations.LauncherDataFolder, "Bin", "Server", "Banner", "EyeCatcher");
@@ -1922,7 +1996,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             if (ComboBox_Server_List.GetItemText(ComboBox_Server_List.SelectedItem) == "Offline Built-In Server")
             {
                 Builtinserver = true;
-                Button_Login.BackgroundImage = Image_Button.Grey;
+                if (Button_Login.BackgroundImage != Image_Button.Grey)
+                {
+                    Button_Login.BackgroundImage = Image_Button.Grey;
+                }
                 Button_Login.Text = "Launch".ToUpper();
                 Button_Login.ForeColor = Color_Text.L_Five;
                 Panel_Server_Information.Visible = false;
@@ -1930,7 +2007,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             else
             {
                 Builtinserver = false;
-                Button_Login.BackgroundImage = Image_Button.Grey;
+                if (Button_Login.BackgroundImage != Image_Button.Grey)
+                {
+                    Button_Login.BackgroundImage = Image_Button.Grey;
+                }
                 Button_Login.Text = "Login".ToUpper();
                 Button_Login.ForeColor = Color_Text.L_Six;
                 Panel_Server_Information.Visible = false;
@@ -1938,7 +2018,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             Uri ServerURI = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress + "/GetServerInformation");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-            ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+            ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
             var Client = new WebClient
             {
                 Encoding = Encoding.UTF8,
@@ -1958,7 +2039,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             Client.DownloadStringAsync(ServerURI);
 
-            System.Timers.Timer aTimer = new System.Timers.Timer(10000);
+            System.Timers.Timer aTimer = new System.Timers.Timer(Launcher_Value.Launcher_WebCall_Timeout_Enable ? Launcher_Value.Launcher_WebCall_Timeout() * 1000 : 10000);
             aTimer.Elapsed += (x, y) => { Client.CancelAsync(); try { aTimer.Dispose(); } catch { } };
             aTimer.AutoReset = false;
             aTimer.Enabled = true;
@@ -1973,7 +2054,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 if (e2.Cancelled || e2.Error != null)
                 {
                     Launcher_Value.Launcher_Select_Server_JSON = null;
-                    Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Offline;
+                    if (Picture_Icon_Server.BackgroundImage != Image_Icon.Server_Offline)
+                    {
+                        Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Offline;
+                    }
                     Label_Status_Game_Server.Text = "Server Status:\n - Offline ( OFF )";
                     Label_Status_Game_Server.ForeColor = Color_Text.S_Error;
                     Label_Status_Game_Server_Data.Text = (e2.Error != null) ?
@@ -2073,7 +2157,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                                              (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
                                 catch { ServerDiscordLink = false; }
-                                Picture_Icon_Server_Discord.BackgroundImage = ServerDiscordLink ? Image_Icon.Discord : Image_Icon.Discord_Disabled;
+                                if (Picture_Icon_Server_Discord.BackgroundImage != (ServerDiscordLink ? Image_Icon.Discord : Image_Icon.Discord_Disabled))
+                                {
+                                    Picture_Icon_Server_Discord.BackgroundImage = ServerDiscordLink ? Image_Icon.Discord : Image_Icon.Discord_Disabled;
+                                }
                                 LinkLabel_Server_Discord.Enabled = ServerDiscordLink;
                                 LinkLabel_Server_Discord.Text = ServerDiscordLink ? "Discord Invite" : string.Empty;
                             }
@@ -2089,7 +2176,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                               (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
                                 catch { ServerWebsiteLink = false; }
-                                Picture_Icon_Server_Home.BackgroundImage = ServerWebsiteLink ? Image_Icon.Home : Image_Icon.Home_Disabled;
+                                if (Picture_Icon_Server_Home.BackgroundImage != (ServerWebsiteLink ? Image_Icon.Home : Image_Icon.Home_Disabled))
+                                {
+                                    Picture_Icon_Server_Home.BackgroundImage = ServerWebsiteLink ? Image_Icon.Home : Image_Icon.Home_Disabled;
+                                }
                                 LinkLabel_Server_Home.Enabled = ServerWebsiteLink;
                                 LinkLabel_Server_Home.Text = ServerWebsiteLink ? "Home Page" : string.Empty;
                             }
@@ -2105,7 +2195,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                                          (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
                                 catch { ServerFacebookLink = false; }
-                                Picture_Icon_Server_Facebook.BackgroundImage = ServerFacebookLink ? Image_Icon.Facebook : Image_Icon.Facebook_Disabled;
+                                if (Picture_Icon_Server_Facebook.BackgroundImage != (ServerFacebookLink ? Image_Icon.Facebook : Image_Icon.Facebook_Disabled))
+                                {
+                                    Picture_Icon_Server_Facebook.BackgroundImage = ServerFacebookLink ? Image_Icon.Facebook : Image_Icon.Facebook_Disabled;
+                                }
                                 LinkLabel_Server_Facebook.Enabled = ServerFacebookLink;
                                 LinkLabel_Server_Facebook.Text = ServerFacebookLink ? "Facebook Page" : string.Empty;
                             }
@@ -2116,7 +2209,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
                                 bool ServerTwitterLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Twitter, UriKind.Absolute, out Uri uriResult) &&
                                                          (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-                                Picture_Icon_Server_Twitter.BackgroundImage = ServerTwitterLink ? Image_Icon.Twitter : Image_Icon.Twitter_Disabled;
+                                if (Picture_Icon_Server_Twitter.BackgroundImage != (ServerTwitterLink ? Image_Icon.Twitter : Image_Icon.Twitter_Disabled))
+                                {
+                                    Picture_Icon_Server_Twitter.BackgroundImage = ServerTwitterLink ? Image_Icon.Twitter : Image_Icon.Twitter_Disabled;
+                                }
                                 LinkLabel_Server_Twitter.Enabled = ServerTwitterLink;
                                 LinkLabel_Server_Twitter.Text = ServerTwitterLink ? "Twitter Feed" : string.Empty;
                             }
@@ -2213,7 +2309,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Label_Status_Game_Server.Text = "Server Connection:\n - Unstable";
                             Label_Status_Game_Server.ForeColor = Color_Text.S_Warning;
                             Label_Status_Game_Server_Data.Text = "Recevied Invalid JSON Game Server Info.";
-                            Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Warning;
+                            if (Picture_Icon_Server.BackgroundImage != Image_Icon.Server_Warning)
+                            {
+                                Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Warning;
+                            }
                         }
                         catch { /* Sad Noises */ }
                     }
@@ -2223,7 +2322,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             Label_Status_Game_Server.Text = "Server Status:\n - Online ( ON )";
                             Label_Status_Game_Server.ForeColor = Color_Text.S_Sucess;
-                            Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Online;
+                            if (Picture_Icon_Server.BackgroundImage != Image_Icon.Server_Online)
+                            {
+                                Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Online;
+                            }
                             /* Enable Login & Register Button */
                             LoginEnabled = true;
                             Button_Login.ForeColor = Color_Text.L_Five;
@@ -2327,7 +2429,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                 Uri URICall_A = new Uri(ImageUrl);
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                                ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ? 
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                                 var Client_A = new WebClient
                                 {
                                     Encoding = Encoding.UTF8,
@@ -2375,9 +2478,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         {
                                             /* Load cached banner! */
 #if NETFRAMEWORK
-                                            Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(Banner_Cache_File) ??Image_Other.Server_Banner;
+                                            if (Picture_Server_Banner.Image != (Bitmap_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
+                                            {
+                                                Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
+                                            }
 #elif NET6_0_OR_GREATER && WINDOWS
-                                            Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
+                                            if (Picture_Server_Banner.Image != (Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
+                                            {
+                                                Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
+                                            }
 #endif
                                             GC.Collect();
                                         }
@@ -2406,7 +2515,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                                 Position = 0
                                             };
 
-                                            Picture_Server_Banner.Image = Image.FromStream(ServerRawBanner) ?? Image_Other.Server_Banner; ;
+                                            if (Picture_Server_Banner.Image != (Image.FromStream(ServerRawBanner) ?? Image_Other.Server_Banner))
+                                            {
+                                                Picture_Server_Banner.Image = Image.FromStream(ServerRawBanner) ?? Image_Other.Server_Banner;
+                                            }
 
                                             if (Strings.GetExtension(ImageUrl) == "gif")
                                             {
@@ -2434,13 +2546,19 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     }
                                 };
                             }
-                            else if (File.Exists(Banner_Cache_File) && !Application.OpenForms[this.Name].IsDisposed)
+                            else if (File.Exists(Banner_Cache_File) && !(Application.OpenForms[this.Name].IsDisposed || Application.OpenForms[this.Name].Disposing))
                             {
                                 /* Load cached banner! */
 #if NETFRAMEWORK
-                                Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(Banner_Cache_File) ??Image_Other.Server_Banner;
+                                if (Picture_Server_Banner.Image != (Bitmap_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
+                                {
+                                    Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
+                                }
 #elif NET6_0_OR_GREATER && WINDOWS
-                                Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
+                                if (Picture_Server_Banner.Image != (Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
+                                {
+                                    Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
+                                }
 #endif
                                 GC.Collect();
                             }
@@ -2550,7 +2668,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         Uri URLCall = new Uri(Save_Settings.Live_Data.Launcher_CDN + "/" + speechFile + "/index.xml");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                         var Client = new WebClient
                         {
                             Encoding = Encoding.UTF8,
@@ -2711,8 +2830,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             ProgressBar_Extracting.Value = 100;
             ProgressBar_Extracting.Width = 519;
-            ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Error);
             ProgressBar_Extracting.ProgressColor = Color_Text.S_Error;
+            if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Error))
+            {
+                ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Error);
+            }
 
             Label_Download_Information.Text = ((Error != null) ? Error.Message : "Download Failed. No Reason Provided").ToUpper();
 
@@ -3399,20 +3521,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Input_Password.Text = Save_Account.Live_Data.User_Raw_Password;
 
             Log.Core("LAUNCHER: Checking for password");
-            if (!string.IsNullOrWhiteSpace(Save_Account.Live_Data.User_Raw_Password))
-            {
-                LoginEnabled = true;
-                ServerEnabled = true;
-                Button_Login.BackgroundImage = Image_Button.Grey;
-                Button_Login.ForeColor = Color_Text.L_Five;
-            }
-            else
-            {
-                LoginEnabled = false;
-                ServerEnabled = false;
-                Button_Login.BackgroundImage = Image_Button.Grey;
-                Button_Login.ForeColor = Color_Text.L_Six;
-            }
+            LoginEnabled = ServerEnabled = !string.IsNullOrWhiteSpace(Save_Account.Live_Data.User_Raw_Password);
+            Button_Login.BackgroundImage = Image_Button.Grey;
+            Button_Login.ForeColor = LoginEnabled ? Color_Text.L_Five : Color_Text.L_Six;
 
             if (!string.IsNullOrWhiteSpace(Save_Account.Live_Data.User_Raw_Email) &&
                 (!string.IsNullOrWhiteSpace(Save_Account.Live_Data.User_Hashed_Password) || !string.IsNullOrWhiteSpace(Save_Account.Live_Data.User_Raw_Password)))
@@ -3560,7 +3671,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     if (UnixOS.Detected())
                     {
-                        Picture_Icon_Version.BackgroundImage = Image_Icon.Engine_Good;
+                        if (Picture_Icon_Version.BackgroundImage != Image_Icon.Engine_Good)
+                        {
+                            Picture_Icon_Version.BackgroundImage = Image_Icon.Engine_Good;
+                        }
                         Label_Status_Launcher.ForeColor = Color_Text.S_Sucess;
                         Label_Status_Launcher.Text = "Launcher Status:\n - Linux Build";
                         Label_Status_Launcher_Version.Text = "Version: v" + Application.ProductVersion;
@@ -3604,6 +3718,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             /* Set Window Name              /
             /*******************************/
 
+            Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
             Text = "SBRW Launcher: v" + Application.ProductVersion;
 
             /*******************************/
@@ -3849,7 +3964,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     while (StillCheckingLastServer) { }
                                     Uri URLCall = new Uri(Servers.IPAddress + "/GetServerInformation");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                                     var Client = new WebClient
                                     {
                                         Encoding = Encoding.UTF8,

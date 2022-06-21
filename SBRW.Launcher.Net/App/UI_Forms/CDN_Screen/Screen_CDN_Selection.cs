@@ -7,6 +7,7 @@ using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
 using SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen;
 using SBRW.Launcher.App.UI_Forms.Settings_Screen;
 using SBRW.Launcher.App.UI_Forms.Welcome_Screen;
+using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Api_;
 using SBRW.Launcher.Core.Extra.File_;
 using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
@@ -162,7 +163,8 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                         {
                             Uri StringToUri = new Uri(serverurl);
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                            ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
 #pragma warning restore SYSLIB0014 // Type or member is obsolete
                             CheckMate = new Ping();
                             CheckMate.PingCompleted += (sender3, e3) =>

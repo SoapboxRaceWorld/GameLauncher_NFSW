@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Management.Automation;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
@@ -1737,6 +1738,7 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
             /* Set Window Name              /
             /*******************************/
 
+            Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
             Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
 
             /*******************************/

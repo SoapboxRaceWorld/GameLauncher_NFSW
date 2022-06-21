@@ -81,7 +81,8 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                 try
                 {
                     Uri StringToUri = new Uri(FormattedURL + "/GetServerInformation");
-                    ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                     var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8,
@@ -160,7 +161,8 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                         string ServerID = string.Empty;
                         Uri newModNetUri = new Uri(FormattedURL + "/Modding/GetModInfo");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                        ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                         var Client = new WebClient
                         {
                             Encoding = Encoding.UTF8,
@@ -362,7 +364,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
 
             Shown += (x, y) =>
             {
-                Application.OpenForms["Screen_Custom_Server_Add"].Activate();
+                Application.OpenForms[this.Name].Activate();
                 this.BringToFront();
             };
         }

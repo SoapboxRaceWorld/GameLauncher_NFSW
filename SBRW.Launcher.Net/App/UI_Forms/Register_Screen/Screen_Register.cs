@@ -144,7 +144,8 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                     string[] regex = new Regex(@"([0-9A-Z]{5})([0-9A-Z]{35})").Split(Password.ToUpper());
 
                     Uri URLCall = new Uri("https://api.pwnedpasswords.com/range/" + regex[1]);
-                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                     var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8,
@@ -411,7 +412,10 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             /* Set Window Name              /
             /*******************************/
 
-            Text = "Register - SBRW Launcher: v" + Application.ProductVersion;
+            if (Parent_Screen.Screen_Instance != null)
+            {
+                Parent_Screen.Screen_Instance.Text = "Register - SBRW Launcher: v" + Application.ProductVersion;
+            }
 
             /*******************************/
             /* Set Initial position & Icon  /

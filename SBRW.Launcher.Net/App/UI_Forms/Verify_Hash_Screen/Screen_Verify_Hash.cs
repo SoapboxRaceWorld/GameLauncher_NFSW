@@ -431,7 +431,8 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
 
                         Uri URLCall = new Uri(FinalCDNURL + "/unpacked/checksums.dat");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                         var Client = new WebClient
                         {
                             Encoding = Encoding.UTF8,
