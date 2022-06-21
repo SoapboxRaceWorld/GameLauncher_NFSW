@@ -1210,6 +1210,15 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                     break;
             }
         }
+
+        private void Console_Quick_Send(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                Console_Enter(sender, e);
+            }
+        }
+
         private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
         {
             if (Button_Save.Image != Image_Button.Green_Hover)
@@ -1458,6 +1467,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Button_Exit.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
             Button_Exit.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
 
+            Input_Console.KeyDown += new KeyEventHandler(Console_Quick_Send);
             Button_Console_Submit.Click += new EventHandler(Console_Enter);
             Button_CDN_List.Click += new EventHandler(Button_CDN_Selector_Click);
             Button_Security_Center.Click += new EventHandler(Button_Security_Center_Click);
