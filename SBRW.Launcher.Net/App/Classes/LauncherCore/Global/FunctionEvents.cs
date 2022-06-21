@@ -32,34 +32,6 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
             Screen_Custom_Server.OpenScreen(true);
         }
 
-        public static void RegisterText_LinkClicked(object sender, EventArgs e)
-        {
-            if (FunctionStatus.AllowRegistration)
-            {
-                if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page))
-                {
-                    Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page);
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " +
-                        ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (Launcher_Value.Launcher_Select_Server_Data.Name.ToUpper() == "WORLDUNITED OFFICIAL")
-                {
-                    Process.Start("https://signup.worldunited.gg/" + ((!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Discord_UserID) &&
-                        Launcher_Value.Launcher_Discord_UserID != "0") ? "?discordid=" + Launcher_Value.Launcher_Discord_UserID : string.Empty));
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " +
-                        Launcher_Value.Launcher_Select_Server_Data.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    Screen_Register.OpenScreen();
-                }
-            }
-            else
-            {
-                MessageBox.Show(null, "Server seems to be Offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         public static void DiscordInviteLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (Launcher_Value.Launcher_Select_Server_JSON != null && !string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord))

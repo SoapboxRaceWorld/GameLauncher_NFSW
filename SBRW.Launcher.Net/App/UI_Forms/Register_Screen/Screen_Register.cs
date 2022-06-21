@@ -5,6 +5,7 @@ using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.LauncherCore.Support;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
+using SBRW.Launcher.App.UI_Forms.Main_Screen;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Discord.RPC_;
 using SBRW.Launcher.Core.Extension.Api_;
@@ -26,7 +27,6 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
 {
     public partial class Screen_Register : Form
     {
-        private static bool IsRegisterScreenOpen { get; set; }
         private bool Ticket_Required { get; set; }
 
         private void Button_Register_Click(object sender, EventArgs e)
@@ -38,42 +38,63 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             if (string.IsNullOrWhiteSpace(Input_Email.Text))
             {
                 registerErrors.Add("Please enter your e-mail.");
-                Picture_Input_Email.Image = Image_Other.Text_Border_Email_Error;
+                if (Picture_Input_Email.Image != Image_Other.Text_Border_Email_Error)
+                {
+                    Picture_Input_Email.Image = Image_Other.Text_Border_Email_Error;
+                }
             }
             else if (!Is_Email.Valid(Input_Email.Text))
             {
                 registerErrors.Add("Please enter a valid e-mail address.");
-                Picture_Input_Email.Image = Image_Other.Text_Border_Email_Error;
+                if (Picture_Input_Email.Image != Image_Other.Text_Border_Email_Error)
+                {
+                    Picture_Input_Email.Image = Image_Other.Text_Border_Email_Error;
+                }
             }
 
             if (string.IsNullOrWhiteSpace(Input_Ticket.Text) && Ticket_Required)
             {
                 registerErrors.Add("Please enter your ticket.");
-                Picture_Input_Ticket.Image = Image_Other.Text_Border_Ticket_Error;
+                if (Picture_Input_Ticket.Image != Image_Other.Text_Border_Ticket_Error)
+                {
+                    Picture_Input_Ticket.Image = Image_Other.Text_Border_Ticket_Error;
+                }
             }
 
             if (string.IsNullOrWhiteSpace(Input_Password.Text))
             {
                 registerErrors.Add("Please enter your password.");
-                Picture_Input_Password.Image = Image_Other.Text_Border_Password_Error;
+                if (Picture_Input_Password.Image != Image_Other.Text_Border_Password_Error)
+                {
+                    Picture_Input_Password.Image = Image_Other.Text_Border_Password_Error;
+                }
             }
 
             if (string.IsNullOrWhiteSpace(Input_Password_Confirm.Text))
             {
                 registerErrors.Add("Please confirm your password.");
-                Picture_Input_Password_Confirm.Image = Image_Other.Text_Border_Password_Error;
+                if (Picture_Input_Password_Confirm.Image != Image_Other.Text_Border_Password_Error)
+                {
+                    Picture_Input_Password_Confirm.Image = Image_Other.Text_Border_Password_Error;
+                }
             }
 
             if (Input_Password_Confirm.Text != Input_Password.Text)
             {
                 registerErrors.Add("Passwords don't match.");
-                Picture_Input_Password_Confirm.Image = Image_Other.Text_Border_Password_Error;
+                if (Picture_Input_Password_Confirm.Image != Image_Other.Text_Border_Password_Error)
+                {
+                    Picture_Input_Password_Confirm.Image = Image_Other.Text_Border_Password_Error;
+                }
             }
 
             if (!CheckBox_Rules_Agreement.Checked)
             {
                 registerErrors.Add("You have not agreed to the Terms of Service.");
-                CheckBox_Rules_Agreement.ForeColor = Color_Text.S_Error;
+                if (CheckBox_Rules_Agreement.ForeColor != Color_Text.S_Error)
+                {
+                    CheckBox_Rules_Agreement.ForeColor = Color_Text.S_Error;
+                }
             }
 
             if (registerErrors.Count == 0)
@@ -173,7 +194,12 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                             var splitChecks = hash.Split(':');
                             if (splitChecks[0] == verify)
                             {
-                                var passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1]) +
+                                if (Picture_Information_Window.Image != Image_Other.Information_Window_Warning)
+                                {
+                                    Picture_Information_Window.Image = Image_Other.Information_Window_Warning;
+                                }
+
+                                DialogResult passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1]) +
                                     " times, you should consider using a different one.\n\nAlternatively you can use the unsafe password anyway." +
                                     "\nWould you like to continue to use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                                 if (passwordCheckReply == DialogResult.Yes)
@@ -210,8 +236,13 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
 
                     Authentication.Client("Register", Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Post, Email, Password, Ticket_Required ? Input_Ticket.Text : string.Empty);
 
-                    if (!String.IsNullOrWhiteSpace(Tokens.Success))
+                    if (!string.IsNullOrWhiteSpace(Tokens.Success))
                     {
+                        if (Picture_Information_Window.Image != (!string.IsNullOrWhiteSpace(Tokens.Warning) ? Image_Other.Information_Window_Warning : Image_Other.Information_Window_Success))
+                        {
+                            Picture_Information_Window.Image = !string.IsNullOrWhiteSpace(Tokens.Warning) ? Image_Other.Information_Window_Warning : Image_Other.Information_Window_Success;
+                        }
+                        
                         DialogResult Success = MessageBox.Show(null, Tokens.Success, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                         if (Success == DialogResult.OK)
@@ -221,86 +252,152 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                     }
                     else
                     {
+                        if (Picture_Information_Window.Image != Image_Other.Information_Window_Error)
+                        {
+                            Picture_Information_Window.Image = Image_Other.Information_Window_Error;
+                        }
+
                         MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    var message = "There were some errors while registering. Please fix them:\n\n";
+                    string message = "There were some errors while registering. Please fix them:\n\n";
 
-                    foreach (var error in registerErrors)
+                    foreach (string error in registerErrors)
                     {
                         message += "• " + error + "\n";
+                    }
+
+                    if (Picture_Information_Window.Image != Image_Other.Information_Window_Error)
+                    {
+                        Picture_Information_Window.Image = Image_Other.Information_Window_Error;
                     }
 
                     MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            else if (Picture_Information_Window.Image != Image_Other.Information_Window_Error)
+            {
+                Picture_Information_Window.Image = Image_Other.Information_Window_Error;
+            }
+        }
+
+        private void Default_Picture_Information_Window()
+        {
+            if (Picture_Information_Window.Image != Image_Other.Information_Window)
+            {
+                Picture_Information_Window.Image = Image_Other.Information_Window;
+            }
         }
 
         private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
         {
-            Button_Register.BackgroundImage = Image_Button.Green_Hover;
+            if (Button_Register.BackgroundImage != Image_Button.Green_Hover)
+            {
+                Button_Register.BackgroundImage = Image_Button.Green_Hover;
+            }
         }
 
         private void Greenbutton_MouseLeave(object sender, EventArgs e)
         {
-            Button_Register.BackgroundImage = Image_Button.Green;
+            if (Button_Register.BackgroundImage != Image_Button.Green)
+            {
+                Button_Register.BackgroundImage = Image_Button.Green;
+            }
         }
 
         private void Greenbutton_hover_MouseUp(object sender, EventArgs e)
         {
-            Button_Register.BackgroundImage = Image_Button.Green_Hover;
+            if (Button_Register.BackgroundImage != Image_Button.Green_Hover)
+            {
+                Button_Register.BackgroundImage = Image_Button.Green_Hover;
+            }
         }
 
         private void Greenbutton_click_MouseDown(object sender, EventArgs e)
         {
-            Button_Register.BackgroundImage = Image_Button.Green_Click;
+            if (Button_Register.BackgroundImage != Image_Button.Green_Click)
+            {
+                Button_Register.BackgroundImage = Image_Button.Green_Click;
+            }
         }
 
         private void CheckBox_Rules_Agreement_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox_Rules_Agreement.ForeColor = Color_Text.L_Five;
+            if (CheckBox_Rules_Agreement.ForeColor != Color_Text.L_Five)
+            {
+                CheckBox_Rules_Agreement.ForeColor = Color_Text.L_Five;
+                Default_Picture_Information_Window();
+            }
         }
 
         private void Input_Email_TextChanged(object sender, EventArgs e)
         {
-            Picture_Input_Email.Image = Image_Other.Text_Border_Email;
+            if (Picture_Input_Email.Image != Image_Other.Text_Border_Email)
+            {
+                Picture_Input_Email.Image = Image_Other.Text_Border_Email;
+                Default_Picture_Information_Window();
+            }
         }
 
         private void Input_Ticket_TextChanged(object sender, EventArgs e)
         {
-            Picture_Input_Ticket.Image = Image_Other.Text_Border_Ticket;
+            if (Picture_Input_Ticket.Image != Image_Other.Text_Border_Ticket)
+            {
+                Picture_Input_Ticket.Image = Image_Other.Text_Border_Ticket;
+                Default_Picture_Information_Window();
+            }
         }
 
         private void Input_Password_Confirm_TextChanged(object sender, EventArgs e)
         {
-            Picture_Input_Password_Confirm.Image = Image_Other.Text_Border_Password;
+            if (Picture_Input_Password_Confirm.Image != Image_Other.Text_Border_Password)
+            {
+                Picture_Input_Password_Confirm.Image = Image_Other.Text_Border_Password;
+                Default_Picture_Information_Window();
+            }
         }
 
         private void Input_Password_TextChanged(object sender, EventArgs e)
         {
-            Picture_Input_Password.Image = Image_Other.Text_Border_Password;
+            if (Picture_Input_Password.Image != Image_Other.Text_Border_Password)
+            {
+                Picture_Input_Password.Image = Image_Other.Text_Border_Password;
+                Default_Picture_Information_Window();
+            }
         }
 
         private void Graybutton_click_MouseDown(object sender, EventArgs e)
         {
-            Button_Cancel.BackgroundImage = Image_Button.Grey_Click;
+            if (Button_Cancel.BackgroundImage != Image_Button.Grey_Click)
+            {
+                Button_Cancel.BackgroundImage = Image_Button.Grey_Click;
+            }
         }
 
         private void Graybutton_hover_MouseEnter(object sender, EventArgs e)
         {
-            Button_Cancel.BackgroundImage = Image_Button.Grey_Hover;
+            if (Button_Cancel.BackgroundImage != Image_Button.Grey_Hover)
+            {
+                Button_Cancel.BackgroundImage = Image_Button.Grey_Hover;
+            }
         }
 
         private void Graybutton_MouseLeave(object sender, EventArgs e)
         {
-            Button_Cancel.BackgroundImage = Image_Button.Grey;
+            if (Button_Cancel.BackgroundImage != Image_Button.Grey)
+            {
+                Button_Cancel.BackgroundImage = Image_Button.Grey;
+            }
         }
 
         private void Graybutton_hover_MouseUp(object sender, EventArgs e)
         {
-            Button_Cancel.BackgroundImage = Image_Button.Grey_Hover;
+            if (Button_Cancel.BackgroundImage != Image_Button.Grey_Hover)
+            {
+                Button_Cancel.BackgroundImage = Image_Button.Grey_Hover;
+            }
         }
 
         private void Button_Cancel_Click(object sender, EventArgs e)
@@ -349,6 +446,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             TransparencyKey = Color_Screen.BG_Registration;
 
             Label_Information_Window.ForeColor = Color_Text.L_Five;
+            Picture_Information_Window.Image = Image_Other.Information_Window;
 
             Input_Email.BackColor = Color_Winform_Other.Input;
             Input_Email.ForeColor = Color_Text.L_Five;
@@ -407,33 +505,18 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             Picture_Input_Ticket.Visible = Ticket_Required;
         }
 
-        public static void OpenScreen()
-        {
-            if (IsRegisterScreenOpen || Application.OpenForms["Screen_Register"] != null)
-            {
-                if (Application.OpenForms["Screen_Register"] != null) { Application.OpenForms["Screen_Register"].Activate(); }
-            }
-            else
-            {
-                try { new Screen_Register().ShowDialog(); }
-                catch (Exception Error)
-                {
-                    string ErrorMessage = "Register Screen Encountered an Error";
-                    LogToFileAddons.OpenLog("Register Screen", ErrorMessage, Error, "Exclamation", false);
-                }
-            }
-        }
-
         public Screen_Register()
         {
-            IsRegisterScreenOpen = true;
             InitializeComponent();
             SetVisuals();
             Presence_Launcher.Status(21, ServerListUpdater.ServerName("Register"));
             this.Closing += (x, y) =>
             {
                 Presence_Launcher.Status(4);
-                IsRegisterScreenOpen = false;
+                if (Screen_Main.Screen_Instance != null)
+                {
+                    Screen_Main.Clear_Hide_Screen_Form_Panel(true);
+                }
                 GC.Collect();
             };
         }

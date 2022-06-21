@@ -544,12 +544,9 @@ namespace SBRW.Launcher.App.UI_Forms
 
                                         LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Renaming Servers File");
                                     }
-                                    else if (!UnixOS.Detected())
+                                    else if (!UnixOS.Detected() && File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)))
                                     {
-                                        if (File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)))
-                                        {
-                                            File.Move(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON), Locations.LauncherCustomServers);
-                                        }
+                                        File.Move(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON), Locations.LauncherCustomServers);
                                     }
                                     else if (!File.Exists(Locations.LauncherCustomServers))
                                     {

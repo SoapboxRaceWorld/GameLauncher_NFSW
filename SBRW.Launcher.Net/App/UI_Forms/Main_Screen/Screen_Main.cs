@@ -60,13 +60,13 @@ using System.Xml;
 using System.Net.Cache;
 using SBRW.Launcher.Core.Extension.Numbers_;
 using SBRW.Launcher.Core.Extension.Api_;
+using SBRW.Launcher.App.UI_Forms.Register_Screen;
 
 namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 {
     public partial class Screen_Main : Form
     {
         public static Screen_Main? Screen_Instance { get; set; }
-        public static Panel? Screen_Panel_Forms { get; set; }
         private bool LoginEnabled { get; set; }
         private bool ServerEnabled { get; set; }
         private bool Builtinserver { get; set; }
@@ -523,6 +523,47 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             UserId = string.Empty;
             LoginToken = string.Empty;
+        }
+
+        /* Register PAGE LAYOUT */
+        public void Button_Register_Click(object sender, EventArgs e)
+        {
+            if (FunctionStatus.AllowRegistration)
+            {
+                if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page))
+                {
+                    Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page);
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on " +
+                        ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if (Launcher_Value.Launcher_Select_Server_Data.Name.ToUpper() == "WORLDUNITED OFFICIAL")
+                {
+                    Process.Start("https://signup.worldunited.gg/" + ((!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Discord_UserID) &&
+                        Launcher_Value.Launcher_Discord_UserID != "0") ? "?discordid=" + Launcher_Value.Launcher_Discord_UserID : string.Empty));
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on " +
+                        Launcher_Value.Launcher_Select_Server_Data.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    try
+                    {
+                        Screen_Register Custom_Instance_Settings = new Screen_Register() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
+                        Panel_Register_Screen.Visible = true;
+                        Panel_Register_Screen.Controls.Add(Custom_Instance_Settings);
+                        Custom_Instance_Settings.Show();
+                        Text = "Register - SBRW Launcher: v" + Application.ProductVersion;
+                    }
+                    catch (Exception Error)
+                    {
+                        string ErrorMessage = "Register Screen Encountered an Error";
+                        LogToFileAddons.OpenLog("SETTINGS Register", ErrorMessage, Error, "Exclamation", false);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show(null, "Server seems to be Offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /* SETTINGS PAGE LAYOUT */
@@ -3760,7 +3801,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Button_Register.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
             Button_Register.MouseUp += new MouseEventHandler(Greenbutton_hover_MouseUp);
             Button_Register.MouseDown += new MouseEventHandler(Greenbutton_click_MouseDown);
-            Button_Register.Click += new EventHandler(FunctionEvents.RegisterText_LinkClicked);
+            Button_Register.Click += new EventHandler(Button_Register_Click);
 
             Load += new EventHandler(MainScreen_Load);
             
@@ -3783,7 +3824,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Closing += (x, y) =>
             {
                 Screen_Instance = null;
-                Screen_Panel_Forms = null;
             };
 
             Shown += (x, y) =>
@@ -3892,12 +3932,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         }
 #endregion
 
-        public static void Clear_Hide_Screen_Form_Panel()
+        public static void Clear_Hide_Screen_Form_Panel(bool From_Registration = false)
         {
-            if (Screen_Panel_Forms != null)
+            if (Screen_Instance != null)
             {
-                Screen_Panel_Forms.Controls.Clear();
-                Screen_Panel_Forms.Visible = false;
+                if (Screen_Instance.Panel_Form_Screens.Visible)
+                {
+                    Screen_Instance.Panel_Form_Screens.Controls.Clear();
+                    Screen_Instance.Panel_Form_Screens.Visible = false;
+                }
+                else if (Screen_Instance.Panel_Register_Screen.Visible)
+                {
+                    Screen_Instance.Panel_Register_Screen.Controls.Clear();
+                    Screen_Instance.Panel_Register_Screen.Visible = false;
+                }
             }
 
             if (Parent_Screen.Screen_Instance != null)
@@ -3911,7 +3959,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             InitializeComponent();
             Set_Visuals();
             Screen_Instance = this;
-            Screen_Panel_Forms = Panel_Form_Screens;
         }
     }
 }
