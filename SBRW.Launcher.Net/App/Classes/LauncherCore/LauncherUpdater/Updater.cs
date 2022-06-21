@@ -212,7 +212,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
             }
         }
 
-        private static bool UpdateStatusResult()
+        public static bool UpdateStatusResult(bool Disable_Startup_Functions = false)
         {
             bool StatusUpdate = false;
             if (!string.IsNullOrWhiteSpace(LatestLauncherBuild))
@@ -221,11 +221,17 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
 
                 if (Revisions < 0)
                 {
-                    LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER POPUP", "Checking if Popup is Required");
-
-                    if (Save_Settings.Live_Data.Update_Version_Skip != LatestLauncherBuild)
+                    if (!Disable_Startup_Functions)
                     {
-                        UpdatePopupStoppedSplashScreen = true;
+                        LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER POPUP", "Checking if Popup is Required");
+                    }
+
+                    if (Save_Settings.Live_Data.Update_Version_Skip != LatestLauncherBuild || Disable_Startup_Functions)
+                    {
+                        if (!Disable_Startup_Functions)
+                        {
+                            UpdatePopupStoppedSplashScreen = true;
+                        }
 
                         DialogResult UserResult = new Screen_Update_Popup().ShowDialog();
 
@@ -250,27 +256,25 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                             SkipAvailableUpgrade = true;
                         }
                     }
-                    else
+                    else if (!Disable_Startup_Functions)
                     {
                         LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER POPUP", "User Saved Skip Version Detected");
                     }
                 }
-                else
+                else if (!Disable_Startup_Functions)
                 {
                     LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER POPUP", "Update to Date");
                 }
             }
-            else
+            else if (!Disable_Startup_Functions)
             {
                 LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER POPUP", "Unable to run Update Popup (Null String)");
             }
 
-            if (!string.IsNullOrWhiteSpace(VersionJSON))
+            if (!Disable_Startup_Functions)
             {
-                VersionJSON = string.Empty;
+                FunctionStatus.LoadingComplete = true;
             }
-
-            FunctionStatus.LoadingComplete = true;
 
             return StatusUpdate;
         }

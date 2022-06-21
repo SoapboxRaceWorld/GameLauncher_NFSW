@@ -555,6 +555,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             LoginToken = string.Empty;
         }
 
+        private void Update_Popup_Click(object sender, EventArgs e)
+        {
+            if (LauncherUpdateCheck.UpgradeAvailable)
+            {
+                LauncherUpdateCheck.UpdateStatusResult(true);
+            }
+        }
+
         /* Register PAGE LAYOUT */
         public void Button_Register_Click(object sender, EventArgs e)
         {
@@ -3837,6 +3845,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             /********************************/
             /* Events                        /
             /********************************/
+
+            Label_Status_Launcher.Click += new EventHandler(Update_Popup_Click);
+            Label_Status_Launcher_Version.Click += new EventHandler(Update_Popup_Click);
 
             LinkLabel_Server_Twitter.LinkClicked += new LinkLabelLinkClickedEventHandler(FunctionEvents.TwitterAccountLink_LinkClicked);
             LinkLabel_Server_Facebook.LinkClicked += new LinkLabelLinkClickedEventHandler(FunctionEvents.FacebookGroupLink_LinkClicked);

@@ -1,4 +1,5 @@
-﻿using SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater;
+﻿using SBRW.Launcher.App.Classes.InsiderKit;
+using SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater;
 using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.LauncherCore.Visuals;
@@ -6,6 +7,7 @@ using SBRW.Launcher.App.UI_Forms.Custom_Server_Screen;
 using SBRW.Launcher.App.UI_Forms.Register_Screen;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Validation_;
+using SBRW.Launcher.Core.Extra.File_;
 using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Theme;
 using System;
@@ -220,51 +222,87 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
         {
             try
             {
+                Live_Commands = Live_Commands.ToLower();
                 switch (Live_Commands)
                 {
                     case "what if...":
+                    case "what if":
                         Process.Start("https://www.youtube.com/watch?v=OaWYwk7dysc");
                         break;
-                    case "Don't Look!":
+                    case "don't look!":
+                    case "dont look":
                         Process.Start("https://www.youtube.com/watch?v=nwqtdwcqrBE");
                         break;
-                    case "Behind the Scenes":
+                    case "behind the scenes":
                         Process.Start("https://cdn.discordapp.com/attachments/620401560954077214/987989783022272562/unknown.png");
                         break;
-                    case "Ezekiel":
-                    case "Crash the Server":
+                    case "ezekiel":
+                    case "crash the server":
                         Process.Start("https://www.youtube.com/watch?v=T-AF81iBCi0");
                         break;
-                    case "Ezekiel Extended Mix":
-                    case "Crash the Server Extended Mix":
+                    case "ezekiel extended mix":
+                    case "crash the server extended mix":
                         Process.Start("https://www.youtube.com/watch?v=sReIQTvS1kM");
                         break;
-                    case "Obsolete":
+                    case "obsolete":
                         if (LauncherUpdateCheck.UpgradeAvailable)
                         {
                             Process.Start("https://youtu.be/LutDfASARmE");
                         }
                         break;
-                    case "A Song Long Ago":
+                    case "a song long ago":
                         Process.Start("https://youtu.be/zo_C-dk6Xh4");
                         break;
-                    case "Keygen":
-                    case "Keygen 2013":
+                    case "keygen":
+                    case "keygen 2013":
                         Process.Start("https://youtu.be/vCMzIE9p07Y");
                         break;
-                    case "Who am I?":
+                    case "who am i?":
+                    case "who am i":
                         Process.Start("https://www.youtube.com/watch?v=6TmlR27izRo");
                         break;
-                    case "StraightUpHippo":
+                    case "straightuphippo":
                         Process.Start("https://youtu.be/Uc57tO6g--I");
                         break;
-                    case "Seeing What's Next":
-                    case "Insider":
-                    case "Developer":
-                    case "Beta":
+                    case "seeing what's next":
+                    case "seeing whats next":
+                    case "insider":
+                    case "developer":
+                    case "beta":
                         Process.Start("https://youtu.be/F6dVLZIJatk");
                         break;
+                    case "password":
+                    case "my password":
+                        string Text_Display = string.IsNullOrWhiteSpace(Save_Account.Live_Data.User_Raw_Password) ? "No Password Found" : 
+                            "Your Password: " + Save_Account.Live_Data.User_Raw_Password;
+                        MessageBox.Show(null, Text_Display, "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        break;
+                    case "now loading":
+                    case "now loading!!!":
+                        Process.Start("https://www.youtube.com/watch?v=kq3X78ngFAY");
+                        break;
+                    case "update":
+                        if (LauncherUpdateCheck.UpgradeAvailable)
+                        {
+                            LauncherUpdateCheck.UpdateStatusResult(true);
+                        }
+                        break;
+                    case "build":
+                    case "build date":
+                        MessageBox.Show(null, InsiderInfo.BuildNumber(), "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        break;
+                    case "help":
+                        MessageBox.Show(null, "Available Commands" +
+                            "\nMy Password - Displays your raw Password" +
+                            "\nUpdate - Triggers the Update popup, if an Update is available" +
+                            "\nBuild Date - Displays Compiled Date"
+                            , "SBRW Launcher Commands", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        break;
                     default:
+                        if (!string.IsNullOrWhiteSpace(Live_Commands))
+                        {
+                            MessageBox.Show(null, "Command not Found", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
                         break;
                 }
             }
