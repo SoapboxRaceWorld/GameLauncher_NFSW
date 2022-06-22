@@ -125,6 +125,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("SplashScreenBG")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\SplashScreen\\" + ThemeFile.Key_Read("SplashScreenBG")))
+                        {
+                            Image_Background.Splash = new Bitmap(ThemeFolder + "\\SplashScreen\\" + ThemeFile.Key_Read("SplashScreenBG"));
+                        }
+                    }
+
                     /* MainScreen Icons */
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("UpdateErrorIcon")))
