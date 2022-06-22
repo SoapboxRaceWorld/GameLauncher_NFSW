@@ -623,19 +623,27 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Visuals
 
                     /* ProgressBar and Outline */
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarOutline")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarCheckingOutline")))
                     {
-                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarOutline")))
+                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarCheckingOutline")))
                         {
-                            Image_ProgressBar.Outline = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarOutline"));
+                            Image_ProgressBar.Checking_Outline = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarCheckingOutline"));
                         }
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarSuccess")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarChecking")))
                     {
-                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarSuccess")))
+                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarChecking")))
                         {
-                            Image_ProgressBar.Success = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarSuccess"));
+                            Image_ProgressBar.Checking = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarChecking"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarPreloadOutline")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarPreloadOutline")))
+                        {
+                            Image_ProgressBar.Preload_Outline = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarPreloadOutline"));
                         }
                     }
 
@@ -647,6 +655,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarWarningOutline")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarWarningOutline")))
+                        {
+                            Image_ProgressBar.Warning_Outline = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarWarningOutline"));
+                        }
+                    }
+
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarWarning")))
                     {
                         if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarWarning")))
@@ -655,11 +671,36 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarErrorOutline")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarErrorOutline")))
+                        {
+                            Image_ProgressBar.Error_Outline = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarErrorOutline"));
+                        }
+                    }
+
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarError")))
                     {
                         if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarError")))
                         {
                             Image_ProgressBar.Error = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarError"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarCompleteOutline")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarCompleteOutline")))
+                        {
+                            Image_ProgressBar.Complete_Outline = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarCompleteOutline"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarComplete")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarComplete")))
+                        {
+                            Image_ProgressBar.Complete = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarComplete"));
                         }
                     }
 

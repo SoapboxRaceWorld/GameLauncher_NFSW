@@ -31,8 +31,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Drawing.Drawing2D.Blend blend3 = new System.Drawing.Drawing2D.Blend();
-            System.Drawing.Drawing2D.Blend blend4 = new System.Drawing.Drawing2D.Blend();
+            System.Drawing.Drawing2D.Blend blend1 = new System.Drawing.Drawing2D.Blend();
+            System.Drawing.Drawing2D.Blend blend2 = new System.Drawing.Drawing2D.Blend();
             this.Picture_Logo = new System.Windows.Forms.PictureBox();
             this.Picture_Server_Banner = new System.Windows.Forms.PictureBox();
             this.Picture_Bar_Outline = new System.Windows.Forms.PictureBox();
@@ -585,21 +585,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // ProgressBar_Preload
             // 
             this.ProgressBar_Preload.BackColor = System.Drawing.Color.Transparent;
-            blend3.Factors = new float[] {
+            blend1.Factors = new float[] {
         0.8F,
         0.7F,
         0.6F,
         0.4F,
         0F,
         0F};
-            blend3.Positions = new float[] {
+            blend1.Positions = new float[] {
         0F,
         0.2F,
         0.4F,
         0.6F,
         0.8F,
         1F};
-            this.ProgressBar_Preload.BBlend = blend3;
+            this.ProgressBar_Preload.BBlend = blend1;
             this.ProgressBar_Preload.Border = false;
             this.ProgressBar_Preload.Image = null;
             this.ProgressBar_Preload.Location = new System.Drawing.Point(30, 430);
@@ -611,21 +611,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // ProgressBar_Extracting
             // 
             this.ProgressBar_Extracting.BackColor = System.Drawing.Color.Transparent;
-            blend4.Factors = new float[] {
+            blend2.Factors = new float[] {
         0.8F,
         0.7F,
         0.6F,
         0.4F,
         0F,
         0F};
-            blend4.Positions = new float[] {
+            blend2.Positions = new float[] {
         0F,
         0.2F,
         0.4F,
         0.6F,
         0.8F,
         1F};
-            this.ProgressBar_Extracting.BBlend = blend4;
+            this.ProgressBar_Extracting.BBlend = blend2;
             this.ProgressBar_Extracting.Border = false;
             this.ProgressBar_Extracting.Image = null;
             this.ProgressBar_Extracting.Location = new System.Drawing.Point(30, 430);
