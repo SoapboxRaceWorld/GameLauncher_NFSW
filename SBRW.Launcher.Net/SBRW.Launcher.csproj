@@ -24,6 +24,7 @@
     <Version>$(GlobalVersion)</Version>
     <AssemblyVersion>$(GlobalVersion)</AssemblyVersion>
     <FileVersion>$(GlobalVersion)</FileVersion>
+    <StartupObject>SBRW.Launcher.Net.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
