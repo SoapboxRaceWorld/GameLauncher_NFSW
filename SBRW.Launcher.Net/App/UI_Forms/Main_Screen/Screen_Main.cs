@@ -1098,6 +1098,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 NotifyIcon_Notification.BalloonTipTitle = "Force Restart - " + Launcher_Value.Game_Server_Name;
                                 NotifyIcon_Notification.BalloonTipText = "Game will shutdown by " + (D_Live_Events.Session_End_Time ?? DateTime.Now.AddMinutes(5)).ToString("t") + ". Please restart it manually before the launcher does it.";
                                 NotifyIcon_Notification.ShowBalloonTip(TimeSpan.FromMinutes(2).Seconds);
+                                NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
+                                {
+                                    return;
+                                };
+                                NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
+                                {
+                                    return;
+                                };
                             }
                             catch (Exception Error)
                             {
@@ -1125,7 +1133,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Time_Window.Timer_None = Time_Window.Timer_Dynamic = false;
                     }
 
-                    Live_Action_Timer.Interval = !Proxy_Settings.Running() ? 30000 : 60000;
+                    Live_Action_Timer.Interval = 30000;
                     Live_Action_Timer.Enabled = true;
 
 #if NETFRAMEWORK
