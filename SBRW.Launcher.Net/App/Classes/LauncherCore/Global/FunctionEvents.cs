@@ -298,6 +298,16 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                             "\nBuild Date - Displays Compiled Date"
                             , "SBRW Launcher Commands", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         break;
+                    case "vhs":
+                    case "verify hash skip":
+                        if ((Save_Settings.Live_Data.Game_Integrity != "Good") && (MessageBox.Show(null, "Confirm the Following Changes:" +
+                            "\n\nGame Integrity OLD: " + Save_Settings.Live_Data.Game_Integrity +
+                            "\n\nGame Integrity NEW: Good", "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes))
+                        {
+                            Save_Settings.Live_Data.Game_Integrity = "Good";
+                            Save_Settings.Save();
+                        }
+                        break;
                     default:
                         if (!string.IsNullOrWhiteSpace(Live_Commands))
                         {
