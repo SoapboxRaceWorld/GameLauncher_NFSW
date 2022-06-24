@@ -4,6 +4,7 @@ using SBRW.Launcher.App.Classes.LauncherCore.Lists;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.LauncherCore.Visuals;
 using SBRW.Launcher.App.UI_Forms.Custom_Server_Screen;
+using SBRW.Launcher.App.UI_Forms.Main_Screen;
 using SBRW.Launcher.App.UI_Forms.Register_Screen;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Validation_;
@@ -300,12 +301,23 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                         break;
                     case "vhs":
                     case "verify hash skip":
-                        if ((Save_Settings.Live_Data.Game_Integrity != "Good") && (MessageBox.Show(null, "Confirm the Following Changes:" +
-                            "\n\nGame Integrity OLD: " + Save_Settings.Live_Data.Game_Integrity +
-                            "\n\nGame Integrity NEW: Good", "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes))
+                        if (Save_Settings.Live_Data.Game_Integrity != "Good")
                         {
-                            Save_Settings.Live_Data.Game_Integrity = "Good";
-                            Save_Settings.Save();
+                            string Entry_Text = Prompt.ShowDialog("Enter New Game Integrity Status", "SBRW Launcher");
+                            if (!string.IsNullOrWhiteSpace(Entry_Text))
+                            {
+                                if (MessageBox.Show(null, "Confirm the Following Changes:" +
+                                "\n\nGame Integrity OLD: " + Save_Settings.Live_Data.Game_Integrity +
+                                "\nGame Integrity NEW: Good", "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                                {
+                                    Save_Settings.Live_Data.Game_Integrity = Entry_Text;
+                                    Save_Settings.Save();
+                                    if (Screen_Main.Screen_Instance != null)
+                                    {
+                                        Screen_Main.Screen_Instance.Button_Settings.BackgroundImage = Image_Icon.Gear;
+                                    }
+                                }
+                            }
                         }
                         break;
                     default:

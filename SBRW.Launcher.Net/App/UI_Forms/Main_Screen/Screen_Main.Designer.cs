@@ -796,7 +796,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private PictureBox Picture_Input_Email;
         private PictureBox Picture_Input_Password;
         private PictureBox Button_Close;
-        private PictureBox Button_Settings;
         private PictureBox Button_Security_Center;
         private PictureBox Picture_Icon_Server;
         private PictureBox Picture_Icon_Version;
@@ -842,5 +841,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public NotifyIcon NotifyIcon_Notification;
         public Panel Panel_Form_Screens;
         public Panel Panel_Register_Screen;
+        public PictureBox Button_Settings;
     }
 }

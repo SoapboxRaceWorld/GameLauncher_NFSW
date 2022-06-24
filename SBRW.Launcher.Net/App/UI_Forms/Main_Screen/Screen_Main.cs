@@ -141,17 +141,17 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private void ButtonSettings_MouseDown(object sender, EventArgs e)
         {
-            Button_Settings.BackgroundImage = (Save_Settings.Live_Data.Game_Integrity == "Bad") ? Image_Icon.Gear_Warning_Click : Image_Icon.Gear_Click;
+            Button_Settings.BackgroundImage = (Save_Settings.Live_Data.Game_Integrity == "Good") ? Image_Icon.Gear_Click : Image_Icon.Gear_Warning_Click;
         }
 
         private void ButtonSettings_MouseEnter(object sender, EventArgs e)
         {
-            Button_Settings.BackgroundImage = (Save_Settings.Live_Data.Game_Integrity == "Bad") ? Image_Icon.Gear_Warning_Hover : Image_Icon.Gear_Hover;
+            Button_Settings.BackgroundImage = (Save_Settings.Live_Data.Game_Integrity == "Good") ? Image_Icon.Gear_Hover : Image_Icon.Gear_Warning_Hover;
         }
 
         private void ButtonSettings_MouseLeaveANDMouseUp(object sender, EventArgs e)
         {
-            Button_Settings.BackgroundImage = (Save_Settings.Live_Data.Game_Integrity == "Bad") ? Image_Icon.Gear_Warning : Image_Icon.Gear;
+            Button_Settings.BackgroundImage = (Save_Settings.Live_Data.Game_Integrity == "Good") ? Image_Icon.Gear : Image_Icon.Gear_Warning;
         }
 
         private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
@@ -1479,7 +1479,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
             }
 
-            if (Save_Settings.Live_Data.Game_Integrity != "Good")
+            if (Save_Settings.Live_Data.Game_Integrity != "Good" || Save_Settings.Live_Data.Game_Integrity != "Ignore")
             {
                 Display_Color_Icons(3);
                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
