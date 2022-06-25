@@ -1482,17 +1482,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             if (Save_Settings.Live_Data.Game_Integrity == "Ignore")
             {
                 Display_Color_Icons(3);
-                Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-
-                if (MessageBox.Show("Warning You are Currently Bypassing a GameFiles Integrity Check" +
-                    "\n\nIf this was an error, please run a 'Verify GameFiles' Scan to fix the issue." +
-                    "\n\nWould you like to return to login screen?",
-                    "Game Files Integrity", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                {
-                    Display_Color_Icons();
-                    Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Save_Account.Live_Data.User_Raw_Email).ToUpper();
-                    return;
-                }
             }
             else if (Save_Settings.Live_Data.Game_Integrity != "Good")
             {
