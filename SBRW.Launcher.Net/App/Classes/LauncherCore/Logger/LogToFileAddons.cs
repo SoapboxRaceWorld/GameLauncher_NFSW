@@ -159,16 +159,15 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Logger
                         break;
                 }
 
-                if (Parent_Screen.Screen_TextBox_LiveLog != null && !FunctionStatus.LauncherForceClose)
+                if (Parent_Screen.Screen_Instance != null && !FunctionStatus.LauncherForceClose)
                 {
                     if (Log_Clear)
                     {
-                        Parent_Screen.Screen_TextBox_LiveLog.SafeInvokeAction(() => Parent_Screen.Screen_TextBox_LiveLog.Clear());
+                        Parent_Screen.Screen_Instance.TextBox_Live_Log.Clear();
                     }
                     else
                     {
-                        Parent_Screen.Screen_TextBox_LiveLog.SafeInvokeAction(() => 
-                        Parent_Screen.Screen_TextBox_LiveLog.AppendText(Environment.NewLine + "[" + Log_Type_String + "] " + Log_Full_String));
+                        Parent_Screen.Screen_Instance.TextBox_Live_Log.AppendText(Environment.NewLine + "[" + Log_Type_String + "] " + Log_Full_String);
                     }
                 }
             }

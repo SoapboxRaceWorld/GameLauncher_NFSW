@@ -124,12 +124,11 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel Panel_Form_Screens;
         private System.Windows.Forms.PictureBox PictureBox_Screen_Splash;
         private System.Windows.Forms.GroupBox GroupBox_Launcherlog;
-        private System.Windows.Forms.TextBox TextBox_Live_Log;
         private System.Windows.Forms.Panel Panel_Splash_Screen;
         private System.Windows.Forms.Timer Clock;
+        public System.Windows.Forms.TextBox TextBox_Live_Log;
+        public System.Windows.Forms.Panel Panel_Form_Screens;
     }
 }

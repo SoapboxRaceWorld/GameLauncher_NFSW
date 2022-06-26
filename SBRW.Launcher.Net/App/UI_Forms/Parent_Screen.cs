@@ -45,8 +45,6 @@ namespace SBRW.Launcher.App.UI_Forms
         #region Screen Variables
         private Point Mouse_Down_Point { get; set; } = Point.Empty;
         public static Parent_Screen? Screen_Instance { get; set; }
-        public static Panel? Screen_Panel_Forms { get; set; }
-        public static TextBox? Screen_TextBox_LiveLog { get; set; }
         private static bool Clock_Tick_Theme_Update { get; set; }
         #endregion
 
@@ -408,7 +406,7 @@ namespace SBRW.Launcher.App.UI_Forms
                                     {
                                         string MessageBoxPopupTLS = string.Empty;
 
-                                        if (string.IsNullOrWhiteSpace(Registry_Core.Read("DisabledByDefault", @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client")))
+                                        if (string.IsNullOrWhiteSpace(Registry_Core.Read("DisabledByDefault", @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client")))
                                         {
                                             MessageBoxPopupTLS = Translations.Database("Program_TextBox_W7_TLS_P1") + "\n\n";
 
@@ -943,15 +941,12 @@ namespace SBRW.Launcher.App.UI_Forms
                             Screen_Instance.Text = "SBRW Launcher: v" + Application.ProductVersion;
                             Screen_Main Custom_Instance_Settings = new Screen_Main() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
 
-                            if (Screen_Panel_Forms != null)
-                            {
-                                Screen_Panel_Forms.Visible = true;
-                                Screen_Panel_Forms.Controls.Add(Custom_Instance_Settings);
-                                Custom_Instance_Settings.Show();
-                                Screen_Instance.Size = new Size(891, 529);
-                                Screen_Instance.Position_Window_Set();
-                                LogToFileAddons.Parent_Log_Screen(1, "MAINSCREEN", "Hello World!", true);
-                            }
+                            Screen_Instance.Panel_Form_Screens.Visible = true;
+                            Screen_Instance.Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
+                            Custom_Instance_Settings.Show();
+                            Screen_Instance.Size = new Size(891, 529);
+                            Screen_Instance.Position_Window_Set();
+                            LogToFileAddons.Parent_Log_Screen(1, "MAINSCREEN", "Hello World!", true);
                         }
                     }
                     catch (COMException Error)
@@ -1204,8 +1199,6 @@ namespace SBRW.Launcher.App.UI_Forms
                 }
 
                 Screen_Instance = null;
-                Screen_Panel_Forms = null;
-                Screen_TextBox_LiveLog = null;
 
                 GC.Collect();
             };
@@ -1213,8 +1206,6 @@ namespace SBRW.Launcher.App.UI_Forms
 
             #region Update Variables
             Screen_Instance = this;
-            Screen_Panel_Forms = Panel_Form_Screens;
-            Screen_TextBox_LiveLog = TextBox_Live_Log;
             #endregion
         }
     }
