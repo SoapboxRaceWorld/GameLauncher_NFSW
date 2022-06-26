@@ -45,7 +45,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         public static Screen_Settings Screen_Instance { get; set; }
         public static Panel Screen_Panel_Forms { get; set; }
 #pragma warning restore CS8618
-        private int LastSelectedCdnId { get; set; }
         private int LastSelectedLanguage { get; set; }
 
         private bool RestartRequired { get; set; }

@@ -983,7 +983,7 @@ namespace SBRW.Launcher.App.UI_Forms
                 else if (BackgroundImage != Image_Other.Logo_Splash)
                 {
                     Clock_Tick_Theme_Update = true;
-                    this.SafeInvokeAction(() => PictureBox_Screen_Splash.BackgroundImage = Image_Other.Logo_Splash, this);
+                    PictureBox_Screen_Splash.SafeInvokeAction(() => PictureBox_Screen_Splash.BackgroundImage = Image_Other.Logo_Splash, this);
                 }
                 else
                 {
