@@ -3136,7 +3136,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Label_Download_Information.SafeInvokeAction(() =>
                 Label_Download_Information.Text = "Loading".ToUpper(), this);
 
-                long Game_Folder_Size = File_and_Folder_Extention.GetDirectorySize(new DirectoryInfo(Save_Settings.Live_Data.Game_Path));
+                long Game_Folder_Size = File_and_Folder_Extention.GetDirectorySize_GameFiles(new DirectoryInfo(Save_Settings.Live_Data.Game_Path));
                 /* TODO: Check for other files and Folder Size */
                 if ((Game_Folder_Size == -1) &&
                     (MessageBox.Show(null, "Seems like we are unable to determine the Games Folder Size" +
@@ -3682,6 +3682,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     {
                         if (d.TotalFreeSpace < 8000000000 || !string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
                         {
+                            ProgressBar_Extracting.SafeInvokeAction(() => { Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline; }, this);
+
                             ProgressBar_Extracting.SafeInvokeAction(() =>
                             {
                                 ProgressBar_Extracting.Value = 100;
@@ -3713,6 +3715,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
                         else if (Save_Settings.Live_Data.Launcher_CDN.StartsWith("http://localhost") || Save_Settings.Live_Data.Launcher_CDN.StartsWith("https://localhost"))
                         {
+                            ProgressBar_Extracting.SafeInvokeAction(() => { Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline; }, this);
+
                             ProgressBar_Extracting.SafeInvokeAction(() =>
                             {
                                 ProgressBar_Extracting.Value = 100;
