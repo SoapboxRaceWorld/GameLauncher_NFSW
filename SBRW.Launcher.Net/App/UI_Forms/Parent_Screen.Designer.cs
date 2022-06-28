@@ -54,6 +54,7 @@
             // PictureBox_Screen_Splash
             // 
             this.PictureBox_Screen_Splash.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.PictureBox_Screen_Splash.InitialImage = null;
             this.PictureBox_Screen_Splash.Location = new System.Drawing.Point(25, 29);
             this.PictureBox_Screen_Splash.Name = "PictureBox_Screen_Splash";
             this.PictureBox_Screen_Splash.Size = new System.Drawing.Size(512, 181);
@@ -108,6 +109,7 @@
             this.ClientSize = new System.Drawing.Size(563, 404);
             this.Controls.Add(this.Panel_Form_Screens);
             this.Controls.Add(this.Panel_Splash_Screen);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -124,11 +126,11 @@
         }
 
         #endregion
-        private System.Windows.Forms.PictureBox PictureBox_Screen_Splash;
-        private System.Windows.Forms.GroupBox GroupBox_Launcherlog;
         private System.Windows.Forms.Panel Panel_Splash_Screen;
         private System.Windows.Forms.Timer Clock;
         public System.Windows.Forms.TextBox TextBox_Live_Log;
         public System.Windows.Forms.Panel Panel_Form_Screens;
+        public System.Windows.Forms.PictureBox PictureBox_Screen_Splash;
+        public System.Windows.Forms.GroupBox GroupBox_Launcherlog;
     }
 }
