@@ -61,7 +61,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
     <PackageReference Include="SBRW.Ini.Parser" Version="2.6.5" />
-    <PackageReference Include="SBRW.Launcher.Core" Version="0.0.50" />
+    <PackageReference Include="SBRW.Launcher.Core" Version="0.0.52" />
     <PackageReference Include="SBRW.Launcher.Core.Discord" Version="0.0.26" />
     <PackageReference Include="SBRW.Launcher.Core.Downloader" Version="0.1.3" />
     <PackageReference Include="SBRW.Launcher.Core.Extra" Version="0.0.16" />
@@ -73,6 +73,10 @@
     <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="WindowsFirewallHelper" Version="2.2.0.86" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GameLauncher\GameLauncher.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

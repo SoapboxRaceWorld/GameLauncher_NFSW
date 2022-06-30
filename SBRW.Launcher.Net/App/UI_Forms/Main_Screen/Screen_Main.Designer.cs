@@ -760,6 +760,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.Controls.Add(this.Picture_Server_Banner);
             this.Controls.Add(this.Picture_Logo);
             this.Controls.Add(this.Picture_Information_Window);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.Name = "Screen_Main";

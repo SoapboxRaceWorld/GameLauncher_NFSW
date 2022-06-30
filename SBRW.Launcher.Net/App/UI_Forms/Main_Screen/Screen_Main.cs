@@ -3682,7 +3682,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     {
                         if (d.TotalFreeSpace < 8000000000 || !string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            ProgressBar_Extracting.SafeInvokeAction(() => { Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline; }, this);
+                            Picture_Bar_Outline.SafeInvokeAction(() => { Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline; }, this);
 
                             ProgressBar_Extracting.SafeInvokeAction(() =>
                             {
@@ -3715,7 +3715,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
                         else if (Save_Settings.Live_Data.Launcher_CDN.StartsWith("http://localhost") || Save_Settings.Live_Data.Launcher_CDN.StartsWith("https://localhost"))
                         {
-                            ProgressBar_Extracting.SafeInvokeAction(() => { Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline; }, this);
+                            Picture_Bar_Outline.SafeInvokeAction(() => { Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline; }, this);
 
                             ProgressBar_Extracting.SafeInvokeAction(() =>
                             {
