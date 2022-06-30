@@ -17,6 +17,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>SBRW.ico</ApplicationIcon>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
     <Platforms>AnyCPU;x86</Platforms>
     <Copyright>© Soapbox Race World</Copyright>
     <GlobalVersion>2.1.9.0003</GlobalVersion>
