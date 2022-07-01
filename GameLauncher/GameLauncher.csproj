@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-	<TargetFrameworks>net6.0;net40</TargetFrameworks>
+	<TargetFrameworks>net6.0;net45</TargetFrameworks>
 	<Platforms>AnyCPU;x86</Platforms>
 	<Copyright>© Soapbox Race World</Copyright>
 	<GlobalVersion>2.1.9.0002</GlobalVersion>

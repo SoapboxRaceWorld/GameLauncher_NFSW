@@ -14,6 +14,7 @@ using SBRW.Launcher.Core.Reference.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Theme;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -25,6 +26,7 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
 {
     public partial class Screen_CDN_Selection : Form
     {
+        public static BackgroundWorker? BackgroundWorker_One { get; set; }
         private static bool IsSelectServerOpen { get; set; }
         private static int ID { get; set; } = 1;
         private static readonly Dictionary<int, Json_List_CDN> ServerListBook = new Dictionary<int, Json_List_CDN>();
@@ -105,145 +107,172 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                     }
                 }
 
-                while ((ServersToPing.Count != 0) && IsSelectServerOpen)
+                try
                 {
-                    string QueueContent = ServersToPing.Dequeue();
-                    string[] Queue_Local_Server_Info = QueueContent.Split(new string[] { "_|||_" }, StringSplitOptions.None);
-
-                    int serverid = Convert.ToInt32(Queue_Local_Server_Info[0]) - 1;
-                    string serverurl = Queue_Local_Server_Info[1];
-
-                    try
+                    if (BackgroundWorker_One != null)
                     {
-                        switch (API_Core.StatusCheck(serverurl + "/en/index.xml", 10))
+                        if (BackgroundWorker_One.IsBusy)
                         {
-                            case APIStatus.Online:
-                                ListView_Server_List.Items[serverid].SubItems[2].Text = "Yes";
-                                break;
-                            case APIStatus.Forbidden:
-                            case APIStatus.NotFound:
-                                ListView_Server_List.Items[serverid].SubItems[2].Text = "No";
-                                break;
-                            default:
-                                ListView_Server_List.Items[serverid].SubItems[2].Text = "---";
-                                break;
+                            BackgroundWorker_One.CancelAsync();
                         }
+                    }
 
-                        switch (API_Core.StatusCheck(serverurl + "/unpacked/checksums.dat", 10))
+                    BackgroundWorker_One = new BackgroundWorker
+                    {
+                        WorkerSupportsCancellation = true,
+                        WorkerReportsProgress = true
+                    };
+                    BackgroundWorker_One.DoWork += (Live_Objects, Live_Events) => 
+                    {
+                        if (!Live_Events.Cancel)
                         {
-                            case APIStatus.Online:
-                                ListView_Server_List.Items[serverid].SubItems[3].Text = "Yes";
-                                break;
-                            case APIStatus.Forbidden:
-                            case APIStatus.NotFound:
-                                ListView_Server_List.Items[serverid].SubItems[3].Text = "No";
-                                break;
-                            default:
-                                ListView_Server_List.Items[serverid].SubItems[3].Text = "---";
-                                break;
-                        }
+                            while ((ServersToPing.Count != 0) && IsSelectServerOpen)
+                            {
+                                string QueueContent = ServersToPing.Dequeue();
+                                string[] Queue_Local_Server_Info = QueueContent.Split(new string[] { "_|||_" }, StringSplitOptions.None);
 
-                        switch (API_Core.StatusCheck(serverurl + "/GameFiles.sbrwpack", 10))
-                        {
-                            case APIStatus.Online:
-                                ListView_Server_List.Items[serverid].SubItems[4].Text = "Yes";
-                                break;
-                            case APIStatus.Forbidden:
-                            case APIStatus.NotFound:
-                                ListView_Server_List.Items[serverid].SubItems[4].Text = "No";
-                                break;
-                            default:
-                                ListView_Server_List.Items[serverid].SubItems[4].Text = "---";
-                                break;
-                        }
+                                int serverid = Convert.ToInt32(Queue_Local_Server_Info[0]) - 1;
+                                string serverurl = Queue_Local_Server_Info[1];
 
-                        Ping? CheckMate = null;
+                                try
+                                {
+                                    switch (API_Core.StatusCheck(serverurl + "/en/index.xml", 10))
+                                    {
+                                        case APIStatus.Online:
+                                            ListView_Server_List.Items[serverid].SubItems[2].Text = "Yes";
+                                            break;
+                                        case APIStatus.Forbidden:
+                                        case APIStatus.NotFound:
+                                            ListView_Server_List.Items[serverid].SubItems[2].Text = "No";
+                                            break;
+                                        default:
+                                            ListView_Server_List.Items[serverid].SubItems[2].Text = "---";
+                                            break;
+                                    }
 
-                        try
-                        {
-                            Uri StringToUri = new Uri(serverurl);
+                                    switch (API_Core.StatusCheck(serverurl + "/unpacked/checksums.dat", 10))
+                                    {
+                                        case APIStatus.Online:
+                                            ListView_Server_List.Items[serverid].SubItems[3].Text = "Yes";
+                                            break;
+                                        case APIStatus.Forbidden:
+                                        case APIStatus.NotFound:
+                                            ListView_Server_List.Items[serverid].SubItems[3].Text = "No";
+                                            break;
+                                        default:
+                                            ListView_Server_List.Items[serverid].SubItems[3].Text = "---";
+                                            break;
+                                    }
+
+                                    switch (API_Core.StatusCheck(serverurl + "/GameFiles.sbrwpack", 10))
+                                    {
+                                        case APIStatus.Online:
+                                            ListView_Server_List.Items[serverid].SubItems[4].Text = "Yes";
+                                            break;
+                                        case APIStatus.Forbidden:
+                                        case APIStatus.NotFound:
+                                            ListView_Server_List.Items[serverid].SubItems[4].Text = "No";
+                                            break;
+                                        default:
+                                            ListView_Server_List.Items[serverid].SubItems[4].Text = "---";
+                                            break;
+                                    }
+
+                                    Ping? CheckMate = null;
+
+                                    try
+                                    {
+                                        Uri StringToUri = new Uri(serverurl);
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                            ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
-                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
+                                        ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                                Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
 #pragma warning restore SYSLIB0014 // Type or member is obsolete
-                            CheckMate = new Ping();
-                            CheckMate.PingCompleted += (sender3, e3) =>
-                            {
-                                if (e3.Reply != null)
-                                {
-                                    if (e3.Reply.Status == IPStatus.Success && Queue_Local_Server_Info[2] != "Offline Built-In Server")
+                                        CheckMate = new Ping();
+                                        CheckMate.PingCompleted += (sender3, e3) =>
+                                        {
+                                            if (e3.Reply != null)
+                                            {
+                                                if (e3.Reply.Status == IPStatus.Success && Queue_Local_Server_Info[2] != "Offline Built-In Server")
+                                                {
+                                                    ListView_Server_List.SafeInvokeAction(() =>
+                                                    {
+                                                        ListView_Server_List.Items[serverid].SubItems[5].Text = e3.Reply.RoundtripTime + "ms";
+                                                    }, this);
+                                                }
+                                                else
+                                                {
+                                                    ListView_Server_List.SafeInvokeAction(() =>
+                                                    {
+                                                        ListView_Server_List.Items[serverid].SubItems[5].Text = "!?";
+                                                    }, this);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                ListView_Server_List.SafeInvokeAction(() =>
+                                                {
+                                                    ListView_Server_List.Items[serverid].SubItems[5].Text = "N/A";
+                                                }, this);
+                                            }
+
+                                            if (e3.UserState != null)
+                                            {
+                                                ((AutoResetEvent)e3.UserState).Set();
+                                            }
+                                        };
+                                        CheckMate.SendAsync(StringToUri.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
+                                    }
+                                    catch
                                     {
                                         ListView_Server_List.SafeInvokeAction(() =>
                                         {
-                                            ListView_Server_List.Items[serverid].SubItems[5].Text = e3.Reply.RoundtripTime + "ms";
+                                            ListView_Server_List.Items[serverid].SubItems[5].Text = "?";
                                         }, this);
                                     }
-                                    else
+                                    finally
+                                    {
+                                        if (CheckMate != null)
+                                        {
+                                            CheckMate.Dispose();
+                                        }
+
+                                        GC.Collect();
+                                    }
+                                }
+                                catch
+                                {
+                                    if (IsSelectServerOpen)
                                     {
                                         ListView_Server_List.SafeInvokeAction(() =>
                                         {
-                                            ListView_Server_List.Items[serverid].SubItems[5].Text = "!?";
+                                            ListView_Server_List.Items[serverid].SubItems[1].Text = Queue_Local_Server_Info[2];
+                                            ListView_Server_List.Items[serverid].SubItems[2].Text = "I-E";
+                                            ListView_Server_List.Items[serverid].SubItems[3].Text = "I-E";
+                                            ListView_Server_List.Items[serverid].SubItems[4].Text = "I-E";
+                                            ListView_Server_List.Items[serverid].SubItems[5].Text = "I-E";
                                         }, this);
                                     }
                                 }
-                                else
+                                finally
                                 {
-                                    ListView_Server_List.SafeInvokeAction(() =>
-                                    {
-                                        ListView_Server_List.Items[serverid].SubItems[5].Text = "N/A";
-                                    }, this);
+                                    GC.Collect();
                                 }
 
-                                if (e3.UserState != null)
-                                {
-                                    ((AutoResetEvent)e3.UserState).Set();
-                                }
-                            };
-                            CheckMate.SendAsync(StringToUri.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
-                        }
-                        catch
-                        {
-                            ListView_Server_List.SafeInvokeAction(() =>
-                            {
-                                ListView_Server_List.Items[serverid].SubItems[5].Text = "?";
-                            }, this);
-                        }
-                        finally
-                        {
-                            if (CheckMate != null)
-                            {
-                                CheckMate.Dispose();
+                                Application.DoEvents();
                             }
 
-                            GC.Collect();
-                        }
-                    }
-                    catch
-                    {
-                        if (IsSelectServerOpen)
-                        {
-                            ListView_Server_List.SafeInvokeAction(() =>
+                            Label_Loading.SafeInvokeAction(() =>
                             {
-                                ListView_Server_List.Items[serverid].SubItems[1].Text = Queue_Local_Server_Info[2];
-                                ListView_Server_List.Items[serverid].SubItems[2].Text = "I-E";
-                                ListView_Server_List.Items[serverid].SubItems[3].Text = "I-E";
-                                ListView_Server_List.Items[serverid].SubItems[4].Text = "I-E";
-                                ListView_Server_List.Items[serverid].SubItems[5].Text = "I-E";
+                                Label_Loading.Text = string.Empty;
                             }, this);
                         }
-                    }
-                    finally
-                    {
-                        GC.Collect();
-                    }
-
-                    Application.DoEvents();
+                    };
+                    BackgroundWorker_One.RunWorkerAsync();
                 }
-
-                Label_Loading.SafeInvokeAction(() =>
+                catch (Exception Error)
                 {
-                    Label_Loading.Text = string.Empty;
-                }, this);
+                    LogToFileAddons.OpenLog("New Download Game Files", string.Empty, Error, string.Empty, true);
+                }
             }
         }
 

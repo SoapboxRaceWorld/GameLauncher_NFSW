@@ -224,15 +224,11 @@ namespace SBRW.Launcher.App.UI_Forms
                             Directory.CreateDirectory(Locations.UserSettingsFolder);
                         }
 
-                        File.WriteAllBytes(Locations.UserSettingsXML, ExtractResource.AsByte("GameLauncher.Resources.UserSettings.UserSettings.xml"));
+                        File.WriteAllBytes(Locations.UserSettingsXML, Core.Extra.Conversion_.Embeded_Files.User_Settings_XML_Bytes());
                     }
                     catch (Exception Error)
                     {
                         LogToFileAddons.OpenLog("LAUNCHER XML", string.Empty, Error, string.Empty, true);
-                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                        {
-                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER XML", Error.InnerException.Message, false, true);
-                        }
                     }
                     finally
                     {
@@ -940,7 +936,7 @@ namespace SBRW.Launcher.App.UI_Forms
                         {
                             Screen_Instance.Text = "SBRW Launcher: v" + Application.ProductVersion;
                             Screen_Main Custom_Instance_Settings = new Screen_Main() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
-
+                            Screen_Instance.Panel_Splash_Screen.Visible = false;
                             Screen_Instance.Panel_Form_Screens.Visible = true;
                             Screen_Instance.Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
                             Custom_Instance_Settings.Show();
