@@ -585,16 +585,6 @@ namespace SBRW.Launcher.App.UI_Forms
                                 }
 
                                 LogToFileAddons.Parent_Log_Screen(2, "PROXY", "Checking if Proxy Is Disabled from User Settings! It's value is " + Save_Settings.Live_Data.Launcher_Proxy);
-                                if (Save_Settings.Live_Data.Launcher_Proxy == "0")
-                                {
-                                    LogToFileAddons.Parent_Log_Screen(11, "PROXY", "Starting Proxy (From Startup)");
-                                    Proxy_Server.Instance.Start("Splash Screen [Program.cs]");
-                                    LogToFileAddons.Parent_Log_Screen(3, "PROXY", (Proxy_Settings.Running() ? "Started" : "Failed to Start") );
-                                }
-                                else
-                                {
-                                    LogToFileAddons.Parent_Log_Screen(3, "PROXY", "Disabled");
-                                }
 
                                 LogToFileAddons.Parent_Log_Screen(2, "PRELOAD", "Headers");
                                 Custom_Header.Headers_WHC();

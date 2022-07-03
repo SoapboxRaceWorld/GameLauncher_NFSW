@@ -65,7 +65,7 @@
     <PackageReference Include="SBRW.Launcher.Core" Version="0.0.53" />
     <PackageReference Include="SBRW.Launcher.Core.Discord" Version="0.0.27" />
     <PackageReference Include="SBRW.Launcher.Core.Downloader" Version="0.1.3" />
-    <PackageReference Include="SBRW.Launcher.Core.Extra" Version="0.0.17" />
+    <PackageReference Include="SBRW.Launcher.Core.Extra" Version="0.0.20" />
     <PackageReference Include="SBRW.Launcher.Core.Proxy" Version="0.0.24" />
     <PackageReference Include="SBRW.Launcher.Core.Theme" Version="0.0.15" />
     <PackageReference Include="SBRW.Nancy" Version="2.0.13" />
@@ -76,7 +76,7 @@
     <PackageReference Include="WindowsFirewallHelper" Version="2.2.0.86" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(Configuration)'=='Release'">
     <ProjectReference Include="..\GameLauncher\GameLauncher.csproj" />
   </ItemGroup>
 

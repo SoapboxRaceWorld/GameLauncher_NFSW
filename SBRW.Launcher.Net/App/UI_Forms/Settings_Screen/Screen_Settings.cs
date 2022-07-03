@@ -650,47 +650,17 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             {
                 Save_Settings.Live_Data.Launcher_Proxy = CheckBox_Proxy.Checked ? "1" : "0";
 
-                if (Save_Settings.Live_Data.Launcher_Proxy == "1")
+                if (Save_Settings.Live_Data.Launcher_Proxy == "1" && InformationCache.SelectedServerEnforceProxy)
                 {
-                    if (Proxy_Settings.Running())
-                    {
-                        Proxy_Server.Instance.Stop("Settings Screen");
-                    }
-
-                    if (InformationCache.SelectedServerEnforceProxy)
-                    {
-                        MessageBox.Show(null, ServerListUpdater.ServerName("Settings") + " requires Proxy to be Enabled." +
+                    MessageBox.Show(null, ServerListUpdater.ServerName("Settings") + " requires Proxy to be Enabled." +
                             "\nThe launcher will turn on Proxy, even if you have chosen to Disable it",
                             "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-                else
-                {
-                    if (!Proxy_Settings.Running())
-                    {
-                        Proxy_Server.Instance.Start("Settings Screen");
-                    }
                 }
             }
 
             if (Save_Settings.Live_Data.Launcher_Discord_Presence != (CheckBox_RPC.Checked ? "1" : "0"))
             {
                 Save_Settings.Live_Data.Launcher_Discord_Presence = CheckBox_RPC.Checked ? "1" : "0";
-
-                if (Save_Settings.Live_Data.Launcher_Discord_Presence == "1")
-                {
-                    if (Presence_Launcher.Running())
-                    {
-                        Presence_Launcher.Stop("Close");
-                    }
-                }
-                else
-                {
-                    if (!Presence_Launcher.Running())
-                    {
-                        Presence_Launcher.Start();
-                    }
-                }
             }
 
             if (Save_Settings.Live_Data.Launcher_Insider != (CheckBox_Opt_Insider.Checked ? "1" : "0"))

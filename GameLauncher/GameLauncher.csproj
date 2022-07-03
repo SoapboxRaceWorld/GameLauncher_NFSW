@@ -11,6 +11,8 @@
 	<AssemblyVersion>$(GlobalVersion)</AssemblyVersion>
 	<FileVersion>$(GlobalVersion)</FileVersion>
 	<StartupObject>GameLauncher.Program</StartupObject>
+	<AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+	<ApplicationManifest>app.manifest</ApplicationManifest>
   
 </PropertyGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
