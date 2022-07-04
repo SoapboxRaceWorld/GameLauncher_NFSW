@@ -32,7 +32,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
         public Label text { get; set; }
         public Label description { get; set; }
 
-        public static string CurrentLauncherBuild { get; set; } = Application.ProductVersion;
+        public static string CurrentLauncherBuild { get { return EnableInsiderDeveloper.Allowed() ? InsiderInfo.BuildNumberOnly() : Application.ProductVersion; } }
         public static string LatestLauncherBuild { get; set; } = string.Empty;
         public static bool UpgradeAvailable { get; set; }
         private static bool SkipAvailableUpgrade { get; set; }
@@ -108,7 +108,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
             Presence_Launcher.Status(0, "Checking Latest Launcher Release Information");
             try
             {
-                Uri URLCall = new Uri((EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed()) ?
+                Uri URLCall = new Uri(EnableInsiderDeveloper.Allowed() ? URLs.GitHub_Launcher_Development : EnableInsiderBetaTester.Allowed() ?
                     URLs.GitHub_Launcher_Beta : URLs.GitHub_Launcher_Stable);
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
@@ -164,7 +164,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                 if (Is_Json.Valid(VersionJSON) && VisualsAPIChecker.GitHubAPI)
                 {
 #pragma warning disable CS8602 // Null Safe Check Done Above
-                    LatestLauncherBuild = (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed()) ?
+                    LatestLauncherBuild = EnableInsiderBetaTester.Allowed() ?
                         Insider_Release_Tag(VersionJSON) : JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON).TagName;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                     LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATE", "GitHub Latest Version -> " + LatestLauncherBuild);
@@ -242,7 +242,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                             if (File.Exists(UpdaterPath))
                             {
                                 Process.Start(UpdaterPath, Process.GetCurrentProcess().Id.ToString() + " " +
-                                    (EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed() ? "Preview" : "Stable"));
+                                    (EnableInsiderDeveloper.Allowed() ? "Developer" + " " + CurrentLauncherBuild : EnableInsiderBetaTester.Allowed() ? "Preview" : "Stable"));
                             }
                             else
                             {

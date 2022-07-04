@@ -120,6 +120,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // 
             this.Picture_Server_Banner.BackColor = System.Drawing.Color.Transparent;
             this.Picture_Server_Banner.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Picture_Server_Banner.ErrorImage = null;
+            this.Picture_Server_Banner.InitialImage = null;
             this.Picture_Server_Banner.Location = new System.Drawing.Point(28, 81);
             this.Picture_Server_Banner.Name = "Picture_Server_Banner";
             this.Picture_Server_Banner.Size = new System.Drawing.Size(523, 223);
@@ -131,6 +133,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // 
             this.Picture_Bar_Outline.BackColor = System.Drawing.Color.Transparent;
             this.Picture_Bar_Outline.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Picture_Bar_Outline.ErrorImage = null;
+            this.Picture_Bar_Outline.InitialImage = null;
             this.Picture_Bar_Outline.Location = new System.Drawing.Point(25, 405);
             this.Picture_Bar_Outline.Name = "Picture_Bar_Outline";
             this.Picture_Bar_Outline.Size = new System.Drawing.Size(529, 42);
@@ -725,9 +729,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.Controls.Add(this.Panel_Form_Screens);
             this.Controls.Add(this.Panel_Register_Screen);
             this.Controls.Add(this.Panel_Launch);
-            this.Controls.Add(this.Panel_Server_Information);
-            this.Controls.Add(this.ProgressBar_Preload);
             this.Controls.Add(this.ProgressBar_Extracting);
+            this.Controls.Add(this.ProgressBar_Preload);
             this.Controls.Add(this.Label_Download_Information_Support);
             this.Controls.Add(this.Button_Select_Server);
             this.Controls.Add(this.Label_Status_API_Details);
@@ -748,6 +751,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.Controls.Add(this.Button_Login);
             this.Controls.Add(this.CheckBox_Remember_Us);
             this.Controls.Add(this.LinkLabel_Forgot_Password);
+            this.Controls.Add(this.Panel_Server_Information);
             this.Controls.Add(this.Picture_Icon_API);
             this.Controls.Add(this.Picture_Icon_Version);
             this.Controls.Add(this.Picture_Icon_Server);

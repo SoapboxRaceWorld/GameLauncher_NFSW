@@ -43,7 +43,7 @@
             // Panel_Form_Screens
             // 
             this.Panel_Form_Screens.BackColor = System.Drawing.Color.Transparent;
-            this.Panel_Form_Screens.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Panel_Form_Screens.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Panel_Form_Screens.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Panel_Form_Screens.Location = new System.Drawing.Point(0, 0);
             this.Panel_Form_Screens.Name = "Panel_Form_Screens";
@@ -54,6 +54,7 @@
             // PictureBox_Screen_Splash
             // 
             this.PictureBox_Screen_Splash.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.PictureBox_Screen_Splash.ErrorImage = null;
             this.PictureBox_Screen_Splash.InitialImage = null;
             this.PictureBox_Screen_Splash.Location = new System.Drawing.Point(25, 29);
             this.PictureBox_Screen_Splash.Name = "PictureBox_Screen_Splash";
@@ -91,6 +92,7 @@
             this.Panel_Splash_Screen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.Panel_Splash_Screen.Controls.Add(this.PictureBox_Screen_Splash);
             this.Panel_Splash_Screen.Controls.Add(this.GroupBox_Launcherlog);
+            this.Panel_Splash_Screen.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Panel_Splash_Screen.Location = new System.Drawing.Point(0, 0);
             this.Panel_Splash_Screen.Name = "Panel_Splash_Screen";
             this.Panel_Splash_Screen.Size = new System.Drawing.Size(563, 404);
@@ -126,7 +128,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.Timer Clock;
+        public System.Windows.Forms.Timer Clock;
         public System.Windows.Forms.TextBox TextBox_Live_Log;
         public System.Windows.Forms.Panel Panel_Form_Screens;
         public System.Windows.Forms.PictureBox PictureBox_Screen_Splash;

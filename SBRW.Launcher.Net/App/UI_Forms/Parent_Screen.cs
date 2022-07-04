@@ -926,10 +926,10 @@ namespace SBRW.Launcher.App.UI_Forms
                         {
                             Screen_Instance.Text = "SBRW Launcher: v" + Application.ProductVersion;
                             Screen_Main Custom_Instance_Settings = new Screen_Main() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
-                            Screen_Instance.Panel_Splash_Screen.Visible = false;
                             Screen_Instance.Panel_Form_Screens.Visible = true;
                             Screen_Instance.Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
                             Custom_Instance_Settings.Show();
+                            Screen_Instance.Panel_Splash_Screen.Visible = false;
                             Screen_Instance.Size = new Size(891, 529);
                             Screen_Instance.Position_Window_Set();
                             LogToFileAddons.Parent_Log_Screen(1, "MAINSCREEN", "Hello World!", true);
@@ -959,17 +959,17 @@ namespace SBRW.Launcher.App.UI_Forms
         {
             if (e != null)
             {
-                if (FunctionStatus.LoadingComplete || FunctionStatus.LauncherForceClose || Clock_Tick_Theme_Update)
+                if ((FunctionStatus.LoadingComplete || FunctionStatus.LauncherForceClose || Clock_Tick_Theme_Update) && (Screen_Instance != null))
                 {
                     if (Clock.Enabled)
                     {
-                        Clock.Stop();
+                        Screen_Instance.Clock.Stop();
                     }
                 }
-                else if (BackgroundImage != Image_Other.Logo_Splash)
+                else if ((BackgroundImage != Image_Other.Logo_Splash) && (Screen_Instance != null))
                 {
                     Clock_Tick_Theme_Update = true;
-                    PictureBox_Screen_Splash.SafeInvokeAction(() => PictureBox_Screen_Splash.BackgroundImage = Image_Other.Logo_Splash, this);
+                    Screen_Instance.PictureBox_Screen_Splash.BackgroundImage = Image_Other.Logo_Splash;
                 }
                 else
                 {
@@ -1132,6 +1132,10 @@ namespace SBRW.Launcher.App.UI_Forms
             Panel_Form_Screens.MouseMove += new MouseEventHandler(Move_Window_Mouse_Move);
             Panel_Form_Screens.MouseUp += new MouseEventHandler(Move_Window_Mouse_Up);
             Panel_Form_Screens.MouseDown += new MouseEventHandler(Move_Window_Mouse_Down);
+
+            PictureBox_Screen_Splash.MouseMove += new MouseEventHandler(Move_Window_Mouse_Move);
+            PictureBox_Screen_Splash.MouseUp += new MouseEventHandler(Move_Window_Mouse_Up);
+            PictureBox_Screen_Splash.MouseDown += new MouseEventHandler(Move_Window_Mouse_Down);
 
             Load += new EventHandler(Parent_Screen_Load);
             Shown += new EventHandler(Parent_Screen_Shown);
