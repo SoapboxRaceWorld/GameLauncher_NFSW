@@ -1738,7 +1738,7 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
             /* Set Window Name              /
             /*******************************/
 
-            Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
+            Icon = FormsIcon.Retrive_Icon();
             Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
 
             /*******************************/

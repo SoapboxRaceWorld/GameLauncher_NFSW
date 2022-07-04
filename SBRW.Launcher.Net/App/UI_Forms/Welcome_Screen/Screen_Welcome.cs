@@ -27,7 +27,7 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
         public Screen_Welcome()
         {
             InitializeComponent();
-            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            Icon = FormsIcon.Retrive_Icon();
             SetVisuals();
             this.Closing += (x, CloseForm) =>
             {

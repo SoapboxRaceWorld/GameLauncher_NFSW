@@ -431,6 +431,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
             /* Functions                     /
             /********************************/
 
+            Icon = FormsIcon.Retrive_Icon();
             Text = (CustomServersOnly ? "Saved Custom Servers" : "Please Select a Server") + " - SBRW Launcher";
 
             ListView_Server_List.AllowColumnReorder = false;

@@ -2994,10 +2994,25 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             try
             {
-                File.WriteAllBytes(Path.Combine(Save_Settings.Live_Data.Game_Path, "GFX", "BootFlow.gfx"),
-                    ExtractResource.AsByte("GameLauncher.Resources.Bootscreen.BootFlow.gfx"));
+                if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
+                {
+                    string GFX_BootFlow_File_Path = Path.Combine(Save_Settings.Live_Data.Game_Path, "GFX", "BootFlow.gfx");
+                    
+                    if (Hashes.Hash_SHA(GFX_BootFlow_File_Path) != "97ED41D1A44ACF58AF2613C243BDD88E8C3806EB")
+                    {
+                        if (File.Exists(GFX_BootFlow_File_Path))
+                        {
+                            File.Move(GFX_BootFlow_File_Path, Path.Combine(Save_Settings.Live_Data.Game_Path, "GFX", "BootFlow.gfx.bak"));
+                        }
+
+                        File.WriteAllBytes(GFX_BootFlow_File_Path, Core.Theme.Conversion_.Embeded_Files.BootFlow_GFX_Bytes());
+                    }
+                }
             }
-            catch { }
+            catch (Exception Error_Live)
+            {
+                LogToFileAddons.OpenLog("BootFlow GFX File", string.Empty, Error_Live, string.Empty, true);
+            }
 
             if (Save_Settings.Live_Data.Game_Integrity == "Unknown")
             {
@@ -4013,7 +4028,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             /* Set Window Name              /
             /*******************************/
 
-            Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
+            Icon = FormsIcon.Retrive_Icon();
             Text = "SBRW Launcher: v" + Application.ProductVersion;
 
             /*******************************/

@@ -331,6 +331,7 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
             /* Functions                     /
             /********************************/
 
+            Icon = FormsIcon.Retrive_Icon();
             Text = "Please Select a CDN - SBRW Launcher";
 
             ListView_Server_List.AllowColumnReorder = false;

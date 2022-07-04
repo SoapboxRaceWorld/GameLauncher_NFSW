@@ -1170,7 +1170,7 @@ namespace SBRW.Launcher.App.UI_Forms
             /* Set Window Name              /
             /*******************************/
 
-            Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
+            Icon = FormsIcon.Retrive_Icon();
             Text = "SBRW Launcher: v" + Application.ProductVersion;
 
             this.Closing += (x, y) =>

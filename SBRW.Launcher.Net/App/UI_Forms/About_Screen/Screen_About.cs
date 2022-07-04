@@ -54,6 +54,8 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
 
         private void SetVisuals()
         {
+            Icon = FormsIcon.Retrive_Icon();
+
             /*******************************/
             /* Set Font                     /
             /*******************************/

@@ -1262,7 +1262,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             /* Set Window Name              /
             /*******************************/
 
-            Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
+            Icon = FormsIcon.Retrive_Icon();
             Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
 
             /*******************************/

@@ -294,6 +294,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
             /* Set Window Name              /
             /*******************************/
 
+            Icon = FormsIcon.Retrive_Icon();
             Text = "Add Server - SBRW Launcher";
 
             /*******************************/
