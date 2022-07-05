@@ -3031,11 +3031,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 if (Screen_Instance != null && !(IsDisposed || Disposing))
                 {
-                    if (!Screen_Instance.Panel_Server_Information.Visible && (Launcher_Value.Launcher_Select_Server_JSON != null) &&
-                        (Launcher_Value.Launcher_Select_Server_Category.ToUpper() != "DEV" ||
-                        Launcher_Value.Launcher_Select_Server_Category.ToUpper() != "OFFLINE"))
+                    if (!Panel_Server_Information.Visible && (Launcher_Value.Launcher_Select_Server_JSON != null))
                     {
-                        Screen_Instance.Panel_Server_Information.Visible = true;
+                        if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_Category))
+                        {
+                            if ((Launcher_Value.Launcher_Select_Server_Category.ToUpper() != "DEV" || Launcher_Value.Launcher_Select_Server_Category.ToUpper() != "OFFLINE"))
+                            {
+                                Screen_Instance.Panel_Server_Information.Visible = true;
+                            }
+                        }
                     }
 
                     Screen_Instance.ProgressBar_Extracting.Value = 100;
@@ -3142,11 +3146,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Error);
                     }
 
-                    if (!Screen_Instance.Panel_Server_Information.Visible && (Launcher_Value.Launcher_Select_Server_JSON != null) &&
-                        (Launcher_Value.Launcher_Select_Server_Category.ToUpper() != "DEV" ||
-                        Launcher_Value.Launcher_Select_Server_Category.ToUpper() != "OFFLINE"))
+                    if (!Panel_Server_Information.Visible && (Launcher_Value.Launcher_Select_Server_JSON != null))
                     {
-                        Screen_Instance.Panel_Server_Information.Visible = true;
+                        if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_Category))
+                        {
+                            if ((Launcher_Value.Launcher_Select_Server_Category.ToUpper() != "DEV" || Launcher_Value.Launcher_Select_Server_Category.ToUpper() != "OFFLINE"))
+                            {
+                                Screen_Instance.Panel_Server_Information.Visible = true;
+                            }
+                        }
                     }
 
                     if (Error != null)
@@ -3397,20 +3405,26 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                                 IsDownloading = false;
                                                 OnDownloadFinished();
-
-                                                NotifyIcon_Notification.Visible = true;
-                                                NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
-                                                NotifyIcon_Notification.BalloonTipTitle = "SBRW Launcher";
-                                                NotifyIcon_Notification.BalloonTipText = "Your game is now ready to launch!";
-                                                NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
+                                                try
                                                 {
-                                                    return;
-                                                };
-                                                NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
+                                                    NotifyIcon_Notification.Visible = true;
+                                                    NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                                    NotifyIcon_Notification.BalloonTipTitle = "SBRW Launcher";
+                                                    NotifyIcon_Notification.BalloonTipText = "Your game is now ready to launch!";
+                                                    NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
+                                                    {
+                                                        return;
+                                                    };
+                                                    NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
+                                                    {
+                                                        return;
+                                                    };
+                                                    NotifyIcon_Notification.ShowBalloonTip(5000);
+                                                }
+                                                catch (Exception Error)
                                                 {
-                                                    return;
-                                                };
-                                                NotifyIcon_Notification.ShowBalloonTip(5000);
+                                                    LogToFileAddons.OpenLog("NotifyIcon_Notification Unpack", string.Empty, Error, string.Empty, true);
+                                                }
                                             }
                                         };
                                         Pack_SBRW_Unpacker.Custom_Unpack(D_Live_Events.Download_Location ?? Last_Known_Location, Save_Settings.Live_Data.Game_Path);
@@ -3469,7 +3483,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Screen_Instance.Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
                     }
 
-                    if (Screen_Instance.Panel_Server_Information.Visible)
+                    if (Panel_Server_Information.Visible)
                     {
                         Screen_Instance.Panel_Server_Information.Visible = false;
                     }
