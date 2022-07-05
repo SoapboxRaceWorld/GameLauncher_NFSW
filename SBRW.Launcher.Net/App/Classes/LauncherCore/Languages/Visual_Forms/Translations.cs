@@ -41,7 +41,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Languages.Visual_Forms
                 {
                     if (!string.IsNullOrWhiteSpace(Text_Request) && Lang_Launcher != null)
                     {
-                        return Regex.Unescape(Lang_Launcher.GetString(Text_Request));
+                        return Regex.Unescape(Lang_Launcher.GetString(Text_Request)??"Languages Not Found");
                     }
                     else
                     {
@@ -50,13 +50,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Languages.Visual_Forms
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("Translations Database Selection", String.Empty, Error, String.Empty, true);
+                    LogToFileAddons.OpenLog("Translations Database Selection", string.Empty, Error, string.Empty, true);
                     return "Languages Program ERROR";
                 }
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Translations Database", String.Empty, Error, String.Empty, true);
+                LogToFileAddons.OpenLog("Translations Database", string.Empty, Error, string.Empty, true);
                 return "Languages ERROR";
             }
         }

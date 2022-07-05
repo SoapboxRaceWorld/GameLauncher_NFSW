@@ -119,15 +119,12 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                     try
                     {
                         Uri URLCall = new Uri(serverurl);
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var Client = new WebClient
                         {
                             Encoding = Encoding.UTF8,
                             CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
                         if (!Launcher_Value.Launcher_Alternative_Webcalls())
                         {
                             Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
@@ -257,9 +254,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                                             try
                                             {
                                                 Uri StringToUri = new Uri(serverurl);
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                                                 ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
                                                 CheckMate = new Ping();
                                                 CheckMate.PingCompleted += (sender3, e3) =>
                                                 {

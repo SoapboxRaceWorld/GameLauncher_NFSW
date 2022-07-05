@@ -38,25 +38,49 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
         public static void DiscordInviteLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (Launcher_Value.Launcher_Select_Server_JSON != null && !string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord))
+            {
+#if NETFRAMEWORK
                 Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord);
+#else
+                Process.Start("explorer.exe", Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord);
+#endif
+            }
         }
 
         public static void HomePageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (Launcher_Value.Launcher_Select_Server_JSON != null && !string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Home))
+            {
+#if NETFRAMEWORK
                 Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Home);
+#else
+                Process.Start("explorer.exe", Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Home);
+#endif
+            }
         }
 
         public static void FacebookGroupLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (Launcher_Value.Launcher_Select_Server_JSON != null && !string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Facebook))
+            {
+#if NETFRAMEWORK
                 Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Facebook);
+#else
+                Process.Start("explorer.exe", Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Facebook);
+#endif
+            }
         }
 
         public static void TwitterAccountLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (Launcher_Value.Launcher_Select_Server_JSON != null && !string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Twitter))
+            {
+#if NETFRAMEWORK
                 Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Twitter);
+#else
+                Process.Start("explorer.exe", Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Twitter);
+#endif
+            }  
         }
 
         public static void ForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -65,7 +89,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
             {
                 if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Account_Recovery_Page))
                 {
+#if NETFRAMEWORK
                     Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Account_Recovery_Page);
+#else
+                    Process.Start("explorer.exe", Launcher_Value.Launcher_Select_Server_JSON.Server_Account_Recovery_Page);
+#endif
                     MessageBox.Show(null, "A browser window has been opened to complete password recovery on " +
                         Launcher_Value.Launcher_Select_Server_JSON.Server_Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -228,49 +256,93 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                 {
                     case "what if...":
                     case "what if":
+#if NETFRAMEWORK
                         Process.Start("https://www.youtube.com/watch?v=OaWYwk7dysc");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://www.youtube.com/watch?v=OaWYwk7dysc/", UseShellExecute = true });
+#endif
                         break;
                     case "don't look!":
                     case "dont look":
+#if NETFRAMEWORK
                         Process.Start("https://www.youtube.com/watch?v=nwqtdwcqrBE");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://www.youtube.com/watch?v=nwqtdwcqrBE/", UseShellExecute = true });
+#endif
                         break;
                     case "behind the scenes":
+#if NETFRAMEWORK
                         Process.Start("https://cdn.discordapp.com/attachments/620401560954077214/987989783022272562/unknown.png");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://cdn.discordapp.com/attachments/620401560954077214/987989783022272562/unknown.png", UseShellExecute = true });
+#endif
                         break;
                     case "ezekiel":
                     case "crash the server":
+#if NETFRAMEWORK
                         Process.Start("https://www.youtube.com/watch?v=T-AF81iBCi0");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://www.youtube.com/watch?v=T-AF81iBCi0/", UseShellExecute = true });
+#endif
                         break;
                     case "ezekiel extended mix":
                     case "crash the server extended mix":
+#if NETFRAMEWORK
                         Process.Start("https://www.youtube.com/watch?v=sReIQTvS1kM");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://www.youtube.com/watch?v=sReIQTvS1kM/", UseShellExecute = true });
+#endif
                         break;
                     case "obsolete":
                         if (LauncherUpdateCheck.UpgradeAvailable)
                         {
+#if NETFRAMEWORK
                             Process.Start("https://youtu.be/LutDfASARmE");
+#else
+                            Process.Start(new ProcessStartInfo { FileName = "https://youtu.be/LutDfASARmE/", UseShellExecute = true });
+#endif
                         }
                         break;
                     case "a song long ago":
+#if NETFRAMEWORK
                         Process.Start("https://youtu.be/zo_C-dk6Xh4");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://youtu.be/zo_C-dk6Xh4/", UseShellExecute = true });
+#endif
                         break;
                     case "keygen":
                     case "keygen 2013":
+#if NETFRAMEWORK
                         Process.Start("https://youtu.be/vCMzIE9p07Y");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://youtu.be/vCMzIE9p07Y/", UseShellExecute = true });
+#endif
                         break;
                     case "who am i?":
                     case "who am i":
+#if NETFRAMEWORK
                         Process.Start("https://www.youtube.com/watch?v=6TmlR27izRo");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://www.youtube.com/watch?v=6TmlR27izRo/", UseShellExecute = true });
+#endif
                         break;
                     case "straightuphippo":
+#if NETFRAMEWORK
                         Process.Start("https://youtu.be/Uc57tO6g--I");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://youtu.be/Uc57tO6g--I/", UseShellExecute = true });
+#endif
                         break;
                     case "seeing what's next":
                     case "seeing whats next":
                     case "insider":
                     case "developer":
                     case "beta":
+#if NETFRAMEWORK
                         Process.Start("https://youtu.be/F6dVLZIJatk");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://youtu.be/F6dVLZIJatk/", UseShellExecute = true });
+#endif
                         break;
                     case "password":
                     case "my password":
@@ -280,7 +352,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Global
                         break;
                     case "now loading":
                     case "now loading!!!":
+#if NETFRAMEWORK
                         Process.Start("https://www.youtube.com/watch?v=kq3X78ngFAY");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://www.youtube.com/watch?v=kq3X78ngFAY/", UseShellExecute = true });
+#endif
                         break;
                     case "update":
                         if (LauncherUpdateCheck.UpgradeAvailable)

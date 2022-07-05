@@ -570,14 +570,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page))
                 {
+#if NETFRAMEWORK
                     Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page);
+#else
+                    Process.Start(new ProcessStartInfo { FileName = Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page, UseShellExecute = true });
+#endif
                     MessageBox.Show(null, "A browser window has been opened to complete registration on " +
                         ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if (Launcher_Value.Launcher_Select_Server_Data.Name.ToUpper() == "WORLDUNITED OFFICIAL")
                 {
-                    Process.Start("https://signup.worldunited.gg/" + ((!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Discord_UserID) &&
-                        Launcher_Value.Launcher_Discord_UserID != "0") ? "?discordid=" + Launcher_Value.Launcher_Discord_UserID : string.Empty));
+#if NETFRAMEWORK
+                    Process.Start("https://signup.worldunited.gg/");
+#else
+                    Process.Start(new ProcessStartInfo { FileName = "https://signup.worldunited.gg/", UseShellExecute = true });
+#endif
                     MessageBox.Show(null, "A browser window has been opened to complete registration on " +
                         Launcher_Value.Launcher_Select_Server_Data.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -858,7 +865,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #if NETFRAMEWORK
                         ContextMenu = new ContextMenu();
                         
-                        ContextMenu.MenuItems.Add(new MenuItem("Now Loading!!!", (b, n) => { Process.Start("https://www.youtube.com/watch?v=kq3X78ngFAY"); }));
+                        ContextMenu.MenuItems.Add(new MenuItem("Now Loading!!!", (b, n) => 
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://www.youtube.com/watch?v=kq3X78ngFAY");
+#else
+                            Process.Start("explorer.exe", "https://www.youtube.com/watch?v=kq3X78ngFAY");
+#endif
+                        }));
                         ContextMenu.MenuItems.Add("-");
                         if (Parent_Screen.Screen_Instance != null)
                         {
@@ -960,11 +974,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
             }
 
+#if NETFRAMEWORK
             if (Nfswstarted != null)
             {
                 Nfswstarted.Abort();
             }
-
+#endif
             string Error_Msg = NFSW.ErrorTranslation(Process_Exit_Code);
 
             if (Did_Game_Start && !string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path) && !FunctionStatus.LauncherBattlePass)
@@ -1040,7 +1055,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             exitCode = 2017;
 #if NETFRAMEWORK
                             ContextMenu = new ContextMenu();
-                            ContextMenu.MenuItems.Add(new MenuItem("Ezekiel was Here - Sent from Mars (C&T)", (b, n) => { Process.Start("https://www.youtube.com/watch?v=T-AF81iBCi0"); }));
+                            ContextMenu.MenuItems.Add(new MenuItem("Ezekiel was Here - Sent from Mars (C&T)", (b, n) => 
+                            {
+#if NETFRAMEWORK
+                                Process.Start("https://www.youtube.com/watch?v=T-AF81iBCi0");
+#else
+                                Process.Start("explorer.exe", "https://www.youtube.com/watch?v=T-AF81iBCi0");
+#endif
+                            }));
                             ContextMenu.MenuItems.Add("-");
                             if (Parent_Screen.Screen_Instance != null)
                             {
@@ -1056,7 +1078,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             exitCode = 2137;
 #if NETFRAMEWORK
                             ContextMenu = new ContextMenu();
-                            ContextMenu.MenuItems.Add(new MenuItem("One more Minute", (b, n) => { Process.Start("https://youtu.be/HNuOQlt1KEM"); }));
+                            ContextMenu.MenuItems.Add(new MenuItem("One more Minute", (b, n) => 
+                            {
+#if NETFRAMEWORK
+                                Process.Start("https://youtu.be/HNuOQlt1KEM");
+#else
+                                Process.Start("explorer.exe", "https://youtu.be/HNuOQlt1KEM");
+#endif
+                            }));
                             ContextMenu.MenuItems.Add("-");
                             if (Parent_Screen.Screen_Instance != null)
                             {
@@ -1144,7 +1173,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
 #if NETFRAMEWORK
                     ContextMenu = new ContextMenu();
-                    ContextMenu.MenuItems.Add(new MenuItem("Running Out of Time", (b, n) => { Process.Start("https://youtu.be/vq9-bmoI-RI"); }));
+                    ContextMenu.MenuItems.Add(new MenuItem("Running Out of Time", (b, n) => 
+                    {
+#if NETFRAMEWORK
+                        Process.Start("https://youtu.be/vq9-bmoI-RI");
+#else
+                        Process.Start("explorer.exe", "https://youtu.be/vq9-bmoI-RI");
+#endif
+                    }));
                     ContextMenu.MenuItems.Add("-");
                     if (Parent_Screen.Screen_Instance != null)
                     {
@@ -1251,8 +1287,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 string FileName = url.ToString().Substring(url.ToString().LastIndexOf("/") + 1, (url.ToString().Length - url.ToString().LastIndexOf("/") - 1));
 
                 ModNetFileNameInUse = FileName;
-
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                 ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                 var Client = new WebClient
@@ -1260,9 +1294,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Encoding = Encoding.UTF8,
                     CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                 };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
-
                 if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                 {
                     Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
@@ -1530,7 +1561,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Presence_Launcher.Status(5);
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
                     Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                     ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                     var ModNetJsonURI = new WebClient
@@ -1538,8 +1568,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Encoding = Encoding.UTF8,
                         CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                     };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
                     if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                     { 
                         ModNetJsonURI = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
@@ -1653,7 +1681,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     Presence_Launcher.Status(7, ModNetList);
 
                                     Uri URLCall = new Uri(URLs.ModNet + "/launcher-modules/" + ModNetList);
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                                     var newModNetFilesDownload = new WebClient
@@ -1661,8 +1688,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         Encoding = Encoding.UTF8,
                                         CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                                     };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
                                     if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                                     { 
                                         newModNetFilesDownload = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
@@ -1705,7 +1730,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
 
                         Uri newModNetUri = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress + "/Modding/GetModInfo");
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                         ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                         var ModInfoJson = new WebClient
@@ -1713,8 +1737,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Encoding = Encoding.UTF8,
                             CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
                         if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                         { 
                             ModInfoJson = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
@@ -1771,7 +1793,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #pragma warning disable CS8602 // Null Safe Check Done Before This Section
                             Uri URLCall_A = new Uri(json2.basePath + "/cars.json");
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                             ServicePointManager.FindServicePoint(URLCall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                             var CarsJson = new WebClient
@@ -1779,8 +1800,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Encoding = Encoding.UTF8,
                                 CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                             };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
                             if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                             { 
                                 CarsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
@@ -1805,7 +1824,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
 
                             Uri URLCall_B = new Uri(json2.basePath + "/events.json");
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                             ServicePointManager.FindServicePoint(URLCall_B).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                             var EventsJson = new WebClient
@@ -1813,8 +1831,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Encoding = Encoding.UTF8,
                                 CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                             };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
                             if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                             { 
                                 EventsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
@@ -1866,7 +1882,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Log.Core("CORE: Loading Server Mods List");
                             /* Get Server Mod Index */
                             Uri newIndexFile = new Uri(json2.basePath + "/index.json");
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                             ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                             var ServerModsList = new WebClient
@@ -1874,8 +1889,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Encoding = Encoding.UTF8,
                                 CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                             };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
                             if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                             { 
                                 ServerModsList = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
@@ -2204,7 +2217,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
 
             Uri ServerURI = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress + "/GetServerInformation");
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
             ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
             var Client = new WebClient
@@ -2212,8 +2224,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Encoding = Encoding.UTF8,
                 CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
             };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
             if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
             { 
                 Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
@@ -2318,7 +2328,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                     try
                                     {
-                                        ServerBannerResult = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Banner, UriKind.Absolute, out Uri uriResult) &&
+                                        ServerBannerResult = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Banner, UriKind.Absolute, out Uri? uriResult) &&
                                         (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                     }
                                     catch 
@@ -2346,7 +2356,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 bool ServerDiscordLink;
                                 try
                                 {
-                                    ServerDiscordLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord, UriKind.Absolute, out Uri uriResult) &&
+                                    ServerDiscordLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord, UriKind.Absolute, out Uri? uriResult) &&
                                                              (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
                                 catch 
@@ -2371,7 +2381,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 bool ServerWebsiteLink;
                                 try
                                 {
-                                    ServerWebsiteLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Home, UriKind.Absolute, out Uri uriResult) &&
+                                    ServerWebsiteLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Home, UriKind.Absolute, out Uri? uriResult) &&
                                               (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
                                 catch 
@@ -2396,7 +2406,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 bool ServerFacebookLink;
                                 try
                                 {
-                                    ServerFacebookLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Facebook, UriKind.Absolute, out Uri uriResult) &&
+                                    ServerFacebookLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Facebook, UriKind.Absolute, out Uri? uriResult) &&
                                                          (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
                                 catch 
@@ -2418,7 +2428,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             /* Twitter Account Display */
                             try
                             {
-                                bool ServerTwitterLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Twitter, UriKind.Absolute, out Uri uriResult) &&
+                                bool ServerTwitterLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Twitter, UriKind.Absolute, out Uri? uriResult) &&
                                                          (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 if (Picture_Icon_Server_Twitter.BackgroundImage != (ServerTwitterLink ? Image_Icon.Twitter : Image_Icon.Twitter_Disabled))
                                 {
@@ -2657,7 +2667,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
 
                                 Uri URICall_A = new Uri(ImageUrl);
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                                 ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ? 
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                                 var Client_A = new WebClient
@@ -2665,8 +2674,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     Encoding = Encoding.UTF8,
                                     CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                                 };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
                                 if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                                 { 
                                     Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
@@ -2814,9 +2821,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             GC.Collect();
         }
-        #endregion
+#endregion
 
-        #region Game Files Downloader Components (LZMA [.dat])
+#region Game Files Downloader Components (LZMA [.dat])
 
         public static void RemoveTracksHighFiles()
         {
@@ -2889,7 +2896,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         speechFile = Download_LZMA_Support.SpeechFiles(Save_Settings.Live_Data.Launcher_Language);
 
                         Uri URLCall = new Uri(Save_Settings.Live_Data.Launcher_CDN + "/" + speechFile + "/index.xml");
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                         var Client = new WebClient
@@ -2897,8 +2903,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Encoding = Encoding.UTF8,
                             CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
                         if (!Launcher_Value.Launcher_Alternative_Webcalls())
                         {
                             Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
@@ -2916,8 +2920,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             XmlDocument speechFileXml = new XmlDocument();
                             speechFileXml.LoadXml(response);
 
-                            XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
-                            speechSize = Convert.ToInt32(speechSizeNode.InnerText);
+                            if (speechFileXml != default)
+                            {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                                XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                                speechSize = Convert.ToInt32(speechSizeNode.InnerText);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                            }
+                            else
+                            {
+                                speechFile = Download_LZMA_Support.SpeechFiles();
+                                speechSize = Download_LZMA_Support.SpeechFilesSize();
+                            }
                         }
                         catch
                         {
@@ -3183,9 +3199,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 FunctionStatus.IsVerifyHashDisabled = true;
             }
         }
-        #endregion
+#endregion
 
-        #region Game Files Downloader (SBRW Pack [.pack.sbrw])
+#region Game Files Downloader (SBRW Pack [.pack.sbrw])
 
         /* That's right the Protype Extractor from 2.1.5.x, now back from the dead - DavidCarbon */
         /// <summary>
@@ -3459,9 +3475,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
             }
         }
-        #endregion
+#endregion
 
-        #region Game Downloader Background Thread Support Functions
+#region Game Downloader Background Thread Support Functions
         public void Game_Downloaders()
         {
             if (Screen_Instance != null && (!IsDisposed || !Disposing))
@@ -3825,9 +3841,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
             }
         }
-        #endregion
+#endregion
 
-        #region Background Workers
+#region Background Workers
         public void BackgroundWorker_One_DoGameDownload(object sender, DoWorkEventArgs e)
         {
             if (!e.Cancel)
@@ -3835,9 +3851,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Game_Pack_Downloader();
             }
         }
-        #endregion
+#endregion
 
-        #region Loads, Set, and Start Certain Functions (CORE)
+#region Loads, Set, and Start Certain Functions (CORE)
         private void MainScreen_Load(object sender, EventArgs e)
         {
             Log.Visuals("CORE: Loading Main Screen");
@@ -4029,7 +4045,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 if (LauncherUpdateCheck.UpgradeAvailable)
                 {
                     ContextMenu.MenuItems.Add("-");
-                    ContextMenu.MenuItems.Add(new MenuItem("Obsolete", (N, O) => { Process.Start("https://www.youtube.com/watch?v=LutDfASARmE"); }));
+                    ContextMenu.MenuItems.Add(new MenuItem("Obsolete", (N, O) => 
+                    {
+#if NETFRAMEWORK
+                        Process.Start("https://www.youtube.com/watch?v=LutDfASARmE");
+#else
+                        Process.Start("explorer.exe", "https://www.youtube.com/watch?v=LutDfASARmE");
+#endif
+                    }));
                 }
                 ContextMenu.MenuItems.Add("-");
                 if (Parent_Screen.Screen_Instance != null)
@@ -4305,7 +4328,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 {
                                     while (StillCheckingLastServer) { }
                                     Uri URLCall = new Uri(Servers.IPAddress + "/GetServerInformation");
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                                     var Client = new WebClient
@@ -4313,8 +4335,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         Encoding = Encoding.UTF8,
                                         CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                                     };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
                                     if (!Launcher_Value.Launcher_Alternative_Webcalls())
                                     {
                                         Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };

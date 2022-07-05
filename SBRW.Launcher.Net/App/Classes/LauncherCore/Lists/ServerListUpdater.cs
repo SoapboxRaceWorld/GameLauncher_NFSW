@@ -35,7 +35,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 
             try
             {
+#pragma warning disable CS8604 // Possible null reference argument.
                 serverInfos.AddRange(JsonConvert.DeserializeObject<List<Json_List_Server>>(CachedJSONList));
+#pragma warning restore CS8604 // Possible null reference argument.
                 LoadedList = true;
 
                 if (VisualsAPIChecker.CarbonAPITwo())

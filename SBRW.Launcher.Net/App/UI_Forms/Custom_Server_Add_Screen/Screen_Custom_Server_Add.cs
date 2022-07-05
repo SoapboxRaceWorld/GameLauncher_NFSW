@@ -60,10 +60,10 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                 Label_Alert.Visible = false;
             }
 
-            bool CorrectFormat = Uri.TryCreate(TextBox_Server_Address.Text, UriKind.Absolute, out Uri Result) && (Result.Scheme == Uri.UriSchemeHttp || Result.Scheme == Uri.UriSchemeHttps);
+            bool CorrectFormat = Uri.TryCreate(TextBox_Server_Address.Text, UriKind.Absolute, out Uri? Result) && (Result.Scheme == Uri.UriSchemeHttp || Result.Scheme == Uri.UriSchemeHttps);
 
             string FormattedURL;
-            if (!CorrectFormat)
+            if (!CorrectFormat || Result == null)
             {
                 DrawErrorAroundTextBox(TextBox_Server_Address);
                 return;
@@ -133,12 +133,12 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                     DrawErrorAroundTextBox(TextBox_Server_Address);
                     Label_Alert.Visible = true;
                     ButtonControls(true);
-                    ServerInfomationJSON = null;
+                    ServerInfomationJSON = string.Empty;
                     return;
                 }
                 else
                 {
-                    Json_Server_Info ServerInformationData = null;
+                    Json_Server_Info? ServerInformationData = null;
 
                     try
                     {
@@ -160,7 +160,6 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                     {
                         string ServerID = string.Empty;
                         Uri newModNetUri = new Uri(FormattedURL + "/Modding/GetModInfo");
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                         ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                         var Client = new WebClient
@@ -168,8 +167,6 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                             Encoding = Encoding.UTF8,
                             CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
                         if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                         { 
                             Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
@@ -182,7 +179,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
 
                         try
                         {
-                            GetModInfo ServerGetInfo = JsonConvert.DeserializeObject<GetModInfo>(Client.DownloadString(newModNetUri));
+                            GetModInfo? ServerGetInfo = JsonConvert.DeserializeObject<GetModInfo>(Client.DownloadString(newModNetUri));
                             ServerID = (ServerGetInfo != null) ? string.IsNullOrWhiteSpace(ServerGetInfo.serverID) ? 
                                 Result.Host : ServerGetInfo.serverID : Result.Host;
                         }

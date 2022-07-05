@@ -52,7 +52,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 
                 try
                 {
+#pragma warning disable CS8604 // Possible null reference argument.
                     LocalResolutionsList.AddRange(JsonConvert.DeserializeObject<List<Json_List_Resolution>>(JSONResolutions));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
                 catch (Exception Error)
                 {

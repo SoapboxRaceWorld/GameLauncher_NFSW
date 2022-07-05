@@ -186,10 +186,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                     if (!string.IsNullOrWhiteSpace(serverReply))
                     {
                         string verify = regex[2];
-
-#pragma warning disable CS8602 // Null Safe Check Done Above
                         string[] hashes = serverReply.Split('\n');
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
                         foreach (string hash in hashes)
                         {
                             var splitChecks = hash.Split(':');

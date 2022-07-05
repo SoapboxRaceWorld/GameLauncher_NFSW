@@ -11,35 +11,47 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite
         {
             if (string.IsNullOrWhiteSpace(File_Name))
             {
-                return null;
+                return default;
             }
             else
             {
                 try
                 {
-                    Assembly TheRun = Assembly.GetExecutingAssembly();
+                    Assembly? TheRun = Assembly.GetExecutingAssembly();
                     if (TheRun != null)
                     {
-                        using (Stream LiveStream = TheRun.GetManifestResourceStream(File_Name))
+                        if (TheRun.GetManifestResourceStream(File_Name) != null)
                         {
-                            if (LiveStream == null) { return null; }
-                            else
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                            using (Stream LiveStream = TheRun.GetManifestResourceStream(File_Name))
                             {
-                                byte[] ba = new byte[LiveStream.Length];
-                                LiveStream.Read(ba, 0, ba.Length);
-                                return ba;
+                                if (LiveStream == null)
+                                {
+                                    return default;
+                                }
+                                else
+                                {
+                                    byte[] ba = new byte[LiveStream.Length];
+                                    LiveStream.Read(ba, 0, ba.Length);
+                                    return ba;
+                                }
                             }
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+                        }
+                        else
+                        {
+                            return default;
                         }
                     }
                     else
                     {
-                        return null;
+                        return default;
                     }
                 }
                 catch (Exception Error)
                 {
                     LogToFileAddons.OpenLog("Extract Resource AsByte", string.Empty, Error, string.Empty, true);
-                    return null;
+                    return default;
                 }
             }
         }

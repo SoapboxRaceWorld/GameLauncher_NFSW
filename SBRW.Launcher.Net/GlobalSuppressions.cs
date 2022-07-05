@@ -7,6 +7,3 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "JSON Attributes care about case", Scope = "namespaceanddescendants", Target = "~N:SBRW.Launcher.App.Classes.LauncherCore.ModNet.JSON")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "JSON Attributes care about case", Scope = "namespaceanddescendants", Target = "~N:SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater")]
-[assembly: SuppressMessage("Usage", "IDE0079:Unnecessary Supression", Justification = "<pending>", Scope = "module")]
-[assembly: SuppressMessage("Usage", "SYSLIB0006:Method Obsolete", Justification = "<pending>")]
-[assembly: SuppressMessage("Usage", "SYSLIB0014:Method Obsolete", Justification = "<pending>")]

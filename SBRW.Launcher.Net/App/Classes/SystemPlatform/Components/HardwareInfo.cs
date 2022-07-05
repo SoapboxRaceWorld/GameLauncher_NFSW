@@ -1,5 +1,4 @@
 ﻿using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.Core.Required.DLL.Kernel32_;
 using System;
 using System.IO;
 using System.Linq;
@@ -9,93 +8,54 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Components
 {
     class HardwareInfo
     {
-        public class CPU
-        {
-            public static string CPUName()
-            {
-                string _cpuName = "Unknown";
-                try
-                {
-                    _cpuName = (from x in new ManagementObjectSearcher("SELECT Name FROM Win32_Processor").Get().Cast<ManagementObject>()
-                                select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
-                }
-                catch (Exception Error)
-                {
-                    LogToFileAddons.OpenLog("Hardware Info", String.Empty, Error, String.Empty, true);
-                }
-                finally
-                {
-                    GC.Collect();
-                }
-
-                return _cpuName;
-            }
-        }
-
-        public class RAM
-        {
-            public static string SysMem()
-            {
-                long memKb = 0;
-                try
-                {
-                    DLL_Kernel32.GetPhysicallyInstalledSystemMemory(out memKb);
-                }
-                catch (Exception Error)
-                {
-                    LogToFileAddons.OpenLog("Hardware Info", String.Empty, Error, String.Empty, true);
-                }
-                finally
-                {
-                    GC.Collect();
-                }
-
-                return (memKb / 1024).ToString();
-            }
-        }
-
         public class GPU
         {
             public static string CardName()
             {
-                string _cardName = "Unknown";
                 try
                 {
-                    _cardName = (from x in new ManagementObjectSearcher("select * from Win32_VideoController").Get()
+#pragma warning disable CS8603 // Possible null reference return.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    return (from x in new ManagementObjectSearcher("select * from Win32_VideoController").Get()
                     .Cast<ManagementObject>()
                                  select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8603 // Possible null reference return.
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("Hardware Info", String.Empty, Error, String.Empty, true);
+                    LogToFileAddons.OpenLog("Hardware Info", string.Empty, Error, string.Empty, true);
                 }
                 finally
                 {
                     GC.Collect();
                 }
 
-                return _cardName;
+                return "Unknown";
             }
 
             public static string DriverVersion()
             {
-                string _driverVersion = "Unknown";
                 try
                 {
-                    _driverVersion = (from x in new ManagementObjectSearcher("select * from Win32_VideoController").Get()
+#pragma warning disable CS8603 // Possible null reference return.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    return (from x in new ManagementObjectSearcher("select * from Win32_VideoController").Get()
                     .Cast<ManagementObject>()
                                       select x.GetPropertyValue("DriverVersion")).FirstOrDefault().ToString();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8603 // Possible null reference return.
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("Hardware Info", String.Empty, Error, String.Empty, true);
+                    LogToFileAddons.OpenLog("Hardware Info", string.Empty, Error, string.Empty, true);
                 }
                 finally
                 {
                     GC.Collect();
                 }
 
-                return _driverVersion;
+                return "Unknown";
             }
         }
 

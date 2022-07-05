@@ -143,11 +143,13 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         /* CDN Display Playing Game! - DavidCarbon */
         private void PingSavedCDN()
         {
+#if NETFRAMEWORK
             if (ThreadSavedCDN != null)
             {
                 ThreadSavedCDN.Abort();
                 ThreadSavedCDN = null;
             }
+#endif
 
             if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN))
             {
@@ -194,8 +196,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 Log.Error("SETTINGS PINGING CDN: Settings.ini has an Empty CDN URL");
             }
         }
-        #endregion
-        #region Loading
+#endregion
+#region Loading
         private void Display_Timer_Button()
         {
             if (Save_Settings.Live_Data.Launcher_Display_Timer == "1")
@@ -331,13 +333,13 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 else
                 {
                     ButtonsColorSet(Button_Game_Verify_Files, 0, false);
-
+#if NETFRAMEWORK
                     if (ThreadChecksums != null)
                     {
                         ThreadChecksums.Abort();
                         ThreadChecksums = null;
                     }
-
+#endif
                     ThreadChecksums = new Thread(() =>
                     {
                         if (!Application.OpenForms[this.Name].IsDisposed)
@@ -379,8 +381,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 "GameLauncher has Paused, Failed To Connect to any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-        #endregion
-        #region ComboxList Setup
+#endregion
+#region ComboxList Setup
         private void RememberLastLanguage()
         {
             /* Last Selected CDN */
@@ -432,8 +434,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 LogToFileAddons.OpenLog("SETTINGS LANGLIST", string.Empty, Error, string.Empty, true);
             }
         }
-        #endregion
-        #region Event Functions
+#endregion
+#region Event Functions
         private void Label_Version_Build_Click(object sender, EventArgs e)
         {
             if (!Button_Console_Submit.Visible && (!this.Disposing || !this.IsDisposed))
@@ -603,13 +605,13 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 Label_CDN_Current.Text = "CHANGED CDN:";
                 LinkLabel_CDN_Current.Text = Save_Settings.Live_Data.Launcher_CDN;
                 RestartRequired = true;
-
+#if NETFRAMEWORK
                 if (ThreadChecksums != null)
                 {
                     ThreadChecksums.Abort();
                     ThreadChecksums = null;
                 }
-
+#endif
                 ButtonsColorSet(Button_Game_Verify_Files, 0, false);
 
                 ThreadChecksums = new Thread(() =>
@@ -984,10 +986,10 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             }
             catch { }
         }
-        #endregion
-        #endregion
-        #region Theme, Text, and Function Setter
-        #region Draw and Regular Events
+#endregion
+#endregion
+#region Theme, Text, and Function Setter
+#region Draw and Regular Events
         /// <summary>
         /// Sets the Category for the Language Drop Down Menu with its set of Colors
         /// </summary>
@@ -1051,8 +1053,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         {
             ((HandledMouseEventArgs)e).Handled = true;
         }
-        #endregion
-        #region Buttons and API
+#endregion
+#region Buttons and API
         /* DavidCarbon */
         private void PingAPIStatus()
         {
@@ -1251,7 +1253,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 Button_Exit.Image = Image_Button.Grey_Hover;
             }
         }
-        #endregion
+#endregion
         /// <summary>
         /// Sets the Button, Image, Text, and Fonts. Enables/Disables Certain Elements of the Screen for Certain Platforms. Also contains functions that act as helper functions
         /// </summary>
@@ -1528,7 +1530,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 PingAPIStatus();
             };
         }
-        #endregion
+#endregion
 
         public static void Clear_Hide_Screen_Form_Panel()
         {
@@ -1550,7 +1552,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             {
                 Presence_Launcher.Status(4);
                 Thread_Number_Change_A = Thread_Number_Change_B = Thread_Number_Change_C = 0;
-
+#if NETFRAMEWORK
                 if (ThreadChangedCDN != null)
                 {
                     ThreadChangedCDN.Abort();
@@ -1566,7 +1568,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                     ThreadChecksums.Abort();
                     ThreadChecksums = null;
                 }
-
+#endif
                 /* This is for Mono Support */
                 if (ToolTip_Hover.Active)
                 {

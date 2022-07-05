@@ -58,7 +58,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                 bool Latest_Found_Build = false;
 
                 List<GitHubRelease> Scrollable_List = new List<GitHubRelease>();
+#pragma warning disable CS8604 // Possible null reference argument.
                 Scrollable_List.AddRange(JsonConvert.DeserializeObject<List<GitHubRelease>>(JSON_Data));
+#pragma warning restore CS8604 // Possible null reference argument.
 
                 if (Scrollable_List.Count > 0)
                 {
@@ -246,7 +248,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                             }
                             else
                             {
+#if NETFRAMEWORK
                                 Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+#else
+                                Process.Start("explorer.exe", "https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+#endif
                                 MessageBox.Show(null, Translations.Database("LauncherUpdateCheck_FS"), "GameLauncher", MessageBoxButtons.OK);
                             }
                         }

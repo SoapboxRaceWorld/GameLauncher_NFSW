@@ -239,7 +239,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                                     Tokens.UserId = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/UserId", "InnerText");
                                     Tokens.LoginToken = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/LoginToken", "InnerText");
 
-                                    if (XMLServerCore.NodeReader(sbrwXml, "NodeOnly", "LoginStatusVO/Warning", String.Empty) == "VAILD NODE - LAUNCHER")
+                                    if (XMLServerCore.NodeReader(sbrwXml, "NodeOnly", "LoginStatusVO/Warning", string.Empty) == "VAILD NODE - LAUNCHER")
                                     {
                                         Tokens.Warning = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/Warning", "InnerText");
                                     }
@@ -304,62 +304,84 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                 }
                 else
                 {
-                    ModernAuthObject ServerObjectResponse;
+                    ModernAuthObject? ServerObjectResponse = null;
+                    string ObjectResponse_Error = string.Empty;
 
                     try
                     {
-                        ServerObjectResponse = JsonConvert.DeserializeObject<ModernAuthObject>(LoginResponse);
-                    }
-                    catch
-                    {
-                        ServerObjectResponse = JsonConvert.DeserializeObject<ModernAuthObject>(ServerErrorResponse);
-                    }
-
-                    if (string.IsNullOrWhiteSpace(ServerObjectResponse.Error) || ServerObjectResponse.Error == "SERVER FULL")
-                    {
-                        if (Method == "Login")
+                        try
                         {
-                            Tokens.UserId = ServerObjectResponse.UserId;
-                            Tokens.LoginToken = ServerObjectResponse.Token;
-
-                            if (!string.IsNullOrWhiteSpace(ServerObjectResponse.Warning))
-                            {
-                                Tokens.Warning = ServerObjectResponse.Warning;
-                            }
+                            ServerObjectResponse = JsonConvert.DeserializeObject<ModernAuthObject>(LoginResponse);
                         }
-                        else if (Method == "Register")
+                        catch
                         {
-                            string MessageSuccess;
-                            string MessageServerWelcome = string.Empty;
+                            ServerObjectResponse = JsonConvert.DeserializeObject<ModernAuthObject>(ServerErrorResponse);
+                        }
+                    }
+                    catch (Exception Error)
+                    {
+                        if (Error != null)
+                        {
+                            ObjectResponse_Error = Error.Message;
+                        }
+                        else
+                        {
+                            ObjectResponse_Error = "Unknown Error Ecnountered";
+                        }
+                    }
 
-                            if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Message))
+                    if (ServerObjectResponse != null)
+                    {
+                        if (string.IsNullOrWhiteSpace(ServerObjectResponse.Error) || ServerObjectResponse.Error == "SERVER FULL")
+                        {
+                            if (Method == "Login")
                             {
-                                if (Launcher_Value.Launcher_Select_Server_JSON.Server_Message.ToLower().Contains("welcome"))
+                                Tokens.UserId = ServerObjectResponse.UserId;
+                                Tokens.LoginToken = ServerObjectResponse.Token;
+
+                                if (!string.IsNullOrWhiteSpace(ServerObjectResponse.Warning))
                                 {
-                                    MessageServerWelcome = Launcher_Value.Launcher_Select_Server_JSON.Server_Message + "\n";
+                                    Tokens.Warning = ServerObjectResponse.Warning;
+                                }
+                            }
+                            else if (Method == "Register")
+                            {
+                                string MessageSuccess;
+                                string MessageServerWelcome = string.Empty;
+
+                                if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Message))
+                                {
+                                    if (Launcher_Value.Launcher_Select_Server_JSON.Server_Message.ToLower().Contains("welcome"))
+                                    {
+                                        MessageServerWelcome = Launcher_Value.Launcher_Select_Server_JSON.Server_Message + "\n";
+                                    }
+                                    else
+                                    {
+                                        MessageServerWelcome = "Welcome: " + Launcher_Value.Launcher_Select_Server_JSON.Server_Message + "\n";
+                                    }
+                                }
+
+                                if (ServerObjectResponse.Error == "SERVER FULL")
+                                {
+                                    MessageSuccess = string.Format(MessageServerWelcome + "Successfully registered on {0}. However, server is actually full, " +
+                                        "therefore you cannot play it right now.", Tokens.ServerName);
                                 }
                                 else
                                 {
-                                    MessageServerWelcome = "Welcome: " + Launcher_Value.Launcher_Select_Server_JSON.Server_Message + "\n";
+                                    MessageSuccess = string.Format(MessageServerWelcome + "Successfully registered on {0}. You can log in now.", Tokens.ServerName);
                                 }
-                            }
 
-                            if (ServerObjectResponse.Error == "SERVER FULL")
-                            {
-                                MessageSuccess = string.Format(MessageServerWelcome + "Successfully registered on {0}. However, server is actually full, " +
-                                    "therefore you cannot play it right now.", Tokens.ServerName);
+                                Tokens.Success = MessageSuccess;
                             }
-                            else
-                            {
-                                MessageSuccess = string.Format(MessageServerWelcome + "Successfully registered on {0}. You can log in now.", Tokens.ServerName);
-                            }
-
-                            Tokens.Success = MessageSuccess;
+                        }
+                        else
+                        {
+                            Tokens.Error = ServerObjectResponse.Error;
                         }
                     }
                     else
                     {
-                        Tokens.Error = ServerObjectResponse.Error;
+                        Tokens.Error = ObjectResponse_Error;
                     }
                 }
             }
@@ -414,6 +436,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                 }
                 if (Type == "InnerText")
                 {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     if (string.IsNullOrWhiteSpace(LocationData.SelectSingleNode(FullNodePath) != null ?
                         LocationData.SelectSingleNode(FullNodePath).InnerText : string.Empty))
                     {
@@ -423,8 +446,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Client.Auth
                         }
                         return "EMPTY VALUE - LAUNCHER";
                     }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     return LocationData.SelectSingleNode(FullNodePath).InnerText;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
                 else if (Type == "NodeOnly")
                 {

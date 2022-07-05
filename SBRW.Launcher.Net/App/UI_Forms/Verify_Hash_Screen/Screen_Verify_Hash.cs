@@ -3,7 +3,6 @@ using SBRW.Launcher.App.Classes.LauncherCore.Global;
 using SBRW.Launcher.App.Classes.LauncherCore.Logger;
 using SBRW.Launcher.App.Classes.LauncherCore.ModNet;
 using SBRW.Launcher.App.Classes.LauncherCore.Support;
-using SBRW.Launcher.App.Classes.LauncherCore.Visuals;
 using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Hash_;
@@ -431,7 +430,6 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                         ScanProgressText.SafeInvokeAction(() => ScanProgressText.Text = "Downloading Checksums File");
 
                         Uri URLCall = new Uri(FinalCDNURL + "/unpacked/checksums.dat");
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                         var Client = new WebClient
@@ -439,7 +437,6 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                             Encoding = Encoding.UTF8,
                             CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
                         if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
                         { 
                             Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
@@ -635,10 +632,12 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                                 {
                                     if (!string.IsNullOrWhiteSpace(text2))
                                     {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                                         if (!new FileInfo(text2).Directory.Exists)
                                         {
                                             new FileInfo(text2).Directory.Create();
                                         }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                                     }
                                 }
                                 catch (Exception Error) { LogToFileAddons.OpenLog("VERIFY HASH File Info", string.Empty, Error, string.Empty, true); }

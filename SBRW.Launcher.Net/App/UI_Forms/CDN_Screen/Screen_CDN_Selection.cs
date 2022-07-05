@@ -183,10 +183,8 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                                     try
                                     {
                                         Uri StringToUri = new Uri(serverurl);
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
                                         ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                                 Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
                                         CheckMate = new Ping();
                                         CheckMate.PingCompleted += (sender3, e3) =>
                                         {

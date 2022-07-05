@@ -23,7 +23,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
         /// </summary>
         /// <param name="Error_Encountered"></param>
         /// <returns></returns>
-        public static Icon Retrive_Icon(bool Error_Encountered = false)
+        public static Icon? Retrive_Icon(bool Error_Encountered = false)
         {
             if (!Set_Cached_Icon)
             {

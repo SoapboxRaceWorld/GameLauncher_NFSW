@@ -117,7 +117,11 @@ namespace SBRW.Launcher.App.UI_Forms
                             "GameLauncher.exe - " + Translations.Database("Program_TextBox_NetFrame_P3"),
                             MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                             {
+#if NETFRAMEWORK
                                 Process.Start("https://dotnet.microsoft.com/download/dotnet-framework/net461");
+#else
+                                Process.Start(new ProcessStartInfo { FileName = "https://dotnet.microsoft.com/download/dotnet-framework/net461", UseShellExecute = true });
+#endif
                             }
 
                             FunctionStatus.LauncherForceClose = true;
@@ -130,7 +134,11 @@ namespace SBRW.Launcher.App.UI_Forms
                             "GameLauncher.exe - " + Translations.Database("Program_TextBox_NetFrame_P3"),
                             MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                             {
+#if NETFRAMEWORK
                                 Process.Start("https://dotnet.microsoft.com/download/dotnet-framework");
+#else
+                                Process.Start(new ProcessStartInfo { FileName = "https://dotnet.microsoft.com/download/dotnet-framework", UseShellExecute = true });
+#endif
                             }
 
                             FunctionStatus.LauncherForceClose = true;

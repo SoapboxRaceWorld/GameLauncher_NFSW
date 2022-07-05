@@ -134,19 +134,31 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
                     case nameof(PatchButton1):
                         if (!string.IsNullOrWhiteSpace(PatchNoteBlocks[0].Link))
                         {
+#if NETFRAMEWORK
                             Process.Start(PatchNoteBlocks[0].Link);
+#else
+                            Process.Start(new ProcessStartInfo { FileName = PatchNoteBlocks[0].Link, UseShellExecute = true });
+#endif
                         }
                         break;
                     case nameof(PatchButton2):
                         if (!string.IsNullOrWhiteSpace(PatchNoteBlocks[1].Link))
                         {
+#if NETFRAMEWORK
                             Process.Start(PatchNoteBlocks[1].Link);
+#else
+                            Process.Start(new ProcessStartInfo { FileName = PatchNoteBlocks[1].Link, UseShellExecute = true });
+#endif
                         }
                         break;
                     case nameof(PatchButton3):
                         if (!string.IsNullOrWhiteSpace(PatchNoteBlocks[2].Link))
                         {
+#if NETFRAMEWORK
                             Process.Start(PatchNoteBlocks[2].Link);
+#else
+                            Process.Start(new ProcessStartInfo { FileName = PatchNoteBlocks[2].Link, UseShellExecute = true });
+#endif
                         }
                         break;
                 }
@@ -182,6 +194,7 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
                                     switch (i)
                                     {
                                         case 0:
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                                             block.Title = node.ChildNodes[i].InnerText;
                                             break;
                                         case 1:
@@ -190,6 +203,7 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
                                         case 2:
                                             block.Link = node.ChildNodes[i].InnerText;
                                             break;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                                     }
                                 }
                                 else
