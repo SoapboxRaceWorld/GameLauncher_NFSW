@@ -971,13 +971,13 @@ namespace SBRW.Launcher.App.UI_Forms
                 {
                     if (Clock.Enabled)
                     {
-                        Screen_Instance.Clock.Stop();
+                        Screen_Instance.SafeInvokeAction(() => Screen_Instance.Clock.Stop(), this);
                     }
                 }
                 else if ((BackgroundImage != Image_Other.Logo_Splash) && (Screen_Instance != null))
                 {
                     Clock_Tick_Theme_Update = true;
-                    Screen_Instance.PictureBox_Screen_Splash.BackgroundImage = Image_Other.Logo_Splash;
+                    PictureBox_Screen_Splash.SafeInvokeAction(() => PictureBox_Screen_Splash.BackgroundImage = Image_Other.Logo_Splash, this);
                 }
                 else
                 {

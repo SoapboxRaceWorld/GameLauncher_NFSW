@@ -15,7 +15,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
         /// <param name="Control_Form">Name of the Control</param>
         /// <param name="Action_Refresh">Parameters to be set for this Control</param>
         /// <param name="Window_Name">Name of the Parent Form</param>
-        static public void SafeInvokeAction(this Control Control_Form, Action Action_Refresh, Form Window_Name)
+        static public void SafeInvokeAction(this Control Control_Form, Action Action_Refresh, Form Window_Name, bool Force_Refresh = true)
         {
             try
             {
@@ -30,7 +30,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
                                 if (Control_Form.InvokeRequired)
                                 {
                                     Control_Form.Invoke(Action_Refresh);
-                                    Control_Form.Refresh();
+
+                                    if (Force_Refresh)
+                                    {
+                                        Control_Form.Refresh();
+                                    }
                                 }
                                 else
                                 {
@@ -61,7 +65,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Safe Invoker Action", String.Empty, Error, String.Empty, true);
+                LogToFileAddons.OpenLog("Safe Invoker Action", string.Empty, Error, string.Empty, true);
             }
         }
         /// <summary>
@@ -70,7 +74,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
         /// <returns>The delegate being invoked has no return value.</returns>
         /// <param name="Control_Form">Name of the Control</param>
         /// <param name="Action_Refresh">Parameters to be set for this Control</param>
-        static public void SafeInvokeAction(this Control Control_Form, Action Action_Refresh)
+        static public void SafeInvokeAction(this Control Control_Form, Action Action_Refresh, bool Force_Refresh = true)
         {
             try
             {
@@ -83,7 +87,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
                             if (Control_Form.InvokeRequired)
                             {
                                 Control_Form.Invoke(Action_Refresh);
-                                Control_Form.Refresh();
+
+                                if (Force_Refresh)
+                                {
+                                    Control_Form.Refresh();
+                                }
                             }
                             else
                             {
@@ -113,7 +121,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Safe Invoker Action [Control Only]", String.Empty, Error, String.Empty, true);
+                LogToFileAddons.OpenLog("Safe Invoker Action [Control Only]", string.Empty, Error, string.Empty, true);
             }
         }
         /// <summary>
@@ -124,7 +132,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
         /// <typeparam name="T">Controls Value</typeparam>
         /// <param name="this">Name of the Control</param>
         /// <param name="Action_Refresh">Parameters to be set for this Control</param>
-        static public void SafeInvokeAction<T>(this T @this, Action<T> Action_Refresh) where T : Control
+        static public void SafeInvokeAction<T>(this T @this, Action<T> Action_Refresh, bool Force_Refresh = true) where T : Control
         {
             try
             {
@@ -135,7 +143,11 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
                         if (@this.InvokeRequired)
                         {
                             @this.Invoke(Action_Refresh);
-                            @this.Refresh();
+
+                            if (Force_Refresh)
+                            {
+                                @this.Refresh();
+                            }
                         }
                         else
                         {
@@ -160,7 +172,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Safe Invoker Action [Control Only]", String.Empty, Error, String.Empty, true);
+                LogToFileAddons.OpenLog("Safe Invoker Action [Control Only]", string.Empty, Error, string.Empty, true);
             }
         }
         /// <summary>
@@ -170,7 +182,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
         /// <param name="this">Name of the Control</param>
         /// <param name="Action_Refresh">Parameters to be set for this Control</param>
         /// <returns>An System.IAsyncResult that represents the result of the System.Windows.Forms.Control.BeginInvoke(System.Delegate) operation.</returns>
-        static public IAsyncResult SafeBeginInvokeActionAsync<T>(this T @this, Action<T> Action_Refresh) where T : Control
+        static public IAsyncResult SafeBeginInvokeActionAsync<T>(this T @this, Action<T> Action_Refresh, bool Force_Refresh = true) where T : Control
         {
             return @this.BeginInvoke((Action)delegate { @this.SafeInvokeAction(Action_Refresh); });
         }
@@ -190,7 +202,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("Safe Invoker [End Invoke (Singleton)]", String.Empty, Error, String.Empty, true);
+                LogToFileAddons.OpenLog("Safe Invoker [End Invoke (Singleton)]", string.Empty, Error, string.Empty, true);
             }
         }
     }

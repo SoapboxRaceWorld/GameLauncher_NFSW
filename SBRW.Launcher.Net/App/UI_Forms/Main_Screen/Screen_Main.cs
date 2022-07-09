@@ -996,30 +996,30 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     Parent_Screen.Screen_Instance.WindowState = FormWindowState.Normal;
                     Parent_Screen.Screen_Instance.ShowInTaskbar = Button_Close.Visible = Button_Logout.Visible = EnablePlayButton(true);
-                    if (Screen_Instance != null)
-                    {
-                        Screen_Instance.Button_Play_OR_Update.Visible = false;
-                    }
+                    Button_Play_OR_Update.SafeInvokeAction(() => Button_Play_OR_Update.Visible = false, this, false);
                 }
                 
                 DisableLogout = false;
 
                 if (Screen_Instance != null)
                 {
-                    Screen_Instance.Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                    Screen_Instance.Label_Download_Information.Text = Error_Msg.ToUpper();
+                    Label_Information_Window.SafeInvokeAction(() => 
+                    Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper(), this, false);
+                    Label_Download_Information.SafeInvokeAction(() =>
+                    Label_Download_Information.Text = Error_Msg.ToUpper(), this);
                 }
 
                 if (Did_Game_Start)
                 {
-
                     Presence_Launcher.Status(0, "Game Closed with Error Code: " + Process_Exit_Code.ToString());
                     Log.Error("GAME CRASH [EXIT CODE]: " + Process_Exit_Code.ToString() + " HEX: (0x" + Process_Exit_Code.ToString("X") + ")" + " REASON: " + Error_Msg);
-                    ProgressBar_Preload.Value = 100;
+                    
                     if ((Screen_Instance != null) && (ProgressBar_Preload.ForeColor != Color_Text.S_Error))
                     {
-                        Screen_Instance.ProgressBar_Preload.ForeColor = Color_Text.S_Error;
+                        ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.ForeColor = Color_Text.S_Error, this, false);
                     }
+
+                    ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Value = 100, this);
                 }
                 else
                 {
@@ -1192,7 +1192,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #endif
                     if (Screen_Instance != null && (!IsDisposed || !Disposing))
                     {
-                        Screen_Instance.Button_Close.Visible = false;
+                        Button_Close.SafeInvokeAction(() => Button_Close.Visible = false, this);
                     }
 
                     if (Parent_Screen.Screen_Instance != null)
@@ -1222,7 +1222,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     string Text_A = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
                     if (Label_Download_Information_Support.Text != Text_A)
                     {
-                        Screen_Instance.Label_Download_Information_Support.Text = Text_A;
+                        Label_Download_Information_Support.SafeInvokeAction(() =>
+                        {
+                            Label_Download_Information_Support.Text = Text_A;
+                        }, false);
                     }
 
                     if (TotalBytesToReceive >= 1)
@@ -1230,7 +1233,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         string Text_B = (" Server Mods: " + ModNetFileNameInUse + " - " + Time_Conversion.FormatFileSize(BytesReceived) + " of " + Time_Conversion.FormatFileSize(TotalBytesToReceive)).ToUpper();
                         if (Label_Download_Information.Text != Text_B)
                         {
-                            Screen_Instance.Label_Download_Information.Text = Text_B;
+                            Label_Download_Information.SafeInvokeAction(() =>
+                            {
+                                Label_Download_Information.Text = Text_B;
+                            }, false);
                         }
                         
                         try
@@ -1240,8 +1246,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             int Number_A = int.Parse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString());
                             if (ProgressBar_Extracting.Value != Number_A)
                             {
-                                Screen_Instance.ProgressBar_Extracting.Value = Number_A;
-                                Screen_Instance.ProgressBar_Extracting.Width = int.Parse(Math.Round(Calulated_Division * 519).ToString());
+                                ProgressBar_Extracting.SafeInvokeAction(() =>
+                                {
+                                    ProgressBar_Extracting.Value = Number_A;
+                                    ProgressBar_Extracting.Width = int.Parse(Math.Round(Calulated_Division * 519).ToString());
+                                });
                             }
                         }
                         catch
@@ -1258,13 +1267,19 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     string Text_A = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
                     if (Label_Download_Information_Support.Text != Text_A)
                     {
-                        Screen_Instance.Label_Download_Information_Support.Text = Text_A;
+                        Label_Download_Information_Support.SafeInvokeAction(() =>
+                        {
+                            Label_Download_Information_Support.Text = Text_A;
+                        }, false);
                     }
 
                     string Text_B = (" Server Mods: " + ModNetFileNameInUse).ToUpper();
                     if (Label_Download_Information.Text != Text_B)
                     {
-                        Screen_Instance.Label_Download_Information.Text = Text_B;
+                        Label_Download_Information.SafeInvokeAction(() =>
+                        {
+                            Label_Download_Information.Text = Text_B;
+                        });
                     }
                 }
             }
@@ -1329,7 +1344,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (Screen_Instance != null && (!IsDisposed || !Disposing))
                     {
-                        Screen_Instance.Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
+                        Label_Information_Window.SafeInvokeAction(() =>
+                        Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper());
                     }
                 }
                 finally
@@ -1355,101 +1371,101 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     /* Checking (Pinging Blue) */
                     case 1:
-                        if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Checking))
-                        {
-                            ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Checking);
-                        }
-
                         if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Checking_Outline)
                         {
-                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                            Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline, this);
+                        }
+
+                        if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Checking))
+                        {
+                            ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Checking), this);
                         }
 
                         if (Login_Icon_Color)
                         {
                             if (Picture_Information_Window.Image != Image_Other.Information_Window)
                             {
-                                Picture_Information_Window.Image = Image_Other.Information_Window;
+                                Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window, this);
                             }
                         }
                         break;
                     /* Error (Red) */
                     case 2:
-                        if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Error))
-                        {
-                            ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Error);
-                        }
-
                         if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Error_Outline)
                         {
-                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Error_Outline;
+                            Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Error_Outline, this);
+                        }
+
+                        if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Error))
+                        {
+                            ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Error), this);
                         }
 
                         if (Login_Icon_Color)
                         {
                             if (Picture_Information_Window.Image != Image_Other.Information_Window_Error)
                             {
-                                Picture_Information_Window.Image = Image_Other.Information_Window_Error;
+                                Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Error, this);
                             }
                         }
                         break;
                     /* Warning (Yellow) */
                     case 3:
-                        if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Warning))
-                        {
-                            ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Warning);
-                        }
-
                         if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Warning_Outline)
                         {
-                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline;
+                            Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline, this);
+                        }
+
+                        if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Warning))
+                        {
+                            ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Warning), this);
                         }
 
                         if (Login_Icon_Color)
                         {
                             if (Picture_Information_Window.Image != Image_Other.Information_Window_Warning)
                             {
-                                Picture_Information_Window.Image = Image_Other.Information_Window_Warning;
+                                Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Warning, this);
                             }
                         }
                         break;
                     /* Unknown (Gray) */
                     case 4:
-                        if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Preload))
-                        {
-                            ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Preload);
-                        }
-
                         if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Preload_Outline)
                         {
-                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Preload_Outline;
+                            Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Preload_Outline, this);
+                        }
+
+                        if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Preload))
+                        {
+                            ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Preload), this);
                         }
 
                         if (Login_Icon_Color)
                         {
                             if (Picture_Information_Window.Image != Image_Other.Information_Window_Unknown)
                             {
-                                Picture_Information_Window.Image = Image_Other.Information_Window_Unknown;
+                                Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Unknown, this);
                             }
                         }
                         break;
                     /* Complete (Green) */
                     default:
-                        if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Complete))
-                        {
-                            ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Complete);
-                        }
-
                         if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Complete_Outline)
                         {
-                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Complete_Outline;
+                            Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Complete_Outline, this);
+                        }
+
+                        if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Complete))
+                        {
+                            ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Complete), this);
                         }
 
                         if (Login_Icon_Color)
                         {
                             if (Picture_Information_Window.Image != Image_Other.Information_Window_Success)
                             {
-                                Picture_Information_Window.Image = Image_Other.Information_Window_Success;
+                                Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Success, this);
                             }
                         }
                         break;
@@ -2842,10 +2858,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         {
             if (Screen_Instance != null && !(IsDisposed || Disposing))
             {
-                Screen_Instance.Label_Download_Information.Text = "Checking Tracks Files...".ToUpper();
-
-                Screen_Instance.ProgressBar_Preload.Width = 0;
-                Screen_Instance.ProgressBar_Extracting.Width = 0;
+                Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Checking Tracks Files...".ToUpper(), this);
+                ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Width = 0, this);
+                ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Width = 0, this);
 
                 if (Parent_Screen.Screen_Instance != null)
                 {
@@ -2856,7 +2871,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 if (!File.Exists(SpecificTracksFilePath) && (LZMA_Downloader != null))
                 {
                     DownloadStartTime = DateTime.Now;
-                    Screen_Instance.Label_Download_Information_Support.Text = "Downloading: Tracks Data".ToUpper();
+                    Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Downloading: Tracks Data".ToUpper(), this);
                     Log.Info("DOWNLOAD: Getting Tracks Folder");
                     Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
                     LZMA_Downloader.StartDownload(Save_Settings.Live_Data.Launcher_CDN, "Tracks", Save_Settings.Live_Data.Game_Path, false, false, 615494528);
@@ -2881,10 +2896,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 if (InformationCache.EnableLZMADownloader)
                 {
-                    Screen_Instance.Label_Download_Information.Text = "Looking for correct Speech Files...".ToUpper();
-
-                    Screen_Instance.ProgressBar_Preload.Width = 0;
-                    Screen_Instance.ProgressBar_Extracting.Width = 0;
+                    Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Looking for correct Speech Files...".ToUpper(), this);
+                    ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Width = 0, this);
+                    ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Width = 0, this);
 
                     if (Parent_Screen.Screen_Instance != null)
                     {
@@ -2954,14 +2968,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         speechSize = Download_LZMA_Support.SpeechFilesSize();
                     }
 
-                    Screen_Instance.Label_Download_Information.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
+                    Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper(), this);
                 }
 
                 string SoundSpeechPath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Sound", "Speech", "copspeechsth_" + speechFile + ".big");
                 if (!File.Exists(SoundSpeechPath) && InformationCache.EnableLZMADownloader && LZMA_Downloader != null)
                 {
                     DownloadStartTime = DateTime.Now;
-                    Screen_Instance.Label_Download_Information_Support.Text = "Downloading: Language Audio".ToUpper();
+                    Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Downloading: Language Audio".ToUpper(), this);
                     Log.Info("DOWNLOAD: Getting Speech/Audio Files");
                     Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
                     LZMA_Downloader.StartDownload(Save_Settings.Live_Data.Launcher_CDN, speechFile, Save_Settings.Live_Data.Game_Path, false, false, speechSize);
@@ -2969,7 +2983,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 else
                 {
                     OnDownloadFinished();
-                    Screen_Instance.Label_Download_Information_Support.Text = string.Empty;
+                    Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = string.Empty, this);
                     Log.Info("DOWNLOAD: Game Files Download is Complete!");
                 }
             }
@@ -3053,25 +3067,28 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             if ((Launcher_Value.Launcher_Select_Server_Category.ToUpper() != "DEV" || Launcher_Value.Launcher_Select_Server_Category.ToUpper() != "OFFLINE"))
                             {
-                                Screen_Instance.Panel_Server_Information.Visible = true;
+                                Panel_Server_Information.SafeInvokeAction(() => Panel_Server_Information.Visible = true, this);
                             }
                         }
                     }
 
-                    Screen_Instance.ProgressBar_Extracting.Value = 100;
-                    Screen_Instance.ProgressBar_Extracting.Width = 519;
+                    if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Complete_Outline)
+                    {
+                        Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Complete_Outline, this);
+                    }
+
+                    ProgressBar_Extracting.SafeInvokeAction(() =>
+                    {
+                        ProgressBar_Extracting.Value = 100;
+                        ProgressBar_Extracting.Width = 519;
+                    }, this);
 
                     if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Complete))
                     {
-                        Screen_Instance.ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Complete);
+                        ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Complete), this);
                     }
 
-                    if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Complete_Outline)
-                    {
-                        Screen_Instance.Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Complete_Outline;
-                    }
-
-                    Screen_Instance.Label_Download_Information.Text = "Ready!".ToUpper();
+                    Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Ready!".ToUpper(), this);
 
                     EnablePlayButton();
 
@@ -3098,8 +3115,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Playenabled = true;
             if (Screen_Instance != null && !(IsDisposed || Disposing))
             {
-                Screen_Instance.ProgressBar_Extracting.Value = 100;
-                Screen_Instance.ProgressBar_Extracting.Width = 519;
+                ProgressBar_Extracting.SafeInvokeAction(() =>
+                {
+                    ProgressBar_Extracting.Value = 100;
+                    ProgressBar_Extracting.Width = 519;
+                }, this);
             }
 
             return Return_Value;
@@ -3141,20 +3161,23 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 try
                 {
-                    Screen_Instance.ProgressBar_Extracting.Value = 100;
-                    Screen_Instance.ProgressBar_Extracting.Width = 519;
+                    ProgressBar_Extracting.SafeInvokeAction(() =>
+                    {
+                        ProgressBar_Extracting.Value = 100;
+                        ProgressBar_Extracting.Width = 519;
+                    }, this);
 
                     if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Error))
                     {
-                        Screen_Instance.ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Error);
+                        ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Error), this);
                     }
 
                     if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Error_Outline)
                     {
-                        Screen_Instance.Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Error_Outline;
+                        Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Error_Outline, this);
                     }
 
-                    Screen_Instance.Label_Download_Information.Text = ((Error != null) ? Error.Message : "Download Failed. No Reason Provided").ToUpper();
+                    Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = ((Error != null) ? Error.Message : "Download Failed. No Reason Provided").ToUpper(), this);
 
                     if (Parent_Screen.Screen_Instance != null)
                     {
@@ -3168,7 +3191,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             if ((Launcher_Value.Launcher_Select_Server_Category.ToUpper() != "DEV" || Launcher_Value.Launcher_Select_Server_Category.ToUpper() != "OFFLINE"))
                             {
-                                Screen_Instance.Panel_Server_Information.Visible = true;
+                                Panel_Server_Information.SafeInvokeAction(() => Panel_Server_Information.Visible = true, this);
                             }
                         }
                     }
@@ -3179,7 +3202,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         if (!string.IsNullOrWhiteSpace(Input_Email.Text))
                         {
                             TempEmailCache = Input_Email.Text;
-                            Screen_Instance.Input_Email.Text = "EMAIL IS HIDDEN";
+                            Input_Email.SafeInvokeAction(() => Input_Email.Text = "EMAIL IS HIDDEN", this);
                         }
 
                         string LogMessage = "CDN Downloader Encountered an Error:";
@@ -3187,7 +3210,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         if (!string.IsNullOrWhiteSpace(TempEmailCache))
                         {
-                            Screen_Instance.Input_Email.Text = TempEmailCache;
+                            Input_Email.SafeInvokeAction(() => Input_Email.Text = TempEmailCache, this);
                         }
                     }
                 }
@@ -3211,9 +3234,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         {
             if (Screen_Instance != null)
             {
-                Screen_Instance.ProgressBar_Extracting.Width = Screen_Instance.ProgressBar_Extracting.Value = 0;
-                Screen_Instance.ProgressBar_Preload.Width = Screen_Instance.ProgressBar_Preload.Value = 0;
-                Screen_Instance.Label_Download_Information.Text = "Loading".ToUpper();
+                Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Loading".ToUpper(), this);
+                ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Value = 0, this);
+                ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Value = 0, this);
 
                 long Game_Folder_Size = File_and_Folder_Extention.GetDirectorySize_GameFiles(new DirectoryInfo(Save_Settings.Live_Data.Game_Path));
                 /* TODO: Check for other files and Folder Size */
@@ -3230,7 +3253,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack", 10))
                     {
                         case APIStatus.Online:
-                            Screen_Instance.Label_Download_Information_Support.Text = "Downloading: Core Game Files Package".ToUpper();
+                            Label_Download_Information_Support.SafeInvokeAction(() =>
+                            {
+                                Label_Download_Information_Support.Text = "Downloading: Core Game Files Package".ToUpper();
+                            }, this);
 
                             Pack_SBRW_Downloader = new Download_Queue();
                             /* @DavidCarbon or @Zacam (Translation Strings Required) */
@@ -3322,8 +3348,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
                                 if (!Pack_SBRW_Downloader.Cancel && (!Disposing || !IsDisposed))
                                 {
-                                    Screen_Instance.ProgressBar_Extracting.Value = (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total);
-                                    Screen_Instance.ProgressBar_Extracting.Width = (int)(519 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total);
+                                    ProgressBar_Extracting.SafeInvokeAction(() =>
+                                    {
+                                        ProgressBar_Extracting.Value = (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total);
+                                        ProgressBar_Extracting.Width = (int)(519 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total);
+                                    }, this);
 
                                     TimeSpan Time_Clock = DateTime.Now - D_Live_Events.Start_Time;
 
@@ -3341,9 +3370,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         }, Parent_Screen.Screen_Instance);
                                     }
 
-                                    Screen_Instance.Label_Download_Information.Text = (Time_Conversion.FormatFileSize(D_Live_Events.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(D_Live_Events.File_Size_Total) +
+                                    Label_Download_Information.SafeInvokeAction(() =>
+                                    {
+                                        Label_Download_Information.Text = (Time_Conversion.FormatFileSize(D_Live_Events.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(D_Live_Events.File_Size_Total) +
                                         " (" + D_Live_Events.Download_Percentage + "%) - " +
                                         Time_Conversion.EstimateFinishTime(D_Live_Events.File_Size_Current, D_Live_Events.File_Size_Total, D_Live_Events.Start_Time)).ToUpper();
+                                    }, this);
                                 }
                             };
                             Pack_SBRW_Downloader.Complete += (x, D_Live_Events) =>
@@ -3358,12 +3390,25 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         }, Parent_Screen.Screen_Instance);
                                     }
 
-                                    Screen_Instance.ProgressBar_Extracting.Width = Screen_Instance.ProgressBar_Extracting.Value = 0;
-                                    Screen_Instance.ProgressBar_Preload.Value = 100;
-                                    Screen_Instance.ProgressBar_Preload.Width = 519;
+                                    ProgressBar_Extracting.SafeInvokeAction(() =>
+                                    {
+                                        ProgressBar_Extracting.Value = 0;
+                                        ProgressBar_Extracting.Width = 0;
+                                    }, this);
 
-                                    Screen_Instance.Label_Download_Information_Support.Text = "Downloaded: SBRW Game Files Package".ToUpper();
-                                    Screen_Instance.Label_Download_Information.Text = "Checking Package Integrity".ToUpper();
+                                    ProgressBar_Preload.SafeInvokeAction(() =>
+                                    {
+                                        ProgressBar_Preload.Value = 100;
+                                        ProgressBar_Preload.Width = 519;
+                                    }, this);
+
+                                    Label_Download_Information_Support.SafeInvokeAction(() =>
+                                    {
+                                        Label_Download_Information_Support.Text = "Downloaded: SBRW Game Files Package".ToUpper();
+                                    }, this);
+
+                                    Label_Download_Information.SafeInvokeAction(() =>
+                                    Label_Download_Information.Text = "Checking Package Integrity".ToUpper(), this);
 
                                     /* Check Local GameFiles Hash */
                                     string Last_Known_Location = D_Live_Events.Download_Location ?? Path.Combine(Save_Settings.Live_Data.Game_Path, ".Launcher", "Downloads", "GameFiles.sbrwpack");
@@ -3391,8 +3436,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         {
                                             if (U_Live_Events != null && (!Disposing || !IsDisposed))
                                             {
-                                                Screen_Instance.ProgressBar_Extracting.Value = U_Live_Events.Extract_Percentage;
-                                                Screen_Instance.ProgressBar_Extracting.Width = (int)(519 * U_Live_Events.File_Current / U_Live_Events.File_Total);
+                                                ProgressBar_Extracting.SafeInvokeAction(() =>
+                                                {
+                                                    ProgressBar_Extracting.Value = U_Live_Events.Extract_Percentage;
+                                                    ProgressBar_Extracting.Width = (int)(519 * U_Live_Events.File_Current / U_Live_Events.File_Total);
+                                                }, this);
 
                                                 Presence_Launcher.Status(1, string.Format("Unpacking Game: {0}%", U_Live_Events.Extract_Percentage));
 
@@ -3404,11 +3452,13 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                                     }, Parent_Screen.Screen_Instance);
                                                 }
 
-                                                Screen_Instance.Label_Download_Information_Support.Text = U_Live_Events.Extract_Percentage + "% [" + U_Live_Events.File_Current + " / " + U_Live_Events.File_Total + "]";
+                                                Label_Download_Information_Support.SafeInvokeAction(() =>
+                                                Label_Download_Information_Support.Text = U_Live_Events.Extract_Percentage + "% [" + U_Live_Events.File_Current + " / " + U_Live_Events.File_Total + "]", this);
 
                                                 if ((U_Live_Events.File_Current_Name != null) && !string.IsNullOrWhiteSpace(U_Live_Events.File_Current_Name))
                                                 {
-                                                    Screen_Instance.Label_Download_Information.Text = ("Unpacking " + U_Live_Events.File_Current_Name.Replace(Pack_SBRW_Unpacker.File_Extension_Replacement, string.Empty)).ToUpper();
+                                                    Label_Download_Information.SafeInvokeAction(() =>
+                                                    Label_Download_Information.Text = ("Unpacking " + U_Live_Events.File_Current_Name.Replace(Pack_SBRW_Unpacker.File_Extension_Replacement, string.Empty)).ToUpper(), this);
                                                 }
                                             }
                                         };
@@ -3416,8 +3466,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         {
                                             if (U_Live_Events != null && (!Disposing || !IsDisposed))
                                             {
-                                                Screen_Instance.Label_Download_Information_Support.Visible = false;
-                                                Screen_Instance.Label_Download_Information_Support.Text = string.Empty;
+                                                Label_Download_Information_Support.SafeInvokeAction(() =>
+                                                {
+                                                    Label_Download_Information_Support.Visible = false;
+                                                    Label_Download_Information_Support.Text = string.Empty;
+                                                }, this);
 
                                                 IsDownloading = false;
                                                 OnDownloadFinished();
@@ -3486,26 +3539,35 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     if (ProgressBar_Preload.Image != new Bitmap(Image_ProgressBar.Preload))
                     {
-                        Screen_Instance.ProgressBar_Preload.Image = new Bitmap(Image_ProgressBar.Preload);
+                        ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Image = new Bitmap(Image_ProgressBar.Preload), this);
                     }
 
                     if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Checking))
                     {
-                        Screen_Instance.ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Checking);
+                        ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Checking), this);
                     }
 
                     if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Checking_Outline)
                     {
-                        Screen_Instance.Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                        Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.Image = new Bitmap(Image_ProgressBar.Checking_Outline), this);
                     }
 
                     if (Panel_Server_Information.Visible)
                     {
-                        Screen_Instance.Panel_Server_Information.Visible = false;
+                        Panel_Server_Information.SafeInvokeAction(() => Panel_Server_Information.Visible = false, this);
                     }
 
-                    Screen_Instance.ProgressBar_Extracting.Width = Screen_Instance.ProgressBar_Extracting.Value = 0;
-                    Screen_Instance.ProgressBar_Preload.Width = Screen_Instance.ProgressBar_Preload.Value = 0;
+                    ProgressBar_Extracting.SafeInvokeAction(() =>
+                    {
+                        ProgressBar_Extracting.Value = 0;
+                        ProgressBar_Extracting.Width = 0;
+                    }, this);
+
+                    ProgressBar_Preload.SafeInvokeAction(() =>
+                    {
+                        ProgressBar_Preload.Value = 0;
+                        ProgressBar_Preload.Width = 0;
+                    }, this);
                 }
                 catch (Exception Error)
                 {
@@ -3615,9 +3677,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                 try
                                 {
-                                    Screen_Instance.Label_Download_Information.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.Bytes_Received),
+                                    Label_Download_Information.SafeInvokeAction(() =>
+                                    Label_Download_Information.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.Bytes_Received),
                                     Time_Conversion.FormatFileSize(Live_Data.Bytes_To_Receive_Total), Time_Conversion.EstimateFinishTime(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total,
-                                    Live_Data.Start_Time), Math_Core.Clamp(Math.Round(Calulated_Division * 100, 0), 0, 100));
+                                    Live_Data.Start_Time), Math_Core.Clamp(Math.Round(Calulated_Division * 100, 0), 0, 100)), this);
 
                                     if (EnableInsiderDeveloper.Allowed())
                                     {
@@ -3640,8 +3703,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                 try
                                 {
-                                    Screen_Instance.ProgressBar_Extracting.Value = int.Parse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString());
-                                    Screen_Instance.ProgressBar_Extracting.Width = int.Parse(Math.Round(Calulated_Division * 519).ToString());
+                                    ProgressBar_Extracting.SafeInvokeAction(() =>
+                                    {
+                                        ProgressBar_Extracting.Value = int.Parse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString());
+                                        ProgressBar_Extracting.Width = int.Parse(Math.Round(Calulated_Division * 519).ToString());
+                                    }, this);
 
                                     Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100)));
 
@@ -3705,11 +3771,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     {
                         if (Screen_Instance != null && (!IsDisposed || !Disposing))
                         {
-                            Screen_Instance.Label_Download_Information.Text = "Checking Core Files...".ToUpper();
-
-                            Screen_Instance.ProgressBar_Preload.Width = 0;
-
-                            Screen_Instance.ProgressBar_Extracting.Width = 0;
+                            ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Width = 0, this, false);
+                            ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Width = 0, this, false);
+                            Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Checking Core Files...".ToUpper(), this);
 
                             if (Parent_Screen.Screen_Instance != null)
                             {
@@ -3724,7 +3788,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             DownloadStartTime = DateTime.Now;
                             if (Screen_Instance != null && (!IsDisposed || !Disposing))
                             {
-                                Screen_Instance.Label_Download_Information_Support.Text = "Downloading: Core GameFiles".ToUpper();
+                                Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Downloading: Core GameFiles".ToUpper(), this);
                             }
                             Log.Info("DOWNLOAD: Getting Core Game Files");
                             Download_Settings.System_Unix = UnixOS.Detected();
@@ -3735,7 +3799,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             DownloadTracksFiles();
                         }
-                    }));
+                    }, false));
                 }
                 catch (Exception Error)
                 {
@@ -3750,15 +3814,22 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             if (Screen_Instance != null && (!IsDisposed || !Disposing))
             {
-                Screen_Instance.Button_Play_OR_Update.BackgroundImage = Image_Button.Play;
-                Screen_Instance.Button_Play_OR_Update.ForeColor = Color_Text.L_Three;
-                Screen_Instance.Label_Download_Information.Text = "Checking up all files".ToUpper();
-                Screen_Instance.ProgressBar_Preload.Width = 0;
-                Screen_Instance.ProgressBar_Extracting.Width = 0;
+                ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Width = 0, this, false);
+                ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Width = 0, this, false);
+
+                Button_Play_OR_Update.SafeInvokeAction(() =>
+                {
+                    Button_Play_OR_Update.BackgroundImage = Image_Button.Play;
+                    Button_Play_OR_Update.ForeColor = Color_Text.L_Three;
+                }, this, false);
+
+                Label_Download_Information.SafeInvokeAction(() =>
+                Label_Download_Information.Text = "Checking up all files".ToUpper(), this);
 
                 try
                 {
-                    Screen_Instance.Label_Download_Information.Text = "Loading list of files to download...".ToUpper();
+                    Label_Download_Information.SafeInvokeAction(() => 
+                    Label_Download_Information.Text = "Loading list of files to download...".ToUpper(), this);
 
                     DriveInfo[] allDrives = DriveInfo.GetDrives();
                     foreach (DriveInfo d in allDrives)
@@ -3767,20 +3838,27 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             if (d.TotalFreeSpace < 8000000000 || !string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                Screen_Instance.Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline;
-                                Screen_Instance.ProgressBar_Extracting.Value = 100;
-                                Screen_Instance.ProgressBar_Extracting.Width = 519;
-                                Screen_Instance.ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Warning);
-                                Screen_Instance.ProgressBar_Extracting.ProgressColor = Color_Winform_Other.Progress_Color_Extracting;
+                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline, this, false);
+
+                                ProgressBar_Extracting.SafeInvokeAction(() =>
+                                {
+                                    ProgressBar_Extracting.Value = 100;
+                                    ProgressBar_Extracting.Width = 519;
+                                    ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Warning);
+                                    ProgressBar_Extracting.ProgressColor = Color_Winform_Other.Progress_Color_Extracting;
+                                }, this, false);
 
                                 if (!string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    Screen_Instance.Label_Download_Information_Support.Text = ("Playing the game on a non-NTFS-formatted drive is not supported.").ToUpper();
-                                    Screen_Instance.Label_Download_Information.Text = ("Drive '" + d.Name + "' is formatted with: " + d.DriveFormat + " Type.").ToUpper();
+                                    Label_Download_Information_Support.SafeInvokeAction(() =>
+                                    Label_Download_Information_Support.Text = ("Playing the game on a non-NTFS-formatted drive is not supported.").ToUpper(), this, false);
+                                    Label_Download_Information.SafeInvokeAction(() =>
+                                    Label_Download_Information.Text = ("Drive '" + d.Name + "' is formatted with: " + d.DriveFormat + " Type.").ToUpper(), this);
                                 }
                                 else
                                 {
-                                    Screen_Instance.Label_Download_Information.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper();
+                                    Label_Download_Information.SafeInvokeAction(() =>
+                                    Label_Download_Information.Text = ("Make sure you have at least 8GB of free space on hard drive.").ToUpper(), this);
                                 }
 
                                 FunctionStatus.IsVerifyHashDisabled = true;
@@ -3793,13 +3871,18 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
                             else if (Save_Settings.Live_Data.Launcher_CDN.StartsWith("http://localhost") || Save_Settings.Live_Data.Launcher_CDN.StartsWith("https://localhost"))
                             {
-                                Screen_Instance.Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline;
-                                Screen_Instance.ProgressBar_Extracting.Value = 100;
-                                Screen_Instance.ProgressBar_Extracting.Width = 519;
-                                Screen_Instance.ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Warning);
-                                Screen_Instance.ProgressBar_Extracting.ProgressColor = Color_Winform_Other.Progress_Color_Extracting;
-                                Screen_Instance.Label_Download_Information_Support.Text = "Failsafe CDN Detected".ToUpper();
-                                Screen_Instance.Label_Download_Information.Text = "Please Choose a CDN from Settings Screen".ToUpper();
+                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline, this, false);
+
+                                ProgressBar_Extracting.SafeInvokeAction(() =>
+                                {
+                                    ProgressBar_Extracting.Value = 100;
+                                    ProgressBar_Extracting.Width = 519;
+                                    ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Warning);
+                                    ProgressBar_Extracting.ProgressColor = Color_Winform_Other.Progress_Color_Extracting;
+                                }, this, false);
+
+                                Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Failsafe CDN Detected".ToUpper(), this, false);
+                                Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Please Choose a CDN from Settings Screen".ToUpper(), this);
 
                                 if (Parent_Screen.Screen_Instance != null)
                                 {
