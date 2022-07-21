@@ -12,7 +12,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Logger
 {
     class LogToFileAddons
     {
-        public static string OpenLogMessage = "Would you Like to Open the Launcher Error Log and Send it to a Support Channel?" +
+        public static string OpenLogMessage { get; set; } = "Would you Like to Open the Launcher Error Log and Send it to a Support Channel?" +
                     "\nThis would be Useful for Fixing Issues and Potential Solutions";
 
         public static void OpenLog(string From, string MessageDetails, Exception Error, string Icon, bool Suppress)

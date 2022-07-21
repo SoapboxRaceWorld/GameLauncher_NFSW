@@ -63,7 +63,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
     <PackageReference Include="SBRW.Ini.Parser" Version="2.6.5" />
-    <PackageReference Include="SBRW.Launcher.Core" Version="0.0.56" />
+    <PackageReference Include="SBRW.Launcher.Core" Version="0.0.57" />
     <PackageReference Include="SBRW.Launcher.Core.Discord" Version="0.0.28" />
     <PackageReference Include="SBRW.Launcher.Core.Downloader" Version="0.1.4" />
     <PackageReference Include="SBRW.Launcher.Core.Extra" Version="0.0.21" />
@@ -72,7 +72,6 @@
     <PackageReference Include="SBRW.Nancy" Version="2.0.13" />
     <PackageReference Include="SBRW.Nancy.Hosting.Self" Version="2.0.11" />
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
-    <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="WindowsFirewallHelper" Version="2.2.0.86" />
   </ItemGroup>
