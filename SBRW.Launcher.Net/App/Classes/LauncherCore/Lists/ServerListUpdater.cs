@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using SBRW.Launcher.App.Classes.LauncherCore.APICheckers;
+using System.Threading.Tasks;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 {
@@ -24,7 +25,7 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
         public static List<Json_List_Server> CleanList { get; set; } = new List<Json_List_Server>();
         public static string CachedJSONList { get; set; } = string.Empty;
 
-        public static void GetList()
+        public static async void GetList()
         {
             LogToFileAddons.Parent_Log_Screen(2, "SERVER LIST CORE", "Creating Server List");
             Presence_Launcher.Status(0, "Creating Server List");
@@ -33,86 +34,48 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
 
             List<Json_List_Server> CustomServerInfos = new List<Json_List_Server>();
 
-            try
-            {
-#pragma warning disable CS8604 // Possible null reference argument.
-                serverInfos.AddRange(JsonConvert.DeserializeObject<List<Json_List_Server>>(CachedJSONList));
-#pragma warning restore CS8604 // Possible null reference argument.
-                LoadedList = true;
-
-                if (VisualsAPIChecker.CarbonAPITwo())
-                {
-                    DateTime Time_Check = DateTime.Now.Date;
-                    string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "Lists");
-                    string Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
-
-                    if (File.Exists(Time_Stamp))
-                    {
-                        try
-                        {
-                            Time_Check = DateTime.Parse(File.ReadLines(Time_Stamp).First()).Date;
-                        }
-                        catch
-                        {
-
-                        }
-                        finally
-                        {
-                            GC.Collect();
-                        }
-                    }
-
-                    if ((Time_Check < DateTime.Now.Date) || !File.Exists(Time_Stamp))
-                    {
-                        if (!Directory.Exists(Launcher_Data_Folder))
-                        {
-                            Directory.CreateDirectory(Launcher_Data_Folder);
-                        }
-                        
-                        File.WriteAllText(Path.Combine(Launcher_Data_Folder, "Game_Servers.json"), CachedJSONList);
-                        File.WriteAllText(Path.Combine(Launcher_Data_Folder, "Content_Delivery_Networks.json"), CDNListUpdater.CachedJSONList);
-                        File.WriteAllText(Time_Stamp, DateTime.Now.ToString());
-                    }
-                }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("SERVER LIST CORE", string.Empty, Error, string.Empty, true);
-
-                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                {
-                    LogToFileAddons.Parent_Log_Screen(5, "SERVER LIST CORE", Error.InnerException.Message, false, true);
-                }
-            }
-            finally
-            {
-                if (!string.IsNullOrWhiteSpace(CachedJSONList))
-                {
-                    CachedJSONList = string.Empty;
-                }
-
-                GC.Collect();
-            }
-
-            if (File.Exists(Locations.LauncherCustomServers))
+            await Task.Run(() =>
             {
                 try
                 {
-                    List<Json_List_Server> fileItems = JsonConvert.DeserializeObject<List<Json_List_Server>>
-                    (File.ReadAllText(Locations.LauncherCustomServers)) ?? new List<Json_List_Server>();
+#pragma warning disable CS8604 // Possible null reference argument.
+                    serverInfos.AddRange(JsonConvert.DeserializeObject<List<Json_List_Server>>(CachedJSONList));
+#pragma warning restore CS8604 // Possible null reference argument.
+                    LoadedList = true;
 
-                    if (fileItems.Count > 0)
+                    if (VisualsAPIChecker.CarbonAPITwo())
                     {
-                        fileItems.Select(si =>
-                        {
-                            si.ID = string.IsNullOrWhiteSpace(si.ID) ? Hashes.Hash_String(1, $"{si.Name}:{si.ID}:{si.IPAddress}") : si.ID;
-                            si.IsSpecial = false;
-                            si.Category = string.IsNullOrWhiteSpace(si.Category) ? "CUSTOM" : si.Category;
+                        DateTime Time_Check = DateTime.Now.Date;
+                        string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "Lists");
+                        string Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
 
-                            return si;
-                        }).ToList().ForEach(si => CustomServerInfos.Add(si));
-                        serverInfos.AddRange(CustomServerInfos);
-                        LoadedList = true;
+                        if (File.Exists(Time_Stamp))
+                        {
+                            try
+                            {
+                                Time_Check = DateTime.Parse(File.ReadLines(Time_Stamp).First()).Date;
+                            }
+                            catch
+                            {
+
+                            }
+                            finally
+                            {
+                                GC.Collect();
+                            }
+                        }
+
+                        if ((Time_Check < DateTime.Now.Date) || !File.Exists(Time_Stamp))
+                        {
+                            if (!Directory.Exists(Launcher_Data_Folder))
+                            {
+                                Directory.CreateDirectory(Launcher_Data_Folder);
+                            }
+
+                            File.WriteAllText(Path.Combine(Launcher_Data_Folder, "Game_Servers.json"), CachedJSONList);
+                            File.WriteAllText(Path.Combine(Launcher_Data_Folder, "Content_Delivery_Networks.json"), CDNListUpdater.CachedJSONList);
+                            File.WriteAllText(Time_Stamp, DateTime.Now.ToString());
+                        }
                     }
                 }
                 catch (Exception Error)
@@ -126,8 +89,52 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Lists
                 }
                 finally
                 {
+                    if (!string.IsNullOrWhiteSpace(CachedJSONList))
+                    {
+                        CachedJSONList = string.Empty;
+                    }
+
                     GC.Collect();
                 }
+            });
+
+            if (File.Exists(Locations.LauncherCustomServers))
+            {
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        List<Json_List_Server> fileItems = JsonConvert.DeserializeObject<List<Json_List_Server>>
+                        (File.ReadAllText(Locations.LauncherCustomServers)) ?? new List<Json_List_Server>();
+
+                        if (fileItems.Count > 0)
+                        {
+                            fileItems.Select(si =>
+                            {
+                                si.ID = string.IsNullOrWhiteSpace(si.ID) ? Hashes.Hash_String(1, $"{si.Name}:{si.ID}:{si.IPAddress}") : si.ID;
+                                si.IsSpecial = false;
+                                si.Category = string.IsNullOrWhiteSpace(si.Category) ? "CUSTOM" : si.Category;
+
+                                return si;
+                            }).ToList().ForEach(si => CustomServerInfos.Add(si));
+                            serverInfos.AddRange(CustomServerInfos);
+                            LoadedList = true;
+                        }
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("SERVER LIST CORE", string.Empty, Error, string.Empty, true);
+
+                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                        {
+                            LogToFileAddons.Parent_Log_Screen(5, "SERVER LIST CORE", Error.InnerException.Message, false, true);
+                        }
+                    }
+                    finally
+                    {
+                        GC.Collect();
+                    }
+                });
             }
 
             if (File.Exists("libOfflineServer.dll"))

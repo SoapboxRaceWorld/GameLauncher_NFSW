@@ -14,6 +14,7 @@ using System.Net;
 using System.Text;
 using System.Windows.Forms;
 using System.Net.Cache;
+using System.Threading.Tasks;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -24,141 +25,18 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
         private static string VersionJSON { get; set; } = string.Empty;
 
         /* Check If Updater Exists or Requires an Update */
-        public static void Check()
+        public static async void Check()
         {
             LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER UPDATER", "Is Version Up to Date or not");
             Presence_Launcher.Status(0, "Checking Launcher and Updater Release Information");
 
             /* Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon */
-            try
+            await Task.Run(() =>
             {
-                bool IsGithubOnline = false;
-                Uri URLCall = new Uri(URLs.GitHub_Updater);
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
-                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                var Client = new WebClient
-                {
-                    Encoding = Encoding.UTF8,
-                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-                if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                { 
-                    Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
-                }
-                else
-                {
-                    Client.Headers.Add("user-agent", "SBRW Launcher " +
-                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                }
-
                 try
                 {
-                    VersionJSON = Client.DownloadString(URLCall);
-                    IsGithubOnline = true;
-                }
-                catch (WebException Error)
-                {
-                    API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
-                        Error, Error.Response as HttpWebResponse);
-
-                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                    {
-                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER", Error.InnerException.Message, false, true);
-                    }
-                }
-                catch (Exception Error)
-                {
-                    LogToFileAddons.OpenLog("LAUNCHER UPDATER", string.Empty, Error, string.Empty, true);
-
-                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                    {
-                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER", Error.InnerException.Message, false, true);
-                    }
-                }
-                finally
-                {
-                    if (Client != null)
-                    {
-                        Client.Dispose();
-                    }
-
-                    GC.Collect();
-                }
-
-                bool IsJsonValid = false;
-
-                try
-                {
-                    if (Is_Json.Valid(VersionJSON) && IsGithubOnline)
-                    {
-#pragma warning disable CS8600 // Null Safe Check Done Above
-                        GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-
-                        if (GHAPI != null && GHAPI.TagName != null)
-                        {
-                            LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Setting Latest Version -> " + GHAPI.TagName);
-                            LatestUpdaterBuildVersion = GHAPI.TagName;
-                            IsJsonValid = true;
-                        }
-
-                        LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Latest Version -> " + LatestUpdaterBuildVersion);
-                    }
-                    else
-                    {
-                        LogToFileAddons.Parent_Log_Screen(4, "LAUNCHER UPDATER", "Received Invalid JSON Data");
-                    }
-                }
-                catch (Exception Error)
-                {
-                    LogToFileAddons.OpenLog("LAUNCHER UPDATER", string.Empty, Error, string.Empty, true);
-
-                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                    {
-                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER", Error.InnerException.Message, false, true);
-                    }
-                }
-                finally
-                {
-                    GC.Collect();
-                }
-
-                if (!IsGithubOnline || !IsJsonValid)
-                {
-                    LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Fail Safe Latest Version -> " + LatestUpdaterBuildVersion);
-                }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("LAUNCHER UPDATER", string.Empty, Error, string.Empty, true);
-
-                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                {
-                    LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER", Error.InnerException.Message, false, true);
-                }
-            }
-            finally
-            {
-                if (!string.IsNullOrWhiteSpace(VersionJSON))
-                {
-                    VersionJSON = string.Empty;
-                }
-
-                GC.Collect();
-            }
-
-            /* Check if File needs to be Downloaded or Require an Update */
-            string UpdaterPath = Path.Combine(Locations.LauncherFolder, Locations.NameUpdater);
-
-            if (!File.Exists(UpdaterPath))
-            {
-                LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Starting GameLauncherUpdater downloader");
-
-                try
-                {
-                    Uri URLCall =
-                        new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
+                    bool IsGithubOnline = false;
+                    Uri URLCall = new Uri(URLs.GitHub_Updater);
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
@@ -167,60 +45,38 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                         CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                     };
 #pragma warning restore SYSLIB0014 // Type or member is obsolete
-                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                    { 
-                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                    {
+                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
                     }
                     else
                     {
                         Client.Headers.Add("user-agent", "SBRW Launcher " +
                         Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     }
-                    Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
-                    {
-                        if (File.Exists(UpdaterPath))
-                        {
-                            try
-                            {
-                                if (new FileInfo(UpdaterPath).Length == 0)
-                                {
-                                    File.Delete(UpdaterPath);
-                                }
-                            }
-                            catch (Exception Error)
-                            {
-                                LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE Error #1]", string.Empty, Error, string.Empty, true);
-                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                                {
-                                    LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [EXE DL #1]", Error.InnerException.Message, false, true);
-                                }
-                            }
-                            finally
-                            {
-                                GC.Collect();
-                            }
-                        }
-                    };
 
                     try
                     {
-                        Client.DownloadFile(URLCall, UpdaterPath);
+                        VersionJSON = Client.DownloadString(URLCall);
+                        IsGithubOnline = true;
                     }
                     catch (WebException Error)
                     {
                         API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
                             Error, Error.Response as HttpWebResponse);
+
                         if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
                         {
-                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [EXE DL #1]", Error.InnerException.Message, false, true);
+                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER", Error.InnerException.Message, false, true);
                         }
                     }
                     catch (Exception Error)
                     {
-                        LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE DL #1]", string.Empty, Error, string.Empty, true);
+                        LogToFileAddons.OpenLog("LAUNCHER UPDATER", string.Empty, Error, string.Empty, true);
+
                         if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
                         {
-                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [EXE DL #1]", Error.InnerException.Message, false, true);
+                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER", Error.InnerException.Message, false, true);
                         }
                     }
                     finally
@@ -232,19 +88,170 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
 
                         GC.Collect();
                     }
+
+                    bool IsJsonValid = false;
+
+                    try
+                    {
+                        if (Is_Json.Valid(VersionJSON) && IsGithubOnline)
+                        {
+#pragma warning disable CS8600 // Null Safe Check Done Above
+                            GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
+                            if (GHAPI != null && GHAPI.TagName != null)
+                            {
+                                LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Setting Latest Version -> " + GHAPI.TagName);
+                                LatestUpdaterBuildVersion = GHAPI.TagName;
+                                IsJsonValid = true;
+                            }
+
+                            LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Latest Version -> " + LatestUpdaterBuildVersion);
+                        }
+                        else
+                        {
+                            LogToFileAddons.Parent_Log_Screen(4, "LAUNCHER UPDATER", "Received Invalid JSON Data");
+                        }
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("LAUNCHER UPDATER", string.Empty, Error, string.Empty, true);
+
+                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                        {
+                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER", Error.InnerException.Message, false, true);
+                        }
+                    }
+                    finally
+                    {
+                        GC.Collect();
+                    }
+
+                    if (!IsGithubOnline || !IsJsonValid)
+                    {
+                        LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Fail Safe Latest Version -> " + LatestUpdaterBuildVersion);
+                    }
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("LAUNCHER UPDATER [!FileExists]", string.Empty, Error, string.Empty, true);
+                    LogToFileAddons.OpenLog("LAUNCHER UPDATER", string.Empty, Error, string.Empty, true);
+
                     if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
                     {
-                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [!FileExists]", Error.InnerException.Message, false, true);
+                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER", Error.InnerException.Message, false, true);
                     }
                 }
                 finally
                 {
+                    if (!string.IsNullOrWhiteSpace(VersionJSON))
+                    {
+                        VersionJSON = string.Empty;
+                    }
+
                     GC.Collect();
                 }
+            });
+
+            /* Check if File needs to be Downloaded or Require an Update */
+            string UpdaterPath = Path.Combine(Locations.LauncherFolder, Locations.NameUpdater);
+
+            if (!File.Exists(UpdaterPath))
+            {
+                LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Starting GameLauncherUpdater downloader");
+
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        Uri URLCall =
+                            new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        var Client = new WebClient
+                        {
+                            Encoding = Encoding.UTF8,
+                            CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                        };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
+                        if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                        {
+                            Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+                        }
+                        else
+                        {
+                            Client.Headers.Add("user-agent", "SBRW Launcher " +
+                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        }
+                        Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
+                        {
+                            if (File.Exists(UpdaterPath))
+                            {
+                                try
+                                {
+                                    if (new FileInfo(UpdaterPath).Length == 0)
+                                    {
+                                        File.Delete(UpdaterPath);
+                                    }
+                                }
+                                catch (Exception Error)
+                                {
+                                    LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE Error #1]", string.Empty, Error, string.Empty, true);
+                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                    {
+                                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [EXE DL #1]", Error.InnerException.Message, false, true);
+                                    }
+                                }
+                                finally
+                                {
+                                    GC.Collect();
+                                }
+                            }
+                        };
+
+                        try
+                        {
+                            Client.DownloadFile(URLCall, UpdaterPath);
+                        }
+                        catch (WebException Error)
+                        {
+                            API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                                Error, Error.Response as HttpWebResponse);
+                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                            {
+                                LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [EXE DL #1]", Error.InnerException.Message, false, true);
+                            }
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE DL #1]", string.Empty, Error, string.Empty, true);
+                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                            {
+                                LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [EXE DL #1]", Error.InnerException.Message, false, true);
+                            }
+                        }
+                        finally
+                        {
+                            if (Client != null)
+                            {
+                                Client.Dispose();
+                            }
+
+                            GC.Collect();
+                        }
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("LAUNCHER UPDATER [!FileExists]", string.Empty, Error, string.Empty, true);
+                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                        {
+                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [!FileExists]", Error.InnerException.Message, false, true);
+                        }
+                    }
+                    finally
+                    {
+                        GC.Collect();
+                    }
+                });
             }
             else if (File.Exists(UpdaterPath))
             {
@@ -265,88 +272,91 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                         LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Latest GameLauncherUpdater!", false, true);
                     }
 
-                    if (UpdaterBuildNumberResult < 0)
+                    await Task.Run(() =>
                     {
-                        LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Downloading New " + Locations.NameUpdater, false, true);
-                        File.Delete(Locations.NameUpdater);
+                        if (UpdaterBuildNumberResult < 0)
+                        {
+                            LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Downloading New " + Locations.NameUpdater, false, true);
+                            File.Delete(Locations.NameUpdater);
 
-                        Uri URLCall =
-                            new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
+                            Uri URLCall =
+                                new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
-                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                        var Client = new WebClient
-                        {
-                            Encoding = Encoding.UTF8,
-                            CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                        };
+                            ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            var Client = new WebClient
+                            {
+                                Encoding = Encoding.UTF8,
+                                CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                            };
 #pragma warning restore SYSLIB0014 // Type or member is obsolete
-                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                        { 
-                            Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
-                        }
-                        else
-                        {
-                            Client.Headers.Add("user-agent", "SBRW Launcher " +
-                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        }
-                        Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
-                        {
-                            if (File.Exists(UpdaterPath))
+                            if (!Launcher_Value.Launcher_Alternative_Webcalls())
                             {
-                                try
+                                Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+                            }
+                            else
+                            {
+                                Client.Headers.Add("user-agent", "SBRW Launcher " +
+                                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            }
+                            Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
+                            {
+                                if (File.Exists(UpdaterPath))
                                 {
-                                    if (new FileInfo(UpdaterPath).Length == 0)
+                                    try
                                     {
-                                        File.Delete(UpdaterPath);
+                                        if (new FileInfo(UpdaterPath).Length == 0)
+                                        {
+                                            File.Delete(UpdaterPath);
+                                        }
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE Error #2]", string.Empty, Error, string.Empty, true);
+                                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                        {
+                                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [EXE Error #2]", Error.InnerException.Message, false, true);
+                                        }
+                                    }
+                                    finally
+                                    {
+                                        GC.Collect();
                                     }
                                 }
-                                catch (Exception Error)
-                                {
-                                    LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE Error #2]", string.Empty, Error, string.Empty, true);
-                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                                    {
-                                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [EXE Error #2]", Error.InnerException.Message, false, true);
-                                    }
-                                }
-                                finally
-                                {
-                                    GC.Collect();
-                                }
-                            }
-                        };
+                            };
 
-                        try
-                        {
-                            Client.DownloadFile(URLCall, Locations.NameUpdater);
-                        }
-                        catch (WebException Error)
-                        {
-                            API_Core.StatusCodes(
-                                "https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe",
-                                Error, Error.Response as HttpWebResponse);
-                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                            try
                             {
-                                LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [EXE DL #2]", Error.InnerException.Message, false, true);
+                                Client.DownloadFile(URLCall, Locations.NameUpdater);
                             }
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE DL #2]", string.Empty, Error, string.Empty, true);
-                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                            catch (WebException Error)
                             {
-                                LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [EXE DL #2]", Error.InnerException.Message, false, true);
+                                API_Core.StatusCodes(
+                                    "https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe",
+                                    Error, Error.Response as HttpWebResponse);
+                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [EXE DL #2]", Error.InnerException.Message, false, true);
+                                }
                             }
-                        }
-                        finally
-                        {
-                            if (Client != null)
+                            catch (Exception Error)
                             {
-                                Client.Dispose();
+                                LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE DL #2]", string.Empty, Error, string.Empty, true);
+                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATER [EXE DL #2]", Error.InnerException.Message, false, true);
+                                }
                             }
+                            finally
+                            {
+                                if (Client != null)
+                                {
+                                    Client.Dispose();
+                                }
 
-                            GC.Collect();
+                                GC.Collect();
+                            }
                         }
-                    }
+                    });
                 }
                 catch (Exception Error)
                 {

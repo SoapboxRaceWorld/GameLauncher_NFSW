@@ -13,6 +13,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Net.Cache;
+using System.Threading.Tasks;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
 {
@@ -116,23 +117,26 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
         public static bool GitHubAPI { get; set; }
         public static APIStatus GitHubAPISC { get; set; } = APIStatus.Unknown;
 
-        public static void PingAPIStatus()
+        public static async void PingAPIStatus()
         {
             LogToFileAddons.Parent_Log_Screen(1, "API", "Checking Status");
             if (!InsiderKit.EnableInsiderDeveloper.Allowed())
             {
                 LogToFileAddons.Parent_Log_Screen(2, "API", "Checking WorldUnited Status");
-                switch (UnitedSC = API_Core.StatusCheck(URLs.Main + "/serverlist.json", 15))
+                await Task.Run(() => 
                 {
-                    case APIStatus.Online:
-                        UnitedSL = RetrieveJSON(URLs.Main + "/serverlist.json", "SL", UnitedSC);
-                        if (UnitedSL) { UnitedCDNL = RetrieveJSON(URLs.Main + "/cdn_list.json", "CDNL", UnitedSC); }
-                        LogToFileAddons.Parent_Log_Screen(3, "API", "WorldUnited Status Check");
-                        break;
-                    default:
-                        LogToFileAddons.Parent_Log_Screen(3, "API", "WorldUnited Status Check");
-                        break;
-                }
+                    switch (UnitedSC = API_Core.StatusCheck(URLs.Main + "/serverlist.json", 15))
+                    {
+                        case APIStatus.Online:
+                            UnitedSL = RetrieveJSON(URLs.Main + "/serverlist.json", "SL", UnitedSC);
+                            if (UnitedSL) { UnitedCDNL = RetrieveJSON(URLs.Main + "/cdn_list.json", "CDNL", UnitedSC); }
+                            LogToFileAddons.Parent_Log_Screen(3, "API", "WorldUnited Status Check");
+                            break;
+                        default:
+                            LogToFileAddons.Parent_Log_Screen(3, "API", "WorldUnited Status Check");
+                            break;
+                    }
+                });
             }
             else
             {
@@ -142,19 +146,22 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
             if (!UnitedAPI())
             {
                 LogToFileAddons.Parent_Log_Screen(2, "API", "Checking DavidCarbon Status");
-                switch (CarbonSC = API_Core.StatusCheck(URLs.Static + "/serverlist.json", 15))
+                await Task.Run(() =>
                 {
-                    case APIStatus.Online:
-                        if (!UnitedSL) { CarbonSL = RetrieveJSON(URLs.Static + "/serverlist.json", "SL", CarbonSC); }
-                        else { CarbonSL = true; }
-                        if (!UnitedCDNL) { CarbonCDNL = RetrieveJSON(URLs.Static + "/cdnlist.json", "CDNL", CarbonSC); }
-                        else { CarbonCDNL = true; }
-                        LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon Status Check");
-                        break;
-                    default:
-                        LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon Status Check");
-                        break;
-                }
+                    switch (CarbonSC = API_Core.StatusCheck(URLs.Static + "/serverlist.json", 15))
+                    {
+                        case APIStatus.Online:
+                            if (!UnitedSL) { CarbonSL = RetrieveJSON(URLs.Static + "/serverlist.json", "SL", CarbonSC); }
+                            else { CarbonSL = true; }
+                            if (!UnitedCDNL) { CarbonCDNL = RetrieveJSON(URLs.Static + "/cdnlist.json", "CDNL", CarbonSC); }
+                            else { CarbonCDNL = true; }
+                            LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon Status Check");
+                            break;
+                        default:
+                            LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon Status Check");
+                            break;
+                    }
+                });
             }
             else
             {
@@ -164,19 +171,22 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
             if (!CarbonAPI())
             {
                 LogToFileAddons.Parent_Log_Screen(2, "API", "Checking DavidCarbon [Second] Status");
-                switch (CarbonTwoSC = API_Core.StatusCheck(URLs.Static_Alt + "/serverlist.json", 15))
+                await Task.Run(() =>
                 {
-                    case APIStatus.Online:
-                        if (!CarbonSL) { CarbonTwoSL = RetrieveJSON(URLs.Static_Alt + "/serverlist.json", "SL", CarbonTwoSC); }
-                        else { CarbonTwoSL = true; }
-                        if (!CarbonCDNL) { CarbonTwoCDNL = RetrieveJSON(URLs.Static_Alt + "/cdnlist.json", "CDNL", CarbonTwoSC); }
-                        else { CarbonTwoCDNL = true; }
-                        LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon [Second] Status Check");
-                        break;
-                    default:
-                        LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon [Second] Status Check");
-                        break;
-                }
+                    switch (CarbonTwoSC = API_Core.StatusCheck(URLs.Static_Alt + "/serverlist.json", 15))
+                    {
+                        case APIStatus.Online:
+                            if (!CarbonSL) { CarbonTwoSL = RetrieveJSON(URLs.Static_Alt + "/serverlist.json", "SL", CarbonTwoSC); }
+                            else { CarbonTwoSL = true; }
+                            if (!CarbonCDNL) { CarbonTwoCDNL = RetrieveJSON(URLs.Static_Alt + "/cdnlist.json", "CDNL", CarbonTwoSC); }
+                            else { CarbonTwoCDNL = true; }
+                            LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon [Second] Status Check");
+                            break;
+                        default:
+                            LogToFileAddons.Parent_Log_Screen(3, "API", "DavidCarbon [Second] Status Check");
+                            break;
+                    }
+                });
             }
             else
             {
@@ -186,41 +196,44 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.APICheckers
             if (!CarbonAPITwo())
             {
                 LogToFileAddons.Parent_Log_Screen(2, "API", "Checking Local Cache");
-                string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "Lists");
-                string Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Game_Servers.json");
-                string CDN_List_Cache = Path.Combine(Launcher_Data_Folder, "Content_Delivery_Networks.json");
-
-                if (File.Exists(Server_List_Cache))
+                await Task.Run(() =>
                 {
-                    if (Is_Json.Valid(File.ReadAllText(Server_List_Cache)))
+                    string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "Lists");
+                    string Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Game_Servers.json");
+                    string CDN_List_Cache = Path.Combine(Launcher_Data_Folder, "Content_Delivery_Networks.json");
+
+                    if (File.Exists(Server_List_Cache))
                     {
-                        Local_Cached_SL = RetrieveJSON(Server_List_Cache, "SL", Local_Cached_SC, true, File.ReadAllText(Server_List_Cache));
+                        if (Is_Json.Valid(File.ReadAllText(Server_List_Cache)))
+                        {
+                            Local_Cached_SL = RetrieveJSON(Server_List_Cache, "SL", Local_Cached_SC, true, File.ReadAllText(Server_List_Cache));
+                        }
+                        else
+                        {
+                            LogToFileAddons.Parent_Log_Screen(5, "API", "Invalid Game Servers Cache File");
+                        }
                     }
                     else
                     {
-                        LogToFileAddons.Parent_Log_Screen(5, "API", "Invalid Game Servers Cache File");
+                        LogToFileAddons.Parent_Log_Screen(5, "API", "No Game Servers Cache File Found");
                     }
-                }
-                else
-                {
-                    LogToFileAddons.Parent_Log_Screen(5, "API", "No Game Servers Cache File Found");
-                }
 
-                if (File.Exists(CDN_List_Cache))
-                {
-                    if (Is_Json.Valid(File.ReadAllText(CDN_List_Cache)))
+                    if (File.Exists(CDN_List_Cache))
                     {
-                        Local_Cached_CDNL = RetrieveJSON(CDN_List_Cache, "CDNL", Local_Cached_SC, true, File.ReadAllText(CDN_List_Cache));
+                        if (Is_Json.Valid(File.ReadAllText(CDN_List_Cache)))
+                        {
+                            Local_Cached_CDNL = RetrieveJSON(CDN_List_Cache, "CDNL", Local_Cached_SC, true, File.ReadAllText(CDN_List_Cache));
+                        }
+                        else
+                        {
+                            LogToFileAddons.Parent_Log_Screen(5, "API", "Invalid Content Delivery Networks Cache File");
+                        }
                     }
                     else
                     {
-                        LogToFileAddons.Parent_Log_Screen(5, "API", "Invalid Content Delivery Networks Cache File");
+                        LogToFileAddons.Parent_Log_Screen(5, "API", "No Content Delivery Networks Cache File Found");
                     }
-                }
-                else
-                {
-                    LogToFileAddons.Parent_Log_Screen(5, "API", "No Content Delivery Networks Cache File Found");
-                }
+                });
             }
             else
             {

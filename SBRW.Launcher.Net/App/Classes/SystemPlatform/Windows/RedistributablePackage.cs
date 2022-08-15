@@ -14,6 +14,7 @@ using System.Net;
 using System.Windows.Forms;
 using SBRW.Launcher.Core.Extension.Registry_;
 using System.Net.Cache;
+using System.Threading.Tasks;
 
 // based on https://github.com/bitbeans/RedistributableChecker/blob/master/RedistributableChecker/RedistributablePackage.cs
 namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
@@ -41,59 +42,56 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
         /// <returns><c>true</c> if the package is installed, otherwise <c>false</c></returns>
         public static bool IsInstalled(RedistributablePackageVersion Redistributable_Version)
         {
+            switch (Redistributable_Version)
             {
-                switch (Redistributable_Version)
-                {
-                    case RedistributablePackageVersion.VC2015to2019x86:
+                case RedistributablePackageVersion.VC2015to2019x86:
+                    InstalledVersion = Registry_Core.Read("Version",
+                            Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", "14.0", "VC", "Runtimes", "x86"));
+                    goto case RedistributablePackageVersion.VC2015to2019x64;
+                case RedistributablePackageVersion.VC2015to2019x64:
+                    if (string.IsNullOrWhiteSpace(InstalledVersion))
+                    {
                         InstalledVersion = Registry_Core.Read("Version",
-                                Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", "14.0", "VC", "Runtimes", "x86"));
-                        goto case RedistributablePackageVersion.VC2015to2019x64;
-                    case RedistributablePackageVersion.VC2015to2019x64:
-                        if (string.IsNullOrWhiteSpace(InstalledVersion))
-                        {
-                            InstalledVersion = Registry_Core.Read("Version",
-                                Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", "14.0", "VC", "Runtimes", "x64"));
-                        }
-                        
-                        try
-                        {
-                            if (!string.IsNullOrWhiteSpace(InstalledVersion))
-                            {
-                                if (InstalledVersion.StartsWith("v"))
-                                {
-                                    InstalledVersion = InstalledVersion.Trim('v');
-                                }
+                            Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", "14.0", "VC", "Runtimes", "x64"));
+                    }
 
-                                if (InstalledVersion.CompareTo("14.20") >= 0)
-                                {
-                                    return true;
-                                }
-                                else
-                                {
-                                    return false;
-                                }
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(InstalledVersion))
+                        {
+                            if (InstalledVersion.StartsWith("v"))
+                            {
+                                InstalledVersion = InstalledVersion.Trim('v');
+                            }
+
+                            if (InstalledVersion.CompareTo("14.20") >= 0)
+                            {
+                                return true;
                             }
                             else
                             {
                                 return false;
                             }
                         }
-                        catch (Exception Error)
+                        else
                         {
-                            LogToFileAddons.OpenLog("Redistributable Package", string.Empty, Error, string.Empty, true);
                             return false;
                         }
-                        finally
-                        {
-                            if (!string.IsNullOrWhiteSpace(InstalledVersion))
-                            {
-                                InstalledVersion = string.Empty;
-                            }
-                        }
-                    default:
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("Redistributable Package", string.Empty, Error, string.Empty, true);
                         return false;
-                }
-
+                    }
+                    finally
+                    {
+                        if (!string.IsNullOrWhiteSpace(InstalledVersion))
+                        {
+                            InstalledVersion = string.Empty;
+                        }
+                    }
+                default:
+                    return false;
             }
         }
     }
@@ -101,7 +99,7 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
     class Redistributable
     {
         public static bool Error_Free { get; set; } = true;
-        public static void Check()
+        public static async void Check()
         {
             if (!UnixOS.Detected())
             {
@@ -117,38 +115,58 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                         Translations.Database("Redistributable_VC_P5"),
                         MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
                     {
-                        try
+                        await Task.Run(() =>
                         {
-                            Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x86.exe");
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
-                            ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                            var Client = new WebClient()
-                            {
-                                CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                            };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
-                            if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                            {
-                                Client = new WebClientWithTimeout() { CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)} ;
-                            }
-                            else
-                            {
-                                Client.Headers.Add("user-agent", "SBRW Launcher " +
-                                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                            }
-
                             try
                             {
-                                Client.DownloadFile(URLCall, "VC_redist.x86.exe");
-                            }
-                            catch (WebException Error)
-                            {
-                                API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
-                                    Error, Error.Response as HttpWebResponse);
-                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x86.exe");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
+                                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                var Client = new WebClient()
                                 {
-                                    LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE", Error.InnerException.Message, false, true);
+                                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                                };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
+
+                                if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                                {
+                                    Client = new WebClientWithTimeout() { CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+                                }
+                                else
+                                {
+                                    Client.Headers.Add("user-agent", "SBRW Launcher " +
+                                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                }
+
+                                try
+                                {
+                                    Client.DownloadFile(URLCall, "VC_redist.x86.exe");
+                                }
+                                catch (WebException Error)
+                                {
+                                    API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                                        Error, Error.Response as HttpWebResponse);
+                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                    {
+                                        LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE", Error.InnerException.Message, false, true);
+                                    }
+                                }
+                                catch (Exception Error)
+                                {
+                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE", string.Empty, Error, string.Empty, true);
+                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                    {
+                                        LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE", Error.InnerException.Message, false, true);
+                                    }
+                                }
+                                finally
+                                {
+                                    if (Client != null)
+                                    {
+                                        Client.Dispose();
+                                    }
+
+                                    GC.Collect();
                                 }
                             }
                             catch (Exception Error)
@@ -161,91 +179,77 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                             }
                             finally
                             {
-                                if (Client != null)
-                                {
-                                    Client.Dispose();
-                                }
-
                                 GC.Collect();
                             }
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("REDISTRIBUTABLE", string.Empty, Error, string.Empty, true);
-                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                            {
-                                LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE", Error.InnerException.Message, false, true);
-                            }
-                        }
-                        finally
-                        {
-                            GC.Collect();
-                        }
+                        });
 
                         if (File.Exists("VC_redist.x86.exe"))
                         {
-                            try
+                            await Task.Run(() =>
                             {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                                Process proc = Process.Start(new ProcessStartInfo
+                                try
                                 {
-                                    Verb = "runas",
-                                    Arguments = "/quiet",
-                                    FileName = "VC_redist.x86.exe"
-                                });
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                                    Process proc = Process.Start(new ProcessStartInfo
+                                    {
+                                        Verb = "runas",
+                                        Arguments = "/quiet",
+                                        FileName = "VC_redist.x86.exe"
+                                    });
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
-                                if (proc != null)
-                                {
-                                    proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
-                                }
-
-                                if (proc == null)
-                                {
-                                    Error_Free = false;
-                                    MessageBox.Show(Translations.Database("Redistributable_VC_P6"),
-                                        Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
-                                        MessageBoxIcon.Error);
-                                }
-                                else if (proc != null)
-                                {
-                                    if (!proc.HasExited)
+                                    if (proc != null)
                                     {
-                                        if (proc.Responding) { proc.CloseMainWindow(); }
-                                        else { proc.Kill(); Error_Free = false; }
+                                        proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
                                     }
 
-                                    if (proc.ExitCode != 0)
+                                    if (proc == null)
                                     {
                                         Error_Free = false;
-                                        LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE INSTALLER [EXIT CODE]", proc.ExitCode.ToString() +
-                                            " HEX: (0x" + proc.ExitCode.ToString("X") + ")", false, true);
-                                        MessageBox.Show(Translations.Database("Redistributable_VC_P7") + " " + proc.ExitCode.ToString() +
-                                            " (0x" + proc.ExitCode.ToString("X") + ")" +
-                                            "\n" + Translations.Database("Redistributable_VC_P8"),
+                                        MessageBox.Show(Translations.Database("Redistributable_VC_P6"),
                                             Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                             MessageBoxIcon.Error);
                                     }
+                                    else if (proc != null)
+                                    {
+                                        if (!proc.HasExited)
+                                        {
+                                            if (proc.Responding) { proc.CloseMainWindow(); }
+                                            else { proc.Kill(); Error_Free = false; }
+                                        }
 
-                                    proc.Close();
+                                        if (proc.ExitCode != 0)
+                                        {
+                                            Error_Free = false;
+                                            LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE INSTALLER [EXIT CODE]", proc.ExitCode.ToString() +
+                                                " HEX: (0x" + proc.ExitCode.ToString("X") + ")", false, true);
+                                            MessageBox.Show(Translations.Database("Redistributable_VC_P7") + " " + proc.ExitCode.ToString() +
+                                                " (0x" + proc.ExitCode.ToString("X") + ")" +
+                                                "\n" + Translations.Database("Redistributable_VC_P8"),
+                                                Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
+                                                MessageBoxIcon.Error);
+                                        }
+
+                                        proc.Close();
+                                    }
                                 }
-                            }
-                            catch (Exception Error)
-                            {
-                                LogToFileAddons.OpenLog("REDISTRIBUTABLE x86 Process", string.Empty, Error, string.Empty, true);
-                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                catch (Exception Error)
                                 {
-                                    LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x86 Process", Error.InnerException.Message, false, true);
+                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE x86 Process", string.Empty, Error, string.Empty, true);
+                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                    {
+                                        LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x86 Process", Error.InnerException.Message, false, true);
+                                    }
+                                    Error_Free = false;
+                                    MessageBox.Show(Translations.Database("Redistributable_VC_P9"),
+                                        Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
+                                        MessageBoxIcon.Error);
                                 }
-                                Error_Free = false;
-                                MessageBox.Show(Translations.Database("Redistributable_VC_P9"),
-                                    Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
-                            }
-                            finally
-                            {
-                                GC.Collect();
-                            }
+                                finally
+                                {
+                                    GC.Collect();
+                                }
+                            });
                         }
                         else
                         {
@@ -282,43 +286,63 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                             Translations.Database("Redistributable_VC_P5"),
                             MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
                         {
-                            try
+                            await Task.Run(() =>
                             {
-                                Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x64.exe");
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
-                                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                                var Client = new WebClient()
-                                {
-                                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                                };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
-                                if (!Launcher_Value.Launcher_Alternative_Webcalls())
-                                {
-                                    Client = new WebClientWithTimeout() { CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
-                                }
-                                else
-                                {
-                                    Client.Headers.Add("user-agent", "SBRW Launcher " +
-                                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                }
-
                                 try
                                 {
-                                    Client.DownloadFile(URLCall, "VC_redist.x64.exe");
-                                }
-                                catch (WebException Error)
-                                {
-                                    API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
-                                        Error, Error.Response as HttpWebResponse);
-                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                    Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x64.exe");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
+                                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                    var Client = new WebClient()
                                     {
-                                        LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x64", Error.InnerException.Message, false, true);
+                                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                                    };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
+
+                                    if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                                    {
+                                        Client = new WebClientWithTimeout() { CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+                                    }
+                                    else
+                                    {
+                                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                    }
+
+                                    try
+                                    {
+                                        Client.DownloadFile(URLCall, "VC_redist.x64.exe");
+                                    }
+                                    catch (WebException Error)
+                                    {
+                                        API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                                            Error, Error.Response as HttpWebResponse);
+                                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                        {
+                                            LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x64", Error.InnerException.Message, false, true);
+                                        }
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        LogToFileAddons.OpenLog("REDISTRIBUTABLE", string.Empty, Error, string.Empty, true);
+                                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                        {
+                                            LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x64", Error.InnerException.Message, false, true);
+                                        }
+                                    }
+                                    finally
+                                    {
+                                        if (Client != null)
+                                        {
+                                            Client.Dispose();
+                                        }
+
+                                        GC.Collect();
                                     }
                                 }
                                 catch (Exception Error)
                                 {
-                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE", string.Empty, Error, string.Empty, true);
+                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE x64", string.Empty, Error, string.Empty, true);
                                     if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
                                     {
                                         LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x64", Error.InnerException.Message, false, true);
@@ -326,91 +350,77 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Windows
                                 }
                                 finally
                                 {
-                                    if (Client != null)
-                                    {
-                                        Client.Dispose();
-                                    }
-
                                     GC.Collect();
                                 }
-                            }
-                            catch (Exception Error)
-                            {
-                                LogToFileAddons.OpenLog("REDISTRIBUTABLE x64", string.Empty, Error, string.Empty, true);
-                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                                {
-                                    LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x64", Error.InnerException.Message, false, true);
-                                }
-                            }
-                            finally
-                            {
-                                GC.Collect();
-                            }
+                            });
 
                             if (File.Exists("VC_redist.x64.exe"))
                             {
-                                try
+                                await Task.Run(() =>
                                 {
-                                    var proc = Process.Start(new ProcessStartInfo
+                                    try
                                     {
-                                        Verb = "runas",
-                                        Arguments = "/quiet",
-                                        FileName = "VC_redist.x64.exe"
-                                    });
-
-                                    if (proc != null)
-                                    {
-                                        proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
-                                    }
-
-                                    if (proc == null)
-                                    {
-                                        Error_Free = false;
-                                        LogToFileAddons.Parent_Log_Screen(5, Translations.Database("Redistributable_VC_P6"),
-                                            Translations.Database("Redistributable_VC_P5"));
-                                        MessageBox.Show(Translations.Database("Redistributable_VC_P6"),
-                                            Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
-                                            MessageBoxIcon.Error);
-                                    }
-                                    else if (proc != null)
-                                    {
-                                        if (!proc.HasExited)
+                                        var proc = Process.Start(new ProcessStartInfo
                                         {
-                                            if (proc.Responding) { proc.CloseMainWindow(); }
-                                            else { proc.Kill(); Error_Free = false; }
+                                            Verb = "runas",
+                                            Arguments = "/quiet",
+                                            FileName = "VC_redist.x64.exe"
+                                        });
+
+                                        if (proc != null)
+                                        {
+                                            proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
                                         }
 
-                                        if (proc.ExitCode != 0)
+                                        if (proc == null)
                                         {
                                             Error_Free = false;
-                                            LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE INSTALLER [EXIT CODE]", proc.ExitCode.ToString() +
-                                                " HEX: (0x" + proc.ExitCode.ToString("X") + ")");
-                                            MessageBox.Show(Translations.Database("Redistributable_VC_P7") + " " + proc.ExitCode.ToString() +
-                                                " (0x" + proc.ExitCode.ToString("X") + ")" +
-                                                "\n" + Translations.Database("Redistributable_VC_P8"),
+                                            LogToFileAddons.Parent_Log_Screen(5, Translations.Database("Redistributable_VC_P6"),
+                                                Translations.Database("Redistributable_VC_P5"));
+                                            MessageBox.Show(Translations.Database("Redistributable_VC_P6"),
                                                 Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
                                                 MessageBoxIcon.Error);
                                         }
+                                        else if (proc != null)
+                                        {
+                                            if (!proc.HasExited)
+                                            {
+                                                if (proc.Responding) { proc.CloseMainWindow(); }
+                                                else { proc.Kill(); Error_Free = false; }
+                                            }
 
-                                        proc.Close();
+                                            if (proc.ExitCode != 0)
+                                            {
+                                                Error_Free = false;
+                                                LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE INSTALLER [EXIT CODE]", proc.ExitCode.ToString() +
+                                                    " HEX: (0x" + proc.ExitCode.ToString("X") + ")");
+                                                MessageBox.Show(Translations.Database("Redistributable_VC_P7") + " " + proc.ExitCode.ToString() +
+                                                    " (0x" + proc.ExitCode.ToString("X") + ")" +
+                                                    "\n" + Translations.Database("Redistributable_VC_P8"),
+                                                    Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
+                                                    MessageBoxIcon.Error);
+                                            }
+
+                                            proc.Close();
+                                        }
                                     }
-                                }
-                                catch (Exception Error)
-                                {
-                                    LogToFileAddons.OpenLog("REDISTRIBUTABLE x64 INSTALLER", string.Empty, Error, string.Empty, true);
-                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                    catch (Exception Error)
                                     {
-                                        LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x64 INSTALLER", Error.InnerException.Message, false, true);
+                                        LogToFileAddons.OpenLog("REDISTRIBUTABLE x64 INSTALLER", string.Empty, Error, string.Empty, true);
+                                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                        {
+                                            LogToFileAddons.Parent_Log_Screen(5, "REDISTRIBUTABLE x64 INSTALLER", Error.InnerException.Message, false, true);
+                                        }
+                                        Error_Free = false;
+                                        MessageBox.Show(Translations.Database("Redistributable_VC_P9"),
+                                            Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
+                                            MessageBoxIcon.Error);
                                     }
-                                    Error_Free = false;
-                                    MessageBox.Show(Translations.Database("Redistributable_VC_P9"),
-                                        Translations.Database("Redistributable_VC_P5"), MessageBoxButtons.OK,
-                                        MessageBoxIcon.Error);
-                                }
-                                finally
-                                {
-                                    GC.Collect();
-                                }
+                                    finally
+                                    {
+                                        GC.Collect();
+                                    }
+                                });
                             }
                             else
                             {

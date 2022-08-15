@@ -163,11 +163,13 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Logger
                 {
                     if (Log_Clear)
                     {
-                        Parent_Screen.Screen_Instance.TextBox_Live_Log.Clear();
+                        Parent_Screen.Screen_Instance.TextBox_Live_Log.SafeInvokeAction(() => 
+                        Parent_Screen.Screen_Instance.TextBox_Live_Log.Clear());
                     }
                     else
                     {
-                        Parent_Screen.Screen_Instance.TextBox_Live_Log.AppendText(Environment.NewLine + "[" + Log_Type_String + "] " + Log_Full_String);
+                        Parent_Screen.Screen_Instance.TextBox_Live_Log.SafeInvokeAction(() =>
+                        Parent_Screen.Screen_Instance.TextBox_Live_Log.AppendText(Environment.NewLine + "[" + Log_Type_String + "] " + Log_Full_String));
                     }
                 }
             }

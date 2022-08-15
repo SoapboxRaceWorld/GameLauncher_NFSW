@@ -29,11 +29,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
                             {
                                 if (Control_Form.InvokeRequired)
                                 {
-                                    Control_Form.Invoke(Action_Refresh);
+                                    Control_Form.BeginInvoke(Action_Refresh);
 
                                     if (Force_Refresh)
                                     {
-                                        Control_Form.Refresh();
+                                        Control_Form.SafeInvokeAction(() =>
+                                        {
+                                            Control_Form.Refresh();
+                                        }, Window_Name, false);
                                     }
                                 }
                                 else
@@ -63,9 +66,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
                     Log.Function("SafeInvokeAction: ".ToUpper() + "Control: " + Control_Form + " Action: " + Action_Refresh + " Form: " + Window_Name + " <- Is Null");
                 }
             }
-            catch (Exception Error)
+            finally
             {
-                LogToFileAddons.OpenLog("Safe Invoker Action", string.Empty, Error, string.Empty, true);
+
             }
         }
         /// <summary>
@@ -86,11 +89,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
                         {
                             if (Control_Form.InvokeRequired)
                             {
-                                Control_Form.Invoke(Action_Refresh);
+                                Control_Form.BeginInvoke(Action_Refresh);
 
                                 if (Force_Refresh)
                                 {
-                                    Control_Form.Refresh();
+                                    Control_Form.SafeInvokeAction(() =>
+                                    {
+                                        Control_Form.Refresh();
+                                    }, false);
                                 }
                             }
                             else
@@ -142,11 +148,14 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.Support
                     {
                         if (@this.InvokeRequired)
                         {
-                            @this.Invoke(Action_Refresh);
+                            @this.BeginInvoke(Action_Refresh);
 
                             if (Force_Refresh)
                             {
-                                @this.Refresh();
+                                @this.SafeInvokeAction(() =>
+                                {
+                                    @this.Refresh();
+                                }, false);
                             }
                         }
                         else

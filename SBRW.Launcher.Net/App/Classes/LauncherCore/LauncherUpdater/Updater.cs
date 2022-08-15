@@ -23,6 +23,7 @@ using SBRW.Launcher.App.UI_Forms.Update_Popup_Screen;
 using SBRW.Launcher.Core.Theme;
 using System.Net.Cache;
 using SBRW.Launcher.App.UI_Forms;
+using System.Threading.Tasks;
 
 namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -104,45 +105,80 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
             return Temp_Latest_Launcher_Build;
         }
 
-        public static void Latest()
+        public static async void Latest()
         {
             LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER UPDATE", "Is Version Up to Date or not");
             Presence_Launcher.Status(0, "Checking Latest Launcher Release Information");
-            try
+            await Task.Run(() =>
             {
-                Uri URLCall = new Uri(EnableInsiderDeveloper.Allowed() ? URLs.GitHub_Launcher_Development : EnableInsiderBetaTester.Allowed() ?
-                    URLs.GitHub_Launcher_Beta : URLs.GitHub_Launcher_Stable);
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
-                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                var Client = new WebClient
-                {
-                    Encoding = Encoding.UTF8,
-                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
-                if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                { 
-                    Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
-                }
-                else
-                {
-                    Client.Headers.Add("user-agent", "SBRW Launcher " +
-                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                }
-
                 try
                 {
-                    VersionJSON = Client.DownloadString(URLCall);
-                    VisualsAPIChecker.GitHubAPI = true;
-                }
-                catch (WebException Error)
-                {
-                    API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
-                        Error, Error.Response as HttpWebResponse);
-                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                    Uri URLCall = new Uri(EnableInsiderDeveloper.Allowed() ? URLs.GitHub_Launcher_Development : EnableInsiderBetaTester.Allowed() ?
+                        URLs.GitHub_Launcher_Beta : URLs.GitHub_Launcher_Stable);
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    var Client = new WebClient
                     {
-                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATE [GITHUB]", Error.InnerException.Message, false, true);
+                        Encoding = Encoding.UTF8,
+                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                    };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
+
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                    {
+                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+                    }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
+                    try
+                    {
+                        VersionJSON = Client.DownloadString(URLCall);
+                        VisualsAPIChecker.GitHubAPI = true;
+                    }
+                    catch (WebException Error)
+                    {
+                        API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                            Error, Error.Response as HttpWebResponse);
+                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                        {
+                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATE [GITHUB]", Error.InnerException.Message, false, true);
+                        }
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("LAUNCHER UPDATE [GITHUB]", string.Empty, Error, string.Empty, true);
+                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                        {
+                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATE [GITHUB]", Error.InnerException.Message, false, true);
+                        }
+                    }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
+
+                        GC.Collect();
+                    }
+
+                    if (Is_Json.Valid(VersionJSON) && VisualsAPIChecker.GitHubAPI)
+                    {
+#pragma warning disable CS8602 // Null Safe Check Done Above
+                        LatestLauncherBuild = EnableInsiderBetaTester.Allowed() ?
+                            Insider_Release_Tag(VersionJSON) : JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON).TagName;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                        LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATE", "GitHub Latest Version -> " + LatestLauncherBuild);
+                        ValidJSONDownload = true;
+                    }
+                    else
+                    {
+                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATE", "Failed to retrieve Latest Build information from GitHub");
+                        ValidJSONDownload = false;
                     }
                 }
                 catch (Exception Error)
@@ -155,41 +191,9 @@ namespace SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 finally
                 {
-                    if (Client != null)
-                    {
-                        Client.Dispose();
-                    }
-
                     GC.Collect();
                 }
-
-                if (Is_Json.Valid(VersionJSON) && VisualsAPIChecker.GitHubAPI)
-                {
-#pragma warning disable CS8602 // Null Safe Check Done Above
-                    LatestLauncherBuild = EnableInsiderBetaTester.Allowed() ?
-                        Insider_Release_Tag(VersionJSON) : JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON).TagName;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-                    LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATE", "GitHub Latest Version -> " + LatestLauncherBuild);
-                    ValidJSONDownload = true;
-                }
-                else
-                {
-                    LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATE", "Failed to retrieve Latest Build information from GitHub");
-                    ValidJSONDownload = false;
-                }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("LAUNCHER UPDATE [GITHUB]", string.Empty, Error, string.Empty, true);
-                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                {
-                    LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATE [GITHUB]", Error.InnerException.Message, false, true);
-                }
-            }
-            finally
-            {
-                GC.Collect();
-            }
+            });
             LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER UPDATE", "Done");
 
             if (!UpdateStatusResult())

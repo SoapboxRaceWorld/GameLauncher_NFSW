@@ -103,45 +103,64 @@ namespace SBRW.Launcher.App.Classes.SystemPlatform.Unix
             }
             else if (File.Exists(@"/etc/os-release"))
             {
-                using (StreamReader stream = new StreamReader(@"/etc/os-release"))
+                try
                 {
-                    string Live_String_Data = stream.ReadLine() ?? string.Empty;
-                    while (!string.IsNullOrWhiteSpace(Live_String_Data))
+                    using (StreamReader stream = new StreamReader(@"/etc/os-release"))
                     {
-                        try
+                        string Live_String_Data = string.Empty;
+                        bool OS_Found = false;
+
+                        while (((Live_String_Data = stream.ReadLine()??string.Empty) != default) && !OS_Found)
                         {
-                            string[] Live_Split_String = Live_String_Data.Split(new[] { '=' }, 2);
-                            if (Live_Split_String[0] == "PRETTY_NAME")
+                            if (!string.IsNullOrWhiteSpace(Live_String_Data))
                             {
-                                string Live_String_Value = Live_Split_String[1];
-
-                                if (Live_String_Value[0] == '"')
-                                {
-                                    Live_String_Value = Live_String_Value.Substring(1);
-                                }
-
-                                if (Live_String_Value[Live_String_Value.Length - 1] == '"')
-                                {
-                                    Live_String_Value = Live_String_Value.Substring(0, Live_String_Value.Length - 1);
-                                }
-
                                 try
                                 {
-                                    return Live_String_Value;
+                                    string[] Live_Split_String = Live_String_Data.Split(new[] { '=' }, 2);
+                                    if (Live_Split_String[0] == "PRETTY_NAME")
+                                    {
+                                        string Live_String_Value = Live_Split_String[1];
+
+                                        if (Live_String_Value[0] == '"')
+                                        {
+                                            Live_String_Value = Live_String_Value.Substring(1);
+                                        }
+
+                                        if (Live_String_Value[Live_String_Value.Length - 1] == '"')
+                                        {
+                                            Live_String_Value = Live_String_Value.Substring(0, Live_String_Value.Length - 1);
+                                        }
+
+                                        try
+                                        {
+                                            return Live_String_Value;
+                                        }
+                                        finally
+                                        {
+                                            OS_Found = true;
+                                            Live_String_Data = string.Empty;
+                                        }
+                                    }
                                 }
-                                finally
+                                catch (Exception Error)
                                 {
-                                    Live_String_Data = string.Empty;
+                                    OS_Found = true;
+                                    LogToFileAddons.OpenLog("Platform OS Name", string.Empty, Error, string.Empty, true);
                                 }
                             }
-                        }
-                        catch (Exception Error)
-                        {
-                            Live_String_Data = string.Empty;
-                            LogToFileAddons.OpenLog("Platform OS Name", string.Empty, Error, string.Empty, true);
+                            else
+                            {
+                                OS_Found = true;
+                            }
                         }
                     }
                 }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Platform OS Release", string.Empty, Error, string.Empty, true);
+                }
+
+                return "Linux";
             }
             else if (File.Exists(@"/proc/sys/kernel/ostype"))
             {

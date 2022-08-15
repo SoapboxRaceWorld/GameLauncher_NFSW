@@ -35,9 +35,11 @@
             this.TextBox_Live_Log = new System.Windows.Forms.TextBox();
             this.Panel_Splash_Screen = new System.Windows.Forms.Panel();
             this.Clock = new System.Windows.Forms.Timer(this.components);
+            this.Button_Close = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox_Screen_Splash)).BeginInit();
             this.GroupBox_Launcherlog.SuspendLayout();
             this.Panel_Splash_Screen.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Button_Close)).BeginInit();
             this.SuspendLayout();
             // 
             // Panel_Form_Screens
@@ -90,6 +92,7 @@
             // 
             this.Panel_Splash_Screen.BackColor = System.Drawing.Color.Transparent;
             this.Panel_Splash_Screen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Panel_Splash_Screen.Controls.Add(this.Button_Close);
             this.Panel_Splash_Screen.Controls.Add(this.PictureBox_Screen_Splash);
             this.Panel_Splash_Screen.Controls.Add(this.GroupBox_Launcherlog);
             this.Panel_Splash_Screen.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -102,6 +105,18 @@
             // 
             this.Clock.Enabled = true;
             this.Clock.Interval = 1200;
+            // 
+            // Button_Close
+            // 
+            this.Button_Close.BackColor = System.Drawing.Color.Transparent;
+            this.Button_Close.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.Button_Close.InitialImage = null;
+            this.Button_Close.Location = new System.Drawing.Point(526, 12);
+            this.Button_Close.Name = "Button_Close";
+            this.Button_Close.Size = new System.Drawing.Size(25, 25);
+            this.Button_Close.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.Button_Close.TabIndex = 6;
+            this.Button_Close.TabStop = false;
             // 
             // Parent_Screen
             // 
@@ -123,6 +138,7 @@
             this.GroupBox_Launcherlog.ResumeLayout(false);
             this.GroupBox_Launcherlog.PerformLayout();
             this.Panel_Splash_Screen.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Button_Close)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -134,5 +150,6 @@
         public System.Windows.Forms.PictureBox PictureBox_Screen_Splash;
         public System.Windows.Forms.GroupBox GroupBox_Launcherlog;
         public System.Windows.Forms.Panel Panel_Splash_Screen;
+        public System.Windows.Forms.PictureBox Button_Close;
     }
 }

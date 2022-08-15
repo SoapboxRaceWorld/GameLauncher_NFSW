@@ -88,12 +88,14 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                         Presence_Launcher.Status(22);
                         IsVerifyHashOpen = false;
                         GameScanner(false);
+                        Log_Verify.Stop = true;
                     }
                 }
                 else
                 {
                     IsVerifyHashOpen = false;
                     Presence_Launcher.Status(22);
+                    Log_Verify.Stop = true;
                 }
 
                 GC.Collect();

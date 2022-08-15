@@ -62,6 +62,7 @@ using SBRW.Launcher.Core.Extension.Numbers_;
 using SBRW.Launcher.Core.Extension.Api_;
 using SBRW.Launcher.App.UI_Forms.Register_Screen;
 using System.Reflection;
+using SBRW.Launcher.Core.Extra.Reference.System_;
 
 namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 {
@@ -3537,6 +3538,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 try
                 {
+                    Label_Download_Information.SafeInvokeAction(() =>
+                    Label_Download_Information.Text = "Loading list of files to download...".ToUpper(), this);
+
                     if (ProgressBar_Preload.Image != new Bitmap(Image_ProgressBar.Preload))
                     {
                         ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Image = new Bitmap(Image_ProgressBar.Preload), this);
@@ -3549,7 +3553,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Checking_Outline)
                     {
-                        Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.Image = new Bitmap(Image_ProgressBar.Checking_Outline), this);
+                        Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline, this);
                     }
 
                     if (Panel_Server_Information.Visible)
@@ -3829,74 +3833,76 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 try
                 {
                     Label_Download_Information.SafeInvokeAction(() => 
-                    Label_Download_Information.Text = "Loading list of files to download...".ToUpper(), this);
+                    Label_Download_Information.Text = "Checking Drive Format and Space".ToUpper(), this);
 
-                    DriveInfo[] allDrives = DriveInfo.GetDrives();
-                    foreach (DriveInfo d in allDrives)
+                    Format_System_Storage Detected_Drive = System_Storage.Drive_Full_Info(Save_Settings.Live_Data.Game_Path, UnixOS.Detected(), true);
+                    double Converted_Available_Free_Space = default;
+
+                    if (UnixOS.Detected())
                     {
-                        if (d.Name == Path.GetPathRoot(Save_Settings.Live_Data.Game_Path))
+                        Log.Debug("LINUX SPACE: " + Detected_Drive.AvailableFreeSpace_Linux);
+                        double.TryParse(Detected_Drive.AvailableFreeSpace_Linux.ToUpper().TrimEnd(new char[] { 'K', 'M', 'G', 'T', 'P' }),
+                        out Converted_Available_Free_Space);
+                    }
+
+                    if ((!UnixOS.Detected() && (Detected_Drive.TotalFreeSpace < 8000000000 || 
+                        !string.Equals(Detected_Drive.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))) || (UnixOS.Detected() && Converted_Available_Free_Space < 8.0D))
+                    {
+                        Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline, this, false);
+
+                        ProgressBar_Extracting.SafeInvokeAction(() =>
                         {
-                            if (d.TotalFreeSpace < 8000000000 || !string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline, this, false);
+                            ProgressBar_Extracting.Value = 100;
+                            ProgressBar_Extracting.Width = 519;
+                            ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Warning);
+                            ProgressBar_Extracting.ProgressColor = Color_Winform_Other.Progress_Color_Extracting;
+                        }, this, false);
 
-                                ProgressBar_Extracting.SafeInvokeAction(() =>
-                                {
-                                    ProgressBar_Extracting.Value = 100;
-                                    ProgressBar_Extracting.Width = 519;
-                                    ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Warning);
-                                    ProgressBar_Extracting.ProgressColor = Color_Winform_Other.Progress_Color_Extracting;
-                                }, this, false);
-
-                                if (!string.Equals(d.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    Label_Download_Information_Support.SafeInvokeAction(() =>
-                                    Label_Download_Information_Support.Text = ("Playing the game on a non-NTFS-formatted drive is not supported.").ToUpper(), this, false);
-                                    Label_Download_Information.SafeInvokeAction(() =>
-                                    Label_Download_Information.Text = ("Drive '" + d.Name + "' is formatted with: " + d.DriveFormat + " Type.").ToUpper(), this);
-                                }
-                                else
-                                {
-                                    Label_Download_Information.SafeInvokeAction(() =>
-                                    Label_Download_Information.Text = ("Make sure you have at least 8GB of free space on hard drive.").ToUpper(), this);
-                                }
-
-                                FunctionStatus.IsVerifyHashDisabled = true;
-
-                                if (Parent_Screen.Screen_Instance != null)
-                                {
-                                    Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
-                                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
-                                }
-                            }
-                            else if (Save_Settings.Live_Data.Launcher_CDN.StartsWith("http://localhost") || Save_Settings.Live_Data.Launcher_CDN.StartsWith("https://localhost"))
-                            {
-                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline, this, false);
-
-                                ProgressBar_Extracting.SafeInvokeAction(() =>
-                                {
-                                    ProgressBar_Extracting.Value = 100;
-                                    ProgressBar_Extracting.Width = 519;
-                                    ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Warning);
-                                    ProgressBar_Extracting.ProgressColor = Color_Winform_Other.Progress_Color_Extracting;
-                                }, this, false);
-
-                                Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Failsafe CDN Detected".ToUpper(), this, false);
-                                Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Please Choose a CDN from Settings Screen".ToUpper(), this);
-
-                                if (Parent_Screen.Screen_Instance != null)
-                                {
-                                    Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
-                                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
-                                }
-                            }
-                            else
-                            {
-                                Game_Downloaders();
-                            }
-
-                            break;
+                        if (!UnixOS.Detected() && !string.Equals(Detected_Drive.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            Label_Download_Information_Support.SafeInvokeAction(() =>
+                            Label_Download_Information_Support.Text = ("Playing the game on a non-NTFS-formatted drive is not supported.").ToUpper(), this, false);
+                            Label_Download_Information.SafeInvokeAction(() =>
+                            Label_Download_Information.Text = ("Drive '" + Detected_Drive.Name + "' is formatted with: " + Detected_Drive.DriveFormat + " Type.").ToUpper(), this);
                         }
+                        else
+                        {
+                            Label_Download_Information.SafeInvokeAction(() =>
+                            Label_Download_Information.Text = ("Make sure you have at least 8GB of free space on hard drive.").ToUpper(), this);
+                        }
+
+                        FunctionStatus.IsVerifyHashDisabled = true;
+
+                        if (Parent_Screen.Screen_Instance != null)
+                        {
+                            Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
+                            Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
+                        }
+                    }
+                    else if (Save_Settings.Live_Data.Launcher_CDN.StartsWith("http://localhost") || Save_Settings.Live_Data.Launcher_CDN.StartsWith("https://localhost"))
+                    {
+                        Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline, this, false);
+
+                        ProgressBar_Extracting.SafeInvokeAction(() =>
+                        {
+                            ProgressBar_Extracting.Value = 100;
+                            ProgressBar_Extracting.Width = 519;
+                            ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Warning);
+                            ProgressBar_Extracting.ProgressColor = Color_Winform_Other.Progress_Color_Extracting;
+                        }, this, false);
+
+                        Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Failsafe CDN Detected".ToUpper(), this, false);
+                        Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Please Choose a CDN from Settings Screen".ToUpper(), this);
+
+                        if (Parent_Screen.Screen_Instance != null)
+                        {
+                            Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
+                            Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
+                        }
+                    }
+                    else
+                    {
+                        Game_Downloaders();
                     }
                 }
                 catch (IOException Error)
