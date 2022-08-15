@@ -851,21 +851,27 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (Builtinserver)
                     {
-                        Label_Download_Information.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
+                        Label_Download_Information.SafeInvokeAction(() => 
+                        Label_Download_Information.Text = "Soapbox server launched. Waiting for queries.".ToUpper());
                     }
                     else
                     {
                         Application.DoEvents();
 
-                        ProgressBar_Extracting.Value = 100;
-                        ProgressBar_Extracting.Width = 519;
+                        ProgressBar_Extracting.SafeInvokeAction(() =>
+                        {
+                            ProgressBar_Extracting.Value = 100;
+                            ProgressBar_Extracting.Width = 519;
+                        });
                         Display_Color_Icons();
-                        Label_Download_Information_Support.Text = string.Empty;
-                        Label_Download_Information.Text = "Loading game. Launcher will minimize once Game has Loaded".ToUpper();
-                        Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
+                        Label_Download_Information.SafeInvokeAction(() =>
+                        Label_Download_Information.Text = "Loading game. Launcher will minimize once Game has Loaded".ToUpper());
+                        Label_Download_Information_Support.SafeInvokeAction(() =>
+                        Label_Download_Information_Support.Text = string.Empty);
+                        Label_Information_Window.SafeInvokeAction(() =>
+                        Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper());
 #if NETFRAMEWORK
                         ContextMenu = new ContextMenu();
-                        
                         ContextMenu.MenuItems.Add(new MenuItem("Now Loading!!!", (b, n) => 
                         {
 #if NETFRAMEWORK
@@ -880,10 +886,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             ContextMenu.MenuItems.Add(new MenuItem("Close Game and Launcher", Parent_Screen.Screen_Instance.Button_Close_Click));
                         }
 #endif
-                        Update();
-                        Refresh();
-
-                        NotifyIcon_Notification.Text = "SBRW Launcher";
+                        this.SafeInvokeAction(() => Refresh());
 #if NETFRAMEWORK
                         NotifyIcon_Notification.ContextMenu = ContextMenu;
 #endif
@@ -1070,7 +1073,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", Parent_Screen.Screen_Instance.Button_Close_Click));
                             }
 
-                            NotifyIcon_Notification.Text = "SBRW Launcher";
                             NotifyIcon_Notification.ContextMenu = ContextMenu;
 #endif
                         }
@@ -1093,7 +1095,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", Parent_Screen.Screen_Instance.Button_Close_Click));
                             }
 
-                            NotifyIcon_Notification.Text = "SBRW Launcher";
                             NotifyIcon_Notification.ContextMenu = ContextMenu;
 #endif
                         }
@@ -1188,7 +1189,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         ContextMenu.MenuItems.Add(new MenuItem("Close Game and Launcher", Parent_Screen.Screen_Instance.Button_Close_Click));
                     }
 
-                    NotifyIcon_Notification.Text = "SBRW Launcher";
                     NotifyIcon_Notification.ContextMenu = ContextMenu;
 #endif
                     if (Screen_Instance != null && (!IsDisposed || !Disposing))
@@ -1198,8 +1198,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (Parent_Screen.Screen_Instance != null)
                     {
-                        Parent_Screen.Screen_Instance.WindowState = FormWindowState.Minimized;
-                        Parent_Screen.Screen_Instance.ShowInTaskbar = false;
+                        Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                        {
+                            Parent_Screen.Screen_Instance.WindowState = FormWindowState.Minimized;
+                            Parent_Screen.Screen_Instance.ShowInTaskbar = false;
+                        });
                     }
 
                     Log.Core("LAUNCHER: Game has Fully Launched, Minimized Launcher");
