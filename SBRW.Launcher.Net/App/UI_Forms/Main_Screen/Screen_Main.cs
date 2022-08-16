@@ -3519,7 +3519,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             break;
                         case APIStatus.Forbidden:
                         case APIStatus.NotFound:
-                            OnDownloadFailed(new Exception("Game Archive Not Present. Please Choose Another CDN"));
+                            OnDownloadFailed(new Exception("Game Archive Not Present on Server. Please Choose Another CDN"));
                             break;
                         default:
                             OnDownloadFailed(new Exception("Unable to Connect to CDN. Choose Another CDN or look at Logs for Details"));
