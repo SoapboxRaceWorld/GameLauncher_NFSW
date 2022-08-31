@@ -1,8 +1,8 @@
-﻿using SBRW.Launcher.App.Classes.LauncherCore.Global;
-using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.App.Classes.LauncherCore.Support;
-using SBRW.Launcher.App.Classes.LauncherCore.Visuals;
-using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
+﻿using SBRW.Launcher.RunTime.LauncherCore.Global;
+using SBRW.Launcher.RunTime.LauncherCore.Logger;
+using SBRW.Launcher.RunTime.LauncherCore.Support;
+using SBRW.Launcher.RunTime.LauncherCore.Visuals;
+using SBRW.Launcher.RunTime.SystemPlatform.Unix;
 using SBRW.Launcher.Core.Theme;
 using System;
 using System.Collections.Generic;
@@ -60,9 +60,15 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
             /* Set Font                     /
             /*******************************/
 
-            float MainFontSize = UnixOS.Detected() ? 10f : 10f * 96f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected() ? 15f : 15f * 96f / CreateGraphics().DpiY;
-            float ThirdFontSize = UnixOS.Detected() ? 26f : 26f * 96f / CreateGraphics().DpiY;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            float MainFontSize = 10f * 96f / CreateGraphics().DpiY;
+            float SecondaryFontSize = 15f * 96f / CreateGraphics().DpiY;
+            float ThirdFontSize = 26f * 96f / CreateGraphics().DpiY;
+#else
+            float MainFontSize = 10f;
+            float SecondaryFontSize = 15f;
+            float ThirdFontSize = 26f;
+#endif
 
             Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             AboutText.Font = new Font(FormsFont.Primary_Bold(), ThirdFontSize, FontStyle.Bold);

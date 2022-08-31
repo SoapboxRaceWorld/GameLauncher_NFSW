@@ -1,21 +1,21 @@
 ﻿using Newtonsoft.Json;
-using SBRW.Launcher.App.Classes.Auth;
-using SBRW.Launcher.App.Classes.InsiderKit;
-using SBRW.Launcher.App.Classes.LauncherCore.APICheckers;
-using SBRW.Launcher.App.Classes.LauncherCore.Client;
-using SBRW.Launcher.App.Classes.LauncherCore.Client.Auth;
-using SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite;
-using SBRW.Launcher.App.Classes.LauncherCore.Global;
-using SBRW.Launcher.App.Classes.LauncherCore.Languages.Visual_Forms;
-using SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater;
-using SBRW.Launcher.App.Classes.LauncherCore.Lists;
-using SBRW.Launcher.App.Classes.LauncherCore.Lists.JSON;
-using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.App.Classes.LauncherCore.ModNet;
-using SBRW.Launcher.App.Classes.LauncherCore.ModNet.JSON;
-using SBRW.Launcher.App.Classes.LauncherCore.Support;
-using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
-using SBRW.Launcher.App.Classes.SystemPlatform.Windows;
+using SBRW.Launcher.RunTime.Auth;
+using SBRW.Launcher.RunTime.InsiderKit;
+using SBRW.Launcher.RunTime.LauncherCore.APICheckers;
+using SBRW.Launcher.RunTime.LauncherCore.Client;
+using SBRW.Launcher.RunTime.LauncherCore.Client.Auth;
+using SBRW.Launcher.RunTime.LauncherCore.FileReadWrite;
+using SBRW.Launcher.RunTime.LauncherCore.Global;
+using SBRW.Launcher.RunTime.LauncherCore.Languages.Visual_Forms;
+using SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater;
+using SBRW.Launcher.RunTime.LauncherCore.Lists;
+using SBRW.Launcher.RunTime.LauncherCore.Lists.JSON;
+using SBRW.Launcher.RunTime.LauncherCore.Logger;
+using SBRW.Launcher.RunTime.LauncherCore.ModNet;
+using SBRW.Launcher.RunTime.LauncherCore.ModNet.JSON;
+using SBRW.Launcher.RunTime.LauncherCore.Support;
+using SBRW.Launcher.RunTime.SystemPlatform.Unix;
+using SBRW.Launcher.RunTime.SystemPlatform.Windows;
 using SBRW.Launcher.App.UI_Forms.Custom_Server_Screen;
 using SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen;
 using SBRW.Launcher.App.UI_Forms.Settings_Screen;
@@ -1502,25 +1502,24 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private void PlayButton_Click(object sender, EventArgs e)
         {
-            if (!UnixOS.Detected())
-            {
-                DriveInfo driveInfo = new DriveInfo(Save_Settings.Live_Data.Game_Path);
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            DriveInfo driveInfo = new DriveInfo(Save_Settings.Live_Data.Game_Path);
 
-                if (!string.Equals(driveInfo.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    Picture_Information_Window.Image = Image_Other.Information_Window_Error;
-                    Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                    MessageBox.Show(
-                        $"Playing the game on a non-NTFS-formatted drive is not supported.\nDrive '{driveInfo.Name}' is formatted with: {driveInfo.DriveFormat}",
-                        "Compatibility",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error)
-                        ;
-                    Picture_Information_Window.Image = Image_Other.Information_Window_Success;
-                    Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Save_Account.Live_Data.User_Raw_Email).ToUpper();
-                    return;
-                }
+            if (!string.Equals(driveInfo.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Picture_Information_Window.Image = Image_Other.Information_Window_Error;
+                Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
+                MessageBox.Show(
+                    $"Playing the game on a non-NTFS-formatted drive is not supported.\nDrive '{driveInfo.Name}' is formatted with: {driveInfo.DriveFormat}",
+                    "Compatibility",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error)
+                    ;
+                Picture_Information_Window.Image = Image_Other.Information_Window_Success;
+                Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Save_Account.Live_Data.User_Raw_Email).ToUpper();
+                return;
             }
+#endif
 
             if (Save_Settings.Live_Data.Game_Integrity == "Ignore")
             {
@@ -3282,8 +3281,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                             case APIStatus.InvaildSSL:
                                             case APIStatus.SSLFailed:
                                                 Status_Code_Explaination = "Unable to Create a Secure Connection." +
-                                                "\nSSL may be invalid, System has blocked connection, or System is unable to handle TLS 1.2 and higher with C# Apps." +
-                                                (UnixOS.Detected() ? "\nCheck if Alternative WebCalls is Enabled to Fix the issue." : "");
+                                                "\nSSL may be invalid, System has blocked connection, or System is unable to handle TLS 1.2 and higher with C# Apps."
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                                ;
+#else
+                                                + "\nCheck if Alternative WebCalls is Enabled to Fix the issue";
+#endif
                                                 Allow_Restart = false;
                                                 break;
                                             /* The following Error Codes Means Internal Error Had Occurred */
@@ -3798,7 +3801,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Downloading: Core GameFiles".ToUpper(), this);
                             }
                             Log.Info("DOWNLOAD: Getting Core Game Files");
-                            Download_Settings.System_Unix = UnixOS.Detected();
+#if (RELEASE_UNIX || DEBUG_UNIX)
+                            Download_Settings.System_Unix = true;
+#endif
                             Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
                             LZMA_Downloader.StartDownload(Save_Settings.Live_Data.Launcher_CDN, string.Empty, Save_Settings.Live_Data.Game_Path, false, false, 1130632198);
                         }
@@ -3841,15 +3846,16 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Format_System_Storage Detected_Drive = System_Storage.Drive_Full_Info(Save_Settings.Live_Data.Game_Path, UnixOS.Detected(), true);
                     double Converted_Available_Free_Space = default;
 
-                    if (UnixOS.Detected())
-                    {
-                        Log.Debug("LINUX SPACE: " + Detected_Drive.AvailableFreeSpace_Linux);
-                        double.TryParse(Detected_Drive.AvailableFreeSpace_Linux.ToUpper().TrimEnd(new char[] { 'K', 'M', 'G', 'T', 'P' }),
-                        out Converted_Available_Free_Space);
-                    }
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                    if (Detected_Drive.TotalFreeSpace < 8000000000 ||
+                        !string.Equals(Detected_Drive.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
+#else
+                    Log.Debug("LINUX SPACE: " + Detected_Drive.AvailableFreeSpace_Linux);
+                    double.TryParse(Detected_Drive.AvailableFreeSpace_Linux.ToUpper().TrimEnd(new char[] { 'K', 'M', 'G', 'T', 'P' }),
+                    out Converted_Available_Free_Space);
 
-                    if ((!UnixOS.Detected() && (Detected_Drive.TotalFreeSpace < 8000000000 || 
-                        !string.Equals(Detected_Drive.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))) || (UnixOS.Detected() && Converted_Available_Free_Space < 8.0D))
+                    if (Converted_Available_Free_Space < 8.0D)
+#endif
                     {
                         Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline, this, false);
 
@@ -3861,7 +3867,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             ProgressBar_Extracting.ProgressColor = Color_Winform_Other.Progress_Color_Extracting;
                         }, this, false);
 
-                        if (!UnixOS.Detected() && !string.Equals(Detected_Drive.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                        if (!string.Equals(Detected_Drive.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
                         {
                             Label_Download_Information_Support.SafeInvokeAction(() =>
                             Label_Download_Information_Support.Text = ("Playing the game on a non-NTFS-formatted drive is not supported.").ToUpper(), this, false);
@@ -3873,6 +3880,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Label_Download_Information.SafeInvokeAction(() =>
                             Label_Download_Information.Text = ("Make sure you have at least 8GB of free space on hard drive.").ToUpper(), this);
                         }
+#else
+                        Label_Download_Information.SafeInvokeAction(() =>
+                        Label_Download_Information.Text = ("Make sure you have at least 8GB of free space on hard drive.").ToUpper(), this);
+#endif
 
                         FunctionStatus.IsVerifyHashDisabled = true;
 
@@ -4116,16 +4127,16 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
                 catch
                 {
-                    if (UnixOS.Detected())
-                    {
+#if RELEASE_UNIX || DEBUG_UNIX
                         if (Picture_Icon_Version.BackgroundImage != Image_Icon.Engine_Good)
                         {
                             Picture_Icon_Version.BackgroundImage = Image_Icon.Engine_Good;
                         }
+
                         Label_Status_Launcher.ForeColor = Color_Text.S_Sucess;
                         Label_Status_Launcher.Text = "Launcher Status:\n - Linux Build";
                         Label_Status_Launcher_Version.Text = "Version: v" + Application.ProductVersion;
-                    }
+#endif
                 }
 
                 PingServerListAPIStatus();
@@ -4179,10 +4190,17 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             /* Set Font                     /
             /*******************************/
 
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
-            float ThirdFontSize = UnixOS.Detected() ? 10f : 10f * 96f / CreateGraphics().DpiY;
-            float FourthFontSize = UnixOS.Detected() ? 14f : 14f * 96f / CreateGraphics().DpiY;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            float MainFontSize = 9f * 96f / CreateGraphics().DpiY;
+            float SecondaryFontSize = 8f * 96f / CreateGraphics().DpiY;
+            float ThirdFontSize = 10f * 96f / CreateGraphics().DpiY;
+            float FourthFontSize = 14f * 96f / CreateGraphics().DpiY;
+#else
+            float MainFontSize = 9f;
+            float SecondaryFontSize = 8f;
+            float ThirdFontSize = 10f;
+            float FourthFontSize = 14f;
+#endif
             Font = new Font(FormsFont.Primary(), SecondaryFontSize, FontStyle.Regular);
 
             /* Front Screen */

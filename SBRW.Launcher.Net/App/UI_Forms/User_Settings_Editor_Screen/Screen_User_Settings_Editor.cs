@@ -7,12 +7,12 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using SBRW.Launcher.App.Classes.LauncherCore.Global;
-using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.App.Classes.LauncherCore.Lists;
-using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
+using SBRW.Launcher.RunTime.LauncherCore.Global;
+using SBRW.Launcher.RunTime.LauncherCore.Logger;
+using SBRW.Launcher.RunTime.LauncherCore.Lists;
+using SBRW.Launcher.RunTime.SystemPlatform.Unix;
 using SBRW.Launcher.Core.Theme;
-using SBRW.Launcher.App.Classes.LauncherCore.Support;
+using SBRW.Launcher.RunTime.LauncherCore.Support;
 using SBRW.Launcher.Core.Extra.XML_;
 
 namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen

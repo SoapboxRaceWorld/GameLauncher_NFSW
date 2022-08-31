@@ -1,14 +1,18 @@
-using SBRW.Launcher.App.Classes.LauncherCore.Client;
-using SBRW.Launcher.App.Classes.LauncherCore.Global;
-using SBRW.Launcher.App.Classes.LauncherCore.Languages.Visual_Forms;
-using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.App.Classes.SystemPlatform.Components;
-using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
+using SBRW.Launcher.RunTime.LauncherCore.Client;
+using SBRW.Launcher.RunTime.LauncherCore.Global;
+using SBRW.Launcher.RunTime.LauncherCore.Languages.Visual_Forms;
+using SBRW.Launcher.RunTime.LauncherCore.Logger;
 using SBRW.Launcher.App.UI_Forms;
 using SBRW.Launcher.App.UI_Forms.Main_Screen;
 using SBRW.Launcher.Core.Extension.Logging_;
 using System;
+#if !RELEASE_UNIX
+#if !DEBUG_UNIX
 using System.Collections.Generic;
+using SBRW.Launcher.RunTime.SystemPlatform.Components;
+using SBRW.Launcher.RunTime.SystemPlatform.Unix;
+#endif
+#endif
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -23,6 +27,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using SBRW.Launcher.Core.Required.DLL;
+using SBRW.Launcher.RunTime.SystemPlatform.Unix;
 
 namespace SBRW.Launcher.Net
 {
@@ -322,6 +328,19 @@ namespace SBRW.Launcher.Net
                     {
                         FunctionStatus.ErrorCloseLauncher("Closing From Downloaded Missing LZMA", LauncherMustRestart);
                     }
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                    else if (UnixOS.Detected())
+                    {
+                        FunctionStatus.LauncherForceCloseReason = "Running Windows Build on Unix is Not Allowed";
+                        FunctionStatus.ErrorCloseLauncher(FunctionStatus.LauncherForceCloseReason, LauncherMustRestart, true, true);
+                    }
+#else
+                    else if (!UnixOS.Detected())
+                    {
+                        FunctionStatus.LauncherForceCloseReason = "Running Unix Build on Windows is Not Allowed";
+                        FunctionStatus.ErrorCloseLauncher(FunctionStatus.LauncherForceCloseReason, LauncherMustRestart, true, true);
+                    }
+#endif
                     else
                     {
                         Mutex No_Java = new Mutex(false, "GameLauncherNFSW-MeTonaTOR");
@@ -329,11 +348,10 @@ namespace SBRW.Launcher.Net
                         {
                             if (No_Java.WaitOne(0, false))
                             {
-                                if (!UnixOS.Detected() && false)
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                /* MONO Hates this... */
+                                string[] File_List =
                                 {
-                                    /* MONO Hates this... */
-                                    string[] File_List =
-                                    {
                                         "DiscordRPC.dll - 1.0.175.0",
                                         "Flurl.dll - 3.0.2",
                                         "Flurl.Http.dll - 3.2.0",
@@ -353,65 +371,64 @@ namespace SBRW.Launcher.Net
                                         "SBRW.Launcher.Core.Proxy.dll - 0.0.12"
                                     };
 
-                                    List<string> Missing_File_List = new List<string>();
+                                List<string> Missing_File_List = new List<string>();
 
-                                    foreach (string File_String in File_List)
+                                foreach (string File_String in File_List)
+                                {
+                                    string[] Split_File_Version = File_String.Split(new string[] { " - " }, StringSplitOptions.None);
+
+                                    if (!File.Exists(Path.Combine(Directory.GetCurrentDirectory(), Split_File_Version[0])))
                                     {
-                                        string[] Split_File_Version = File_String.Split(new string[] { " - " }, StringSplitOptions.None);
-
-                                        if (!File.Exists(Path.Combine(Directory.GetCurrentDirectory(), Split_File_Version[0])))
+                                        Missing_File_List.Add(Split_File_Version[0] + " - " + Translations.Database("Program_TextBox_File_NotFound"));
+                                    }
+                                    else
+                                    {
+                                        try
                                         {
-                                            Missing_File_List.Add(Split_File_Version[0] + " - " + Translations.Database("Program_TextBox_File_NotFound"));
-                                        }
-                                        else
-                                        {
-                                            try
-                                            {
-                                                FileVersionInfo Version_Info = FileVersionInfo.GetVersionInfo(Split_File_Version[0]);
-                                                string[] Version_Split = (Version_Info.ProductVersion??string.Empty).Split('+');
-                                                string File_Version = Version_Split[0];
+                                            FileVersionInfo Version_Info = FileVersionInfo.GetVersionInfo(Split_File_Version[0]);
+                                            string[] Version_Split = (Version_Info.ProductVersion ?? string.Empty).Split('+');
+                                            string File_Version = Version_Split[0];
 
-                                                if (File_Version == "")
-                                                {
-                                                    Missing_File_List.Add(Split_File_Version[0] + " - " + Translations.Database("Program_TextBox_File_Invalid"));
-                                                }
-                                                else
-                                                {
-                                                    if (!HardwareInfo.CheckArchitectureFile(Split_File_Version[0]))
-                                                    {
-                                                        Missing_File_List.Add(Split_File_Version[0] + " - " + Translations.Database("Program_TextBox_File_Invalid_CPU"));
-                                                    }
-                                                    else
-                                                    {
-                                                        if (File_Version != Split_File_Version[1])
-                                                        {
-                                                            Missing_File_List.Add(Split_File_Version[0] + " - " + Translations.Database("Program_TextBox_File_Invalid_Version") +
-                                                                "(" + Split_File_Version[1] + " != " + File_Version + ")");
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            catch
+                                            if (File_Version == "")
                                             {
                                                 Missing_File_List.Add(Split_File_Version[0] + " - " + Translations.Database("Program_TextBox_File_Invalid"));
                                             }
+                                            else
+                                            {
+                                                if (!HardwareInfo.CheckArchitectureFile(Split_File_Version[0]))
+                                                {
+                                                    Missing_File_List.Add(Split_File_Version[0] + " - " + Translations.Database("Program_TextBox_File_Invalid_CPU"));
+                                                }
+                                                else
+                                                {
+                                                    if (File_Version != Split_File_Version[1])
+                                                    {
+                                                        Missing_File_List.Add(Split_File_Version[0] + " - " + Translations.Database("Program_TextBox_File_Invalid_Version") +
+                                                            "(" + Split_File_Version[1] + " != " + File_Version + ")");
+                                                    }
+                                                }
+                                            }
                                         }
-                                    }
-
-                                    if (Missing_File_List.Count != 0)
-                                    {
-                                        string Message_Display = Translations.Database("Program_TextBox_File_Invalid_Start");
-
-                                        foreach (string File_String in Missing_File_List)
+                                        catch
                                         {
-                                            Message_Display += "• " + File_String + "\n";
+                                            Missing_File_List.Add(Split_File_Version[0] + " - " + Translations.Database("Program_TextBox_File_Invalid"));
                                         }
-
-                                        FunctionStatus.LauncherForceClose = true;
-                                        MessageBox.Show(null, Message_Display, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     }
                                 }
 
+                                if (Missing_File_List.Count != 0)
+                                {
+                                    string Message_Display = Translations.Database("Program_TextBox_File_Invalid_Start");
+
+                                    foreach (string File_String in Missing_File_List)
+                                    {
+                                        Message_Display += "• " + File_String + "\n";
+                                    }
+
+                                    FunctionStatus.LauncherForceClose = true;
+                                    MessageBox.Show(null, Message_Display, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+#endif
                                 if (FunctionStatus.LauncherForceClose)
                                 {
                                     FunctionStatus.ErrorCloseLauncher("Closing From Missing .dll Files Check", LauncherMustRestart);

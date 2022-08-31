@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
-using SBRW.Launcher.App.Classes.LauncherCore.Global;
-using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.App.Classes.LauncherCore.ModNet.JSON;
-using SBRW.Launcher.App.Classes.LauncherCore.Support;
-using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
+using SBRW.Launcher.RunTime.LauncherCore.Global;
+using SBRW.Launcher.RunTime.LauncherCore.Logger;
+using SBRW.Launcher.RunTime.LauncherCore.ModNet.JSON;
+using SBRW.Launcher.RunTime.LauncherCore.Support;
+using SBRW.Launcher.RunTime.SystemPlatform.Unix;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.String_;
 using SBRW.Launcher.Core.Extension.Validation_.Json_.Newtonsoft_;
@@ -304,7 +304,11 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
             /* Set Font                     /
             /*******************************/
 
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            float MainFontSize = 9f * 96f / CreateGraphics().DpiY;
+#else
+            float MainFontSize = 9f;
+#endif
             Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
 
             Button_Add.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);

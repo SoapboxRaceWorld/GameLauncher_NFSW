@@ -1,17 +1,17 @@
-﻿using SBRW.Launcher.App.Classes.InsiderKit;
-using SBRW.Launcher.App.Classes.LauncherCore.APICheckers;
-using SBRW.Launcher.App.Classes.LauncherCore.FileReadWrite;
-using SBRW.Launcher.App.Classes.LauncherCore.Global;
-using SBRW.Launcher.App.Classes.LauncherCore.Languages.Visual_Forms;
-using SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater;
-using SBRW.Launcher.App.Classes.LauncherCore.Lists;
-using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.App.Classes.LauncherCore.ModNet;
-using SBRW.Launcher.App.Classes.LauncherCore.Support;
-using SBRW.Launcher.App.Classes.LauncherCore.Visuals;
-using SBRW.Launcher.App.Classes.SystemPlatform.Components;
-using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
-using SBRW.Launcher.App.Classes.SystemPlatform.Windows;
+﻿using SBRW.Launcher.RunTime.InsiderKit;
+using SBRW.Launcher.RunTime.LauncherCore.APICheckers;
+using SBRW.Launcher.RunTime.LauncherCore.FileReadWrite;
+using SBRW.Launcher.RunTime.LauncherCore.Global;
+using SBRW.Launcher.RunTime.LauncherCore.Languages.Visual_Forms;
+using SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater;
+using SBRW.Launcher.RunTime.LauncherCore.Lists;
+using SBRW.Launcher.RunTime.LauncherCore.Logger;
+using SBRW.Launcher.RunTime.LauncherCore.ModNet;
+using SBRW.Launcher.RunTime.LauncherCore.Support;
+using SBRW.Launcher.RunTime.LauncherCore.Visuals;
+using SBRW.Launcher.RunTime.SystemPlatform.Components;
+using SBRW.Launcher.RunTime.SystemPlatform.Unix;
+using SBRW.Launcher.RunTime.SystemPlatform.Windows;
 using SBRW.Launcher.App.UI_Forms.Main_Screen;
 using SBRW.Launcher.App.UI_Forms.Welcome_Screen;
 using SBRW.Launcher.Core.Cache;
@@ -38,6 +38,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SBRW.Launcher.Core.Required.DLL;
 
 namespace SBRW.Launcher.App.UI_Forms
 {
@@ -126,70 +127,69 @@ namespace SBRW.Launcher.App.UI_Forms
 
             Presence_Launcher.Start();
 
-            if (!UnixOS.Detected())
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            Presence_Launcher.Status(0, "Checking .NET Framework");
+            await Task.Run(() =>
             {
-                Presence_Launcher.Status(0, "Checking .NET Framework");
-                await Task.Run(() => 
+                try
                 {
-                    try
+                    /* Check if User has a compatible .NET Framework Installed */
+                    if (int.TryParse(Registry_Core.Read("Release", @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\"), out int NetFrame_Version))
                     {
-                        /* Check if User has a compatible .NET Framework Installed */
-                        if (int.TryParse(Registry_Core.Read("Release", @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\"), out int NetFrame_Version))
+                        /* For now, allow edge case of Windows 8.0 to run .NET 4.6.1 where upgrading to 8.1 is not possible */
+                        if (Product_Version.GetWindowsNumber() == 6.2 && NetFrame_Version <= 394254)
                         {
-                            /* For now, allow edge case of Windows 8.0 to run .NET 4.6.1 where upgrading to 8.1 is not possible */
-                            if (Product_Version.GetWindowsNumber() == 6.2 && NetFrame_Version <= 394254)
+                            if (MessageBox.Show(null, Translations.Database("Program_TextBox_NetFrame_P1") +
+                            " .NETFramework, Version=v4.6.1 \n\n" + Translations.Database("Program_TextBox_NetFrame_P2"),
+                            "GameLauncher.exe - " + Translations.Database("Program_TextBox_NetFrame_P3"),
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                             {
-                                if (MessageBox.Show(null, Translations.Database("Program_TextBox_NetFrame_P1") +
-                                " .NETFramework, Version=v4.6.1 \n\n" + Translations.Database("Program_TextBox_NetFrame_P2"),
-                                "GameLauncher.exe - " + Translations.Database("Program_TextBox_NetFrame_P3"),
-                                MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
-                                {
 #if NETFRAMEWORK
                                 Process.Start("https://dotnet.microsoft.com/download/dotnet-framework/net461");
 #else
                                     Process.Start(new ProcessStartInfo { FileName = "https://dotnet.microsoft.com/download/dotnet-framework/net461", UseShellExecute = true });
 #endif
-                                }
-
-                                FunctionStatus.LauncherForceClose = true;
                             }
-                            /* Otherwise, all other OS Versions should have 4.6.2 as a Minimum Version */
-                            else if (NetFrame_Version <= 394802)
+
+                            FunctionStatus.LauncherForceClose = true;
+                        }
+                        /* Otherwise, all other OS Versions should have 4.6.2 as a Minimum Version */
+                        else if (NetFrame_Version <= 394802)
+                        {
+                            if (MessageBox.Show(null, Translations.Database("Program_TextBox_NetFrame_P1") +
+                            " .NETFramework, Version=v4.6.2 \n\n" + Translations.Database("Program_TextBox_NetFrame_P2"),
+                            "GameLauncher.exe - " + Translations.Database("Program_TextBox_NetFrame_P3"),
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                             {
-                                if (MessageBox.Show(null, Translations.Database("Program_TextBox_NetFrame_P1") +
-                                " .NETFramework, Version=v4.6.2 \n\n" + Translations.Database("Program_TextBox_NetFrame_P2"),
-                                "GameLauncher.exe - " + Translations.Database("Program_TextBox_NetFrame_P3"),
-                                MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
-                                {
 #if NETFRAMEWORK
                                 Process.Start("https://dotnet.microsoft.com/download/dotnet-framework");
 #else
                                     Process.Start(new ProcessStartInfo { FileName = "https://dotnet.microsoft.com/download/dotnet-framework", UseShellExecute = true });
 #endif
-                                }
+                            }
 
-                                FunctionStatus.LauncherForceClose = true;
-                            }
-                            else
-                            {
-                                LogToFileAddons.Parent_Log_Screen(7, "NET-FRAMEWORK", "Supported Installed Version");
-                            }
+                            FunctionStatus.LauncherForceClose = true;
                         }
                         else
                         {
-                            LogToFileAddons.Parent_Log_Screen(4, "NET-FRAMEWORK", "Failed to Parse Version");
+                            LogToFileAddons.Parent_Log_Screen(7, "NET-FRAMEWORK", "Supported Installed Version");
                         }
                     }
-                    catch
+                    else
                     {
-                        FunctionStatus.LauncherForceClose = true;
+                        LogToFileAddons.Parent_Log_Screen(4, "NET-FRAMEWORK", "Failed to Parse Version");
                     }
-                    finally
-                    {
-                        GC.Collect();
-                    }
-                });
-            }
+                }
+                catch
+                {
+                    FunctionStatus.LauncherForceClose = true;
+                }
+                finally
+                {
+                    GC.Collect();
+                }
+            });
+#endif
 
             if (FunctionStatus.LauncherForceClose)
             {
@@ -197,6 +197,11 @@ namespace SBRW.Launcher.App.UI_Forms
             }
             else
             {
+                if (Debugger.IsAttached)
+                {
+                    LogToFileAddons.Parent_Log_Screen(1, "Debug Mode", "Enabled for Current Session");
+                }
+                
                 Log.Start();
                 await Task.Run(() => Log_Location.RemoveLegacyLogs());
 
@@ -290,18 +295,17 @@ namespace SBRW.Launcher.App.UI_Forms
                 {
                     try
                     {
-                        if (UnixOS.Detected())
-                        {
-                            LogToFileAddons.Parent_Log_Screen(7, "Detected OS", Launcher_Value.System_OS_Name = UnixOS.FullName());
-                        }
-                        else
-                        {
-                            LogToFileAddons.Parent_Log_Screen(7, "Detected OS", Launcher_Value.System_OS_Name = Product_Version.ConvertWindowsNumberToName());
-                            LogToFileAddons.Parent_Log_Screen(7, "Windows Build", Product_Version.GetWindowsBuildNumber().ToString());
-                            LogToFileAddons.Parent_Log_Screen(7, "NT Version", Environment.OSVersion.VersionString);
-                            LogToFileAddons.Parent_Log_Screen(7, "Video Card", HardwareInfo.GPU.CardName());
-                            LogToFileAddons.Parent_Log_Screen(7, "Driver Version", HardwareInfo.GPU.DriverVersion());
-                        }
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                        LogToFileAddons.Parent_Log_Screen(7, "Detected OS", Launcher_Value.System_OS_Name = Product_Version.ConvertWindowsNumberToName());
+                        LogToFileAddons.Parent_Log_Screen(7, "Windows Build", Product_Version.GetWindowsBuildNumber().ToString());
+                        LogToFileAddons.Parent_Log_Screen(7, "NT Version", Environment.OSVersion.VersionString);
+                        LogToFileAddons.Parent_Log_Screen(7, "Video Card", HardwareInfo.GPU.CardName());
+                        LogToFileAddons.Parent_Log_Screen(7, "Driver Version", HardwareInfo.GPU.DriverVersion());
+#else
+                        LogToFileAddons.Parent_Log_Screen(7, "Detected OS", Launcher_Value.System_OS_Name = UnixOS.FullName());
+                        LogToFileAddons.Parent_Log_Screen(7, "Wine Version", DLL_NTDLL.WineVersion());
+                        LogToFileAddons.Parent_Log_Screen(7, "Wine Build ID", DLL_NTDLL.WineBuildId());
+#endif
                         LogToFileAddons.Parent_Log_Screen(3, "OS", "Detected");
                     }
                     catch (Exception Error)
@@ -331,41 +335,40 @@ namespace SBRW.Launcher.App.UI_Forms
                     Directory.SetCurrentDirectory(Locations.LauncherFolder);
                     LogToFileAddons.Parent_Log_Screen(3, "SETUP", "Current Directory now Set at -> " + Locations.LauncherFolder);
 
-                    if (!UnixOS.Detected())
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                    LogToFileAddons.Parent_Log_Screen(2, "FOLDER LOCATION", "Checking Launcher Folder Directory");
+                    Presence_Launcher.Status(0, "Checking Launcher Folder Locations");
+
+                    await Task.Run(() =>
                     {
-                        LogToFileAddons.Parent_Log_Screen(2, "FOLDER LOCATION", "Checking Launcher Folder Directory");
-                        Presence_Launcher.Status(0, "Checking Launcher Folder Locations");
-
-                        await Task.Run(() =>
+                        switch (FunctionStatus.CheckFolder(Locations.LauncherFolder))
                         {
-                            switch (FunctionStatus.CheckFolder(Locations.LauncherFolder))
-                            {
-                                case FolderType.IsTempFolder:
-                                case FolderType.IsUsersFolders:
-                                case FolderType.IsProgramFilesFolder:
-                                case FolderType.IsWindowsFolder:
-                                case FolderType.IsRootFolder:
-                                    string Constructed_Msg = string.Empty;
+                            case FolderType.IsTempFolder:
+                            case FolderType.IsUsersFolders:
+                            case FolderType.IsProgramFilesFolder:
+                            case FolderType.IsWindowsFolder:
+                            case FolderType.IsRootFolder:
+                                string Constructed_Msg = string.Empty;
 
-                                    Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher") + "\n\n";
-                                    Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P2") + "\n";
-                                    Constructed_Msg += "• X:\\GameLauncher.exe " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P3") + "\n";
-                                    Constructed_Msg += "• C:\\Program Files\n";
-                                    Constructed_Msg += "• C:\\Program Files (x86)\n";
-                                    Constructed_Msg += "• C:\\Users " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P4") + "\n";
-                                    Constructed_Msg += "• C:\\Windows\n\n";
-                                    Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P5") + "\n";
-                                    Constructed_Msg += "• 'C:\\Soapbox Race World' " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P6") + " 'C:\\SBRW'\n";
-                                    Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P7") + "\n\n";
+                                Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher") + "\n\n";
+                                Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P2") + "\n";
+                                Constructed_Msg += "• X:\\GameLauncher.exe " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P3") + "\n";
+                                Constructed_Msg += "• C:\\Program Files\n";
+                                Constructed_Msg += "• C:\\Program Files (x86)\n";
+                                Constructed_Msg += "• C:\\Users " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P4") + "\n";
+                                Constructed_Msg += "• C:\\Windows\n\n";
+                                Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P5") + "\n";
+                                Constructed_Msg += "• 'C:\\Soapbox Race World' " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P6") + " 'C:\\SBRW'\n";
+                                Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P7") + "\n\n";
 
-                                    MessageBox.Show(null, Constructed_Msg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    FunctionStatus.LauncherForceClose = true;
-                                    break;
-                            }
-                        });
+                                MessageBox.Show(null, Constructed_Msg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                FunctionStatus.LauncherForceClose = true;
+                                break;
+                        }
+                    });
 
-                        LogToFileAddons.Parent_Log_Screen(3, "FOLDER LOCATION", "Done");
-                    }
+                    LogToFileAddons.Parent_Log_Screen(3, "FOLDER LOCATION", "Done");
+#endif
 
                     if (FunctionStatus.LauncherForceClose)
                     {

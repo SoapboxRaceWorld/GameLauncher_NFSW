@@ -28,6 +28,7 @@
     <ApplicationIcon>SBRW.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+    <Configurations>Debug;Release;Release.Unix;Debug.Unix</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -68,7 +69,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
     <PackageReference Include="SBRW.Ini.Parser" Version="2.6.5" />
-    <PackageReference Include="SBRW.Launcher.Core" Version="0.0.58" />
+    <PackageReference Include="SBRW.Launcher.Core" Version="0.0.59" />
     <PackageReference Include="SBRW.Launcher.Core.Discord" Version="0.0.28" />
     <PackageReference Include="SBRW.Launcher.Core.Downloader" Version="0.1.4" />
     <PackageReference Include="SBRW.Launcher.Core.Extra" Version="0.0.22" />
@@ -81,12 +82,14 @@
     <PackageReference Include="WindowsFirewallHelper" Version="2.2.0.86" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)'=='Release'">
+  <ItemGroup Condition="'$(Configuration)'=='Release' OR '$(Configuration)'=='Release.Unix'">
     <ProjectReference Include="..\GameLauncher\GameLauncher.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if &quot;$(Configuration)&quot; == &quot;Release&quot; (&#xD;&#xA;if exist &quot;$(SolutionDir)Keys\Launcher.p12&quot; (&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x86\signtool.exe&quot; sign /f &quot;$(SolutionDir)Keys\Launcher.p12&quot; /p &quot;Launcher Development CRT&quot; /d &quot;Soapbox Race World&quot; /du &quot;https://soapboxrace.world&quot; /tr http://timestamp.digicert.com /td SHA256 &quot;$(TargetPath)&quot;)&#xD;&#xA;if exist &quot;$(SolutionDir)Keys\Launcher.p12&quot; (&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x86\signtool.exe&quot; sign /f &quot;$(SolutionDir)Keys\Launcher.p12&quot; /p &quot;Launcher Development CRT&quot; /d &quot;Soapbox Race World&quot; /du &quot;https://soapboxrace.world&quot; /tr http://timestamp.digicert.com /td SHA256 &quot;$(TargetDir)SBRW.*.exe&quot;)&#xD;&#xA;)&#xD;&#xA;" />
+    <Exec Command="if &quot;$(Configuration)&quot; == &quot;Release&quot; (&#xD;&#xA;if exist &quot;$(SolutionDir)Keys\Launcher.p12&quot; (&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x86\signtool.exe&quot; sign /f &quot;$(SolutionDir)Keys\Launcher.p12&quot; /p &quot;Launcher Development CRT&quot; /d &quot;Soapbox Race World&quot; /du &quot;https://soapboxrace.world&quot; /tr http://timestamp.digicert.com /td SHA256 &quot;$(TargetPath)&quot;)&#xD;&#xA;if exist &quot;$(SolutionDir)Keys\Launcher.p12&quot; (&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x86\signtool.exe&quot; sign /f &quot;$(SolutionDir)Keys\Launcher.p12&quot; /p &quot;Launcher Development CRT&quot; /d &quot;Soapbox Race World&quot; /du &quot;https://soapboxrace.world&quot; /tr http://timestamp.digicert.com /td SHA256 &quot;$(TargetDir)SBRW.*.exe&quot;)&#xD;&#xA;)&#xD;&#xA;&#xD;&#xA;if &quot;$(Configuration)&quot; == &quot;Release.Unix&quot; (&#xD;&#xA;if exist &quot;$(SolutionDir)Keys\Launcher.p12&quot; (&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x86\signtool.exe&quot; sign /f &quot;$(SolutionDir)Keys\Launcher.p12&quot; /p &quot;Launcher Development CRT&quot; /d &quot;Soapbox Race World&quot; /du &quot;https://soapboxrace.world&quot; /tr http://timestamp.digicert.com /td SHA256 &quot;$(TargetPath)&quot;)&#xD;&#xA;if exist &quot;$(SolutionDir)Keys\Launcher.p12&quot; (&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x86\signtool.exe&quot; sign /f &quot;$(SolutionDir)Keys\Launcher.p12&quot; /p &quot;Launcher Development CRT&quot; /d &quot;Soapbox Race World&quot; /du &quot;https://soapboxrace.world&quot; /tr http://timestamp.digicert.com /td SHA256 &quot;$(TargetDir)SBRW.*.exe&quot;)&#xD;&#xA;)" />
   </Target>
+
+  <Import Project="..\SBRW.Launcher.RunTime\SBRW.Launcher.RunTime.projitems" Label="Shared" />
 
 </Project>

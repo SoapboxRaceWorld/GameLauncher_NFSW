@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
-using SBRW.Launcher.App.Classes.InsiderKit;
-using SBRW.Launcher.App.Classes.LauncherCore.APICheckers;
-using SBRW.Launcher.App.Classes.LauncherCore.LauncherUpdater;
-using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.App.Classes.LauncherCore.Support;
-using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
+using SBRW.Launcher.RunTime.InsiderKit;
+using SBRW.Launcher.RunTime.LauncherCore.APICheckers;
+using SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater;
+using SBRW.Launcher.RunTime.LauncherCore.Logger;
+using SBRW.Launcher.RunTime.LauncherCore.Support;
+using SBRW.Launcher.RunTime.SystemPlatform.Unix;
 using SBRW.Launcher.Core.Discord.RPC_;
 using SBRW.Launcher.Core.Extension.Validation_.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Theme;

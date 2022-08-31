@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
-using SBRW.Launcher.App.Classes.LauncherCore.Global;
-using SBRW.Launcher.App.Classes.LauncherCore.Lists;
-using SBRW.Launcher.App.Classes.LauncherCore.Lists.JSON;
-using SBRW.Launcher.App.Classes.LauncherCore.Logger;
-using SBRW.Launcher.App.Classes.LauncherCore.Support;
-using SBRW.Launcher.App.Classes.SystemPlatform.Unix;
+using SBRW.Launcher.RunTime.LauncherCore.Global;
+using SBRW.Launcher.RunTime.LauncherCore.Lists;
+using SBRW.Launcher.RunTime.LauncherCore.Lists.JSON;
+using SBRW.Launcher.RunTime.LauncherCore.Logger;
+using SBRW.Launcher.RunTime.LauncherCore.Support;
+using SBRW.Launcher.RunTime.SystemPlatform.Unix;
 using SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Validation_.Json_.Newtonsoft_;
@@ -377,8 +377,11 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
             /*******************************/
             /* Set Font                     /
             /*******************************/
-
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            float MainFontSize = 9f * 96f / CreateGraphics().DpiY;
+#else
+            float MainFontSize = 9f;
+#endif
 
             Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             ListView_Server_List.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
@@ -456,9 +459,9 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
 
             Shown += new EventHandler(Screen_Custom_Server_Shown);
         }
-        #endregion
+#endregion
 
-        #region Button Functions
+#region Button Functions
         private void Button_Server_Add_Click(object sender, EventArgs e)
         {
             Screen_Custom_Server_Add.OpenScreen();
@@ -530,7 +533,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                 }
             }
         }
-        #endregion
+#endregion
 
         public Screen_Custom_Server()
         {
