@@ -424,9 +424,13 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             /*******************************/
             /* Set Font                     /
             /*******************************/
-
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            float MainFontSize = 9f * 96f / CreateGraphics().DpiY;
+            float SecondaryFontSize = 8f * 96f / CreateGraphics().DpiY;
+#else
+            float MainFontSize = 9f;
+            float SecondaryFontSize = 8f;
+#endif
             Font = new Font(FormsFont.Primary(), SecondaryFontSize, FontStyle.Regular);
 
             /* Registering Panel */
@@ -519,7 +523,9 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                 {
                     Screen_Main.Clear_Hide_Screen_Form_Panel(true);
                 }
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             };
         }
     }

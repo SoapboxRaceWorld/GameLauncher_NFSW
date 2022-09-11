@@ -55,6 +55,8 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Unix
         /// <returns></returns>
         public static bool AmI()
         {
+            try
+            {
 #if NETFRAMEWORK
             if (Type.GetType("Mono.Runtime") != null || DLL_NTDLL.WineDetected())
             {
@@ -73,13 +75,38 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Unix
                 }
             }
 #else
-            return OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() || OperatingSystem.IsFreeBSD() || 
-            (Type.GetType("Mono.Runtime") != null) || DLL_NTDLL.WineDetected();
+                return OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() || OperatingSystem.IsFreeBSD() ||
+                (Type.GetType("Mono.Runtime") != null) || DLL_NTDLL.WineDetected();
 #endif
+            }
+            catch
+            {
+#if NETFRAMEWORK
+            if (Type.GetType("Mono.Runtime") != null)
+            {
+                return true;
+            }
+            else
+            {
+                switch (ID(Platform()))
+                {
+                    case PlatformIDPort.Unix:
+                    case PlatformIDPort.MonoLegacy:
+                    case PlatformIDPort.MacOSX:
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+#else
+                return OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() || OperatingSystem.IsFreeBSD() ||
+                (Type.GetType("Mono.Runtime") != null);
+#endif
+            }
         }
 
         public static bool Detected() => File.Exists("SBRW.Launcher.Core.dll") ? Launcher_Value.System_Unix = AmI() : AmI();
-
+#if (RELEASE_UNIX || DEBUG_UNIX)
         private static string PlatformOSName()
         {
             if (!File.Exists(@"/etc/os-release"))
@@ -206,6 +233,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Unix
 
             return CacheUnixOSName;
         }
+#endif
 
         /* If Launcher Targets .Net Framework 4.7.1 then the code above is redundent and would recommend the following for Detected Boolean */
         /* https://gist.github.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38#file-unixos-cs */

@@ -81,7 +81,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
             }
             finally
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             }
 
             return true;
@@ -154,7 +156,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
             }
             finally
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             }
 
             return hostname;

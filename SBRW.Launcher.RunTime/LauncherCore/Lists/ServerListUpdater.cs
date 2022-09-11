@@ -61,7 +61,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Lists
                             }
                             finally
                             {
-                                GC.Collect();
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
                             }
                         }
 
@@ -94,7 +96,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Lists
                         CachedJSONList = string.Empty;
                     }
 
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
             });
 
@@ -132,7 +136,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Lists
                     }
                     finally
                     {
-                        GC.Collect();
+                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                        GC.Collect(); 
+                        #endif
                     }
                 });
             }
@@ -237,7 +243,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Lists
             }
             finally
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             }
 
             LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATER", "Moved to Function");
@@ -272,7 +280,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Lists
             }
             finally
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             }
 
             return "Unknown";
@@ -332,7 +342,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Lists
             }
             finally
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             }
         }
     }

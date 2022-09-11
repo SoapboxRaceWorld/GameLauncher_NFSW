@@ -132,7 +132,8 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         /// <returns><code>True or False</code></returns>
         private bool GetDefenderStatus(string Query)
         {
-            if (!UnixOS.Detected() && Product_Version.GetWindowsNumber() >= 10)
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            if (Product_Version.GetWindowsNumber() >= 10)
             {
                 ManagementObjectSearcher? ObjectPath = null;
                 ManagementObjectCollection? ObjectCollection = null;
@@ -172,7 +173,7 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                     if (ObjectCollection != null) { ObjectCollection.Dispose(); }
                 }
             }
-
+#endif
             return false;
         }
         /// <summary>Checks Windows Defender on if it's Enabled or Disabled by the User or Third-Party Program</summary>
@@ -180,21 +181,19 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         /// <returns><code>True or False</code></returns>
         public bool Defender()
         {
-            if (!UnixOS.Detected())
-            {
-                return GetDefenderStatus("AntivirusEnabled") &&
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            return GetDefenderStatus("AntivirusEnabled") &&
                     GetDefenderStatus("AntispywareEnabled") &&
                     GetDefenderStatus("RealTimeProtectionEnabled");
-            }
-
+#else
             return false;
+#endif
         }
         /// <summary>Windows Defender: Checks Defender's Current Exclusion List</summary>
         /// <returns>String-Array of Exclusions</returns>
         private string[] ExclusionCheck()
         {
-            if (!UnixOS.Detected())
-            {
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                 ManagementObjectSearcher? ObjectPath = null;
                 ManagementObjectCollection? ObjectCollection = null;
 
@@ -229,7 +228,7 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                     if (ObjectPath != null) { ObjectPath.Dispose(); }
                     if (ObjectCollection != null) { ObjectCollection.Dispose(); }
                 }
-            }
+#endif
 
             return Array.Empty<string>();
         }
@@ -240,28 +239,28 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         /// <returns><code>True or False</code></returns>
         private bool ExclusionExist(string FilePath)
         {
-            if (UnixOS.Detected())
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            if (ExclusionCheck() != null)
             {
-                return true;
+                return ExclusionCheck().Any(FilePath.Contains);
+                /*
+                foreach (string ExistingPaths in ExclusionCheck())
+                {
+                    if (ExistingPaths == FilePath)
+                    {
+                        return true;
+                    }
+                }
+
+                return false; */
             }
             else
             {
-                if (ExclusionCheck() != null)
-                {
-                    return ExclusionCheck().Any(FilePath.Contains);
-                    /*
-                    foreach (string ExistingPaths in ExclusionCheck())
-                    {
-                        if (ExistingPaths == FilePath)
-                        {
-                            return true;
-                        }
-                    }
-
-                    return false; */
-                }
-                else { return false; }
+                return false;
             }
+#else
+            return true;
+#endif
         }
         /// <summary>Windows Defender: Add an Exclusion</summary>
         /// <param name="AppName">Enter the name of the Application</param>
@@ -337,15 +336,18 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         /// <returns>Firewall API Version</returns>
         private FirewallAPIVersion FirewallAPI()
         {
-            if (UnixOS.Detected())
-            {
-                return FirewallAPIVersion.None;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            try 
+            { 
+                return FirewallManager.Version; 
             }
-            else
-            {
-                try { return FirewallManager.Version; }
-                catch { return FirewallAPIVersion.None; }
+            catch
+            { 
+                return FirewallAPIVersion.None; 
             }
+#else
+            return FirewallAPIVersion.None;
+#endif
         }
         /// <summary>
         /// Checks the Firewall API Version against Versions that isn't supported
@@ -353,14 +355,11 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         /// <returns><code>True or False</code></returns>
         private bool FirewallSupported()
         {
-            if (UnixOS.Detected() || FirewallAPI() == FirewallAPIVersion.None)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            return FirewallAPI() != FirewallAPIVersion.None;
+#else
+            return false;
+#endif
         }
         /// <summary>
         /// Checks Windows Firewall on if it's Enabled or Disabled by the User or Third-Party Program
@@ -371,25 +370,24 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         {
             try
             {
-                if (!UnixOS.Detected())
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                if (bool.TryParse(FirewallManager.IsServiceRunning.ToString(), out bool Service_Result) && Service_Result)
                 {
-                    if (bool.TryParse(FirewallManager.IsServiceRunning.ToString(), out bool Service_Result) && Service_Result)
+                    if (bool.TryParse(FirewallManager.Instance.GetActiveProfile().IsActive.ToString(), out bool Profile_Result))
                     {
-                        if (bool.TryParse(FirewallManager.Instance.GetActiveProfile().IsActive.ToString(), out bool Profile_Result))
-                        {
-                            return Profile_Result;
-                        }
-                        /* @DavidCarbon Remember to Debug This!
-                        Type NetFwMgrType = Type.GetTypeFromProgID("HNetCfg.FwMgr", true);
-                        INetFwMgr Mana = (INetFwMgr)Activator.CreateInstance(NetFwMgrType);
-
-                        if (bool.TryParse(Mana.LocalPolicy.CurrentProfile.FirewallEnabled.ToString(), out bool Results))
-                        {
-                            return Mana.LocalPolicy.CurrentProfile.FirewallEnabled;
-                        }
-                        */
+                        return Profile_Result;
                     }
+                    /* @DavidCarbon Remember to Debug This!
+                    Type NetFwMgrType = Type.GetTypeFromProgID("HNetCfg.FwMgr", true);
+                    INetFwMgr Mana = (INetFwMgr)Activator.CreateInstance(NetFwMgrType);
+
+                    if (bool.TryParse(Mana.LocalPolicy.CurrentProfile.FirewallEnabled.ToString(), out bool Results))
+                    {
+                        return Mana.LocalPolicy.CurrentProfile.FirewallEnabled;
+                    }
+                    */
                 }
+#endif
             }
             catch (COMException Error)
             {
@@ -497,15 +495,18 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         /// <returns><code>True or False</code></returns>
         private bool RuleExist(string Mode, string AppName, string AppPath)
         {
-            if (UnixOS.Detected())
-            {
-                return true;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            if (FindRules(Mode, AppName, AppPath) != null) 
+            { 
+                return FindRules(Mode, AppName, AppPath).Any(); 
             }
-            else
-            {
-                if (FindRules(Mode, AppName, AppPath) != null) { return FindRules(Mode, AppName, AppPath).Any(); }
-                else { return false; }
+            else 
+            { 
+                return false; 
             }
+#else
+            return true;
+#endif
         }
         /// <summary>Windows Firewall: Adds an Exclusion</summary>
         /// <param name="AppName">Enter the name of the Application</param>
@@ -599,11 +600,8 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
 
             try
             {
-                if (UnixOS.Detected())
-                {
-                    Completed = true;
-                }
-                else if (ModeType >= 0 && ModeType <= 1 && !string.IsNullOrWhiteSpace(LocationPath))
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                if (ModeType >= 0 && ModeType <= 1 && !string.IsNullOrWhiteSpace(LocationPath))
                 {
                     SecurityIdentifier Everyone_Question_Mark = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
 
@@ -653,6 +651,9 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                             break;
                     }
                 }
+#else
+                Completed = true;
+#endif
             }
             catch (Exception Error)
             {
@@ -678,11 +679,8 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
 
             try
             {
-                if (UnixOS.Detected())
-                {
-                    Completed = true;
-                }
-                else if (ModeType >= 0 && ModeType <= 1 && !string.IsNullOrWhiteSpace(LocationPath))
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                if (ModeType >= 0 && ModeType <= 1 && !string.IsNullOrWhiteSpace(LocationPath))
                 {
                     bool IsPermissionAlreadySet = CheckPermissionAccess(ModeType, LocationPath);
 
@@ -720,7 +718,7 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                                 Directory.SetAccessControl(LocationPath, CoreFolderSecurity);
 #else
                                 new DirectoryInfo(LocationPath).SetAccessControl(CoreFolderSecurity);
-#endif                                
+#endif
                                 Completed = true;
                                 break;
                             default:
@@ -730,6 +728,9 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                     }
                     else { Completed = true; }
                 }
+#else
+                Completed = true;
+#endif
             }
             catch (Exception Error)
             {
@@ -1786,9 +1787,13 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
             /*******************************/
             /* Set Font                     /
             /*******************************/
-
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            float MainFontSize = 9f * 96f / CreateGraphics().DpiY;
+            float SecondaryFontSize = 8f * 96f / CreateGraphics().DpiY;
+#else
+            float MainFontSize = 9f;
+            float SecondaryFontSize = 8f;
+#endif
 
             Font = new Font(FormsFont.Primary(), SecondaryFontSize, FontStyle.Regular);
             /* Text */
@@ -1886,7 +1891,9 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                     }
                 }
                 RPCStateCache = string.Empty;
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             };
 
             Presence_Launcher.Status(20);

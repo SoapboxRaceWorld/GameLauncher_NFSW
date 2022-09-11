@@ -344,7 +344,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.APICheckers
                             Client.Dispose();
                         }
 
-                        GC.Collect();
+                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                        GC.Collect(); 
+                        #endif
                     }
                 }
                 else
@@ -387,7 +389,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.APICheckers
                     OnlineListJson = string.Empty;
                 }
 
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             }
         }
     }

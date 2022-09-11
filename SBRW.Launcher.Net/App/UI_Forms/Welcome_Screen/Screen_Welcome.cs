@@ -31,7 +31,9 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             SetVisuals();
             this.Closing += (x, CloseForm) =>
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             };
         }
 
@@ -65,20 +67,20 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             /*******************************/
 
             Label_Version.Text = "Version: v" + Application.ProductVersion;
-
-            if (UnixOS.Detected())
-            {
-                Button_Save.Text = "Save Settings and Game Language";
-            }
+#if (RELEASE_UNIX || DEBUG_UNIX)
+            Button_Save.Text = "Save Settings and Game Language";
+#endif
 
             /*******************************/
             /* Set Font                     /
             /*******************************/
-
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
-            float ThirdFontSize = UnixOS.Detected() ? 10f : 10f * 96f / CreateGraphics().DpiY;
-            float FourthFontSize = UnixOS.Detected() ? 14f : 14f * 96f / CreateGraphics().DpiY;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            float MainFontSize = 9f * 96f / CreateGraphics().DpiY;
+            float ThirdFontSize = 10f * 96f / CreateGraphics().DpiY;
+#else
+            float MainFontSize = 9f;
+            float ThirdFontSize = 10f;
+#endif
 
             Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_Introduction.Font = new Font(FormsFont.Primary_Bold(), ThirdFontSize, FontStyle.Bold);

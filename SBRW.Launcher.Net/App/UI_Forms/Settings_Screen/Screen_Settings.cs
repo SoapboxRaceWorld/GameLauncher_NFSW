@@ -61,16 +61,15 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         #region Support Functions
         private void WindowsDefenderGameFilesDirctoryChange()
         {
-            if (!UnixOS.Detected())
-            {
-                /* Check if New Game! Files is not in Banned Folder Locations */
-                CheckGameFilesDirectoryPrevention();
-                /* Store Old Location for Security Panel to Use Later on */
-                Save_Settings.Live_Data.Game_Path_Old = Save_Settings.Live_Data.Game_Path;
-                Save_Settings.Live_Data.Firewall_Game = "Not Excluded";
-                Save_Settings.Live_Data.Defender_Game = "Not Excluded";
-                ButtonsColorSet(Button_Security_Center, 2, true);
-            }
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            /* Check if New Game! Files is not in Banned Folder Locations */
+            CheckGameFilesDirectoryPrevention();
+            /* Store Old Location for Security Panel to Use Later on */
+            Save_Settings.Live_Data.Game_Path_Old = Save_Settings.Live_Data.Game_Path;
+            Save_Settings.Live_Data.Firewall_Game = "Not Excluded";
+            Save_Settings.Live_Data.Defender_Game = "Not Excluded";
+            ButtonsColorSet(Button_Security_Center, 2, true);
+#endif
 
             Save_Settings.Live_Data.Game_Path = NewGameFilesPath;
 
@@ -87,55 +86,54 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 
         private void CheckGameFilesDirectoryPrevention()
         {
-            if (!UnixOS.Detected())
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            bool FailSafePathCreation = false;
+            switch (FunctionStatus.CheckFolder(NewGameFilesPath))
             {
-                bool FailSafePathCreation = false;
-                switch (FunctionStatus.CheckFolder(NewGameFilesPath))
-                {
-                    case FolderType.IsSameAsLauncherFolder:
-                        FailSafePathCreation = true;
-                        Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                        Log.Error("LAUNCHER: Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
-                        MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed." +
-                            "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        break;
-                    case FolderType.IsTempFolder:
-                        FailSafePathCreation = true;
-                        Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                        Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is NOT allowed!");
-                        MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is NOT allowed!" +
-                            "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        break;
-                    case FolderType.IsProgramFilesFolder:
-                    case FolderType.IsUsersFolders:
-                    case FolderType.IsWindowsFolder:
-                        FailSafePathCreation = true;
-                        Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                        Log.Error("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
-                        MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is not recommended or allowed." +
-                            "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        break;
-                }
-                Save_Settings.Save();
+                case FolderType.IsSameAsLauncherFolder:
+                    FailSafePathCreation = true;
+                    Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                    Log.Error("LAUNCHER: Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
+                    MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed." +
+                        "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+                case FolderType.IsTempFolder:
+                    FailSafePathCreation = true;
+                    Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                    Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is NOT allowed!");
+                    MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is NOT allowed!" +
+                        "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+                case FolderType.IsProgramFilesFolder:
+                case FolderType.IsUsersFolders:
+                case FolderType.IsWindowsFolder:
+                    FailSafePathCreation = true;
+                    Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                    Log.Error("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
+                    MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is not recommended or allowed." +
+                        "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+            }
+            Save_Settings.Save();
 
-                if (FailSafePathCreation)
+            if (FailSafePathCreation)
+            {
+                if (!Directory.Exists(Locations.GameFilesFailSafePath))
                 {
-                    if (!Directory.Exists(Locations.GameFilesFailSafePath))
+                    try
                     {
-                        try
-                        {
-                            Directory.CreateDirectory(Locations.GameFilesFailSafePath);
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("Launcher", string.Empty, Error, string.Empty, true);
-                        }
+                        Directory.CreateDirectory(Locations.GameFilesFailSafePath);
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("Launcher", string.Empty, Error, string.Empty, true);
                     }
                 }
             }
+#endif
         }
         #endregion
         #region Settings
@@ -569,21 +567,23 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 
             if (!string.IsNullOrWhiteSpace(NewGameFilesPath))
             {
-                if (Product_Version.GetWindowsNumber() >= 10.0 && (Save_Settings.Live_Data.Game_Path != NewGameFilesPath) && !UnixOS.Detected())
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                if (Product_Version.GetWindowsNumber() >= 10.0 && (Save_Settings.Live_Data.Game_Path != NewGameFilesPath))
                 {
                     WindowsDefenderGameFilesDirctoryChange();
                 }
-                else if (Save_Settings.Live_Data.Game_Path != NewGameFilesPath)
+                else
+#endif
+                if (Save_Settings.Live_Data.Game_Path != NewGameFilesPath)
                 {
-                    if (!UnixOS.Detected())
-                    {
-                        /* Check if New Game! Files is not in Banned Folder Locations */
-                        CheckGameFilesDirectoryPrevention();
-                        /* Store Old Location for Security Panel to Use Later on */
-                        Save_Settings.Live_Data.Game_Path_Old = Save_Settings.Live_Data.Game_Path;
-                        Save_Settings.Live_Data.Firewall_Game = "Not Excluded";
-                        ButtonsColorSet(Button_Security_Center, 2, true);
-                    }
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                    /* Check if New Game! Files is not in Banned Folder Locations */
+                    CheckGameFilesDirectoryPrevention();
+                    /* Store Old Location for Security Panel to Use Later on */
+                    Save_Settings.Live_Data.Game_Path_Old = Save_Settings.Live_Data.Game_Path;
+                    Save_Settings.Live_Data.Firewall_Game = "Not Excluded";
+                    ButtonsColorSet(Button_Security_Center, 2, true);
+#endif
 
                     Save_Settings.Live_Data.Game_Path = NewGameFilesPath;
 
@@ -894,39 +894,36 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         /* Settings Change Game Files Location */
         private void SettingsGameFiles_Click(object sender, EventArgs e)
         {
-            if (!UnixOS.Detected())
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            OpenFileDialog changeGameFilesPath = new OpenFileDialog
             {
-                OpenFileDialog changeGameFilesPath = new OpenFileDialog
-                {
-                    InitialDirectory = "C:\\",
-                    ValidateNames = false,
-                    CheckFileExists = false,
-                    CheckPathExists = true,
-                    AutoUpgradeEnabled = false,
-                    Title = "Select the location to Find or Download nfsw.exe",
-                    FileName = "   Select Game Files Folder"
-                };
+                InitialDirectory = "C:\\",
+                ValidateNames = false,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                AutoUpgradeEnabled = false,
+                Title = "Select the location to Find or Download nfsw.exe",
+                FileName = "   Select Game Files Folder"
+            };
 
-                if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
-                {
-                    NewGameFilesPath = Path.GetDirectoryName(changeGameFilesPath.FileName)??"Invalid Folder Path";
-                    Label_Game_Current_Path.Text = "NEW DIRECTORY";
-                    LinkLabel_Game_Path.Text = NewGameFilesPath;
-                }
-
-                changeGameFilesPath.Dispose();
-            }
-            else
+            if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
             {
-                FolderBrowserDialog changeGameFilesPath = new FolderBrowserDialog();
-
-                if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
-                {
-                    NewGameFilesPath = Path.GetFullPath(changeGameFilesPath.SelectedPath);
-                    Label_Game_Current_Path.Text = "NEW DIRECTORY";
-                    LinkLabel_Game_Path.Text = NewGameFilesPath;
-                }
+                NewGameFilesPath = Path.GetDirectoryName(changeGameFilesPath.FileName) ?? "Invalid Folder Path";
+                Label_Game_Current_Path.Text = "NEW DIRECTORY";
+                LinkLabel_Game_Path.Text = NewGameFilesPath;
             }
+
+            changeGameFilesPath.Dispose();
+#else
+            FolderBrowserDialog changeGameFilesPath = new FolderBrowserDialog();
+
+            if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
+            {
+                NewGameFilesPath = Path.GetFullPath(changeGameFilesPath.SelectedPath);
+                Label_Game_Current_Path.Text = "NEW DIRECTORY";
+                LinkLabel_Game_Path.Text = NewGameFilesPath;
+            }
+#endif
         }
 
         /* Settings Open Current CDN in Browser */
@@ -1046,7 +1043,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             catch { }
             finally
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             }
         }
         private void DropDownMenu_MouseWheel(object sender, MouseEventArgs e)
@@ -1286,9 +1285,13 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             /*******************************/
             /* Set Font                     /
             /*******************************/
-
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            float MainFontSize = 9f * 96f / CreateGraphics().DpiY;
+            float SecondaryFontSize = 8f * 96f / CreateGraphics().DpiY;
+#else
+            float MainFontSize = 9f;
+            float SecondaryFontSize = 8f;
+#endif
 
             Font = new Font(FormsFont.Primary(), SecondaryFontSize, FontStyle.Regular);
             Button_Security_Center.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
@@ -1576,7 +1579,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                     ToolTip_Hover.Dispose();
                 }
 
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
 
                 if (Screen_Main.Screen_Instance != null)
                 {

@@ -165,7 +165,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                     Client.Dispose();
                                 }
 
-                                GC.Collect();
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
                             }
                         }
                         catch (Exception Error)
@@ -178,7 +180,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                         }
                         finally
                         {
-                            GC.Collect();
+                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                            GC.Collect(); 
+                            #endif
                         }
                     });
 
@@ -246,7 +250,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                             }
                             finally
                             {
-                                GC.Collect();
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
                             }
                         });
                     }
@@ -336,7 +342,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                         Client.Dispose();
                                     }
 
-                                    GC.Collect();
+                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                    GC.Collect(); 
+                                    #endif
                                 }
                             }
                             catch (Exception Error)
@@ -349,7 +357,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                             }
                             finally
                             {
-                                GC.Collect();
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
                             }
                         });
 
@@ -417,7 +427,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                 }
                                 finally
                                 {
-                                    GC.Collect();
+                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                    GC.Collect(); 
+                                    #endif
                                 }
                             });
                         }

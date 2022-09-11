@@ -4,7 +4,6 @@ using SBRW.Launcher.RunTime.LauncherCore.APICheckers;
 using SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater;
 using SBRW.Launcher.RunTime.LauncherCore.Logger;
 using SBRW.Launcher.RunTime.LauncherCore.Support;
-using SBRW.Launcher.RunTime.SystemPlatform.Unix;
 using SBRW.Launcher.Core.Discord.RPC_;
 using SBRW.Launcher.Core.Extension.Validation_.Json_.Newtonsoft_;
 using SBRW.Launcher.Core.Theme;
@@ -22,8 +21,11 @@ namespace SBRW.Launcher.App.UI_Forms.Update_Popup_Screen
             /*******************************/
             /* Set Font                     /
             /*******************************/
-
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            float MainFontSize = 9f * 96f / CreateGraphics().DpiY;
+#else
+            float MainFontSize = 9f;
+#endif
 
             Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             TextBox_Changelog.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);

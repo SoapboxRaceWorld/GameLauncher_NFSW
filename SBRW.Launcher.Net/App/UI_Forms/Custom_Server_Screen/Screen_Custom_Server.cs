@@ -103,7 +103,9 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                     catch { }
                     finally
                     {
-                        GC.Collect();
+                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                        GC.Collect(); 
+                        #endif
                     }
                 }
 
@@ -154,7 +156,9 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                                 }
                                 finally
                                 {
-                                    GC.Collect();
+                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                    GC.Collect(); 
+                                    #endif
                                 }
                             };
                             aTimer.AutoReset = false;
@@ -172,7 +176,9 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                                 }
                                 finally
                                 {
-                                    GC.Collect();
+                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                    GC.Collect(); 
+                                    #endif
                                 }
 
                                 if (e2.Cancelled || e2.Error != null || !IsSelectServerOpen)
@@ -234,7 +240,9 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                                         }
                                         finally
                                         {
-                                            GC.Collect();
+                                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                            GC.Collect(); 
+                                            #endif
                                         }
 
                                         if (ServerJsonData != null)
@@ -304,7 +312,9 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                                                     CheckMate.Dispose();
                                                 }
 
-                                                GC.Collect();
+                                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                                GC.Collect(); 
+                                                #endif
                                             }
                                         }
                                         else
@@ -358,7 +368,9 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                     }
                     finally
                     {
-                        GC.Collect();
+                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                        GC.Collect(); 
+                        #endif
                     }
 
                     Application.DoEvents();
@@ -522,7 +534,9 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                             ListView_Server_List.Items.Remove(ListView_Server_List.SelectedItems[0]);
                             File.WriteAllText(Locations.LauncherCustomServers, JsonConvert.SerializeObject(ServerListUpdater.NoCategoryList_CSO));
                             Application.DoEvents();
+                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
                             GC.Collect();
+                            #endif
                         }
                     }
                 }
@@ -547,7 +561,9 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                 ServerListBook.Clear();
                 ServersToPing.Clear();
                 CustomServersOnly = IsSelectServerOpen = false;
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             };
         }
     }

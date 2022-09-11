@@ -186,7 +186,9 @@ namespace SBRW.Launcher.App.UI_Forms
                 }
                 finally
                 {
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
             });
 #endif
@@ -252,7 +254,9 @@ namespace SBRW.Launcher.App.UI_Forms
                     finally
                     {
                         LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER MIGRATION", "Done");
-                        GC.Collect();
+                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                        GC.Collect(); 
+                        #endif
                     }
                 });
 
@@ -278,7 +282,9 @@ namespace SBRW.Launcher.App.UI_Forms
                         }
                         finally
                         {
-                            GC.Collect();
+                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                            GC.Collect(); 
+                            #endif
                         }
                     }
 
@@ -320,7 +326,9 @@ namespace SBRW.Launcher.App.UI_Forms
                     }
                     finally
                     {
-                        GC.Collect();
+                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                        GC.Collect(); 
+                        #endif
                     }
                 });
 
@@ -385,47 +393,48 @@ namespace SBRW.Launcher.App.UI_Forms
                         else
                         {
                             LogToFileAddons.Parent_Log_Screen(3, "WRITE TEST", "Passed");
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                             /* Location Migration */
-                            if (!UnixOS.Detected())
+                            LogToFileAddons.Parent_Log_Screen(2, "Account File Migration", "Doing Migration");
+                            Presence_Launcher.Status(0, "Doing Ini File Migration");
+                            await Task.Run(() =>
                             {
-                                LogToFileAddons.Parent_Log_Screen(2, "Account File Migration", "Doing Migration");
-                                Presence_Launcher.Status(0, "Doing Ini File Migration");
-                                await Task.Run(() => 
+                                if (File.Exists(Ini_Location.Name_Account_Ini))
                                 {
-                                    if (File.Exists(Ini_Location.Name_Account_Ini))
+                                    try
                                     {
-                                        try
+                                        if (File.Exists(Ini_Location.Launcher_Account))
                                         {
-                                            if (File.Exists(Ini_Location.Launcher_Account))
-                                            {
-                                                File.Move(Ini_Location.Launcher_Account,
-                                                    Path.Combine(Locations.RoamingAppDataFolder_Launcher, Time_Folder.DateAndTime() + "_" + Ini_Location.Name_Account_Ini));
-                                            }
+                                            File.Move(Ini_Location.Launcher_Account,
+                                                Path.Combine(Locations.RoamingAppDataFolder_Launcher, Time_Folder.DateAndTime() + "_" + Ini_Location.Name_Account_Ini));
+                                        }
 
-                                            File.Move(Ini_Location.Name_Account_Ini, Ini_Location.Launcher_Account);
-                                        }
-                                        catch (Exception Error)
+                                        File.Move(Ini_Location.Name_Account_Ini, Ini_Location.Launcher_Account);
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        LogToFileAddons.OpenLog("Account File Migration", string.Empty, Error, string.Empty, true);
+                                        FunctionStatus.LauncherForceClose = true;
+                                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
                                         {
-                                            LogToFileAddons.OpenLog("Account File Migration", string.Empty, Error, string.Empty, true);
-                                            FunctionStatus.LauncherForceClose = true;
-                                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                                            {
-                                                LogToFileAddons.Parent_Log_Screen(5, "Account File Migration", Error.InnerException.Message, false, true);
-                                            }
-                                        }
-                                        finally
-                                        {
-                                            GC.Collect();
+                                            LogToFileAddons.Parent_Log_Screen(5, "Account File Migration", Error.InnerException.Message, false, true);
                                         }
                                     }
-                                    else
+                                    finally
                                     {
-                                        LogToFileAddons.Parent_Log_Screen(3, "Account File Migration", "Already Migrated");
+                                        #if !(RELEASE_UNIX || DEBUG_UNIX)
+                                        GC.Collect(); 
+                                        #endif
                                     }
-                                });
+                                }
+                                else
+                                {
+                                    LogToFileAddons.Parent_Log_Screen(3, "Account File Migration", "Already Migrated");
+                                }
+                            });
 
-                                LogToFileAddons.Parent_Log_Screen(3, "Account File Migration", "Done");
-                            }
+                            LogToFileAddons.Parent_Log_Screen(3, "Account File Migration", "Done");
+#endif
 
                             if (FunctionStatus.LauncherForceClose)
                             {
@@ -505,7 +514,9 @@ namespace SBRW.Launcher.App.UI_Forms
                                     }
                                     finally
                                     {
-                                        GC.Collect();
+                                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                        GC.Collect(); 
+                                        #endif
                                     }
                                 }
 
@@ -561,7 +572,9 @@ namespace SBRW.Launcher.App.UI_Forms
                                     }
                                     finally
                                     {
-                                        GC.Collect();
+                                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                        GC.Collect(); 
+                                        #endif
                                     }
                                 }
 
@@ -588,7 +601,9 @@ namespace SBRW.Launcher.App.UI_Forms
                                 finally
                                 {
                                     LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Launcher Data Done");
-                                    GC.Collect();
+                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                    GC.Collect(); 
+                                    #endif
                                 }
 
                                 await Task.Run(() =>
@@ -609,10 +624,12 @@ namespace SBRW.Launcher.App.UI_Forms
 
                                             LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Renaming Servers File");
                                         }
-                                        else if (!UnixOS.Detected() && File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)))
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                        else if (File.Exists(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)))
                                         {
                                             File.Move(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON), Locations.LauncherCustomServers);
                                         }
+#endif
                                         else if (!File.Exists(Locations.LauncherCustomServers))
                                         {
                                             try
@@ -637,7 +654,9 @@ namespace SBRW.Launcher.App.UI_Forms
                                     finally
                                     {
                                         LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Done");
-                                        GC.Collect();
+                                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                        GC.Collect(); 
+                                        #endif
                                     }
                                 });
 
@@ -737,6 +756,7 @@ namespace SBRW.Launcher.App.UI_Forms
 
                         try
                         {
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                             if (!UnixOS.Detected())
                             {
                                 string GameFolderPath = string.Empty;
@@ -816,7 +836,9 @@ namespace SBRW.Launcher.App.UI_Forms
                                     }
                                 });
                             }
-                            else if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
+                            else 
+#endif
+                            if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
                             {
                                 await Task.Run(() =>
                                 {
@@ -872,7 +894,9 @@ namespace SBRW.Launcher.App.UI_Forms
                         }
                         finally
                         {
-                            GC.Collect();
+                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                            GC.Collect(); 
+                            #endif
                         }
                     }
                     else if (!Directory.Exists(Save_Settings.Live_Data.Game_Path))
@@ -896,7 +920,9 @@ namespace SBRW.Launcher.App.UI_Forms
                             }
                             finally
                             {
-                                GC.Collect();
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
                             }
                         });
                     }
@@ -910,86 +936,89 @@ namespace SBRW.Launcher.App.UI_Forms
             }
             else
             {
-                if (!UnixOS.Detected())
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER", "Checking Game Path Location");
+                Presence_Launcher.Status(0, "Checking Game Files Folder Location");
+
+                await Task.Run(() =>
                 {
-                    LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER", "Checking Game Path Location");
-                    Presence_Launcher.Status(0, "Checking Game Files Folder Location");
-
-                    await Task.Run(() =>
+                    switch (FunctionStatus.CheckFolder(Save_Settings.Live_Data.Game_Path))
                     {
-                        switch (FunctionStatus.CheckFolder(Save_Settings.Live_Data.Game_Path))
-                        {
-                            case FolderType.IsSameAsLauncherFolder:
-                                try
+                        case FolderType.IsSameAsLauncherFolder:
+                            try
+                            {
+                                if (!Directory.Exists(Locations.GameFilesFailSafePath))
                                 {
-                                    if (!Directory.Exists(Locations.GameFilesFailSafePath))
-                                    {
-                                        Directory.CreateDirectory(Locations.GameFilesFailSafePath);
-                                        LogToFileAddons.Parent_Log_Screen(11, "FOLDER", "Created Game Files Directory at " + Locations.GameFilesFailSafePath);
-                                    }
+                                    Directory.CreateDirectory(Locations.GameFilesFailSafePath);
+                                    LogToFileAddons.Parent_Log_Screen(11, "FOLDER", "Created Game Files Directory at " + Locations.GameFilesFailSafePath);
                                 }
-                                catch (Exception Error)
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("FOLDER CREATE", string.Empty, Error, string.Empty, true);
+                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
                                 {
-                                    LogToFileAddons.OpenLog("FOLDER CREATE", string.Empty, Error, string.Empty, true);
-                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                                    {
-                                        LogToFileAddons.Parent_Log_Screen(5, "FOLDER Create", Error.InnerException.Message, false, true);
-                                    }
+                                    LogToFileAddons.Parent_Log_Screen(5, "FOLDER Create", Error.InnerException.Message, false, true);
                                 }
-                                finally
+                            }
+                            finally
+                            {
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
+                            }
+                            LogToFileAddons.Parent_Log_Screen(4, "LAUNCHER", "Installing NFSW in same location where the GameLauncher resides is NOT allowed.", false, true);
+                            MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n" +
+                                "Instead, we will install it at {0}.", Locations.GameFilesFailSafePath),
+                                "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                            break;
+                        case FolderType.IsTempFolder:
+                        case FolderType.IsUsersFolders:
+                        case FolderType.IsProgramFilesFolder:
+                        case FolderType.IsWindowsFolder:
+                        case FolderType.IsRootFolder:
+                            string constructMsg = string.Empty;
+                            constructMsg += "Using this location for Game Files is not allowed.\n\n";
+                            constructMsg += "The following locations are also NOT allowed:\n";
+                            constructMsg += "• X:\\nfsw.exe (Root of Drive, such as C:\\ or D:\\, must be in a folder)\n";
+                            constructMsg += "• C:\\Program Files\n";
+                            constructMsg += "• C:\\Program Files (x86)\n";
+                            constructMsg += "• C:\\Users (Includes 'Desktop', 'Documents', 'Downloads')\n";
+                            constructMsg += "• C:\\Windows\n\n";
+                            constructMsg += "Instead, we will install the NFSW Game at " + Locations.GameFilesFailSafePath;
+                            try
+                            {
+                                if (!Directory.Exists(Locations.GameFilesFailSafePath))
                                 {
-                                    GC.Collect();
+                                    Directory.CreateDirectory(Locations.GameFilesFailSafePath);
+                                    LogToFileAddons.Parent_Log_Screen(11, "FOLDER", "Created Game Files Directory at " + Locations.GameFilesFailSafePath);
                                 }
-                                LogToFileAddons.Parent_Log_Screen(4, "LAUNCHER", "Installing NFSW in same location where the GameLauncher resides is NOT allowed.", false, true);
-                                MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n" +
-                                    "Instead, we will install it at {0}.", Locations.GameFilesFailSafePath),
-                                    "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                                break;
-                            case FolderType.IsTempFolder:
-                            case FolderType.IsUsersFolders:
-                            case FolderType.IsProgramFilesFolder:
-                            case FolderType.IsWindowsFolder:
-                            case FolderType.IsRootFolder:
-                                string constructMsg = string.Empty;
-                                constructMsg += "Using this location for Game Files is not allowed.\n\n";
-                                constructMsg += "The following locations are also NOT allowed:\n";
-                                constructMsg += "• X:\\nfsw.exe (Root of Drive, such as C:\\ or D:\\, must be in a folder)\n";
-                                constructMsg += "• C:\\Program Files\n";
-                                constructMsg += "• C:\\Program Files (x86)\n";
-                                constructMsg += "• C:\\Users (Includes 'Desktop', 'Documents', 'Downloads')\n";
-                                constructMsg += "• C:\\Windows\n\n";
-                                constructMsg += "Instead, we will install the NFSW Game at " + Locations.GameFilesFailSafePath;
-                                try
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("FOLDER CREATE", string.Empty, Error, string.Empty, true);
+                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
                                 {
-                                    if (!Directory.Exists(Locations.GameFilesFailSafePath))
-                                    {
-                                        Directory.CreateDirectory(Locations.GameFilesFailSafePath);
-                                        LogToFileAddons.Parent_Log_Screen(11, "FOLDER", "Created Game Files Directory at " + Locations.GameFilesFailSafePath);
-                                    }
+                                    LogToFileAddons.Parent_Log_Screen(5, "FOLDER Create", Error.InnerException.Message, false, true);
                                 }
-                                catch (Exception Error)
-                                {
-                                    LogToFileAddons.OpenLog("FOLDER CREATE", string.Empty, Error, string.Empty, true);
-                                    if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                                    {
-                                        LogToFileAddons.Parent_Log_Screen(5, "FOLDER Create", Error.InnerException.Message, false, true);
-                                    }
-                                }
-                                finally
-                                {
-                                    GC.Collect();
-                                }
-                                LogToFileAddons.Parent_Log_Screen(4, "LAUNCHER", "Installing NFSW in a Restricted Location is not allowed.", false, true);
-                                MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                                break;
-                        }
-                        Save_Settings.Save();
-                    });
+                            }
+                            finally
+                            {
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
+                            }
+                            LogToFileAddons.Parent_Log_Screen(4, "LAUNCHER", "Installing NFSW in a Restricted Location is not allowed.", false, true);
+                            MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                            break;
+                    }
+                    Save_Settings.Save();
+                });
 
-                    LogToFileAddons.Parent_Log_Screen(11, "LAUNCHER", "Done Checking Game Path Location");
-                }
+                LogToFileAddons.Parent_Log_Screen(11, "LAUNCHER", "Done Checking Game Path Location");
+#endif
 
                 /* Check If Launcher Failed to Connect to any APIs */
                 if (!VisualsAPIChecker.Local_Cached_API())
@@ -1041,14 +1070,16 @@ namespace SBRW.Launcher.App.UI_Forms
                     }
                     finally
                     {
-                        GC.Collect();
+                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                        GC.Collect(); 
+                        #endif
                     }
                 }
             }
         }
-        #endregion
+#endregion
 
-        #region Splash Screen
+#region Splash Screen
         private void Clock_Tick(object sender, EventArgs e)
         {
             if (e != null)
@@ -1068,13 +1099,15 @@ namespace SBRW.Launcher.App.UI_Forms
                 }
                 else
                 {
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
             }
         }
-        #endregion
+#endregion
 
-        #region App Close Functions
+#region App Close Functions
         private void ClosingTasks()
         {
             Save_Settings.Save();
@@ -1212,12 +1245,12 @@ namespace SBRW.Launcher.App.UI_Forms
             // If in Console Mode or if Form is Hidden and/or for Background Threads
             Environment.Exit(Environment.ExitCode);
         }
-        #endregion
+#endregion
 
         public Parent_Screen()
         {
             InitializeComponent();
-            #region Custom EventHandlers
+#region Custom EventHandlers
             MouseMove += new MouseEventHandler(Move_Window_Mouse_Move);
             MouseUp += new MouseEventHandler(Move_Window_Mouse_Up);
             MouseDown += new MouseEventHandler(Move_Window_Mouse_Down);
@@ -1249,7 +1282,11 @@ namespace SBRW.Launcher.App.UI_Forms
             /*******************************/
             /* Set Font                     /
             /*******************************/
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            float MainFontSize = 9f * 96f / CreateGraphics().DpiY;
+#else
+            float MainFontSize = 9f;
+#endif
 
             Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             TextBox_Live_Log.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
@@ -1294,13 +1331,15 @@ namespace SBRW.Launcher.App.UI_Forms
 
                 Screen_Instance = null;
 
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             };
-            #endregion
+#endregion
 
-            #region Update Variables
+#region Update Variables
             Screen_Instance = this;
-            #endregion
+#endregion
         }
     }
 }

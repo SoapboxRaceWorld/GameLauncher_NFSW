@@ -50,7 +50,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Logger
                         }
                         finally
                         {
-                            GC.Collect();
+                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                            GC.Collect(); 
+                            #endif
                         }
                     }
                 }
@@ -179,7 +181,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Logger
             }
             finally
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             }
         }
     }

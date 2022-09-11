@@ -20,7 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Global\FunctionStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Global\Locations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Global\URLs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\InsiderKit\KitEnabler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InsiderKit\KitEnabler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Languages\Visual_Forms\Translations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\LauncherUpdater\Updater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\LauncherUpdater\UpdaterExecutable.cs" />

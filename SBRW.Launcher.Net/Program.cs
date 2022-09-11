@@ -6,12 +6,9 @@ using SBRW.Launcher.App.UI_Forms;
 using SBRW.Launcher.App.UI_Forms.Main_Screen;
 using SBRW.Launcher.Core.Extension.Logging_;
 using System;
-#if !RELEASE_UNIX
-#if !DEBUG_UNIX
+#if !(RELEASE_UNIX || DEBUG_UNIX)
 using System.Collections.Generic;
 using SBRW.Launcher.RunTime.SystemPlatform.Components;
-using SBRW.Launcher.RunTime.SystemPlatform.Unix;
-#endif
 #endif
 using System.ComponentModel;
 using System.Diagnostics;
@@ -27,7 +24,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using SBRW.Launcher.Core.Required.DLL;
 using SBRW.Launcher.RunTime.SystemPlatform.Unix;
 
 namespace SBRW.Launcher.Net

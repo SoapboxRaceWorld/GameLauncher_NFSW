@@ -81,7 +81,9 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
                     Hover.Dispose();
                 }
 
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             };
         }
 
@@ -806,9 +808,13 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             /*******************************/
             /* Set Font                     /
             /*******************************/
-
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
-            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 96f / CreateGraphics().DpiY;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            float MainFontSize = 9f * 96f / CreateGraphics().DpiY;
+            float SecondaryFontSize = 8f * 96f / CreateGraphics().DpiY;
+#else
+            float MainFontSize = 9f;
+            float SecondaryFontSize = 8f;
+#endif
             Font = new Font(FormsFont.Primary(), SecondaryFontSize, FontStyle.Bold);
 
             labelVideoOptions.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);

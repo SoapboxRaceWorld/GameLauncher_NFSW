@@ -1051,7 +1051,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Visuals
                 }
                 finally
                 {
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
             }
         }

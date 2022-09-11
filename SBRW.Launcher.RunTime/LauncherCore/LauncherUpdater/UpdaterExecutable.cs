@@ -86,7 +86,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                             Client.Dispose();
                         }
 
-                        GC.Collect();
+                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                        GC.Collect(); 
+                        #endif
                     }
 
                     bool IsJsonValid = false;
@@ -124,7 +126,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                     }
                     finally
                     {
-                        GC.Collect();
+                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                        GC.Collect(); 
+                        #endif
                     }
 
                     if (!IsGithubOnline || !IsJsonValid)
@@ -148,7 +152,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                         VersionJSON = string.Empty;
                     }
 
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
             });
 
@@ -203,7 +209,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                                 }
                                 finally
                                 {
-                                    GC.Collect();
+                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                    GC.Collect(); 
+                                    #endif
                                 }
                             }
                         };
@@ -236,7 +244,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                                 Client.Dispose();
                             }
 
-                            GC.Collect();
+                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                            GC.Collect(); 
+                            #endif
                         }
                     }
                     catch (Exception Error)
@@ -249,7 +259,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                     }
                     finally
                     {
-                        GC.Collect();
+                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                        GC.Collect(); 
+                        #endif
                     }
                 });
             }
@@ -319,7 +331,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                                     }
                                     finally
                                     {
-                                        GC.Collect();
+                                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                        GC.Collect(); 
+                                        #endif
                                     }
                                 }
                             };
@@ -353,7 +367,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                                     Client.Dispose();
                                 }
 
-                                GC.Collect();
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
                             }
                         }
                     });
@@ -369,7 +385,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                 }
                 finally
                 {
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
             }
             LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER UPDATER", "Done");

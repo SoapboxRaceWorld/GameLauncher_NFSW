@@ -398,7 +398,9 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
             this.Closing += (x, CloseForm) =>
             {
                 IsAddServerOpen = false;
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             };
         }
     }

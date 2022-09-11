@@ -103,7 +103,9 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                     catch { }
                     finally
                     {
-                        GC.Collect();
+                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                        GC.Collect(); 
+                        #endif
                     }
                 }
 
@@ -233,8 +235,9 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                                         {
                                             CheckMate.Dispose();
                                         }
-
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                                         GC.Collect();
+#endif
                                     }
                                 }
                                 catch
@@ -253,7 +256,9 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                                 }
                                 finally
                                 {
-                                    GC.Collect();
+                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                    GC.Collect(); 
+                                    #endif
                                 }
 
                                 Application.DoEvents();
@@ -436,7 +441,9 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                             ListView_Server_List.Items.Remove(ListView_Server_List.SelectedItems[0]);
                             File.WriteAllText(Locations.LauncherCustomServers, JsonConvert.SerializeObject(ServerListUpdater.NoCategoryList_CSO));
                             Application.DoEvents();
-                            GC.Collect();
+                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                            GC.Collect(); 
+                            #endif
                         }
                     }
                 }
@@ -461,7 +468,9 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                 ServerListBook.Clear();
                 ServersToPing.Clear();
                 IsSelectServerOpen = false;
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             };
         }
     }

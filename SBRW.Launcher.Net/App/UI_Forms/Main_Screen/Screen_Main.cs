@@ -1150,7 +1150,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
                             finally
                             {
-                                GC.Collect();
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
                             }
                         }
                     };
@@ -1293,7 +1295,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
             finally
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             }
         }
 
@@ -1670,7 +1674,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             catch { }
                             finally
                             {
-                                GC.Collect();
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
                             }
 
                             string[] modules_newlines = ModulesJSON.Split(new string[] { "\n" }, StringSplitOptions.None);
@@ -2148,7 +2154,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #region Game Server Information Download
         private void ComboBox_Server_List_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GC.Collect();
+            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+            GC.Collect(); 
+            #endif
             if (Picture_Input_Email.Image != Image_Other.Text_Border_Email)
             {
                 Picture_Input_Email.Image = Image_Other.Text_Border_Email;
@@ -2743,7 +2751,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                                 Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
                                             }
 #endif
-                                            GC.Collect();
+                                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                            GC.Collect(); 
+                                            #endif
                                         }
 
                                         if (Client_A != null)
@@ -2796,7 +2806,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                                 Client_A.Dispose();
                                             }
 
-                                            GC.Collect();
+                                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                            GC.Collect(); 
+                                            #endif
                                         }
                                     }
                                 };
@@ -2815,12 +2827,16 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
                                 }
 #endif
-                                GC.Collect();
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
                             }
                             else if (!Application.OpenForms[this.Name].IsDisposed)
                             {
                                 Picture_Server_Banner.BackColor = Color_Winform_Other.Server_Banner_BackColor;
-                                GC.Collect();
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
                             }
                         }
                         catch (Exception Error)
@@ -2834,11 +2850,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 if (Application.OpenForms[this.Name] != null)
                 {
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
             };
 
-            GC.Collect();
+            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+            GC.Collect(); 
+            #endif
         }
 #endregion
 
@@ -2886,7 +2906,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
             else
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX)
+                GC.Collect(); 
+                #endif
             }
         }
 
@@ -2992,7 +3014,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
             else
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             }
         }
 
@@ -3103,7 +3127,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
                 else
                 {
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
             }
             catch (Exception Error_Live)
@@ -3708,7 +3734,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 }
                                 finally
                                 {
-                                    GC.Collect();
+                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                    GC.Collect(); 
+                                    #endif
                                 }
 
                                 try
@@ -3738,7 +3766,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 }
                                 finally
                                 {
-                                    GC.Collect();
+                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                    GC.Collect(); 
+                                    #endif
                                 }
 
                                 try
@@ -3757,7 +3787,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 }
                                 finally
                                 {
-                                    GC.Collect();
+                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                    GC.Collect(); 
+                                    #endif
                                 }
                             }
                             else if (LZMA_Downloader != null)
@@ -3844,12 +3876,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Label_Download_Information.Text = "Checking Drive Format and Space".ToUpper(), this);
 
                     Format_System_Storage Detected_Drive = System_Storage.Drive_Full_Info(Save_Settings.Live_Data.Game_Path, UnixOS.Detected(), true);
-                    double Converted_Available_Free_Space = default;
 
 #if !(RELEASE_UNIX || DEBUG_UNIX)
                     if (Detected_Drive.TotalFreeSpace < 8000000000 ||
                         !string.Equals(Detected_Drive.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
 #else
+                    double Converted_Available_Free_Space = default;
                     Log.Debug("LINUX SPACE: " + Detected_Drive.AvailableFreeSpace_Linux);
                     double.TryParse(Detected_Drive.AvailableFreeSpace_Linux.ToUpper().TrimEnd(new char[] { 'K', 'M', 'G', 'T', 'P' }),
                     out Converted_Available_Free_Space);
@@ -3935,7 +3967,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 finally
                 {
                     //@DavidCarbon or @Launcher_Dev_Team (4-22-2022)
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
 
                 if (Force_Restart_Download_Request)
@@ -4432,7 +4466,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
                             else
                             {
-                                GC.Collect();
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
 
                                 try
                                 {
@@ -4515,7 +4551,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 Game_Folder_Checks();
 
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             };
         }
 #endregion

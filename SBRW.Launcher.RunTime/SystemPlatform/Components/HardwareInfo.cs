@@ -28,7 +28,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Components
                 }
                 finally
                 {
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
 
                 return "Unknown";
@@ -52,7 +54,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Components
                 }
                 finally
                 {
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
 
                 return "Unknown";
@@ -85,7 +89,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Components
             }
             finally
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             }
         }
     }

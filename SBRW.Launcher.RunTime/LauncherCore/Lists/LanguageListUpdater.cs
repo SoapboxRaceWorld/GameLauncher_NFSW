@@ -52,7 +52,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Lists
             }
             finally
             {
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             }
 
             if (Is_Json.Valid(json_language))
@@ -73,7 +75,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Lists
                 }
                 finally
                 {
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
 
                 try
@@ -119,7 +123,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Lists
                 }
                 finally
                 {
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
 
                 LogToFileAddons.Parent_Log_Screen(3, "LIST CORE", "Done");

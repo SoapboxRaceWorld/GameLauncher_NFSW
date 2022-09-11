@@ -98,7 +98,9 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                     Log_Verify.Stop = true;
                 }
 
-                GC.Collect();
+                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                GC.Collect(); 
+                #endif
             };
         }
 
@@ -727,7 +729,9 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                             if (IsVerifyHashOpen)
                             {
                                 Application.DoEvents();
-                                GC.Collect();
+                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                                GC.Collect(); 
+                                #endif
                             }
                         }
                     }
@@ -869,8 +873,11 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
             /*******************************/
             /* Set Font                     /
             /*******************************/
-
-            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 96f / CreateGraphics().DpiY;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+            float MainFontSize = 9f * 96f / CreateGraphics().DpiY;
+#else
+            float MainFontSize = 9f;
+#endif
             Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
 
             VerifyHashWelcome.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);

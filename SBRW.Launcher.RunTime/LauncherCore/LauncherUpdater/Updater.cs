@@ -163,7 +163,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                             Client.Dispose();
                         }
 
-                        GC.Collect();
+                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                        GC.Collect(); 
+                        #endif
                     }
 
                     if (Is_Json.Valid(VersionJSON) && VisualsAPIChecker.GitHubAPI)
@@ -191,7 +193,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                 }
                 finally
                 {
-                    GC.Collect();
+                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                    GC.Collect(); 
+                    #endif
                 }
             });
             LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER UPDATE", "Done");
