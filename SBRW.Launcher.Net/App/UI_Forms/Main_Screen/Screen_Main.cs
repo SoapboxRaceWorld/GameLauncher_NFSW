@@ -3548,7 +3548,29 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             break;
                         case APIStatus.Forbidden:
                         case APIStatus.NotFound:
-                            OnDownloadFailed(new Exception("Game Archive Not Present on Server. Please Choose Another CDN"));
+                            if (MessageBox.Show(null, "Game Archive is Not Present on Current Saved CDN." +
+                                "\nWould you like to check for LZMA Support? This would switch to the old LZMA Downloader." +
+                                "\nOtherwise, please switch to another CDN.", "GameLauncher",
+                                MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning) == DialogResult.Retry)
+                            {
+                                switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/en/index.xml", 10))
+                                {
+                                    case APIStatus.Online:
+                                        Game_Downloaders(true);
+                                        break;
+                                    case APIStatus.Forbidden:
+                                    case APIStatus.NotFound:
+                                        OnDownloadFailed(new Exception("Game Archive & LZMA Not Present on Server. Please Choose Another CDN"));
+                                        break;
+                                    default:
+                                        OnDownloadFailed(new Exception("Please Choose Another CDN"));
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                OnDownloadFailed(new Exception("Game Archive Not Present on Server. Please Choose Another CDN"));
+                            }
                             break;
                         default:
                             OnDownloadFailed(new Exception("Unable to Connect to CDN. Choose Another CDN or look at Logs for Details"));
@@ -3564,7 +3586,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #endregion
 
 #region Game Downloader Background Thread Support Functions
-        public void Game_Downloaders()
+        public void Game_Downloaders(bool From_PackDownloader = false)
         {
             if (Screen_Instance != null && (!IsDisposed || !Disposing))
             {
@@ -3650,7 +3672,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
 
             /* Use Local Packed Archive for Install Source - DavidCarbon */
-            if (!InformationCache.EnableLZMADownloader)
+            if (!InformationCache.EnableLZMADownloader && !From_PackDownloader)
             {
                 try
                 {
