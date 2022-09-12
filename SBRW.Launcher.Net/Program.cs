@@ -344,7 +344,7 @@ namespace SBRW.Launcher.Net
                         {
                             if (No_Java.WaitOne(0, false))
                             {
-#if !(RELEASE_UNIX || DEBUG_UNIX)
+#if (RELEASE_UNIX || DEBUG_UNIX)
                                 /* MONO Hates this... */
                                 string[] File_List =
                                 {

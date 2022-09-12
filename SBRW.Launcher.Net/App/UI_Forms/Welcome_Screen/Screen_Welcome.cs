@@ -2,7 +2,6 @@
 using SBRW.Launcher.RunTime.LauncherCore.Lists;
 using SBRW.Launcher.RunTime.LauncherCore.Logger;
 using SBRW.Launcher.RunTime.LauncherCore.Support;
-using SBRW.Launcher.RunTime.SystemPlatform.Unix;
 using SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen;
 using SBRW.Launcher.Core.Extension.Logging_;
 using SBRW.Launcher.Core.Extra.File_;
@@ -14,6 +13,8 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using SBRW.Launcher.RunTime.LauncherCore.Global;
+using SBRW.Launcher.Core.Cache;
 
 namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
 {
@@ -31,9 +32,16 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             SetVisuals();
             this.Closing += (x, CloseForm) =>
             {
-                #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                GC.Collect(); 
-                #endif
+                /* This is for Mono Support */
+                if (ToolTip_Hover.Active)
+                {
+                    ToolTip_Hover.RemoveAll();
+                    ToolTip_Hover.Dispose();
+                }
+
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                GC.Collect();
+#endif
             };
         }
 
@@ -43,15 +51,13 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             /* Load CDN List                /
             /*******************************/
 
-            Log.Checking("API: Test #3");
             /* Check If Launcher Failed to Connect to any APIs */
-            if (!VisualsAPIChecker.CarbonAPITwo())
+            if (!VisualsAPIChecker.Local_Cached_API())
             {
                 MessageBox.Show(null, "Unable to Connect to any CDN List API. Please check your connection." +
-                "\n\nCDN Dropdown List will not be available on Welcome Screen",
-                "GameLauncher has Paused, Failed To Connect to any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                "\n\nCDN Selection List will not be available",
+                "SBRW Launcher Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            Log.Checking("API: Test #3 Done");
 
             /*******************************/
             /* Load CDN List                /
@@ -67,9 +73,14 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             /*******************************/
 
             Label_Version.Text = "Version: v" + Application.ProductVersion;
-#if (RELEASE_UNIX || DEBUG_UNIX)
-            Button_Save.Text = "Save Settings and Game Language";
-#endif
+            bool Is_Game_Path_Empty = string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path);
+            if (!Is_Game_Path_Empty)
+            {
+                Button_Save.Text = "Save Settings";
+            }
+            
+            CheckBox_LZMA_Downloader.Checked = InformationCache.EnableLZMADownloader;
+            CheckBox_Alt_WebCalls.Checked = InformationCache.EnableAltWebCalls;
 
             /*******************************/
             /* Set Font                     /
@@ -83,6 +94,8 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
 #endif
 
             Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            CheckBox_Alt_WebCalls.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            CheckBox_LZMA_Downloader.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_Introduction.Font = new Font(FormsFont.Primary_Bold(), ThirdFontSize, FontStyle.Bold);
             Label_CDN_Source.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Label_Game_Language.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
@@ -91,6 +104,10 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             Label_CDN_Status_List.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Button_CDN_Sources.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Label_Version.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            NumericUpDown_WebClient_Timeout.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            Label_WebClient_Timeout.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            Label_Download_Method.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            Label_WebClient_Settings.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
 
             /********************************/
             /* Set Theme Colors & Images     /
@@ -101,21 +118,33 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
 
             Label_CDN_Status_List.ForeColor = Color_Winform.Text_Fore_Color;
             Label_Introduction.ForeColor = Color_Winform.Secondary_Text_Fore_Color;
-
             Label_CDN_Source.ForeColor = Color_Winform.Text_Fore_Color;
             Label_Game_Language.ForeColor = Color_Winform.Text_Fore_Color;
+            Label_Version.ForeColor = Color_Winform.Text_Fore_Color;
+            Label_WebClient_Timeout.ForeColor = Color_Winform.Text_Fore_Color;
+            Label_Download_Method.ForeColor = Color_Winform.Text_Fore_Color;
+            Label_WebClient_Settings.ForeColor = Color_Winform.Text_Fore_Color;
 
-            Button_CDN_Sources.ForeColor = Color_Winform_Buttons.Blue_Fore_Color;
-            Button_CDN_Sources.BackColor = Color_Winform_Buttons.Blue_Back_Color;
-            Button_CDN_Sources.FlatAppearance.BorderColor = Color_Winform_Buttons.Blue_Border_Color;
-            Button_CDN_Sources.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Blue_Mouse_Over_Back_Color;
+            Button_CDN_Sources.ForeColor = !Is_Game_Path_Empty ? Color_Winform_Buttons.Yellow_Fore_Color :
+                Color_Winform_Buttons.Blue_Fore_Color;
+            Button_CDN_Sources.BackColor = !Is_Game_Path_Empty ? Color_Winform_Buttons.Yellow_Back_Color :
+                Color_Winform_Buttons.Blue_Back_Color;
+            Button_CDN_Sources.FlatAppearance.BorderColor = !Is_Game_Path_Empty ? Color_Winform_Buttons.Yellow_Border_Color :
+                Color_Winform_Buttons.Blue_Border_Color;
+            Button_CDN_Sources.FlatAppearance.MouseOverBackColor = !Is_Game_Path_Empty ? Color_Winform_Buttons.Yellow_Mouse_Over_Back_Color :
+                Color_Winform_Buttons.Blue_Mouse_Over_Back_Color;
 
             Button_Save.ForeColor = Color_Winform_Buttons.Blue_Fore_Color;
             Button_Save.BackColor = Color_Winform_Buttons.Blue_Back_Color;
             Button_Save.FlatAppearance.BorderColor = Color_Winform_Buttons.Blue_Border_Color;
             Button_Save.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Blue_Mouse_Over_Back_Color;
 
-            Label_Version.ForeColor = Color_Winform.Text_Fore_Color;
+            CheckBox_LZMA_Downloader.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
+            CheckBox_Alt_WebCalls.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
+
+            /* Input Boxes */
+            NumericUpDown_WebClient_Timeout.ForeColor = Color_Winform_Other.DropMenu_Text_ForeColor;
+            NumericUpDown_WebClient_Timeout.BackColor = Color_Winform_Other.DropMenu_Background_ForeColor;
 
             /********************************/
             /* Events                        /
@@ -131,6 +160,17 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             Button_Save.DialogResult = DialogResult.OK;
 
             Screen_Instance = this;
+
+            ToolTip_Hover.SetToolTip(Button_CDN_Sources, "Download Location for Fetching the base GameFiles\n" +
+                "Can also be a Soruce for VerifyHash to get replacement files");
+            ToolTip_Hover.SetToolTip(ComboBox_Game_Language, "Controls the In-Game Lanuguage setting\n" +
+                "This also includes setting the Default Chat joined In-Game");
+            ToolTip_Hover.SetToolTip(CheckBox_Alt_WebCalls, "Changes the internal method used by Launcher for Communications\n" +
+            "Unchecked: Uses \'standard\' WebClient calls\n" +
+            "Checked: Uses WebClientWithTimeout");
+            ToolTip_Hover.SetToolTip(CheckBox_LZMA_Downloader, "Setting for LZMA Downloader:\n" +
+                "If Checked, this enables the old LZMA Downloader\n" +
+                "If Unchecked, enables the new SBRW Pack Downloader");
         }
 
         private void GameLangSource_SelectedIndexChanged(object sender, EventArgs e)
@@ -157,11 +197,16 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
                 if (!VisualsAPIChecker.CarbonAPI())
                 {
                     Label_CDN_Status_List.Text = "Carbon 2nd List - Online";
-
+                        
                     if (!VisualsAPIChecker.CarbonAPITwo())
                     {
-                        Label_CDN_Status_List.Text = "API Lists Connection - Error";
-                        StatusCheck = true;
+                        Label_CDN_Status_List.Text = "Local Cache List - Offline";
+
+                        if (!VisualsAPIChecker.Local_Cached_API())
+                        {
+                            Label_CDN_Status_List.Text = "API Lists Connection - Error";
+                            StatusCheck = true;
+                        }
                     }
                 }
             }
@@ -203,6 +248,31 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             {
                 Save_Settings.Live_Data.Launcher_Language = ((Json_List_Language)ComboBox_Game_Language.SelectedItem).Value_Ini;
                 XML_File.XML_Settings_Data.Language = ((Json_List_Language)ComboBox_Game_Language.SelectedItem).Value_XML;
+            }
+
+            if (Save_Settings.Live_Data.Launcher_LZMA_Downloader != (CheckBox_LZMA_Downloader.Checked ? "1" : "0"))
+            {
+                Save_Settings.Live_Data.Launcher_LZMA_Downloader = CheckBox_LZMA_Downloader.Checked ? "1" : "0";
+            }
+
+            if (Save_Settings.Live_Data.Launcher_WebCall_TimeOut_Time != NumericUpDown_WebClient_Timeout.Value.ToString())
+            {
+                Save_Settings.Live_Data.Launcher_WebCall_TimeOut_Time = NumericUpDown_WebClient_Timeout.Value.ToString();
+
+                if (NumericUpDown_WebClient_Timeout.Value > 0)
+                {
+                    Launcher_Value.Launcher_WebCall_Timeout_Enable = true;
+                }
+                else
+                {
+                    Launcher_Value.Launcher_WebCall_Timeout_Enable = false;
+                }
+            }
+
+            if (Save_Settings.Live_Data.Launcher_WebClient_Method != (CheckBox_Alt_WebCalls.Checked ? "WebClientWithTimeout" : "WebClient"))
+            {
+                Save_Settings.Live_Data.Launcher_WebClient_Method = CheckBox_Alt_WebCalls.Checked ? "WebClientWithTimeout" : "WebClient";
+                Launcher_Value.Launcher_Alternative_Webcalls(Save_Settings.Live_Data.Launcher_WebClient_Method == "WebClient");
             }
 
             try
@@ -250,9 +320,8 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             else if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN))
             {
                 Save_Settings.Live_Data.Launcher_CDN = "http://localhost";
+                Button_Save.Visible = true;
             }
-
-            Button_Save.Visible = true;
         }
 
         private void GameLangSource_DrawItem(object sender, DrawItemEventArgs e)

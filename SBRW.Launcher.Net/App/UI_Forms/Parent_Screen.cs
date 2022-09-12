@@ -712,7 +712,9 @@ namespace SBRW.Launcher.App.UI_Forms
             }
 
             LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER", "Checking Game Installation");
-            if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
+            if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path) ||
+                (Save_Settings.Live_Data.Launcher_CDN.Contains("http://localhost") && 
+                !Save_Settings.Live_Data.Launcher_CDN.Contains(".")))
             {
                 Presence_Launcher.Status(0, "Doing First Time Run");
                 LogToFileAddons.Parent_Log_Screen(11, "LAUNCHER", "First run!");

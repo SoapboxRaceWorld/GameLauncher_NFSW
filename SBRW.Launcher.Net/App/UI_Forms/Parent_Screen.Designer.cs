@@ -34,8 +34,8 @@
             this.GroupBox_Launcherlog = new System.Windows.Forms.GroupBox();
             this.TextBox_Live_Log = new System.Windows.Forms.TextBox();
             this.Panel_Splash_Screen = new System.Windows.Forms.Panel();
-            this.Clock = new System.Windows.Forms.Timer(this.components);
             this.Button_Close = new System.Windows.Forms.PictureBox();
+            this.Clock = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox_Screen_Splash)).BeginInit();
             this.GroupBox_Launcherlog.SuspendLayout();
             this.Panel_Splash_Screen.SuspendLayout();
@@ -101,11 +101,6 @@
             this.Panel_Splash_Screen.Size = new System.Drawing.Size(563, 404);
             this.Panel_Splash_Screen.TabIndex = 29;
             // 
-            // Clock
-            // 
-            this.Clock.Enabled = true;
-            this.Clock.Interval = 1200;
-            // 
             // Button_Close
             // 
             this.Button_Close.BackColor = System.Drawing.Color.Transparent;
@@ -117,6 +112,11 @@
             this.Button_Close.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.Button_Close.TabIndex = 6;
             this.Button_Close.TabStop = false;
+            // 
+            // Clock
+            // 
+            this.Clock.Enabled = true;
+            this.Clock.Interval = 1200;
             // 
             // Parent_Screen
             // 
