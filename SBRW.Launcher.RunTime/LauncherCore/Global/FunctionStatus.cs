@@ -116,20 +116,33 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
         /* Let's actually make it cleaner and nicer - MeTonaTOR */
         public static FolderType CheckFolder(string FolderName)
         {
-            if (FolderName.Contains(Path.Combine("C:", "Users")) && FolderName.Contains("Temp")) { return FolderType.IsTempFolder; }
-            else if (FolderName.Contains(Path.Combine("C:", "Users"))) { return FolderType.IsUsersFolders; }
-            else if (FolderName.Contains(Path.Combine("C:", "Program Files"))) { return FolderType.IsProgramFilesFolder; }
-            else if (FolderName.Contains(Path.Combine("C:", "Windows"))) { return FolderType.IsWindowsFolder; }
-            else if (FolderName.Length == 3) { return FolderType.IsRootFolder; }
-            else if (Path.Combine(FolderName, "\\") == Locations.LauncherFolder ||
-                FolderName == Locations.LauncherFolder) { return FolderType.IsSameAsLauncherFolder; }
+            if (string.IsNullOrWhiteSpace(FolderName))
+            {
+                return FolderType.Invalid;
+            }
             else
             {
-                return FolderType.Unknown;
+                if (FolderName.Contains(Path.Combine("C:\\", "Users")) && FolderName.Contains("Temp")) { return FolderType.IsTempFolder; }
+                else if (FolderName.Contains(Path.Combine("C:\\", "Users"))) { return FolderType.IsUsersFolders; }
+                else if (FolderName.Contains(Path.Combine("C:\\", "Program Files"))) { return FolderType.IsProgramFilesFolder; }
+                else if (FolderName.Contains(Path.Combine("C:\\", "Windows"))) { return FolderType.IsWindowsFolder; }
+                else if (FolderName.Length == 3) { return FolderType.IsRootFolder; }
+                else if (Path.Combine(FolderName, "\\") == Locations.LauncherFolder ||
+                    FolderName == Locations.LauncherFolder) { return FolderType.IsSameAsLauncherFolder; }
+                else
+                {
+                    return FolderType.Unknown;
+                }
             }
         }
 
         /* Converts Host Name to a IP (ex. http://localhost -> 192.168.1.69 */
+        /// <summary>
+        /// Converts Host Name to a IP
+        /// </summary>
+        /// <param name="hostname"></param>
+        /// <param name="Beta_Search"></param>
+        /// <returns>http://localhost -> 127.0.0.1</returns>
         public static string HostName2IP(string hostname, bool Beta_Search = false)
         {
             try 

@@ -11,7 +11,8 @@
         IsWindowsFolder,
         IsSameAsLauncherFolder,
         IsRootFolder,
-        Unknown
+        Unknown,
+        Invalid
     }
     /* Used with CheckHash Function in MainScreen.cs and RegisterScreen.cs
     /* Or

@@ -29,7 +29,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Support
                             {
                                 if (Control_Form.InvokeRequired)
                                 {
-                                    Control_Form.BeginInvoke(Action_Refresh);
+                                    Control_Form.Invoke(Action_Refresh);
 
                                     if (Force_Refresh)
                                     {
@@ -89,7 +89,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Support
                         {
                             if (Control_Form.InvokeRequired)
                             {
-                                Control_Form.BeginInvoke(Action_Refresh);
+                                Control_Form.Invoke(Action_Refresh);
 
                                 if (Force_Refresh)
                                 {
@@ -148,7 +148,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Support
                     {
                         if (@this.InvokeRequired)
                         {
-                            @this.BeginInvoke(Action_Refresh);
+                            @this.Invoke(Action_Refresh);
 
                             if (Force_Refresh)
                             {
@@ -193,7 +193,11 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Support
         /// <returns>An System.IAsyncResult that represents the result of the System.Windows.Forms.Control.BeginInvoke(System.Delegate) operation.</returns>
         static public IAsyncResult SafeBeginInvokeActionAsync<T>(this T @this, Action<T> Action_Refresh, bool Force_Refresh = true) where T : Control
         {
-            return @this.BeginInvoke((Action)delegate { @this.SafeInvokeAction(Action_Refresh); });
+#if NETFRAMEWORK
+            return @this.BeginInvoke((Action)delegate { @this.SafeInvokeAction(Action_Refresh, Force_Refresh); });
+#else
+            return @this.BeginInvoke(delegate { @this.SafeInvokeAction(Action_Refresh, Force_Refresh); });
+#endif
         }
         /// <summary>
         /// Retrieves the return value of the asynchronous operation represented by the System.IAsyncResult passed.

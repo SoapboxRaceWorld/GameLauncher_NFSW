@@ -63,6 +63,7 @@ using SBRW.Launcher.Core.Extension.Api_;
 using SBRW.Launcher.App.UI_Forms.Register_Screen;
 using System.Reflection;
 using SBRW.Launcher.Core.Extra.Reference.System_;
+using System.Threading.Tasks;
 
 namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 {
@@ -3676,14 +3677,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 try
                 {
-                    Log.Core("CORE: 'GetServerInformation' from all Servers in Server List and Download Selected Server Banners");
-                    Parent_Screen.BackgroundWorker_One = new BackgroundWorker
-                    {
-                        WorkerSupportsCancellation = true,
-                        WorkerReportsProgress = true
-                    };
-                    Parent_Screen.BackgroundWorker_One.DoWork += new DoWorkEventHandler(BackgroundWorker_One_DoGameDownload);
-                    Parent_Screen.BackgroundWorker_One.RunWorkerAsync();
+                    //@DavidCarbon -> 9-15-2022
+                    Game_Pack_Downloader();
                 }
                 catch (Exception Error)
                 {
@@ -4472,9 +4467,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Screen_Instance = null;
             };
 
-            Shown += (x, y) =>
+            Shown += async (x, y) =>
             {
-                Thread Live_Thread = new Thread(() =>
+                Log.Debug("Game Folder Checks");
+                await Task.Run(() => { Game_Folder_Checks(); });
+                Log.Debug("Server Status Checks");
+                await Task.Run(() =>
                 {
                     Presence_Launcher.Update();
 
@@ -4482,15 +4480,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     {
                         foreach (Json_List_Server Servers in ServerListUpdater.NoCategoryList)
                         {
-                            if (Nfswstarted != null)
+                            if (Nfswstarted != null || Parent_Screen.Screen_Instance == null || Screen_Instance == null)
                             {
                                 break;
                             }
                             else
                             {
-                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                                GC.Collect(); 
-                                #endif
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                GC.Collect();
+#endif
 
                                 try
                                 {
@@ -4505,7 +4503,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     };
                                     if (!Launcher_Value.Launcher_Alternative_Webcalls())
                                     {
-                                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+                                        Client = new WebClientWithTimeout
+                                        {
+                                            Encoding = Encoding.UTF8,
+                                            CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                                        };
                                     }
                                     else
                                     {
@@ -4568,12 +4570,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     }
                 });
 
-                Live_Thread.IsBackground = true;
-                Live_Thread.Start();
-
-                Game_Folder_Checks();
-
-                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                 GC.Collect(); 
                 #endif
             };
