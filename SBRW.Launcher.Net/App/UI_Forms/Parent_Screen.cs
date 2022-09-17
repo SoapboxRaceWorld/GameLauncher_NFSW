@@ -51,7 +51,6 @@ namespace SBRW.Launcher.App.UI_Forms
         #endregion
 
         #region Screen Login Variables
-        public static BackgroundWorker? BackgroundWorker_One { get; set; }
         public static bool Launcher_Restart { get; set; }
         #endregion
 
@@ -759,86 +758,82 @@ namespace SBRW.Launcher.App.UI_Forms
                         try
                         {
 #if !(RELEASE_UNIX || DEBUG_UNIX)
-                            if (!UnixOS.Detected())
+                            string GameFolderPath = string.Empty;
+
+                            OpenFileDialog FolderDialog = new OpenFileDialog
                             {
-                                string GameFolderPath = string.Empty;
+                                InitialDirectory = "C:\\",
+                                ValidateNames = false,
+                                CheckFileExists = false,
+                                CheckPathExists = true,
+                                AutoUpgradeEnabled = false,
+                                Title = "Select the location to Find or Download nfsw.exe",
+                                FileName = "   Select Game Files Folder"
+                            };
 
-                                OpenFileDialog FolderDialog = new OpenFileDialog
+                            if (FolderDialog.ShowDialog() == DialogResult.OK)
+                            {
+                                if (!string.IsNullOrWhiteSpace(FolderDialog.FileName))
                                 {
-                                    InitialDirectory = "C:\\",
-                                    ValidateNames = false,
-                                    CheckFileExists = false,
-                                    CheckPathExists = true,
-                                    AutoUpgradeEnabled = false,
-                                    Title = "Select the location to Find or Download nfsw.exe",
-                                    FileName = "   Select Game Files Folder"
-                                };
-
-                                if (FolderDialog.ShowDialog() == DialogResult.OK)
-                                {
-                                    if (!string.IsNullOrWhiteSpace(FolderDialog.FileName))
-                                    {
-                                        GameFolderPath = Path.GetDirectoryName(FolderDialog.FileName) ?? string.Empty;
-                                    }
+                                    GameFolderPath = Path.GetDirectoryName(FolderDialog.FileName) ?? string.Empty;
                                 }
+                            }
 
-                                FolderDialog.Dispose();
+                            FolderDialog.Dispose();
 
-                                await Task.Run(() =>
+                            await Task.Run(() =>
+                            {
+                                if (!string.IsNullOrWhiteSpace(GameFolderPath))
                                 {
-                                    if (!string.IsNullOrWhiteSpace(GameFolderPath))
-                                    {
-                                        Presence_Launcher.Status(0, "Verifying Game Files Folder Location");
+                                    Presence_Launcher.Status(0, "Verifying Game Files Folder Location");
 
-                                        if (!FunctionStatus.HasWriteAccessToFolder(GameFolderPath))
-                                        {
-                                            LogToFileAddons.Parent_Log_Screen(5, "FOLDER SELECT DIALOG", "Not enough permissions.");
-                                            string ErrorMessage = "You don't have enough permission to select this path as the Installation folder. " +
-                                                "Please select another directory by manually setting a new path.";
-                                            MessageBox.Show(null, ErrorMessage, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                            FunctionStatus.LauncherForceClose = true;
-                                            FunctionStatus.LauncherForceCloseReason = ErrorMessage;
-                                        }
-                                        else
-                                        {
-                                            if (GameFolderPath.Length == 3)
-                                            {
-                                                Directory.CreateDirectory("Game Files");
-                                                LogToFileAddons.Parent_Log_Screen(4, "FOLDER SELECT DIALOG", "Installing NFSW in root of the harddisk is not allowed.");
-                                                MessageBox.Show(null, string.Format("Installing NFSW in root of the harddisk is not allowed. " +
-                                                    "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
-                                                    "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                                Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                                                Save_Settings.Save();
-                                                XML_File.Save(1);
-                                            }
-                                            else if (GameFolderPath == Locations.LauncherFolder)
-                                            {
-                                                Directory.CreateDirectory("Game Files");
-                                                LogToFileAddons.Parent_Log_Screen(4, "FOLDER SELECT DIALOG", "Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
-                                                MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n " +
-                                                    "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
-                                                    "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                                Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                                                Save_Settings.Save();
-                                                XML_File.Save(1);
-                                            }
-                                            else
-                                            {
-                                                LogToFileAddons.Parent_Log_Screen(11, "FOLDER SELECT DIALOG", "Directory Set at " + GameFolderPath);
-                                                Save_Settings.Live_Data.Game_Path = GameFolderPath;
-                                                Save_Settings.Save();
-                                                XML_File.Save(1);
-                                            }
-                                        }
+                                    if (!FunctionStatus.HasWriteAccessToFolder(GameFolderPath))
+                                    {
+                                        LogToFileAddons.Parent_Log_Screen(5, "FOLDER SELECT DIALOG", "Not enough permissions.");
+                                        string ErrorMessage = "You don't have enough permission to select this path as the Installation folder. " +
+                                            "Please select another directory by manually setting a new path.";
+                                        MessageBox.Show(null, ErrorMessage, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        FunctionStatus.LauncherForceClose = true;
+                                        FunctionStatus.LauncherForceCloseReason = ErrorMessage;
                                     }
                                     else
                                     {
-                                        FunctionStatus.LauncherForceClose = true;
+                                        if (GameFolderPath.Length == 3)
+                                        {
+                                            Directory.CreateDirectory("Game Files");
+                                            LogToFileAddons.Parent_Log_Screen(4, "FOLDER SELECT DIALOG", "Installing NFSW in root of the harddisk is not allowed.");
+                                            MessageBox.Show(null, string.Format("Installing NFSW in root of the harddisk is not allowed. " +
+                                                "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
+                                                "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                                            Save_Settings.Save();
+                                            XML_File.Save(1);
+                                        }
+                                        else if (GameFolderPath == Locations.LauncherFolder)
+                                        {
+                                            Directory.CreateDirectory("Game Files");
+                                            LogToFileAddons.Parent_Log_Screen(4, "FOLDER SELECT DIALOG", "Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
+                                            MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n " +
+                                                "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
+                                                "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                                            Save_Settings.Save();
+                                            XML_File.Save(1);
+                                        }
+                                        else
+                                        {
+                                            LogToFileAddons.Parent_Log_Screen(11, "FOLDER SELECT DIALOG", "Directory Set at " + GameFolderPath);
+                                            Save_Settings.Live_Data.Game_Path = GameFolderPath;
+                                            Save_Settings.Save();
+                                            XML_File.Save(1);
+                                        }
                                     }
-                                });
-                            }
-                            else 
+                                }
+                                else
+                                {
+                                    FunctionStatus.LauncherForceClose = true;
+                                }
+                            });
 #endif
                             if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
                             {
@@ -1145,21 +1140,6 @@ namespace SBRW.Launcher.App.UI_Forms
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("CDN DOWNLOADER", string.Empty, Error, string.Empty, true);
-            }
-
-            try
-            {
-                if (BackgroundWorker_One != null)
-                {
-                    if (BackgroundWorker_One.IsBusy)
-                    {
-                        BackgroundWorker_One.CancelAsync();
-                    }
-                }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("BackgroundWorker_One", string.Empty, Error, string.Empty, true);
             }
 
             try

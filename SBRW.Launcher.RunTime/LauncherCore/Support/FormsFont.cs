@@ -1,5 +1,4 @@
-﻿using SBRW.Launcher.Core.Cache;
-using SBRW.Launcher.Core.Extension.Font_;
+﻿using SBRW.Launcher.Core.Theme;
 using SBRW.Launcher.Core.Theme.Conversion_;
 using System.Drawing;
 using System.IO;
@@ -15,7 +14,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Support
         /// 
         /// </summary>
         /// <returns></returns>
-        public static bool Primary_Cached() => Launcher_Value.Launcher_Font != null;
+        public static bool Primary_Cached() => Font_Wrapper.Launcher_Font != null;
         /// <summary>
         /// Custom System Font
         /// </summary>
@@ -26,17 +25,17 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Support
             {
                 using (MemoryStream Live_Memory_Cache = new MemoryStream(Embeded_Files.DejaVuSans_Ttf_Bytes()))
                 {
-                    Launcher_Value.Launcher_Font = Font_Wrapper.Instance.GetFontFamily("DejaVuSans.ttf", Live_Memory_Cache);
+                    Font_Wrapper.Launcher_Font = Font_Wrapper.Instance.GetFontFamily("DejaVuSans.ttf", Live_Memory_Cache);
                 }
             }
 
-            return Launcher_Value.Launcher_Font;
+            return Font_Wrapper.Launcher_Font;
         }
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public static bool Primary_Bold_Cached() => Launcher_Value.Launcher_Font_Bold != null;
+        public static bool Primary_Bold_Cached() => Font_Wrapper.Launcher_Font_Bold != null;
         /// <summary>
         /// Custom System Font
         /// </summary>
@@ -47,11 +46,11 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Support
             {
                 using (MemoryStream Live_Memory_Cache = new MemoryStream(Embeded_Files.DejaVuSans_Bold_Ttf_Bytes()))
                 {
-                    Launcher_Value.Launcher_Font_Bold = Font_Wrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf", Live_Memory_Cache);
+                    Font_Wrapper.Launcher_Font_Bold = Font_Wrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf", Live_Memory_Cache);
                 }
             }
 
-            return Launcher_Value.Launcher_Font_Bold;
+            return Font_Wrapper.Launcher_Font_Bold;
         }
     }
 }

@@ -22,6 +22,7 @@ using System.Net.Cache;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace SBRW.Launcher.App.UI_Forms.Register_Screen
 {
@@ -29,7 +30,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
     {
         private bool Ticket_Required { get; set; }
 
-        private void Button_Register_Click(object sender, EventArgs e)
+        private async void Button_Register_Click(object sender, EventArgs e)
         {
             Refresh();
 
@@ -162,26 +163,31 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                     }
 
                     string serverReply = string.Empty;
-                    try
+
+                    await Task.Run(() =>
                     {
-                        serverReply = Client.DownloadString(URLCall);
-                    }
-                    catch (WebException Error)
-                    {
-                        API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
-                            Error, Error.Response as HttpWebResponse);
-                    }
-                    catch (Exception Error)
-                    {
-                        LogToFileAddons.OpenLog("Register", string.Empty, Error, string.Empty, true);
-                    }
-                    finally
-                    {
-                        if (Client != null)
+                        
+                        try
                         {
-                            Client.Dispose();
+                            serverReply = Client.DownloadString(URLCall);
                         }
-                    }
+                        catch (WebException Error)
+                        {
+                            API_Core.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                                Error, Error.Response as HttpWebResponse);
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("Register", string.Empty, Error, string.Empty, true);
+                        }
+                        finally
+                        {
+                            if (Client != null)
+                            {
+                                Client.Dispose();
+                            }
+                        }
+                    });
 
                     if (!string.IsNullOrWhiteSpace(serverReply))
                     {
@@ -232,31 +238,34 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                     Tokens.IPAddress = Launcher_Value.Launcher_Select_Server_Data.IPAddress;
                     Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
-                    Authentication.Client("Register", Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Post, Email, Password, Ticket_Required ? Input_Ticket.Text : string.Empty);
-
-                    if (!string.IsNullOrWhiteSpace(Tokens.Success))
+                    await Task.Run(() =>
                     {
-                        if (Picture_Information_Window.Image != (!string.IsNullOrWhiteSpace(Tokens.Warning) ? Image_Other.Information_Window_Warning : Image_Other.Information_Window_Success))
-                        {
-                            Picture_Information_Window.Image = !string.IsNullOrWhiteSpace(Tokens.Warning) ? Image_Other.Information_Window_Warning : Image_Other.Information_Window_Success;
-                        }
-                        
-                        DialogResult Success = MessageBox.Show(null, Tokens.Success, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        Authentication.Client("Register", Launcher_Value.Launcher_Select_Server_JSON.Server_Authentication_Post, Email, Password, Ticket_Required ? Input_Ticket.Text : string.Empty);
 
-                        if (Success == DialogResult.OK)
+                        if (!string.IsNullOrWhiteSpace(Tokens.Success))
                         {
-                            Close();
-                        }
-                    }
-                    else
-                    {
-                        if (Picture_Information_Window.Image != Image_Other.Information_Window_Error)
-                        {
-                            Picture_Information_Window.Image = Image_Other.Information_Window_Error;
-                        }
+                            if (Picture_Information_Window.Image != (!string.IsNullOrWhiteSpace(Tokens.Warning) ? Image_Other.Information_Window_Warning : Image_Other.Information_Window_Success))
+                            {
+                                Picture_Information_Window.Image = !string.IsNullOrWhiteSpace(Tokens.Warning) ? Image_Other.Information_Window_Warning : Image_Other.Information_Window_Success;
+                            }
 
-                        MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                            DialogResult Success = MessageBox.Show(null, Tokens.Success, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                            if (Success == DialogResult.OK)
+                            {
+                                Close();
+                            }
+                        }
+                        else
+                        {
+                            if (Picture_Information_Window.Image != Image_Other.Information_Window_Error)
+                            {
+                                Picture_Information_Window.Image = Image_Other.Information_Window_Error;
+                            }
+
+                            MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    });
                 }
                 else
                 {

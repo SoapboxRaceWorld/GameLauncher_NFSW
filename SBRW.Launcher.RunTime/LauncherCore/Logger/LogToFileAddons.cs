@@ -15,45 +15,49 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Logger
         public static string OpenLogMessage { get; set; } = "Would you Like to Open the Launcher Error Log and Send it to a Support Channel?" +
                     "\nThis would be Useful for Fixing Issues and Potential Solutions";
 
-        public static void OpenLog(string From, string MessageDetails, Exception Error, string Icon, bool Suppress)
+        public static void OpenLog(string From, string MessageDetails, Exception Error, string Icon, bool Suppress = true, IWin32Window Window_Handle = default, bool Ignore_Log_Alert = false)
         {
             if (File.Exists(Path.Combine(Locations.LauncherFolder, "SBRW.Launcher.Core.dll")))
             {
-                Log_Detail.OpenLog(From, MessageDetails, Error, Icon, Suppress, OpenLogMessage);
+                Log_Detail.Full(From, Error, Ignore_Log_Alert);
             }
-            else
+
+            if (!Suppress)
             {
-                if (!Suppress)
+                MessageBoxIcon IconBox = Icon switch
                 {
-                    var IconBox = Icon switch
-                    {
-                        "Error" => MessageBoxIcon.Error,
-                        "Exclamation" => MessageBoxIcon.Exclamation,
-                        "Information" => MessageBoxIcon.Information,
-                        "Warning" => MessageBoxIcon.Warning,
-                        _ => MessageBoxIcon.None,
-                    };
-                    string FormattedMessage = string.IsNullOrWhiteSpace(MessageDetails) ? string.Empty : MessageDetails + "\n" + ((Error != null) ? Error.Message + 
-                        (Error.GetBaseException() != null && (Error.GetBaseException() != Error) ? "\n" + Error.GetBaseException().Message : string.Empty) : "Unknown Error [Null Exception]") + "\n\n";
+                    "Error" => MessageBoxIcon.Error,
+                    "Exclamation" => MessageBoxIcon.Exclamation,
+                    "Information" => MessageBoxIcon.Information,
+                    "Warning" => MessageBoxIcon.Warning,
+                    _ => MessageBoxIcon.None,
+                };
 
-                    DialogResult OpenLogFile = MessageBox.Show(null, FormattedMessage + OpenLogMessage, "GameLauncher Error Log",
-                        MessageBoxButtons.YesNo, IconBox);
+                string FormattedMessage = string.IsNullOrWhiteSpace(MessageDetails) ? string.Empty : 
+                    MessageDetails + "\n" + ((Error != null) ? Error.Message : "Unknown Error [Null Exception]") + "\n\n";
 
-                    if (OpenLogFile == DialogResult.Yes)
+                DialogResult OpenLogFile = MessageBox.Show(Window_Handle, FormattedMessage + OpenLogMessage, "SBRW Launcher Error Log",
+                    MessageBoxButtons.YesNo, IconBox);
+
+                if (OpenLogFile == DialogResult.Yes)
+                {
+                    try
                     {
-                        try
+                        if (Directory.Exists(Log_Location.LogCurrentFolder))
                         {
-                            if (Directory.Exists(Path.Combine(Locations.LauncherFolder, "Logs")))
-                            {
-                                Process.Start(Path.Combine(Locations.LauncherFolder, "Logs"));
-                            }
+                            Process.Start(Log_Location.LogCurrentFolder);
                         }
-                        finally
+
+                        if (File.Exists(Log_Location.LogLauncher))
                         {
-                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+                            Process.Start(Log_Location.LogLauncher);
+                        }
+                    }
+                    finally
+                    {
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                             GC.Collect(); 
-                            #endif
-                        }
+#endif
                     }
                 }
             }

@@ -33,6 +33,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 {
@@ -51,12 +52,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         private string NewLauncherPath { get; set; }
         private string NewGameFilesPath { get; set; }
         public string New_Choosen_CDN { get; set; }
-        private static long Thread_Number_Change_A { get; set; }
-        private static Thread? ThreadChangedCDN { get; set; }
-        private static long Thread_Number_Change_B { get; set; }
-        private static Thread? ThreadSavedCDN { get; set; }
-        private static long Thread_Number_Change_C { get; set; }
-        private static Thread? ThreadChecksums { get; set; }
 
         #region Support Functions
         private void WindowsDefenderGameFilesDirctoryChange()
@@ -139,31 +134,21 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         #region Settings
         #region Shown (When Window Is Visually Shown)
         /* CDN Display Playing Game! - DavidCarbon */
-        private void PingSavedCDN()
+        private async void PingSavedCDN()
         {
-#if NETFRAMEWORK
-            if (ThreadSavedCDN != null)
-            {
-                ThreadSavedCDN.Abort();
-                ThreadSavedCDN = null;
-            }
-#endif
-
             if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Launcher_CDN))
             {
                 LinkLabel_CDN_Current.LinkColor = Color_Text.L_Two;
                 Log.Info("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
 
-                ThreadSavedCDN = new Thread(() =>
+                if (Screen_Instance != null)
                 {
-                    long Cached_Value = Thread_Number_Change_A;
-
-                    if ((Screen_Instance != null) && Cached_Value == Thread_Number_Change_A)
+                    await Task.Run(() =>
                     {
                         switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/index.xml", 10))
                         {
                             case APIStatus.Online:
-                                if (Cached_Value == Thread_Number_Change_A)
+                                if (Screen_Instance != null)
                                 {
                                     LinkLabel_CDN_Current.SafeInvokeAction(() =>
                                     {
@@ -173,7 +158,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                                 }
                                 break;
                             default:
-                                if (Cached_Value == Thread_Number_Change_A)
+                                if (Screen_Instance != null)
                                 {
                                     LinkLabel_CDN_Current.SafeInvokeAction(() =>
                                     {
@@ -183,11 +168,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                                 }
                                 break;
                         }
-                    }
-                });
-
-                ThreadSavedCDN.Start();
-                Thread_Number_Change_A++;
+                    });
+                }
             }
             else
             {
@@ -212,7 +194,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             }
         }
 
-        private void Screen_Settings_Load(object sender, EventArgs e)
+        private async void Screen_Settings_Load(object sender, EventArgs e)
         {
 
             /*******************************/
@@ -321,6 +303,18 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 LogToFileAddons.OpenLog("SETTINGS CDN URL TRIM", string.Empty, Error, string.Empty, true);
             }
 
+            /********************************/
+            /* CDN, APIs, & Restore Last CDN /
+            /********************************/
+
+            /* Check If Launcher Failed to Connect to any APIs */
+            if (!VisualsAPIChecker.CarbonAPITwo())
+            {
+                MessageBox.Show(null, "Unable to Connect to any CDN List API. Please check your connection." +
+                "\nCDN Dropdown List will not be available on Settings Screen",
+                "GameLauncher has Paused, Failed To Connect to any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
             try
             {
                 if (EnableInsiderDeveloper.Allowed())
@@ -331,14 +325,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 else
                 {
                     ButtonsColorSet(Button_Game_Verify_Files, 0, false);
-#if NETFRAMEWORK
-                    if (ThreadChecksums != null)
-                    {
-                        ThreadChecksums.Abort();
-                        ThreadChecksums = null;
-                    }
-#endif
-                    ThreadChecksums = new Thread(() =>
+                    await Task.Run(() =>
                     {
                         if (!Application.OpenForms[this.Name].IsDisposed)
                         {
@@ -358,25 +345,11 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                             }
                         }
                     });
-
-                    ThreadChecksums.Start();
                 }
             }
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("SETTINGS VERIFYHASH", string.Empty, Error, string.Empty, true);
-            }
-
-            /********************************/
-            /* CDN, APIs, & Restore Last CDN /
-            /********************************/
-
-            /* Check If Launcher Failed to Connect to any APIs */
-            if (!VisualsAPIChecker.CarbonAPITwo())
-            {
-                MessageBox.Show(null, "Unable to Connect to any CDN List API. Please check your connection." +
-                "\nCDN Dropdown List will not be available on Settings Screen",
-                "GameLauncher has Paused, Failed To Connect to any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 #endregion
@@ -523,8 +496,9 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         }
 
         /* Settings Save */
-        private void SettingsSave_Click(object sender, EventArgs e)
+        private async void SettingsSave_Click(object sender, EventArgs e)
         {
+            bool Stop_and_Restart_Downloader = false;
             Button_Save.Text = "SAVING";
             /* TODO null check */
             if (ComboBox_Language_List.SelectedItem != null && !string.IsNullOrWhiteSpace(((Json_List_Language)ComboBox_Language_List.SelectedItem).Value_Ini))
@@ -604,44 +578,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 Save_Settings.Live_Data.Launcher_CDN = New_Choosen_CDN.EndsWith("/") ? New_Choosen_CDN.TrimEnd('/') : New_Choosen_CDN;
                 Label_CDN_Current.Text = "CHANGED CDN:";
                 LinkLabel_CDN_Current.Text = Save_Settings.Live_Data.Launcher_CDN;
-                RestartRequired = true;
-#if NETFRAMEWORK
-                if (ThreadChecksums != null)
-                {
-                    ThreadChecksums.Abort();
-                    ThreadChecksums = null;
-                }
-#endif
+                Stop_and_Restart_Downloader = RestartRequired = true;
                 ButtonsColorSet(Button_Game_Verify_Files, 0, false);
-
-                ThreadChecksums = new Thread(() =>
-                {
-                    long Cached_Value = Thread_Number_Change_B;
-
-                    if ((Screen_Instance != null) && Cached_Value == Thread_Number_Change_B)
-                    {
-                        switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/unpacked/checksums.dat", 10))
-                        {
-                            case APIStatus.Online:
-                                if (Cached_Value == Thread_Number_Change_B)
-                                {
-                                    FunctionStatus.DoesCDNSupportVerifyHash = true;
-                                    ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
-                                }
-                                break;
-                            default:
-                                if (Cached_Value == Thread_Number_Change_B)
-                                {
-                                    FunctionStatus.DoesCDNSupportVerifyHash = false;
-                                    ButtonsColorSet(Button_Game_Verify_Files, 3, true);
-                                }
-                                break;
-                        }
-                    }
-                });
-
-                ThreadChecksums.Start();
-                Thread_Number_Change_B++;
             }
             else
             {
@@ -705,21 +643,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             if (Save_Settings.Live_Data.Launcher_LZMA_Downloader != (CheckBox_LZMA_Downloader.Checked ? "1" : "0"))
             {
                 Save_Settings.Live_Data.Launcher_LZMA_Downloader = CheckBox_LZMA_Downloader.Checked ? "1" : "0";
-                try
-                {
-                    if (Screen_Main.Screen_Instance != null)
-                    {
-                        Screen_Main.Screen_Instance.SafeEndInvokeAsyncCatch(Screen_Main.Screen_Instance.SafeBeginInvokeActionAsync(Launcher_X_Form =>
-                        {
-                            Screen_Main.Pack_SBRW_Downloader_Error_Rate = 0;
-                            Screen_Main.Screen_Instance.Game_Folder_Checks();
-                        }));
-                    }
-                }
-                catch (Exception Error)
-                {
-                    LogToFileAddons.OpenLog("SETTINGS to Main Screen Instance", string.Empty, Error, string.Empty, true);
-                }
+                Stop_and_Restart_Downloader = true;
             }
 
             if (Save_Settings.Live_Data.Launcher_JSON_Frequency_Update_Cache != (CheckBox_JSON_Update_Cache.Checked ? "1" : "0"))
@@ -765,6 +689,46 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             {
                 MessageBox.Show(null, "In order to see settings changes, you need to restart the Launcher manually.", "GameLauncher",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            if (Stop_and_Restart_Downloader)
+            {
+                try
+                {
+                    if (Screen_Main.Screen_Instance != null)
+                    {
+                        Screen_Main.Pack_SBRW_Downloader_Error_Rate = 0;
+                        Screen_Main.Screen_Instance.Game_Folder_Checks();
+                    }
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("SETTINGS to Main Screen Instance", string.Empty, Error, string.Empty, true);
+                }
+
+                await Task.Run(() => 
+                {
+                    if (Screen_Instance != null)
+                    {
+                        switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/unpacked/checksums.dat", 10))
+                        {
+                            case APIStatus.Online:
+                                if (Screen_Instance != null)
+                                {
+                                    FunctionStatus.DoesCDNSupportVerifyHash = true;
+                                    ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
+                                }
+                                break;
+                            default:
+                                if (Screen_Instance != null)
+                                {
+                                    FunctionStatus.DoesCDNSupportVerifyHash = false;
+                                    ButtonsColorSet(Button_Game_Verify_Files, 3, true);
+                                }
+                                break;
+                        }
+                    }
+                });
             }
         }
 
@@ -1554,24 +1518,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             this.Closing += (x, y) =>
             {
                 Presence_Launcher.Status(4);
-                Thread_Number_Change_A = Thread_Number_Change_B = Thread_Number_Change_C = 0;
-#if NETFRAMEWORK
-                if (ThreadChangedCDN != null)
-                {
-                    ThreadChangedCDN.Abort();
-                    ThreadChangedCDN = null;
-                }
-                if (ThreadSavedCDN != null)
-                {
-                    ThreadSavedCDN.Abort();
-                    ThreadSavedCDN = null;
-                }
-                if (ThreadChecksums != null)
-                {
-                    ThreadChecksums.Abort();
-                    ThreadChecksums = null;
-                }
-#endif
+
                 /* This is for Mono Support */
                 if (ToolTip_Hover.Active)
                 {

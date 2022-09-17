@@ -18,6 +18,7 @@ using System.Net;
 using System.Net.Cache;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
 {
@@ -27,14 +28,20 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
 
         public void DrawErrorAroundTextBox(TextBox x)
         {
-            x.BorderStyle = BorderStyle.Fixed3D;
-            Pen p = new Pen(Color_Winform.Error_Text_Fore_Color);
-            Graphics g = this.CreateGraphics();
-            int variance = 1;
-            g.DrawRectangle(p, new Rectangle(x.Location.X - variance, x.Location.Y - variance, x.Width + variance, x.Height + variance));
+            if (ActiveForm != null)
+            {
+                if (!ActiveForm.IsDisposed)
+                {
+                    x.BorderStyle = BorderStyle.Fixed3D;
+                    Pen p = new Pen(Color_Winform.Error_Text_Fore_Color);
+                    Graphics g = this.CreateGraphics();
+                    int variance = 1;
+                    g.DrawRectangle(p, new Rectangle(x.Location.X - variance, x.Location.Y - variance, x.Width + variance, x.Height + variance));
+                }
+            }
         }
 
-        private void Button_Add_Click(object sender, EventArgs e)
+        private async void Button_Add_Click(object sender, EventArgs e)
         {
             Label_Alert.Visible = false;
             this.Refresh();
@@ -74,102 +81,25 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
             }
 
             ButtonControls(false);
-
-            try
+            await Task.Run(() =>
             {
-                string ServerInfomationJSON = string.Empty;
                 try
                 {
-                    Uri StringToUri = new Uri(FormattedURL + "/GetServerInformation");
-                    ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
-                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
-                    var Client = new WebClient
-                    {
-                        Encoding = Encoding.UTF8,
-                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                    };
-
-                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                    { 
-                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
-                    }
-                    else
-                    {
-                        Client.Headers.Add("user-agent", "SBRW Launcher " +
-                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    }
-
+                    string ServerInfomationJSON = string.Empty;
                     try
                     {
-                        ServerInfomationJSON = Client.DownloadString(StringToUri);
-                    }
-                    catch (Exception Error)
-                    {
-                        string LogMessage = "Add Server Check Encountered an Error:";
-                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, string.Empty, false);
-                    }
-                    finally
-                    {
-                        if (Client != null)
-                        {
-                            Client.Dispose();
-                        }
-                    }
-                }
-                catch (Exception Error)
-                {
-                    string LogMessage = "Add Server Check Encountered an Error:";
-                    LogToFileAddons.OpenLog("Add Server", LogMessage, Error, string.Empty, false);
-                }
-
-                if (string.IsNullOrWhiteSpace(ServerInfomationJSON))
-                {
-                    ButtonControls(true);
-                    return;
-                }
-                else if (!Is_Json.Valid(ServerInfomationJSON))
-                {
-                    Label_Alert.Text = "Unstable Connection";
-                    DrawErrorAroundTextBox(TextBox_Server_Address);
-                    Label_Alert.Visible = true;
-                    ButtonControls(true);
-                    ServerInfomationJSON = string.Empty;
-                    return;
-                }
-                else
-                {
-                    Json_Server_Info? ServerInformationData = null;
-
-                    try
-                    {
-                        ServerInformationData = JsonConvert.DeserializeObject<Json_Server_Info>(ServerInfomationJSON);
-                    }
-                    catch (Exception Error)
-                    {
-                        string LogMessage = "Add Server Get Information Encountered an Error:";
-                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, string.Empty, false);
-                    }
-
-                    if (ServerInformationData == null)
-                    {
-                        ButtonControls(true);
-                        ServerInfomationJSON = string.Empty;
-                        return;
-                    }
-                    else
-                    {
-                        string ServerID = string.Empty;
-                        Uri newModNetUri = new Uri(FormattedURL + "/Modding/GetModInfo");
-                        ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
-                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
+                        Uri StringToUri = new Uri(FormattedURL + "/GetServerInformation");
+                        ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                        Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
                         var Client = new WebClient
                         {
                             Encoding = Encoding.UTF8,
                             CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                         };
-                        if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                        { 
-                            Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+
+                        if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                        {
+                            Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
                         }
                         else
                         {
@@ -179,14 +109,12 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
 
                         try
                         {
-                            GetModInfo? ServerGetInfo = JsonConvert.DeserializeObject<GetModInfo>(Client.DownloadString(newModNetUri));
-                            ServerID = (ServerGetInfo != null) ? string.IsNullOrWhiteSpace(ServerGetInfo.serverID) ? 
-                                Result.Host : ServerGetInfo.serverID : Result.Host;
+                            ServerInfomationJSON = Client.DownloadString(StringToUri);
                         }
                         catch (Exception Error)
                         {
-                            LogToFileAddons.OpenLog("Add Server", string.Empty, Error, string.Empty, true);
-                            ServerID = Result.Host;
+                            string LogMessage = "Add Server Check Encountered an Error:";
+                            LogToFileAddons.OpenLog("Add Server", LogMessage, Error, string.Empty, false);
                         }
                         finally
                         {
@@ -195,73 +123,160 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                                 Client.Dispose();
                             }
                         }
+                    }
+                    catch (Exception Error)
+                    {
+                        string LogMessage = "Add Server Check Encountered an Error:";
+                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, string.Empty, false);
+                    }
+
+                    if (string.IsNullOrWhiteSpace(ServerInfomationJSON))
+                    {
+                        ButtonControls(true);
+                        return;
+                    }
+                    else if (!Is_Json.Valid(ServerInfomationJSON))
+                    {
+                        Label_Alert.Text = "Unstable Connection";
+                        DrawErrorAroundTextBox(TextBox_Server_Address);
+                        Label_Alert.Visible = true;
+                        ButtonControls(true);
+                        ServerInfomationJSON = string.Empty;
+                        return;
+                    }
+                    else
+                    {
+                        Json_Server_Info? ServerInformationData = null;
 
                         try
                         {
-                            StreamReader sr = new StreamReader(Locations.LauncherCustomServers);
-                            string oldcontent = sr.ReadToEnd();
-                            sr.Close();
-
-                            if (string.IsNullOrWhiteSpace(oldcontent))
-                            {
-                                oldcontent = "[]";
-                            }
-
-                            var Servers = JsonConvert.DeserializeObject<List<Json_List_Server>>(oldcontent);
-
-                            if (Servers != null)
-                            {
-                                Servers.Add(new Json_List_Server
-                                {
-                                    Name = Strings.Encode(Textbox_Server_Name.Text),
-                                    IPAddress = FormattedURL,
-                                    IsSpecial = false,
-                                    ID = ServerID,
-                                    Category = string.IsNullOrWhiteSpace(Strings.Encode(TextBox_Server_Category.Text)) ? "Custom" : Strings.Encode(TextBox_Server_Category.Text)
-                                });
-
-                                File.WriteAllText(Locations.LauncherCustomServers, JsonConvert.SerializeObject(Servers));
-
-                                MessageBox.Show(null, "The New server will be added on the next start of the Launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            }
+                            ServerInformationData = JsonConvert.DeserializeObject<Json_Server_Info>(ServerInfomationJSON);
                         }
                         catch (Exception Error)
                         {
-                            string LogMessage = "Failed to Add New Server:";
+                            string LogMessage = "Add Server Get Information Encountered an Error:";
                             LogToFileAddons.OpenLog("Add Server", LogMessage, Error, string.Empty, false);
+                        }
+
+                        if (ServerInformationData == null)
+                        {
                             ButtonControls(true);
+                            ServerInfomationJSON = string.Empty;
                             return;
                         }
-                        finally
+                        else
                         {
-                            if (!string.IsNullOrWhiteSpace(ServerID))
+                            string ServerID = string.Empty;
+                            Uri newModNetUri = new Uri(FormattedURL + "/Modding/GetModInfo");
+                            ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                        Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
+                            var Client = new WebClient
                             {
-                                ServerID = string.Empty;
+                                Encoding = Encoding.UTF8,
+                                CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                            };
+                            if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                            {
+                                Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+                            }
+                            else
+                            {
+                                Client.Headers.Add("user-agent", "SBRW Launcher " +
+                                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             }
 
-                            if (!string.IsNullOrWhiteSpace(ServerInfomationJSON))
+                            try
                             {
-                                ServerInfomationJSON = string.Empty;
+                                GetModInfo? ServerGetInfo = JsonConvert.DeserializeObject<GetModInfo>(Client.DownloadString(newModNetUri));
+                                ServerID = (ServerGetInfo != null) ? string.IsNullOrWhiteSpace(ServerGetInfo.serverID) ?
+                                    Result.Host : ServerGetInfo.serverID : Result.Host;
                             }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("Add Server", string.Empty, Error, string.Empty, true);
+                                ServerID = Result.Host;
+                            }
+                            finally
+                            {
+                                if (Client != null)
+                                {
+                                    Client.Dispose();
+                                }
+                            }
+
+                            try
+                            {
+                                StreamReader sr = new StreamReader(Locations.LauncherCustomServers);
+                                string oldcontent = sr.ReadToEnd();
+                                sr.Close();
+
+                                if (string.IsNullOrWhiteSpace(oldcontent))
+                                {
+                                    oldcontent = "[]";
+                                }
+
+                                var Servers = JsonConvert.DeserializeObject<List<Json_List_Server>>(oldcontent);
+
+                                if (Servers != null)
+                                {
+                                    Servers.Add(new Json_List_Server
+                                    {
+                                        Name = Strings.Encode(Textbox_Server_Name.Text),
+                                        IPAddress = FormattedURL,
+                                        IsSpecial = false,
+                                        ID = ServerID,
+                                        Category = string.IsNullOrWhiteSpace(Strings.Encode(TextBox_Server_Category.Text)) ? "Custom" : Strings.Encode(TextBox_Server_Category.Text)
+                                    });
+
+                                    File.WriteAllText(Locations.LauncherCustomServers, JsonConvert.SerializeObject(Servers));
+
+                                    MessageBox.Show(null, "The New server will be added on the next start of the Launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                }
+                            }
+                            catch (Exception Error)
+                            {
+                                string LogMessage = "Failed to Add New Server:";
+                                LogToFileAddons.OpenLog("Add Server", LogMessage, Error, string.Empty, false);
+                                ButtonControls(true);
+                                return;
+                            }
+                            finally
+                            {
+                                if (!string.IsNullOrWhiteSpace(ServerID))
+                                {
+                                    ServerID = string.Empty;
+                                }
+
+                                if (!string.IsNullOrWhiteSpace(ServerInfomationJSON))
+                                {
+                                    ServerInfomationJSON = string.Empty;
+                                }
+                            }
+
+                            Button_Cancel_Click(sender, e);
                         }
-
-                        Button_Cancel_Click(sender, e);
                     }
                 }
-            }
-            catch
-            {
-                DrawErrorAroundTextBox(TextBox_Server_Address);
-                ButtonControls(true);
-            }
+                catch
+                {
+                    DrawErrorAroundTextBox(TextBox_Server_Address);
+                    ButtonControls(true);
+                }
+            });
         }
 
         private void ButtonControls(bool Enable)
         {
-            Button_Cancel.Enabled = Enable;
-            Button_Add.Enabled = Enable;
-            TextBox_Server_Address.Enabled = Enable;
-            Textbox_Server_Name.Enabled = Enable;
+            if (ActiveForm != null)
+            {
+                if (!ActiveForm.IsDisposed)
+                {
+                    Button_Cancel.Enabled = Enable;
+                    Button_Add.Enabled = Enable;
+                    TextBox_Server_Address.Enabled = Enable;
+                    Textbox_Server_Name.Enabled = Enable;
+                }
+            }
         }
 
         private void Button_Cancel_Click(object sender, EventArgs e)
@@ -271,17 +286,29 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
 
         public void TextBox_Server_Category_ShowPlaceHolderText(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(Strings.Encode(TextBox_Server_Category.Text)))
+            if (ActiveForm != null)
             {
-                TextBox_Server_Category.Text = "Custom";
+                if (!ActiveForm.IsDisposed)
+                {
+                    if (string.IsNullOrWhiteSpace(Strings.Encode(TextBox_Server_Category.Text)))
+                    {
+                        TextBox_Server_Category.Text = "Custom";
+                    }
+                }
             }
         }
 
         public void TextBox_Server_Category_RemovePlaceHolderText(object sender, EventArgs e)
         {
-            if (TextBox_Server_Category.Text == "Custom")
+            if (ActiveForm != null)
             {
-                TextBox_Server_Category.Text = string.Empty;
+                if (!ActiveForm.IsDisposed)
+                {
+                    if (TextBox_Server_Category.Text == "Custom")
+                    {
+                        TextBox_Server_Category.Text = string.Empty;
+                    }
+                }
             }
         }
 

@@ -14,7 +14,6 @@ using SBRW.Launcher.RunTime.LauncherCore.Logger;
 using SBRW.Launcher.RunTime.LauncherCore.ModNet;
 using SBRW.Launcher.RunTime.LauncherCore.ModNet.JSON;
 using SBRW.Launcher.RunTime.LauncherCore.Support;
-using SBRW.Launcher.RunTime.SystemPlatform.Unix;
 using SBRW.Launcher.RunTime.SystemPlatform.Windows;
 using SBRW.Launcher.App.UI_Forms.Custom_Server_Screen;
 using SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen;
@@ -26,7 +25,6 @@ using SBRW.Launcher.Core.Downloader;
 using SBRW.Launcher.Core.Downloader.LZMA_;
 #if NETFRAMEWORK
 using SBRW.Launcher.App.UI_Forms.About_Screen;
-using SBRW.Launcher.Core.Extension.Bitmap_;
 #endif
 using SBRW.Launcher.Core.Extension.Hash_;
 using SBRW.Launcher.Core.Extension.Logging_;
@@ -1032,7 +1030,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Log.Core("LAUNCHER: Game failed to Launch. Forcing User to Login again.");
                 }
 
-                MessageBox.Show(null, Error_Msg, "GameLauncher", MessageBoxButtons.OK, Icon_Box_Art);
+                MessageBox.Show(Screen_Instance, Error_Msg, "GameLauncher", MessageBoxButtons.OK, Icon_Box_Art);
             }));
         }
 
@@ -2211,11 +2209,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Button_Login.ForeColor = Color_Text.L_Six;
             string Banner_Cache_Folder = Path.Combine(Locations.LauncherDataFolder, "Bin", "Server", "Banner", "EyeCatcher");
             string Banner_Cache_File = Path.Combine(Banner_Cache_Folder, Hashes.Hash_String(1, Launcher_Value.Launcher_Select_Server_Data.IPAddress) + ".bin");
-#if NETFRAMEWORK
-            Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(Banner_Cache_File) ??Image_Other.Server_Banner;
-#elif NET6_0_OR_GREATER && WINDOWS
-            Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File)??Image_Other.Server_Banner;
-#endif
+            Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
             Picture_Server_Banner.BackColor = Color.Transparent;
             string ImageUrl = string.Empty;
             string numPlayers = string.Empty;
@@ -2741,20 +2735,13 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         if (!ServerChangeTriggered)
                                         {
                                             /* Load cached banner! */
-#if NETFRAMEWORK
-                                            if (Picture_Server_Banner.Image != (Bitmap_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
-                                            {
-                                                Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
-                                            }
-#elif NET6_0_OR_GREATER && WINDOWS
                                             if (Picture_Server_Banner.Image != (Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
                                             {
                                                 Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
                                             }
-#endif
-                                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                                             GC.Collect(); 
-                                            #endif
+#endif
                                         }
 
                                         if (Client_A != null)
@@ -2817,20 +2804,13 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             else if (File.Exists(Banner_Cache_File) && !(Application.OpenForms[this.Name].IsDisposed || Application.OpenForms[this.Name].Disposing))
                             {
                                 /* Load cached banner! */
-#if NETFRAMEWORK
-                                if (Picture_Server_Banner.Image != (Bitmap_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
-                                {
-                                    Picture_Server_Banner.Image = Bitmap_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
-                                }
-#elif NET6_0_OR_GREATER && WINDOWS
                                 if (Picture_Server_Banner.Image != (Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
                                 {
                                     Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
                                 }
-#endif
-                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                                 GC.Collect(); 
-                                #endif
+#endif
                             }
                             else if (!Application.OpenForms[this.Name].IsDisposed)
                             {
@@ -3236,7 +3216,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
 
                         string LogMessage = "CDN Downloader Encountered an Error:";
-                        LogToFileAddons.OpenLog("Game Download", LogMessage, Error, "Error", false);
+                        LogToFileAddons.OpenLog("Game Download", LogMessage, Error, "Error", false, Screen_Instance);
 
                         if (!string.IsNullOrWhiteSpace(TempEmailCache))
                         {
@@ -3549,7 +3529,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             break;
                         case APIStatus.Forbidden:
                         case APIStatus.NotFound:
-                            if (MessageBox.Show(null, "Game Archive is Not Present on Current Saved CDN." +
+                            if (MessageBox.Show(Screen_Instance, "Game Archive is Not Present on Current Saved CDN." +
                                 "\nWould you like to check for LZMA Support? This would switch to the old LZMA Downloader." +
                                 "\nOtherwise, please switch to another CDN.", "GameLauncher",
                                 MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning) == DialogResult.Retry)
@@ -3587,226 +3567,236 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #endregion
 
 #region Game Downloader Background Thread Support Functions
-        public void Game_Downloaders(bool From_PackDownloader = false)
+        public async void Game_Downloaders(bool From_PackDownloader = false)
         {
-            if (Screen_Instance != null && (!IsDisposed || !Disposing))
+            await Task.Run(() => 
             {
+                if (Screen_Instance != null && (!IsDisposed || !Disposing))
+                {
+                    try
+                    {
+                        Label_Download_Information.SafeInvokeAction(() =>
+                        Label_Download_Information.Text = "Loading list of files to download...".ToUpper(), this);
+
+                        if (ProgressBar_Preload.Image != new Bitmap(Image_ProgressBar.Preload))
+                        {
+                            ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Image = new Bitmap(Image_ProgressBar.Preload), this);
+                        }
+
+                        if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Checking))
+                        {
+                            ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Checking), this);
+                        }
+
+                        if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Checking_Outline)
+                        {
+                            Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline, this);
+                        }
+
+                        if (Panel_Server_Information.Visible)
+                        {
+                            Panel_Server_Information.SafeInvokeAction(() => Panel_Server_Information.Visible = false, this);
+                        }
+
+                        ProgressBar_Extracting.SafeInvokeAction(() =>
+                        {
+                            ProgressBar_Extracting.Value = 0;
+                            ProgressBar_Extracting.Width = 0;
+                        }, this);
+
+                        ProgressBar_Preload.SafeInvokeAction(() =>
+                        {
+                            ProgressBar_Preload.Value = 0;
+                            ProgressBar_Preload.Width = 0;
+                        }, this);
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("Progress Bar/Outline", string.Empty, Error, string.Empty, true);
+                    }
+                }
+
                 try
                 {
-                    Label_Download_Information.SafeInvokeAction(() =>
-                    Label_Download_Information.Text = "Loading list of files to download...".ToUpper(), this);
-
-                    if (ProgressBar_Preload.Image != new Bitmap(Image_ProgressBar.Preload))
+                    if (LZMA_Downloader != null)
                     {
-                        ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Image = new Bitmap(Image_ProgressBar.Preload), this);
+                        if (LZMA_Downloader.Downloading)
+                        {
+                            LZMA_Downloader.Stop();
+                        }
                     }
-
-                    if (ProgressBar_Extracting.Image != new Bitmap(Image_ProgressBar.Checking))
-                    {
-                        ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Image = new Bitmap(Image_ProgressBar.Checking), this);
-                    }
-
-                    if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Checking_Outline)
-                    {
-                        Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline, this);
-                    }
-
-                    if (Panel_Server_Information.Visible)
-                    {
-                        Panel_Server_Information.SafeInvokeAction(() => Panel_Server_Information.Visible = false, this);
-                    }
-
-                    ProgressBar_Extracting.SafeInvokeAction(() =>
-                    {
-                        ProgressBar_Extracting.Value = 0;
-                        ProgressBar_Extracting.Width = 0;
-                    }, this);
-
-                    ProgressBar_Preload.SafeInvokeAction(() =>
-                    {
-                        ProgressBar_Preload.Value = 0;
-                        ProgressBar_Preload.Width = 0;
-                    }, this);
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("Progress Bar/Outline", string.Empty, Error, string.Empty, true);
+                    LogToFileAddons.OpenLog("CDN DOWNLOADER [LZMA]", string.Empty, Error, string.Empty, true);
                 }
-            }
 
-            try
-            {
-                if (LZMA_Downloader != null)
-                {
-                    if (LZMA_Downloader.Downloading)
-                    {
-                        LZMA_Downloader.Stop();
-                    }
-                }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("CDN DOWNLOADER [LZMA]", string.Empty, Error, string.Empty, true);
-            }
-
-            try
-            {
-                if (Pack_SBRW_Downloader != null)
-                {
-                    if (!Pack_SBRW_Downloader.Cancel)
-                    {
-                        Pack_SBRW_Downloader.Cancel = true;
-                    }
-
-                    if (Pack_SBRW_Unpacker != null)
-                    {
-                        if (!Pack_SBRW_Unpacker.Cancel)
-                        {
-                            Pack_SBRW_Unpacker.Cancel = true;
-                        }
-                    }
-                }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("CDN DOWNLOADER", string.Empty, Error, string.Empty, true);
-            }
-
-            /* Use Local Packed Archive for Install Source - DavidCarbon */
-            if (!InformationCache.EnableLZMADownloader && !From_PackDownloader)
-            {
                 try
                 {
-                    //@DavidCarbon -> 9-15-2022
-                    Game_Pack_Downloader();
-                }
-                catch (Exception Error)
-                {
-                    LogToFileAddons.OpenLog("New Download Game Files", string.Empty, Error, string.Empty, true);
-                }
-            }
-            else
-            {
-                try
-                {
-                    LZMA_Downloader = new Download_LZMA_Data(this, 3, 2, 16, DownloadStartTime ?? DateTime.Now)
+                    if (Pack_SBRW_Downloader != null)
                     {
-                        Progress_Update_Frequency = 800
-                    };
-
-                    LZMA_Downloader.Internal_Error += (x, D_Live_Events) =>
-                    {
-                        if (D_Live_Events.Recorded_Exception != null && LZMA_Downloader.Downloading)
+                        if (!Pack_SBRW_Downloader.Cancel)
                         {
-                            LogToFileAddons.OpenLog("LZMA_SBRW_Downloader", string.Empty, D_Live_Events.Recorded_Exception, string.Empty, true);
-                            OnDownloadFailed(new Exception((Pack_SBRW_Downloader_Error_Rate > 0) ? "Game Files Package Downloader Encountered too many Errors" : "Game Files Package hash does not Match"));
+                            Pack_SBRW_Downloader.Cancel = true;
                         }
-                    };
 
-                    LZMA_Downloader.Complete += (X_Input, Live_Data) =>
-                    {
-                        if ((!IsDisposed || !Disposing) && Live_Data.Complete)
+                        if (Pack_SBRW_Unpacker != null)
                         {
-                            Game_Downloaders();
-                        }
-                    };
-
-                    LZMA_Downloader.Live_Progress += (X_Input, Live_Data) =>
-                    {
-                        if (Screen_Instance != null && (!IsDisposed || !Disposing) && LZMA_Downloader != null)
-                        {
-                            if (LZMA_Downloader.Downloading)
+                            if (!Pack_SBRW_Unpacker.Cancel)
                             {
-                                decimal Calulated_Division = 0;
+                                Pack_SBRW_Unpacker.Cancel = true;
+                            }
+                        }
+                    }
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("CDN DOWNLOADER", string.Empty, Error, string.Empty, true);
+                }
 
-                                try
+                /* Use Local Packed Archive for Install Source - DavidCarbon */
+                if (!InformationCache.EnableLZMADownloader && !From_PackDownloader)
+                {
+                    try
+                    {
+                        //@DavidCarbon -> 9-15-2022
+                        Game_Pack_Downloader();
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("New Download Game Files", string.Empty, Error, string.Empty, true);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        LZMA_Downloader = new Download_LZMA_Data(this, 3, 2, 16, DownloadStartTime ?? DateTime.Now)
+                        {
+                            Progress_Update_Frequency = 800
+                        };
+
+                        LZMA_Downloader.Internal_Error += (x, D_Live_Events) =>
+                        {
+                            if (D_Live_Events.Recorded_Exception != null && LZMA_Downloader.Downloading)
+                            {
+                                LogToFileAddons.OpenLog("LZMA_SBRW_Downloader", string.Empty, D_Live_Events.Recorded_Exception, string.Empty, true);
+                                OnDownloadFailed(new Exception((Pack_SBRW_Downloader_Error_Rate > 0) ? "Game Files Package Downloader Encountered too many Errors" : "Game Files Package hash does not Match"));
+                            }
+                        };
+
+                        LZMA_Downloader.Complete += (X_Input, Live_Data) =>
+                        {
+                            if ((!IsDisposed || !Disposing) && Live_Data.Complete)
+                            {
+                                Game_Downloaders();
+                            }
+                        };
+
+                        LZMA_Downloader.Live_Progress += (X_Input, Live_Data) =>
+                        {
+                            if (Screen_Instance != null && (!IsDisposed || !Disposing) && LZMA_Downloader != null)
+                            {
+                                if (LZMA_Downloader.Downloading)
                                 {
-                                    Calulated_Division = decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total);
-                                }
-                                catch
-                                {
+                                    decimal Calulated_Division = 0;
 
-                                }
-
-                                try
-                                {
-                                    Label_Download_Information.SafeInvokeAction(() =>
-                                    Label_Download_Information.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.Bytes_Received),
-                                    Time_Conversion.FormatFileSize(Live_Data.Bytes_To_Receive_Total), Time_Conversion.EstimateFinishTime(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total,
-                                    Live_Data.Start_Time), Math_Core.Clamp(Math.Round(Calulated_Division * 100, 0), 0, 100)), this);
-
-                                    if (EnableInsiderDeveloper.Allowed())
+                                    try
                                     {
-                                        Log.Debug("Current Download Percentge: " + Math.Round(Calulated_Division * 100, 0));
-                                        Log.Debug("Current File (Counted): " + Live_Data.Bytes_Received);
-                                        Log.Debug("Total File (Counted): " + Live_Data.Bytes_To_Receive_Total);
-                                        Log.Debug("Current Divide Total (Math): " + Calulated_Division);
-                                        Log.Debug("Math Divide [Function]: " + Calulated_Division);
-                                        Log.Debug("Math Divide [Round]: " + decimal.Round(Calulated_Division, MidpointRounding.AwayFromZero).ToString());
+                                        Calulated_Division = decimal.Divide(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total);
                                     }
-                                }
-                                catch
-                                {
-
-                                }
-                                finally
-                                {
-                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                                    GC.Collect(); 
-                                    #endif
-                                }
-
-                                try
-                                {
-                                    ProgressBar_Extracting.SafeInvokeAction(() =>
+                                    catch
                                     {
-                                        ProgressBar_Extracting.Value = int.Parse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString());
-                                        ProgressBar_Extracting.Width = int.Parse(Math.Round(Calulated_Division * 519).ToString());
-                                    }, this);
 
-                                    Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100)));
+                                    }
 
-                                    if (Parent_Screen.Screen_Instance != null)
+                                    try
                                     {
-                                        if (ulong.TryParse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString(), out ulong Converted_Value))
+                                        Label_Download_Information.SafeInvokeAction(() =>
+                                        Label_Download_Information.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.Bytes_Received),
+                                        Time_Conversion.FormatFileSize(Live_Data.Bytes_To_Receive_Total), Time_Conversion.EstimateFinishTime(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total,
+                                        Live_Data.Start_Time), Math_Core.Clamp(Math.Round(Calulated_Division * 100, 0), 0, 100)), this);
+
+                                        if (EnableInsiderDeveloper.Allowed())
+                                        {
+                                            Log.Debug("Current Download Percentge: " + Math.Round(Calulated_Division * 100, 0));
+                                            Log.Debug("Current File (Counted): " + Live_Data.Bytes_Received);
+                                            Log.Debug("Total File (Counted): " + Live_Data.Bytes_To_Receive_Total);
+                                            Log.Debug("Current Divide Total (Math): " + Calulated_Division);
+                                            Log.Debug("Math Divide [Function]: " + Calulated_Division);
+                                            Log.Debug("Math Divide [Round]: " + decimal.Round(Calulated_Division, MidpointRounding.AwayFromZero).ToString());
+                                        }
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                    finally
+                                    {
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                        GC.Collect();
+#endif
+                                    }
+
+                                    try
+                                    {
+                                        ProgressBar_Extracting.SafeInvokeAction(() =>
+                                        {
+                                            ProgressBar_Extracting.Value = int.Parse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString());
+                                            ProgressBar_Extracting.Width = int.Parse(Math.Round(Calulated_Division * 519).ToString());
+                                        }, this);
+
+                                        Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100)));
+
+                                        if (Parent_Screen.Screen_Instance != null)
+                                        {
+                                            if (ulong.TryParse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString(), out ulong Converted_Value))
+                                            {
+                                                Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                                                {
+                                                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
+                                                }, Parent_Screen.Screen_Instance);
+                                            }
+                                        }
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                    finally
+                                    {
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                        GC.Collect();
+#endif
+                                    }
+
+                                    try
+                                    {
+                                        if (Parent_Screen.Screen_Instance != null)
                                         {
                                             Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
                                             {
-                                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
+                                                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
                                             }, Parent_Screen.Screen_Instance);
                                         }
                                     }
-                                }
-                                catch
-                                {
-
-                                }
-                                finally
-                                {
-                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                                    GC.Collect(); 
-                                    #endif
-                                }
-
-                                try
-                                {
-                                    if (Parent_Screen.Screen_Instance != null)
+                                    catch
                                     {
-                                        Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
-                                        {
-                                            Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
-                                        }, Parent_Screen.Screen_Instance);
+
+                                    }
+                                    finally
+                                    {
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                        GC.Collect();
+#endif
                                     }
                                 }
-                                catch
+                                else if (LZMA_Downloader != null)
                                 {
-
-                                }
-                                finally
-                                {
-                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                                    GC.Collect(); 
-                                    #endif
+                                    if (LZMA_Downloader.Downloading)
+                                    {
+                                        LZMA_Downloader.Stop();
+                                    }
                                 }
                             }
                             else if (LZMA_Downloader != null)
@@ -3816,18 +3806,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     LZMA_Downloader.Stop();
                                 }
                             }
-                        }
-                        else if (LZMA_Downloader != null)
-                        {
-                            if (LZMA_Downloader.Downloading)
-                            {
-                                LZMA_Downloader.Stop();
-                            }
-                        }
-                    };
+                        };
 
-                    this.SafeEndInvokeAsyncCatch(this.SafeBeginInvokeActionAsync(Launcher_X_Form =>
-                    {
                         if (Screen_Instance != null && (!IsDisposed || !Disposing))
                         {
                             ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Width = 0, this, false);
@@ -3860,13 +3840,13 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             DownloadTracksFiles();
                         }
-                    }, false));
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("Classic Download Game Files", string.Empty, Error, string.Empty, true);
+                    }
                 }
-                catch (Exception Error)
-                {
-                    LogToFileAddons.OpenLog("Classic Download Game Files", string.Empty, Error, string.Empty, true);
-                }
-            }
+            });
         }
 
         public void Game_Folder_Checks()
@@ -3891,8 +3871,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     Label_Download_Information.SafeInvokeAction(() => 
                     Label_Download_Information.Text = "Checking Drive Format and Space".ToUpper(), this);
-
-                    Format_System_Storage Detected_Drive = System_Storage.Drive_Full_Info(Save_Settings.Live_Data.Game_Path, UnixOS.Detected(), true);
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                    Format_System_Storage Detected_Drive = System_Storage.Drive_Full_Info(Save_Settings.Live_Data.Game_Path, false, true);
+#else
+                    Format_System_Storage Detected_Drive = System_Storage.Drive_Full_Info(Save_Settings.Live_Data.Game_Path, true, true);
+#endif
 
 #if !(RELEASE_UNIX || DEBUG_UNIX)
                     if (Detected_Drive.TotalFreeSpace < 8000000000 ||
@@ -3984,9 +3967,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 finally
                 {
                     //@DavidCarbon or @Launcher_Dev_Team (4-22-2022)
-                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                     GC.Collect(); 
-                    #endif
+#endif
                 }
 
                 if (Force_Restart_Download_Request)
@@ -4469,9 +4452,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             Shown += async (x, y) =>
             {
-                Log.Debug("Game Folder Checks");
-                await Task.Run(() => { Game_Folder_Checks(); });
-                Log.Debug("Server Status Checks");
+                Game_Folder_Checks();
                 await Task.Run(() =>
                 {
                     Presence_Launcher.Update();
@@ -4572,7 +4553,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
 #if !(RELEASE_UNIX || DEBUG_UNIX)
                 GC.Collect(); 
-                #endif
+#endif
             };
         }
 #endregion

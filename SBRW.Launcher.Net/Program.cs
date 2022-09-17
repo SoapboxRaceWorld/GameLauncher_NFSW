@@ -344,28 +344,27 @@ namespace SBRW.Launcher.Net
                         {
                             if (No_Java.WaitOne(0, false))
                             {
-#if (RELEASE_UNIX || DEBUG_UNIX)
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                                 /* MONO Hates this... */
                                 string[] File_List =
                                 {
                                         "DiscordRPC.dll - 1.0.175.0",
-                                        "Flurl.dll - 3.0.2",
-                                        "Flurl.Http.dll - 3.2.0",
+                                        "Flurl.dll - 3.0.6",
+                                        "Flurl.Http.dll - 3.2.4",
                                         "LZMA.dll - 9.10 beta",
                                         "Newtonsoft.Json.dll - 13.0.1",
-                                        "System.Runtime.InteropServices.RuntimeInformation.dll - 4.6.24705.01. " +
-                                        "Commit Hash: 4d1af962ca0fede10beb01d197367c2f90e92c97",
                                         "System.ValueTuple.dll - 4.6.26515.06 @BuiltBy: dlab-DDVSOWINAGE059 " +
                                         "@Branch: release/2.1 @SrcCode: https://github.com/dotnet/corefx/tree/30ab651fcb4354552bd4891619a0bdd81e0ebdbf",
-                                        "WindowsFirewallHelper.dll - 2.1.4.81",
-                                        "SBRW.Ini.Parser.dll - 2.6.3",
-                                        "SBRW.Launcher.Core.dll - 0.0.24",
-                                        "SBRW.Nancy.dll - 2.0.10",
-                                        "SBRW.Nancy.Hosting.Self.dll - 2.0.6",
-                                        "SBRW.Launcher.Core.Extra.dll - 0.0.7",
-                                        "SBRW.Launcher.Core.Discord.dll - 0.0.14",
-                                        "SBRW.Launcher.Core.Proxy.dll - 0.0.12"
-                                    };
+                                        "WindowsFirewallHelper.dll - 2.2.0.85",
+                                        "SBRW.Ini.Parser.dll - 2.6.5",
+                                        "SBRW.Launcher.Core.dll - 0.1.1",
+                                        "SBRW.Nancy.dll - 2.0.13",
+                                        "SBRW.Nancy.Hosting.Self.dll - 2.0.11",
+                                        "SBRW.Launcher.Core.Extra.dll - 0.1.0",
+                                        "SBRW.Launcher.Core.Discord.dll - 0.1.0",
+                                        "SBRW.Launcher.Core.Proxy.dll - 0.1.0",
+                                        "SBRW.Launcher.Core.Theme.dll - 0.1.0"
+                                };
 
                                 List<string> Missing_File_List = new List<string>();
 
