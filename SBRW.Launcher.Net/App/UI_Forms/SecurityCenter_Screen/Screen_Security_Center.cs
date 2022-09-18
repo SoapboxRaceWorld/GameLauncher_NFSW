@@ -26,6 +26,7 @@ using System.Windows.Forms;
 using WindowsFirewallHelper;
 using WindowsFirewallHelper.Exceptions;
 using WindowsFirewallHelper.FirewallRules;
+using System.Threading.Tasks;
 
 namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
 {
@@ -497,8 +498,31 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         {
 #if !(RELEASE_UNIX || DEBUG_UNIX)
             if (FindRules(Mode, AppName, AppPath) != null) 
-            { 
-                return FindRules(Mode, AppName, AppPath).Any(); 
+            {
+                foreach (IFirewallRule Single_Rule in FindRules(Mode, AppName, AppPath))
+                {
+                    if (Single_Rule != null)
+                    {
+                        if (EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed())
+                        {
+                            Log.Ignore("---Firewall---");
+                            Log.Debug("Name: " + Single_Rule.Name);
+                            Log.Debug("Friendly Name: " + Single_Rule.FriendlyName);
+                            Log.Debug("Application Name: " + Single_Rule.ApplicationName);
+                            Log.Debug("Direction: " + Single_Rule.Direction);
+                            Log.Debug("Scope: " + Single_Rule.Scope);
+                            Log.Debug("Enabled: " + Single_Rule.IsEnable);
+                            Log.Ignore("------End------");
+                        }
+
+                        if (Single_Rule.Name.Equals(AppName) && Single_Rule.ApplicationName.Equals(AppPath))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
             }
             else 
             { 
@@ -832,12 +856,13 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                 {
                     /* Firewall Rule Add */
                     case 0:
+                        /* If File Path Exits, but not with our Set Name. Then Remove the rule within the set path. */
                         if (RuleExist("Path", AppName, AppPath) && !RuleExist("Name", AppName, AppPath))
                         {
                             /* Inbound & Outbound */
                             RemoveRules("Path", "Non-" + AppName, AppPath, "Path Match");
                         }
-
+                        /* If both path and set name is not set in firewall, go ahead and add it normally */
                         if (!RuleExist("Path", AppName, AppPath) && !RuleExist("Name", AppName, AppPath))
                         {
                             /* Inbound */
@@ -847,12 +872,17 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                             return AddApplicationRule(AppName, AppPath, GroupKey, Description,
                                 FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound");
                         }
+                        /* If both path and name are set and match, then its already set */
                         else if (RuleExist("Path", AppName, AppPath) && RuleExist("Name", AppName, AppPath))
                         {
                             Log.Completed("WINDOWS FIREWALL: " + AppName + " Rule is already Added");
                             return true;
                         }
-                        else { Log.Completed("WINDOWS FIREWALL: " + AppName + " Rule wasn't added due to a Unknown Issue"); return false; }
+                        /* Proabably a code conditional problem. Developer must check the code to verify its issue */
+                        else 
+                        { 
+                            Log.Completed("WINDOWS FIREWALL: " + AppName + " Rule wasn't added due to a Unknown Issue"); return false; 
+                        }
                     /* Firewall Rule Removal */
                     case 1:
                         if (RuleExist("Path", AppName, AppPath) && !RuleExist("Name", AppName, AppPath))
@@ -865,7 +895,10 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                         {
                             return RemoveRules("Path", AppName, AppPath, "Path Match");
                         }
-                        else { return false; }
+                        else 
+                        { 
+                            return false; 
+                        }
                     /* Firewall Rule Check (Exists) */
                     case 2:
                         return RuleExist("Path", AppName, AppPath) && RuleExist("Name", AppName, AppPath);
@@ -929,788 +962,861 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
         /// <returns><code>True or False</code></returns>
         private bool ButtonEnabler(int ModeType, int ModeAPI)
         {
-            try { return DataBase(ModeType, ModeAPI); }
-            catch { return false; }
+            try 
+            {
+                return DataBase(ModeType, ModeAPI); 
+            }
+            catch 
+            { 
+                return false; 
+            }
         }
         ///<summary>Button: Firewall Rules API</summary>
-        private void ButtonFirewallRulesAPI_Click(object sender, EventArgs e)
+        private async void ButtonFirewallRulesAPI_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonFRAPI)
+            await Task.Run(() => 
             {
-                Log.Info("Security Center Screen: ".ToUpper() + "[Check Firewall API] Button was clicked by user");
-
-                DisableButtonFRAPI = true;
-
-                if (ButtonEnabler(4, 20))
+                if (!DisableButtonFRAPI)
                 {
-                    ButtonsColorSet(ButtonFirewallRulesCheck, 2, true);
-                    DisableButtonFRC = false;
-                }
-                else { ButtonsColorSet(ButtonFirewallRulesCheck, 3, false); DisableButtonFRC = true; }
+                    Log.Info("Security Center Screen: ".ToUpper() + "[Check Firewall API] Button was clicked by user");
 
-                ButtonsColorSet(ButtonFirewallRulesAPI, 1, false);
-            }
+                    DisableButtonFRAPI = true;
+
+                    if (ButtonEnabler(4, 20))
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesCheck, 2, true);
+                        DisableButtonFRC = false;
+                    }
+                    else
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesCheck, 3, false);
+                        DisableButtonFRC = true;
+                    }
+
+                    ButtonsColorSet(ButtonFirewallRulesAPI, 1, false);
+                }
+            });
         }
         ///<summary>Button: Firewall Rules Check</summary>
-        private void ButtonFirewallRulesCheck_Click(object sender, EventArgs e)
+        private async void ButtonFirewallRulesCheck_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonFRC)
+            await Task.Run(() =>
             {
-                Log.Info("Security Center Screen: ".ToUpper() + "[Check All Rules] Button was clicked by user");
-
-                if (Firewall())
+                if (!DisableButtonFRC)
                 {
-                    ButtonsColorSet(ButtonFirewallRulesCheck, 0, true);
-
-                    /* Both */
-                    if (ButtonEnabler(0, 2) && ButtonEnabler(1, 2) && ButtonEnabler(2, 2))
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddAll, 1, true);
-                        DisableButtonFRAA = DisableButtonFRRA = false;
-                        ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2, true);
-                    }
-                    else if (!ButtonEnabler(0, 2) && !ButtonEnabler(1, 2) && !ButtonEnabler(2, 2))
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddAll, 2, true);
-                        DisableButtonFRAA = false;
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false);
-                        DisableButtonFRAA = DisableButtonFRRA = true;
-                        ButtonsColorSet(ButtonFirewallRulesRemoveAll, 3, false);
-                    }
-                    /* Launcher */
-                    if (ButtonEnabler(0, 2) && ButtonEnabler(1, 2))
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddLauncher, 1, true);
-                        DisableButtonFRAL = DisableButtonFRRL = false;
-                        ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
-                        DisableButtonFRAL = false;
-                        ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
-                    }
-                    /* Game */
-                    if (ButtonEnabler(2, 2) && !string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path_Old) &&
-                        Save_Settings.Live_Data.Game_Path_Old != Save_Settings.Live_Data.Game_Path)
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
-                        DisableButtonFRAG = DisableButtonFRRG = false;
-                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 4, true);
-                    }
-                    else if (ButtonEnabler(2, 2))
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
-                        DisableButtonFRAG = DisableButtonFRRG = false;
-                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2, true);
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddGame,
-                            (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path_Old) &&
-                            (Save_Settings.Live_Data.Game_Path_Old != Save_Settings.Live_Data.Game_Path) ? 4 : 2), true);
-                        DisableButtonFRAG = false;
-                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
-                    }
+                    Log.Info("Security Center Screen: ".ToUpper() + "[Check All Rules] Button was clicked by user");
 
                     if (Firewall())
-                    { ButtonsColorSet(ButtonFirewallRulesCheck, 1, true); }
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesCheck, 0, true);
+
+                        /* Both */
+                        if (ButtonEnabler(0, 2) && ButtonEnabler(1, 2) && ButtonEnabler(2, 2))
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddAll, 1, true);
+                            DisableButtonFRAA = DisableButtonFRRA = false;
+                            ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2, true);
+                        }
+                        else if (!ButtonEnabler(0, 2) && !ButtonEnabler(1, 2) && !ButtonEnabler(2, 2))
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddAll, 2, true);
+                            DisableButtonFRAA = false;
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false);
+                            DisableButtonFRAA = DisableButtonFRRA = true;
+                            ButtonsColorSet(ButtonFirewallRulesRemoveAll, 3, false);
+                        }
+                        /* Launcher */
+                        if (ButtonEnabler(0, 2) && ButtonEnabler(1, 2))
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddLauncher, 1, true);
+                            DisableButtonFRAL = DisableButtonFRRL = false;
+                            ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
+                            DisableButtonFRAL = false;
+                            ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
+                        }
+                        /* Game */
+                        if (ButtonEnabler(2, 2) && !string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path_Old) &&
+                            Save_Settings.Live_Data.Game_Path_Old != Save_Settings.Live_Data.Game_Path)
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
+                            DisableButtonFRAG = DisableButtonFRRG = false;
+                            ButtonsColorSet(ButtonFirewallRulesRemoveGame, 4, true);
+                        }
+                        else if (ButtonEnabler(2, 2))
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
+                            DisableButtonFRAG = DisableButtonFRRG = false;
+                            ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2, true);
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddGame,
+                                (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path_Old) &&
+                                (Save_Settings.Live_Data.Game_Path_Old != Save_Settings.Live_Data.Game_Path) ? 4 : 2), true);
+                            DisableButtonFRAG = false;
+                            ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
+                        }
+
+                        if (Firewall())
+                        { 
+                            ButtonsColorSet(ButtonFirewallRulesCheck, 1, true); 
+                        }
+                        else
+                        { 
+                            ButtonsColorSet(ButtonFirewallRulesCheck, 3, true); 
+                        }
+                    }
                     else
-                    { ButtonsColorSet(ButtonFirewallRulesCheck, 3, true); }
+                    { 
+                        ButtonsColorSet(ButtonFirewallRulesCheck, 3, true); 
+                    }
                 }
-                else
-                { ButtonsColorSet(ButtonFirewallRulesCheck, 3, true); }
-            }
+            });
         }
         ///<summary>Button: Firewall Rules Add All</summary>
-        private void ButtonFirewallRulesAddAll_Click(object sender, EventArgs e)
+        private async void ButtonFirewallRulesAddAll_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonFRAA)
+            await Task.Run(() =>
             {
-                DisableButtonFRAA = true;
-
-                if (ButtonEnabler(4, 20))
+                if (!DisableButtonFRAA)
                 {
-                    ButtonsColorSet(ButtonFirewallRulesAddAll, 2, true);
+                    DisableButtonFRAA = true;
 
-                    /* Launcher & Updater */
-                    if (ButtonEnabler(0, 0) && ButtonEnabler(1, 0))
+                    if (ButtonEnabler(4, 20))
                     {
-                        ButtonsColorSet(ButtonFirewallRulesAddLauncher, 1, true);
-                        ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
-                        DisableButtonFRRL = false;
-                        Save_Settings.Live_Data.Firewall_Launcher = "Excluded";
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
-                        Save_Settings.Live_Data.Firewall_Launcher = "Error";
-                    }
-                    /* Game */
-                    if (ButtonEnabler(2, 0))
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
-                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2, true);
-                        DisableButtonFRRG = false;
-                        Save_Settings.Live_Data.Firewall_Game = "Excluded";
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
-                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
-                        Save_Settings.Live_Data.Firewall_Game = "Error";
-                    }
+                        ButtonsColorSet(ButtonFirewallRulesAddAll, 2, true);
 
-                    Save_Settings.Save();
+                        /* Launcher & Updater */
+                        if (ButtonEnabler(0, 0) && ButtonEnabler(1, 0))
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddLauncher, 1, true);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
+                            DisableButtonFRRL = false;
+                            Save_Settings.Live_Data.Firewall_Launcher = "Excluded";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
+                            Save_Settings.Live_Data.Firewall_Launcher = "Error";
+                        }
+                        /* Game */
+                        if (ButtonEnabler(2, 0))
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2, true);
+                            DisableButtonFRRG = false;
+                            Save_Settings.Live_Data.Firewall_Game = "Excluded";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
+                            Save_Settings.Live_Data.Firewall_Game = "Error";
+                        }
 
-                    if (Firewall())
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddAll, 1, true);
-                        DisableButtonFRRA = !(ButtonFirewallRulesRemoveLauncher.Enabled && ButtonFirewallRulesRemoveGame.Enabled);
-                        ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2,
-                            ButtonFirewallRulesRemoveLauncher.Enabled && ButtonFirewallRulesRemoveGame.Enabled);
+                        Save_Settings.Save();
+
+                        if (Firewall())
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddAll, 1, true);
+                            DisableButtonFRRA = !(ButtonFirewallRulesRemoveLauncher.Enabled && ButtonFirewallRulesRemoveGame.Enabled);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2,
+                                ButtonFirewallRulesRemoveLauncher.Enabled && ButtonFirewallRulesRemoveGame.Enabled);
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveAll, 3, false);
+                        }
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false);
-                        ButtonsColorSet(ButtonFirewallRulesRemoveAll, 3, false);
                     }
                 }
-                else
-                {
-                    ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false);
-                }
-            }
+            });
         }
         ///<summary>Button: Firewall Rules Add Launcher</summary>
-        private void ButtonFirewallRulesAddLauncher_Click(object sender, EventArgs e)
+        private async void ButtonFirewallRulesAddLauncher_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonFRAL)
+            await Task.Run(() =>
             {
-                DisableButtonFRAL = true;
-
-                if (ButtonEnabler(4, 20))
+                if (!DisableButtonFRAL)
                 {
-                    ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
+                    DisableButtonFRAL = true;
 
-                    /* Game */
-                    if (ButtonEnabler(0, 0) && ButtonEnabler(1, 0))
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddLauncher, 1, true);
-                        ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
-                        DisableButtonFRRL = false;
-                        Save_Settings.Live_Data.Firewall_Launcher = "Excluded";
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
-                        ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
-                        Save_Settings.Live_Data.Firewall_Launcher = "Error";
-                    }
-
-                    Save_Settings.Save();
-                }
-                else
-                {
-                    ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
-                }
-            }
-        }
-        ///<summary>Button: Firewall Rules Add Game</summary>
-        private void ButtonFirewallRulesAddGame_Click(object sender, EventArgs e)
-        {
-            if (!DisableButtonFRAG)
-            {
-                DisableButtonFRAG = true;
-
-                if (ButtonEnabler(4, 20))
-                {
-                    ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
-
-                    /* Remove Old Game Path and Cache Location Just in Case for Windows Defender */
-                    if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path_Old))
-                    {
-                        if (ButtonEnabler(3, 1))
-                        {
-                            if (string.IsNullOrWhiteSpace(CacheOldGameLocation))
-                            {
-                                CacheOldGameLocation = Save_Settings.Live_Data.Game_Path_Old;
-                            }
-                            Save_Settings.Live_Data.Game_Path_Old = string.Empty;
-                        }
-                    }
-
-                    /* Game */
-                    if (ButtonEnabler(2, 0))
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
-                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2, true);
-                        DisableButtonFRRG = false;
-                        Save_Settings.Live_Data.Firewall_Game = "Excluded";
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
-                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
-                        Save_Settings.Live_Data.Firewall_Game = "Error";
-                    }
-
-                    Save_Settings.Save();
-                }
-                else
-                {
-                    ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
-                }
-            }
-        }
-        ///<summary>Button: Firewall Rules Remove All</summary>
-        private void ButtonFirewallRulesRemoveAll_Click(object sender, EventArgs e)
-        {
-            if (!DisableButtonFRRA)
-            {
-                DisableButtonFRRA = true;
-
-                if (ButtonEnabler(4, 20))
-                {
-                    ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2, true);
-
-                    /* Launcher & Updater */
-                    if (ButtonEnabler(0, 1) && ButtonEnabler(1, 1))
+                    if (ButtonEnabler(4, 20))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
-                        DisableButtonFRAL = true;
-                        ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 1, true);
-                        Save_Settings.Live_Data.Firewall_Launcher = "Removed";
+
+                        /* Game */
+                        if (ButtonEnabler(0, 0) && ButtonEnabler(1, 0))
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddLauncher, 1, true);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
+                            DisableButtonFRRL = false;
+                            Save_Settings.Live_Data.Firewall_Launcher = "Excluded";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
+                            Save_Settings.Live_Data.Firewall_Launcher = "Error";
+                        }
+
+                        Save_Settings.Save();
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
-                        ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
-                        Save_Settings.Live_Data.Firewall_Launcher = "Error";
                     }
-                    /* Game */
-                    if (ButtonEnabler(2, 1))
+                }
+            });
+        }
+        ///<summary>Button: Firewall Rules Add Game</summary>
+        private async void ButtonFirewallRulesAddGame_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() =>
+            {
+                if (!DisableButtonFRAG)
+                {
+                    DisableButtonFRAG = true;
+
+                    if (ButtonEnabler(4, 20))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
-                        DisableButtonFRAG = true;
-                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 1, true);
-                        Save_Settings.Live_Data.Firewall_Game = "Removed";
+
+                        /* Remove Old Game Path and Cache Location Just in Case for Windows Defender */
+                        if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path_Old))
+                        {
+                            if (ButtonEnabler(3, 1))
+                            {
+                                if (string.IsNullOrWhiteSpace(CacheOldGameLocation))
+                                {
+                                    CacheOldGameLocation = Save_Settings.Live_Data.Game_Path_Old;
+                                }
+                                Save_Settings.Live_Data.Game_Path_Old = string.Empty;
+                            }
+                        }
+
+                        /* Game */
+                        if (ButtonEnabler(2, 0))
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2, true);
+                            DisableButtonFRRG = false;
+                            Save_Settings.Live_Data.Firewall_Game = "Excluded";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
+                            Save_Settings.Live_Data.Firewall_Game = "Error";
+                        }
+
+                        Save_Settings.Save();
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
-                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
-                        Save_Settings.Live_Data.Firewall_Game = "Error";
                     }
+                }
+            });
+        }
+        ///<summary>Button: Firewall Rules Remove All</summary>
+        private async void ButtonFirewallRulesRemoveAll_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() =>
+            {
+                if (!DisableButtonFRRA)
+                {
+                    DisableButtonFRRA = true;
 
-                    Save_Settings.Save();
-
-                    if (Firewall())
+                    if (ButtonEnabler(4, 20))
                     {
-                        ButtonsColorSet(ButtonFirewallRulesRemoveAll, 1, true);
-                        DisableButtonFRAA = !(ButtonFirewallRulesAddLauncher.Enabled && ButtonFirewallRulesAddGame.Enabled);
-                        ButtonsColorSet(ButtonFirewallRulesAddAll, 2, ButtonFirewallRulesAddLauncher.Enabled && ButtonFirewallRulesAddGame.Enabled);
+                        ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2, true);
+
+                        /* Launcher & Updater */
+                        if (ButtonEnabler(0, 1) && ButtonEnabler(1, 1))
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
+                            DisableButtonFRAL = true;
+                            ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 1, true);
+                            Save_Settings.Live_Data.Firewall_Launcher = "Removed";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
+                            Save_Settings.Live_Data.Firewall_Launcher = "Error";
+                        }
+                        /* Game */
+                        if (ButtonEnabler(2, 1))
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
+                            DisableButtonFRAG = true;
+                            ButtonsColorSet(ButtonFirewallRulesRemoveGame, 1, true);
+                            Save_Settings.Live_Data.Firewall_Game = "Removed";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
+                            Save_Settings.Live_Data.Firewall_Game = "Error";
+                        }
+
+                        Save_Settings.Save();
+
+                        if (Firewall())
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesRemoveAll, 1, true);
+                            DisableButtonFRAA = !(ButtonFirewallRulesAddLauncher.Enabled && ButtonFirewallRulesAddGame.Enabled);
+                            ButtonsColorSet(ButtonFirewallRulesAddAll, 2, ButtonFirewallRulesAddLauncher.Enabled && ButtonFirewallRulesAddGame.Enabled);
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesRemoveAll, 3, false);
+                            ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false);
+                        }
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFirewallRulesRemoveAll, 3, false);
-                        ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false);
                     }
                 }
-                else
-                {
-                    ButtonsColorSet(ButtonFirewallRulesRemoveAll, 3, false);
-                }
-            }
+            });
         }
         ///<summary>Button: Firewall Rules Remove Launcher</summary>
-        private void ButtonFirewallRulesRemoveLauncher_Click(object sender, EventArgs e)
+        private async void ButtonFirewallRulesRemoveLauncher_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonFRRL)
+            await Task.Run(() =>
             {
-                DisableButtonFRRL = true;
-
-                if (ButtonEnabler(4, 20))
+                if (!DisableButtonFRRL)
                 {
-                    ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
+                    DisableButtonFRRL = true;
 
-                    /* Launcher & Updater */
-                    if (ButtonEnabler(0, 1) && ButtonEnabler(1, 1))
+                    if (ButtonEnabler(4, 20))
                     {
-                        ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
-                        DisableButtonFRAL = false;
-                        ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 1, true);
-                        Save_Settings.Live_Data.Firewall_Launcher = "Removed";
+                        ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
+
+                        /* Launcher & Updater */
+                        if (ButtonEnabler(0, 1) && ButtonEnabler(1, 1))
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
+                            DisableButtonFRAL = false;
+                            ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 1, true);
+                            Save_Settings.Live_Data.Firewall_Launcher = "Removed";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
+                            Save_Settings.Live_Data.Firewall_Launcher = "Error";
+                        }
+
+                        Save_Settings.Save();
                     }
                     else
                     {
-                        ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false);
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
-                        Save_Settings.Live_Data.Firewall_Launcher = "Error";
                     }
-
-                    Save_Settings.Save();
                 }
-                else
-                {
-                    ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 3, false);
-                }
-            }
+            });
         }
         ///<summary>Button: Firewall Rules Remove Game</summary>
-        private void ButtonFirewallRulesRemoveGame_Click(object sender, EventArgs e)
+        private async void ButtonFirewallRulesRemoveGame_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonFRRG)
+            await Task.Run(() =>
             {
-                DisableButtonFRRG = true;
-
-                if (ButtonEnabler(4, 20))
+                if (!DisableButtonFRRG)
                 {
-                    ButtonsColorSet(ButtonFirewallRulesRemoveGame, 0, true);
-                    /* Remove Old Game Path and Cache Location Just in Case for Windows Defender */
-                    if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path_Old))
-                    {
-                        if (ButtonEnabler(3, 1))
-                        {
-                            if (string.IsNullOrWhiteSpace(CacheOldGameLocation))
-                            {
-                                CacheOldGameLocation = Save_Settings.Live_Data.Game_Path_Old;
-                            }
-                            Save_Settings.Live_Data.Game_Path_Old = string.Empty;
-                        }
-                    }
+                    DisableButtonFRRG = true;
 
-                    /* Game */
-                    if (ButtonEnabler(2, 1))
+                    if (ButtonEnabler(4, 20))
                     {
-                        ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
-                        DisableButtonFRAG = false;
-                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 1, true);
-                        Save_Settings.Live_Data.Firewall_Game = "Removed";
+                        ButtonsColorSet(ButtonFirewallRulesRemoveGame, 0, true);
+                        /* Remove Old Game Path and Cache Location Just in Case for Windows Defender */
+                        if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path_Old))
+                        {
+                            if (ButtonEnabler(3, 1))
+                            {
+                                if (string.IsNullOrWhiteSpace(CacheOldGameLocation))
+                                {
+                                    CacheOldGameLocation = Save_Settings.Live_Data.Game_Path_Old;
+                                }
+                                Save_Settings.Live_Data.Game_Path_Old = string.Empty;
+                            }
+                        }
+
+                        /* Game */
+                        if (ButtonEnabler(2, 1))
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
+                            DisableButtonFRAG = false;
+                            ButtonsColorSet(ButtonFirewallRulesRemoveGame, 1, true);
+                            Save_Settings.Live_Data.Firewall_Game = "Removed";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
+                            ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
+                            Save_Settings.Live_Data.Firewall_Game = "Error";
+                        }
+
+                        Save_Settings.Save();
                     }
                     else
                     {
-                        ButtonsColorSet(ButtonFirewallRulesAddGame, 3, false);
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
-                        Save_Settings.Live_Data.Firewall_Game = "Error";
                     }
-
-                    Save_Settings.Save();
                 }
-                else
-                {
-                    ButtonsColorSet(ButtonFirewallRulesRemoveGame, 3, false);
-                }
-            }
+            });
         }
         ///<summary>Button: Defender Exclusion API</summary>
-        private void ButtonDefenderExclusionAPI_Click(object sender, EventArgs e)
+        private async void ButtonDefenderExclusionAPI_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonDRAPI)
+            await Task.Run(() =>
             {
-                if (EnableInsiderDeveloper.Allowed() || (Product_Version.GetWindowsNumber() >= 10 &&
-                    (MessageBox.Show(null, "There has been reports that some users are not able to run Windows Defender Checks." +
-                    "\nThis ranges from the Built-In to Third-Party Anti-Virus Software." +
-                    "\n\nIf this Window Closes or the Launcher Crashes with an Error Message" +
-                    "\n\nDo not run this Check, just simply ignore this section." +
-                    "\n\n\nClick Yes to Agree to a potential Launcher Crash" +
-                    "\nClick No to avoid a potential Launcher Crash",
-                    "Windows Defender API Check - SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)))
+                if (!DisableButtonDRAPI)
                 {
-                    DisableButtonDRAPI = true;
-
-                    if (ButtonEnabler(5, 10))
+                    if (EnableInsiderDeveloper.Allowed() || (Product_Version.GetWindowsNumber() >= 10 &&
+                        (MessageBox.Show(this, "There has been reports that some users are not able to run Windows Defender Checks." +
+                        "\nThis ranges from the Built-In to Third-Party Anti-Virus Software." +
+                        "\n\nIf this Window Closes or the Launcher Crashes with an Error Message" +
+                        "\n\nDo not run this Check, just simply ignore this section." +
+                        "\n\n\nClick Yes to Agree to a potential Launcher Crash" +
+                        "\nClick No to avoid a potential Launcher Crash",
+                        "Windows Defender API Check - SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)))
                     {
-                        ButtonsColorSet(ButtonDefenderExclusionCheck, 2, true);
-                        DisableButtonDRC = false;
-                    }
-                    else { ButtonsColorSet(ButtonDefenderExclusionCheck, 3, false); DisableButtonDRC = true; }
+                        DisableButtonDRAPI = true;
 
-                    ButtonsColorSet(ButtonDefenderExclusionAPI, 1, false);
+                        if (ButtonEnabler(5, 10))
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionCheck, 2, true);
+                            DisableButtonDRC = false;
+                        }
+                        else { ButtonsColorSet(ButtonDefenderExclusionCheck, 3, false); DisableButtonDRC = true; }
+
+                        ButtonsColorSet(ButtonDefenderExclusionAPI, 1, false);
+                    }
                 }
-            }
+            });
         }
         ///<summary>Button: Defender Exclusion Check</summary>
-        private void ButtonDefenderExclusionCheck_Click(object sender, EventArgs e)
+        private async void ButtonDefenderExclusionCheck_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonDRC)
+            await Task.Run(() =>
             {
-                if (Defender())
+                if (!DisableButtonDRC)
                 {
-                    ButtonsColorSet(ButtonDefenderExclusionCheck, 0, true);
-
-                    /* Launcher, Updater, & All */
-                    if (ButtonEnabler(0, 5))
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddAll, 1, true);
-                        ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 1, true);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 2, true);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 2, true);
-                        DisableButtonDRAA = DisableButtonDRAL = DisableButtonDRRA = DisableButtonDRRL = false;
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddAll, 2, true);
-                        ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 2, true);
-                        DisableButtonDRAL = DisableButtonDRAA = false;
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 3, false);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 3, false);
-                    }
-                    /* Game */
-                    if (ButtonEnabler(2, 5) && !string.IsNullOrWhiteSpace(CacheOldGameLocation) &&
-                        CacheOldGameLocation != Save_Settings.Live_Data.Game_Path)
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddGame, 1, true);
-                        DisableButtonDRAG = DisableButtonDRRG = false;
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 4, true);
-                    }
-                    else if (ButtonEnabler(2, 5))
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddGame, 1, true);
-                        DisableButtonDRAG = DisableButtonDRRG = false;
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 2, true);
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddGame,
-                            (!string.IsNullOrWhiteSpace(CacheOldGameLocation) &&
-                            (CacheOldGameLocation != Save_Settings.Live_Data.Game_Path) ? 4 : 2), true);
-                        DisableButtonDRAG = false;
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
-                        DisableButtonDRRG = true;
-                    }
-
                     if (Defender())
-                    { ButtonsColorSet(ButtonDefenderExclusionCheck, 1, true); }
+                    {
+                        ButtonsColorSet(ButtonDefenderExclusionCheck, 0, true);
+
+                        /* Launcher, Updater, & All */
+                        if (ButtonEnabler(0, 5))
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddAll, 1, true);
+                            ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 1, true);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 2, true);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 2, true);
+                            DisableButtonDRAA = DisableButtonDRAL = DisableButtonDRRA = DisableButtonDRRL = false;
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddAll, 2, true);
+                            ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 2, true);
+                            DisableButtonDRAL = DisableButtonDRAA = false;
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 3, false);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 3, false);
+                        }
+                        /* Game */
+                        if (ButtonEnabler(2, 5) && !string.IsNullOrWhiteSpace(CacheOldGameLocation) &&
+                            CacheOldGameLocation != Save_Settings.Live_Data.Game_Path)
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddGame, 1, true);
+                            DisableButtonDRAG = DisableButtonDRRG = false;
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 4, true);
+                        }
+                        else if (ButtonEnabler(2, 5))
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddGame, 1, true);
+                            DisableButtonDRAG = DisableButtonDRRG = false;
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 2, true);
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddGame,
+                                (!string.IsNullOrWhiteSpace(CacheOldGameLocation) &&
+                                (CacheOldGameLocation != Save_Settings.Live_Data.Game_Path) ? 4 : 2), true);
+                            DisableButtonDRAG = false;
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
+                            DisableButtonDRRG = true;
+                        }
+
+                        if (Defender())
+                        { ButtonsColorSet(ButtonDefenderExclusionCheck, 1, true); }
+                        else
+                        { ButtonsColorSet(ButtonDefenderExclusionCheck, 3, true); }
+                    }
                     else
                     { ButtonsColorSet(ButtonDefenderExclusionCheck, 3, true); }
                 }
-                else
-                { ButtonsColorSet(ButtonDefenderExclusionCheck, 3, true); }
-            }
+            });
         }
         ///<summary>Button: Defender Exclusion Add All</summary>
-        private void ButtonDefenderExclusionAddAll_Click(object sender, EventArgs e)
+        private async void ButtonDefenderExclusionAddAll_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonDRAA)
+            await Task.Run(() => 
             {
-                DisableButtonDRAA = true;
-
-                if (ButtonEnabler(4, 20))
+                if (!DisableButtonDRAA)
                 {
-                    ButtonsColorSet(ButtonDefenderExclusionAddAll, 2, true);
+                    DisableButtonDRAA = true;
 
-                    /* Launcher & Updater */
-                    if (ButtonEnabler(0, 3))
+                    if (ButtonEnabler(4, 20))
                     {
-                        ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 1, true);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 2, true);
-                        DisableButtonDRRL = false;
-                        Save_Settings.Live_Data.Defender_Launcher = "Excluded";
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
-                        Save_Settings.Live_Data.Defender_Launcher = "Error";
-                    }
-                    /* Game */
-                    if (ButtonEnabler(2, 3))
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddGame, 1, true);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 2, true);
-                        DisableButtonDRRG = false;
-                        Save_Settings.Live_Data.Defender_Game = "Excluded";
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
-                        Save_Settings.Live_Data.Defender_Game = "Error";
-                    }
+                        ButtonsColorSet(ButtonDefenderExclusionAddAll, 2, true);
 
-                    Save_Settings.Save();
+                        /* Launcher & Updater */
+                        if (ButtonEnabler(0, 3))
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 1, true);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 2, true);
+                            DisableButtonDRRL = false;
+                            Save_Settings.Live_Data.Defender_Launcher = "Excluded";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
+                            Save_Settings.Live_Data.Defender_Launcher = "Error";
+                        }
+                        /* Game */
+                        if (ButtonEnabler(2, 3))
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddGame, 1, true);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 2, true);
+                            DisableButtonDRRG = false;
+                            Save_Settings.Live_Data.Defender_Game = "Excluded";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
+                            Save_Settings.Live_Data.Defender_Game = "Error";
+                        }
 
-                    if (Defender())
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddAll, 1, true);
-                        DisableButtonDRRA = !(ButtonDefenderExclusionRemoveLauncher.Enabled && ButtonDefenderExclusionRemoveGame.Enabled);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 2,
-                            ButtonDefenderExclusionRemoveLauncher.Enabled && ButtonDefenderExclusionRemoveGame.Enabled);
+                        Save_Settings.Save();
+
+                        if (Defender())
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddAll, 1, true);
+                            DisableButtonDRRA = !(ButtonDefenderExclusionRemoveLauncher.Enabled && ButtonDefenderExclusionRemoveGame.Enabled);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 2,
+                                ButtonDefenderExclusionRemoveLauncher.Enabled && ButtonDefenderExclusionRemoveGame.Enabled);
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddAll, 3, false);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 3, false);
+                        }
                     }
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddAll, 3, false);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 3, false);
                     }
                 }
-                else
-                {
-                    ButtonsColorSet(ButtonDefenderExclusionAddAll, 3, false);
-                }
-            }
+            });
         }
         ///<summary>Button: Defender Exclusion Add Launcher</summary>
-        private void ButtonDefenderExclusionAddLauncher_Click(object sender, EventArgs e)
+        private async void ButtonDefenderExclusionAddLauncher_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonDRAL)
+            await Task.Run(() =>
             {
-                DisableButtonDRAL = true;
-
-                if (ButtonEnabler(5, 10))
+                if (!DisableButtonDRAL)
                 {
-                    ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 2, true);
+                    DisableButtonDRAL = true;
 
-                    /* Launcher & Updater */
-                    if (ButtonEnabler(0, 3))
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 1, true);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 2, true);
-                        DisableButtonDRRL = false;
-                        Save_Settings.Live_Data.Defender_Launcher = "Excluded";
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 3, false);
-                        Save_Settings.Live_Data.Defender_Launcher = "Error";
-                    }
-
-                    Save_Settings.Save();
-                }
-                else
-                {
-                    ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
-                }
-            }
-        }
-        ///<summary>Button: Defender Exclusion Add Game</summary>
-        private void ButtonDefenderExclusionAddGame_Click(object sender, EventArgs e)
-        {
-            if (!DisableButtonDRAG)
-            {
-                DisableButtonDRAG = true;
-
-                if (ButtonEnabler(5, 10))
-                {
-                    ButtonsColorSet(ButtonDefenderExclusionAddGame, 2, true);
-                    /* Remove Old Game Path */
-                    if (!string.IsNullOrWhiteSpace(CacheOldGameLocation))
-                    {
-                        if (ButtonEnabler(3, 4))
-                        {
-                            CacheOldGameLocation = string.Empty;
-                        }
-                    }
-
-                    /* Game */
-                    if (ButtonEnabler(2, 3))
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddGame, 1, true);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 2, true);
-                        DisableButtonDRRG = false;
-                        Save_Settings.Live_Data.Defender_Game = "Excluded";
-                    }
-                    else
-                    {
-                        ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
-                        Save_Settings.Live_Data.Defender_Game = "Error";
-                    }
-
-                    Save_Settings.Save();
-                }
-                else
-                {
-                    ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
-                }
-            }
-        }
-        ///<summary>Button: Defender Exclusion Remove All</summary>
-        private void ButtonDefenderExclusionRemoveAll_Click(object sender, EventArgs e)
-        {
-            if (!DisableButtonDRRA)
-            {
-                DisableButtonDRRA = true;
-
-                if (ButtonEnabler(4, 20))
-                {
-                    ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 2, true);
-
-                    /* Launcher & Updater */
-                    if (ButtonEnabler(0, 4))
+                    if (ButtonEnabler(5, 10))
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 2, true);
-                        DisableButtonDRAL = true;
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 1, true);
-                        Save_Settings.Live_Data.Defender_Launcher = "Removed";
+
+                        /* Launcher & Updater */
+                        if (ButtonEnabler(0, 3))
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 1, true);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 2, true);
+                            DisableButtonDRRL = false;
+                            Save_Settings.Live_Data.Defender_Launcher = "Excluded";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 3, false);
+                            Save_Settings.Live_Data.Defender_Launcher = "Error";
+                        }
+
+                        Save_Settings.Save();
                     }
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 3, false);
-                        Save_Settings.Live_Data.Defender_Launcher = "Error";
                     }
-                    /* Game */
-                    if (ButtonEnabler(2, 4))
+                }
+            });
+        }
+        ///<summary>Button: Defender Exclusion Add Game</summary>
+        private async void ButtonDefenderExclusionAddGame_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() =>
+            {
+                if (!DisableButtonDRAG)
+                {
+                    DisableButtonDRAG = true;
+
+                    if (ButtonEnabler(5, 10))
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddGame, 2, true);
-                        DisableButtonDRAG = true;
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 1, true);
-                        Save_Settings.Live_Data.Defender_Game = "Removed";
+                        /* Remove Old Game Path */
+                        if (!string.IsNullOrWhiteSpace(CacheOldGameLocation))
+                        {
+                            if (ButtonEnabler(3, 4))
+                            {
+                                CacheOldGameLocation = string.Empty;
+                            }
+                        }
+
+                        /* Game */
+                        if (ButtonEnabler(2, 3))
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddGame, 1, true);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 2, true);
+                            DisableButtonDRRG = false;
+                            Save_Settings.Live_Data.Defender_Game = "Excluded";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
+                            Save_Settings.Live_Data.Defender_Game = "Error";
+                        }
+
+                        Save_Settings.Save();
                     }
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
-                        Save_Settings.Live_Data.Defender_Game = "Error";
                     }
+                }
+            });
+        }
+        ///<summary>Button: Defender Exclusion Remove All</summary>
+        private async void ButtonDefenderExclusionRemoveAll_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() =>
+            {
+                if (!DisableButtonDRRA)
+                {
+                    DisableButtonDRRA = true;
 
-                    Save_Settings.Save();
-
-                    if (Defender())
+                    if (ButtonEnabler(4, 20))
                     {
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 1, true);
-                        DisableButtonDRAA = !(ButtonDefenderExclusionAddLauncher.Enabled && ButtonDefenderExclusionAddGame.Enabled);
-                        ButtonsColorSet(ButtonDefenderExclusionAddAll, 2,
-                            ButtonDefenderExclusionAddLauncher.Enabled && ButtonDefenderExclusionAddGame.Enabled);
+                        ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 2, true);
+
+                        /* Launcher & Updater */
+                        if (ButtonEnabler(0, 4))
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 2, true);
+                            DisableButtonDRAL = true;
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 1, true);
+                            Save_Settings.Live_Data.Defender_Launcher = "Removed";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 3, false);
+                            Save_Settings.Live_Data.Defender_Launcher = "Error";
+                        }
+                        /* Game */
+                        if (ButtonEnabler(2, 4))
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddGame, 2, true);
+                            DisableButtonDRAG = true;
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 1, true);
+                            Save_Settings.Live_Data.Defender_Game = "Removed";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
+                            Save_Settings.Live_Data.Defender_Game = "Error";
+                        }
+
+                        Save_Settings.Save();
+
+                        if (Defender())
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 1, true);
+                            DisableButtonDRAA = !(ButtonDefenderExclusionAddLauncher.Enabled && ButtonDefenderExclusionAddGame.Enabled);
+                            ButtonsColorSet(ButtonDefenderExclusionAddAll, 2,
+                                ButtonDefenderExclusionAddLauncher.Enabled && ButtonDefenderExclusionAddGame.Enabled);
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 3, false);
+                            ButtonsColorSet(ButtonDefenderExclusionAddAll, 3, false);
+                        }
                     }
                     else
                     {
                         ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 3, false);
-                        ButtonsColorSet(ButtonDefenderExclusionAddAll, 3, false);
                     }
                 }
-                else
-                {
-                    ButtonsColorSet(ButtonDefenderExclusionRemoveAll, 3, false);
-                }
-            }
+            });
         }
         ///<summary>Button: Defender Exclusion Remove Launcher</summary>
-        private void ButtonDefenderExclusionRemoveLauncher_Click(object sender, EventArgs e)
+        private async void ButtonDefenderExclusionRemoveLauncher_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonDRRL)
+            await Task.Run(() =>
             {
-                DisableButtonDRRL = true;
-
-                if (ButtonEnabler(4, 20))
+                if (!DisableButtonDRRL)
                 {
-                    ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 2, true);
+                    DisableButtonDRRL = true;
 
-                    /* Launcher & Updater */
-                    if (ButtonEnabler(0, 4))
+                    if (ButtonEnabler(4, 20))
                     {
-                        ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 2, true);
-                        DisableButtonDRAL = false;
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 1, true);
-                        Save_Settings.Live_Data.Defender_Launcher = "Removed";
+                        ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 2, true);
+
+                        /* Launcher & Updater */
+                        if (ButtonEnabler(0, 4))
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 2, true);
+                            DisableButtonDRAL = false;
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 1, true);
+                            Save_Settings.Live_Data.Defender_Launcher = "Removed";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 3, false);
+                            Save_Settings.Live_Data.Defender_Launcher = "Error";
+                        }
+
+                        Save_Settings.Save();
                     }
                     else
                     {
-                        ButtonsColorSet(ButtonDefenderExclusionAddLauncher, 3, false);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 3, false);
-                        Save_Settings.Live_Data.Defender_Launcher = "Error";
                     }
-
-                    Save_Settings.Save();
                 }
-                else
-                {
-                    ButtonsColorSet(ButtonDefenderExclusionRemoveLauncher, 3, false);
-                }
-            }
+            });
         }
         ///<summary>Button: Defender Exclusion Remove Game</summary>
-        private void ButtonDefenderExclusionRemoveGame_Click(object sender, EventArgs e)
+        private async void ButtonDefenderExclusionRemoveGame_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonDRRG)
+            await Task.Run(() =>
             {
-                DisableButtonDRRG = true;
-
-                if (ButtonEnabler(4, 20))
+                if (!DisableButtonDRRG)
                 {
-                    ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 0, true);
-                    /* Remove Old Game Path */
-                    if (!string.IsNullOrWhiteSpace(CacheOldGameLocation))
-                    {
-                        if (ButtonEnabler(3, 4))
-                        {
-                            CacheOldGameLocation = string.Empty;
-                        }
-                    }
+                    DisableButtonDRRG = true;
 
-                    /* Game */
-                    if (ButtonEnabler(2, 4))
+                    if (ButtonEnabler(4, 20))
                     {
-                        ButtonsColorSet(ButtonDefenderExclusionAddGame, 2, true);
-                        DisableButtonDRAG = false;
-                        ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 1, true);
-                        Save_Settings.Live_Data.Defender_Game = "Removed";
+                        ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 0, true);
+                        /* Remove Old Game Path */
+                        if (!string.IsNullOrWhiteSpace(CacheOldGameLocation))
+                        {
+                            if (ButtonEnabler(3, 4))
+                            {
+                                CacheOldGameLocation = string.Empty;
+                            }
+                        }
+
+                        /* Game */
+                        if (ButtonEnabler(2, 4))
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddGame, 2, true);
+                            DisableButtonDRAG = false;
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 1, true);
+                            Save_Settings.Live_Data.Defender_Game = "Removed";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
+                            ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
+                            Save_Settings.Live_Data.Defender_Game = "Error";
+                        }
+
+                        Save_Settings.Save();
                     }
                     else
                     {
-                        ButtonsColorSet(ButtonDefenderExclusionAddGame, 3, false);
                         ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
-                        Save_Settings.Live_Data.Defender_Game = "Error";
                     }
-
-                    Save_Settings.Save();
                 }
-                else
-                {
-                    ButtonsColorSet(ButtonDefenderExclusionRemoveGame, 3, false);
-                }
-            }
+            });
         }
         ///<summary>Button: File or Folder Permisson Check</summary>
-        private void ButtonFolderPermissonCheck_Click(object sender, EventArgs e)
+        private async void ButtonFolderPermissonCheck_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonPRC)
+            await Task.Run(() =>
             {
-                if (!ButtonEnabler(6, 6))
+                if (!DisableButtonPRC)
                 {
-                    ButtonsColorSet(ButtonFolderPermissonSet, 2, true);
-                    DisableButtonPRAA = false;
-                }
-                else { ButtonsColorSet(ButtonFolderPermissonSet, 1, false); }
+                    if (!ButtonEnabler(6, 6))
+                    {
+                        ButtonsColorSet(ButtonFolderPermissonSet, 2, true);
+                        DisableButtonPRAA = false;
+                    }
+                    else 
+                    { 
+                        ButtonsColorSet(ButtonFolderPermissonSet, 1, false); 
+                    }
 
-                ButtonsColorSet(ButtonFolderPermissonCheck, 1, false);
-            }
+                    ButtonsColorSet(ButtonFolderPermissonCheck, 1, false);
+                }
+            });
         }
         ///<summary>Button: Firewall Rules Add Launcher</summary>
-        private void ButtonFolderPermissonSet_Click(object sender, EventArgs e)
+        private async void ButtonFolderPermissonSet_Click(object sender, EventArgs e)
         {
-            if (!DisableButtonPRAA)
+            await Task.Run(() =>
             {
-                DisableButtonPRAA = true;
-
-                if (ButtonEnabler(6, 6))
+                if (!DisableButtonPRAA)
                 {
-                    ButtonsColorSet(ButtonFolderPermissonSet, 2, true);
-                    DisableButtonPRC = true;
+                    DisableButtonPRAA = true;
 
-                    /* Game */
-                    if (ButtonEnabler(0, 6))
+                    if (ButtonEnabler(6, 6))
                     {
-                        ButtonsColorSet(ButtonFolderPermissonSet, 1, true);
-                        Save_Settings.Live_Data.Write_Permissions = "Set";
+                        ButtonsColorSet(ButtonFolderPermissonSet, 2, true);
+                        DisableButtonPRC = true;
+
+                        /* Game */
+                        if (ButtonEnabler(0, 6))
+                        {
+                            ButtonsColorSet(ButtonFolderPermissonSet, 1, true);
+                            Save_Settings.Live_Data.Write_Permissions = "Set";
+                        }
+                        else
+                        {
+                            ButtonsColorSet(ButtonFolderPermissonSet, 3, false);
+                            Save_Settings.Live_Data.Write_Permissions = "Error";
+                        }
+
+                        Save_Settings.Save();
                     }
                     else
                     {
                         ButtonsColorSet(ButtonFolderPermissonSet, 3, false);
-                        Save_Settings.Live_Data.Write_Permissions = "Error";
                     }
-
-                    Save_Settings.Save();
                 }
-                else
-                {
-                    ButtonsColorSet(ButtonFolderPermissonSet, 3, false);
-                }
-            }
+            });
         }
 
         private void ButtonClose_Click(object sender, EventArgs e)
