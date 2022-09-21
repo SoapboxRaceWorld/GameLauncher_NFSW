@@ -34,9 +34,24 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
         public static bool DisableDiscordRPC { get { return Save_Settings.Live_Data.Launcher_Discord_Presence == "1"; } }
         public static bool DisableFrequencyJSONUpdate { get { return Save_Settings.Live_Data.Launcher_JSON_Frequency_Update_Cache == "1"; } }
         public static bool EnableAltWebCalls { get { return Save_Settings.Live_Data.Launcher_WebClient_Method == "WebClientWithTimeout"; } }
-        public static bool EnableInsiderPreview { get { return Save_Settings.Live_Data.Launcher_Insider == "1"; } }
+        public static bool EnableInsiderPreview { get { return Save_Settings.Live_Data.Launcher_Insider == "1" || Save_Settings.Live_Data.Launcher_Insider == "2"; } }
         public static bool EnableThemeSupport { get { return Save_Settings.Live_Data.Launcher_Theme_Support == "1"; } }
         public static bool EnableLZMADownloader { get { return Save_Settings.Live_Data.Launcher_LZMA_Downloader == "1"; } }
+        /// <summary>
+        /// Default Path Location for Game Files Archive File
+        /// </summary>
+        /// <remarks>Example: C:\Soapbox Race World\Game Files\.Launcher\Downloads\GameFiles.sbrwpack</remarks>
+        public static string Default_Game_Archive_Path { get { return Path.Combine(Save_Settings.Live_Data.Game_Path, ".Launcher", "Downloads", "GameFiles.sbrwpack"); } }
+        /// <summary>
+        /// Secondary Path Location for Game Files Archive File
+        /// </summary>
+        /// <remarks>Example: C:\Soapbox Race World\Launcher\Launcher_Data\Archive\Game Files\GameFiles.sbrwpack</remarks>
+        public static string Secondary_Game_Archive_Path { get { return Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "Game Files", "GameFiles.sbrwpack"); } }
+        /// <summary>
+        /// Legacy File path that existed for launchers 2.1.4.X - 2.1.5.X
+        /// </summary>
+        /// <remarks>Example: C:\Soapbox Race World\Launcher\GameFiles.sbrwpack</remarks>
+        public static string Legacy_Game_Archive_Path { get { return Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack"); } }
     }
 
     /* This is Used to call Certain Functions (Such as Completion Status or Function Callbacks) */
@@ -182,7 +197,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
         /// <param name="Notes">Required: Where the Launcher is Closing From</param>
         /// <param name="Force_Restart">True: Restarts Launcher | False: Closes Launcher</param>
         /// <param name="No_Log_Prompt"> True to disable the Log Prompt.</param>
-        public static void ErrorCloseLauncher(string Notes, bool Force_Restart, bool No_Log_Prompt = true, bool Display_Close_Only = false)
+        public static void ErrorCloseLauncher(string Notes, bool Force_Restart, IWin32Window? Window_Handle = default, bool No_Log_Prompt = true, bool Display_Close_Only = false)
         {
             if (Presence_Launcher.Running())
             {
@@ -201,7 +216,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
                     "Below is a Summary of the Error:" + "\n" + LauncherForceCloseReason + "\n\n" +
                     LogToFileAddons.OpenLogMessage : "Launcher will close. Below is a Summary of the Reason: \n" + LauncherForceCloseReason;
 
-                DialogResult OpenLogFile = MessageBox.Show(null, Message_Display, "SBRW Launcher",
+                DialogResult OpenLogFile = MessageBox.Show(Window_Handle, Message_Display, "SBRW Launcher",
                 (Display_Close_Only ? MessageBoxButtons.OK : MessageBoxButtons.YesNo), MessageBoxIcon.Information);
 
                 if (OpenLogFile == DialogResult.Yes && No_Log_Prompt)

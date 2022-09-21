@@ -257,9 +257,31 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                             else
                             {
 #if NETFRAMEWORK
-                                Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                                if (EnableInsiderDeveloper.Allowed())
+                                {
+                                    Process.Start(@"https://github.com/DavidCarbon-SBRW/SBRW.Launcher.Releases/releases/latest");
+                                }
+                                else if (EnableInsiderBetaTester.Allowed())
+                                {
+                                    Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases");
+                                }
+                                else
+                                {
+                                    Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                                }
 #else
-                                Process.Start("explorer.exe", "https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                                if (EnableInsiderDeveloper.Allowed())
+                                {
+                                    Process.Start("explorer.exe", "https://github.com/DavidCarbon-SBRW/SBRW.Launcher.Releases/releases/latest");
+                                }
+                                else if (EnableInsiderBetaTester.Allowed())
+                                {
+                                    Process.Start("explorer.exe", "https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases");
+                                }
+                                else
+                                {
+                                    Process.Start("explorer.exe", "https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                                }
 #endif
                                 MessageBox.Show(null, Translations.Database("LauncherUpdateCheck_FS"), "GameLauncher", MessageBoxButtons.OK);
                             }

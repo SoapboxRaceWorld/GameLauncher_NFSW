@@ -18,6 +18,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
+using SBRW.Launcher.App.UI_Forms.Settings_Screen;
 
 namespace SBRW.Launcher.RunTime.LauncherCore.Global
 {
@@ -346,9 +347,12 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
                         break;
                     case "password":
                     case "my password":
-                        string Text_Display = string.IsNullOrWhiteSpace(Save_Account.Live_Data.User_Raw_Password) ? "No Password Found" : 
-                            "Your Password: " + Save_Account.Live_Data.User_Raw_Password;
-                        MessageBox.Show(null, Text_Display, "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (Screen_Settings.Screen_Instance != null)
+                        {
+                            string Text_Display = string.IsNullOrWhiteSpace(Save_Account.Live_Data.User_Raw_Password) ? "No Password Found" :
+                                "Your Password: " + Save_Account.Live_Data.User_Raw_Password;
+                            MessageBox.Show(Screen_Settings.Screen_Instance, Text_Display, "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                         break;
                     case "now loading":
                     case "now loading!!!":
@@ -366,40 +370,83 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
                         break;
                     case "build":
                     case "build date":
-                        MessageBox.Show(null, InsiderInfo.BuildNumber(), "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        if (Screen_Settings.Screen_Instance != null)
+                        {
+                            MessageBox.Show(Screen_Settings.Screen_Instance, InsiderInfo.BuildNumber(), "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                        break;
+                    case "opt build beta":
+                    case "opt build dev":
+                    case "opt build stable":
+                        if (Live_Commands.Contains("beta"))
+                        {
+                            Screen_Settings.Insider_Settings_Lock = true;
+                            Save_Settings.Live_Data.Launcher_Insider = "1";
+                            EnableInsiderDeveloper.Allowed(false);
+                            EnableInsiderBetaTester.Allowed(true);
+                        }
+                        else if (Live_Commands.Contains("dev"))
+                        {
+                            Screen_Settings.Insider_Settings_Lock = true;
+                            Save_Settings.Live_Data.Launcher_Insider = "2";
+                            EnableInsiderDeveloper.Allowed(true);
+                            EnableInsiderBetaTester.Allowed(false);
+                        }
+                        else
+                        {
+                            Save_Settings.Live_Data.Launcher_Insider = "0";
+                            EnableInsiderDeveloper.Allowed(false);
+                            EnableInsiderBetaTester.Allowed(false);
+                        }
                         break;
                     case "help":
-                        MessageBox.Show(null, "Available Commands" +
-                            "\nMy Password - Displays your raw Password" +
-                            "\nUpdate - Triggers the Update popup, if an Update is available" +
-                            "\nBuild Date - Displays Compiled Date"
-                            , "SBRW Launcher Commands", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        if (Screen_Settings.Screen_Instance != null)
+                        {
+                            MessageBox.Show(Screen_Settings.Screen_Instance, "Available Commands" +
+                                                        "\nMy Password - Displays your raw Password" +
+                                                        "\nUpdate - Triggers the Update popup, if an Update is available" +
+                                                        "\nBuild Date - Displays Compiled Date"
+                                                        , "SBRW Launcher Commands", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                         break;
                     case "vhs":
                     case "verify hash skip":
                         if (Save_Settings.Live_Data.Game_Integrity != "Good")
                         {
-                            string Entry_Text = Prompt.ShowDialog("Enter New Game Integrity Status", "SBRW Launcher");
-                            if (!string.IsNullOrWhiteSpace(Entry_Text))
+                            if (Screen_Settings.Screen_Instance != null)
                             {
-                                if (MessageBox.Show(null, "Confirm the Following Changes:" +
-                                "\n\nGame Integrity OLD: " + Save_Settings.Live_Data.Game_Integrity +
-                                "\nGame Integrity NEW: Good", "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                                string Entry_Text = Prompt.ShowDialog("Enter New Game Integrity Status", "SBRW Launcher");
+                                if (!string.IsNullOrWhiteSpace(Entry_Text))
                                 {
-                                    Save_Settings.Live_Data.Game_Integrity = Entry_Text;
-                                    Save_Settings.Save();
-                                    if (Screen_Main.Screen_Instance != null)
+                                    if (MessageBox.Show(Screen_Settings.Screen_Instance, "Confirm the Following Changes:" +
+                                    "\n\nGame Integrity OLD: " + Save_Settings.Live_Data.Game_Integrity +
+                                    "\nGame Integrity NEW: Good", "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                                     {
-                                        Screen_Main.Screen_Instance.Button_Settings.BackgroundImage = Image_Icon.Gear;
+                                        Save_Settings.Live_Data.Game_Integrity = Entry_Text;
+                                        Save_Settings.Save();
+                                        if (Screen_Main.Screen_Instance != null)
+                                        {
+                                            Screen_Main.Screen_Instance.Button_Settings.BackgroundImage = Image_Icon.Gear;
+                                        }
                                     }
                                 }
                             }
                         }
                         break;
+                    case "nfsw goes offline":
+#if NETFRAMEWORK
+                        Process.Start("https://www.youtube.com/watch?v=BEX3pd3vHks/");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://www.youtube.com/watch?v=BEX3pd3vHks/", UseShellExecute = true });
+#endif
+                        break;
                     default:
                         if (!string.IsNullOrWhiteSpace(Live_Commands))
                         {
-                            MessageBox.Show(null, "Command not Found", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            if (Screen_Settings.Screen_Instance != null)
+                            {
+                                MessageBox.Show(Screen_Settings.Screen_Instance, "Command not Found", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            }
                         }
                         break;
                 }

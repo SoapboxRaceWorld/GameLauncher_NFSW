@@ -39,6 +39,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SBRW.Launcher.Core.Required.DLL;
+using SBRW.Launcher.Core.Extension.Hash_;
 
 namespace SBRW.Launcher.App.UI_Forms
 {
@@ -194,192 +195,201 @@ namespace SBRW.Launcher.App.UI_Forms
 
             if (FunctionStatus.LauncherForceClose)
             {
-                FunctionStatus.ErrorCloseLauncher("Closing From .NET Framework Check", false);
+                FunctionStatus.ErrorCloseLauncher("Closing From .NET Framework Check", false, this);
             }
             else
             {
-                if (Debugger.IsAttached)
-                {
-                    LogToFileAddons.Parent_Log_Screen(1, "Debug Mode", "Enabled for Current Session");
-                }
-                
-                Log.Start();
-                await Task.Run(() => Log_Location.RemoveLegacyLogs());
+                /* Set Launcher Directory */
+                LogToFileAddons.Parent_Log_Screen(2, "SETUP", "Setting Launcher Folder Directory");
+                Directory.SetCurrentDirectory(Locations.LauncherFolder);
+                LogToFileAddons.Parent_Log_Screen(3, "SETUP", "Current Directory now Set at -> " + Locations.LauncherFolder);
 
-                LogToFileAddons.Parent_Log_Screen(1, "CURRENT DATE", Time_Clock.GetTime("Date"));
-                LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER MIGRATION", "Appdata and/or Roaming Folders");
-                /* Deletes Folders that will Crash the Launcher (Cleanup Migration) */
-                await Task.Run(() => 
-                {
-                    try
-                    {
-                        if (!Directory.Exists(Locations.RoamingAppDataFolder_Launcher))
-                        {
-                            Directory.CreateDirectory(Locations.RoamingAppDataFolder_Launcher);
-                        }
-                        if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World")))
-                        {
-                            Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World"), true);
-                        }
-                        if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World")))
-                        {
-                            Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World"), true);
-                        }
-                        if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld")))
-                        {
-                            Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld"), true);
-                        }
-                        if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld")))
-                        {
-                            Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld"), true);
-                        }
-                        if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg")))
-                        {
-                            Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg"), true);
-                        }
-                        if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg")))
-                        {
-                            Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg"), true);
-                        }
-                    }
-                    catch (Exception Error)
-                    {
-                        LogToFileAddons.OpenLog("LAUNCHER MIGRATION", string.Empty, Error, string.Empty, true);
-                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                        {
-                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER MIGRATION", Error.InnerException.Message, false, true);
-                        }
-                    }
-                    finally
-                    {
-                        LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER MIGRATION", "Done");
-                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                        GC.Collect(); 
-                        #endif
-                    }
-                });
-
-                LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER XML", "If File Exists or Not");
-                Presence_Launcher.Status(0, "Checking if UserSettings XML Exists");
-                /* Create Default Configuration Files (if they don't already exist) */
-                await Task.Run(() => 
-                {
-                    if (!File.Exists(Locations.UserSettingsXML))
-                    {
-                        try
-                        {
-                            if (!Directory.Exists(Locations.UserSettingsFolder))
-                            {
-                                Directory.CreateDirectory(Locations.UserSettingsFolder);
-                            }
-
-                            File.WriteAllBytes(Locations.UserSettingsXML, Core.Extra.Conversion_.Embeded_Files.User_Settings_XML_Bytes());
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("LAUNCHER XML", string.Empty, Error, string.Empty, true);
-                        }
-                        finally
-                        {
-                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                            GC.Collect(); 
-                            #endif
-                        }
-                    }
-
-                    LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER XML", "Done");
-                });
-
-                LogToFileAddons.Parent_Log_Screen(8,
-                    EnableInsiderDeveloper.Allowed() ? "DEV TEST " : (EnableInsiderBetaTester.Allowed() ? "BETA TEST " : ""),
-                    "GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
-
-                LogToFileAddons.Parent_Log_Screen(2, "OS", "Detecting");
-                Presence_Launcher.Status(0, "Checking Operating System");
-                await Task.Run(() => 
-                {
-                    try
-                    {
 #if !(RELEASE_UNIX || DEBUG_UNIX)
-                        LogToFileAddons.Parent_Log_Screen(7, "Detected OS", Launcher_Value.System_OS_Name = Product_Version.ConvertWindowsNumberToName());
-                        LogToFileAddons.Parent_Log_Screen(7, "Windows Build", Product_Version.GetWindowsBuildNumber().ToString());
-                        LogToFileAddons.Parent_Log_Screen(7, "NT Version", Environment.OSVersion.VersionString);
-                        LogToFileAddons.Parent_Log_Screen(7, "Video Card", HardwareInfo.GPU.CardName());
-                        LogToFileAddons.Parent_Log_Screen(7, "Driver Version", HardwareInfo.GPU.DriverVersion());
-#else
-                        LogToFileAddons.Parent_Log_Screen(7, "Detected OS", Launcher_Value.System_OS_Name = UnixOS.FullName());
-                        LogToFileAddons.Parent_Log_Screen(7, "Wine Version", DLL_NTDLL.WineVersion());
-                        LogToFileAddons.Parent_Log_Screen(7, "Wine Build ID", DLL_NTDLL.WineBuildId());
-#endif
-                        LogToFileAddons.Parent_Log_Screen(3, "OS", "Detected");
-                    }
-                    catch (Exception Error)
+                LogToFileAddons.Parent_Log_Screen(2, "FOLDER LOCATION", "Checking Launcher Folder Directory");
+                Presence_Launcher.Status(0, "Checking Launcher Folder Locations");
+
+                await Task.Run(() =>
+                {
+                    switch (FunctionStatus.CheckFolder(Locations.LauncherFolder))
                     {
-                        LogToFileAddons.OpenLog("SYSTEM", string.Empty, Error, string.Empty, true);
-                        FunctionStatus.LauncherForceCloseReason = "Code: 0\n" + Translations.Database("Program_TextBox_System_Detection") + "\n" + Error.Message;
-                        FunctionStatus.LauncherForceClose = true;
-                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                        {
-                            LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER XML", Error.InnerException.Message, false, true);
-                        }
-                    }
-                    finally
-                    {
-                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                        GC.Collect(); 
-                        #endif
+                        case FolderType.IsTempFolder:
+                        case FolderType.IsUsersFolders:
+                        case FolderType.IsProgramFilesFolder:
+                        case FolderType.IsWindowsFolder:
+                        case FolderType.IsRootFolder:
+                            string Constructed_Msg = string.Empty;
+
+                            Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher") + "\n\n";
+                            Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P2") + "\n";
+                            Constructed_Msg += "• X:\\GameLauncher.exe " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P3") + "\n";
+                            Constructed_Msg += "• C:\\Program Files\n";
+                            Constructed_Msg += "• C:\\Program Files (x86)\n";
+                            Constructed_Msg += "• C:\\Users " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P4") + "\n";
+                            Constructed_Msg += "• C:\\Windows\n\n";
+                            Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P5") + "\n";
+                            Constructed_Msg += "• 'C:\\Soapbox Race World' " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P6") + " 'C:\\SBRW'\n";
+                            Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P7") + "\n\n";
+
+                            MessageBox.Show(this, Constructed_Msg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            FunctionStatus.LauncherForceClose = true;
+                            break;
                     }
                 });
 
+                LogToFileAddons.Parent_Log_Screen(3, "FOLDER LOCATION", "Done");
+#endif
                 if (FunctionStatus.LauncherForceClose)
                 {
-                    FunctionStatus.ErrorCloseLauncher("Closing From Operating System Check", false);
+                    FunctionStatus.ErrorCloseLauncher("Closing From Invalid Launcher Location", false);
+                }
+                else if (!FunctionStatus.HasWriteAccessToFolder(Locations.LauncherFolder))
+                {
+                    FunctionStatus.LauncherForceClose = true;
+                    FunctionStatus.LauncherForceCloseReason = Translations.Database("Program_TextBox_Folder_Write_Test");
+                    FunctionStatus.ErrorCloseLauncher("Closing From No Write Access", false);
                 }
                 else
                 {
-                    /* Set Launcher Directory */
-                    LogToFileAddons.Parent_Log_Screen(2, "SETUP", "Setting Launcher Folder Directory");
-                    Directory.SetCurrentDirectory(Locations.LauncherFolder);
-                    LogToFileAddons.Parent_Log_Screen(3, "SETUP", "Current Directory now Set at -> " + Locations.LauncherFolder);
+                    if (Debugger.IsAttached)
+                    {
+                        LogToFileAddons.Parent_Log_Screen(1, "Debug Mode", "Enabled for Current Session");
+                    }
 
-#if !(RELEASE_UNIX || DEBUG_UNIX)
-                    LogToFileAddons.Parent_Log_Screen(2, "FOLDER LOCATION", "Checking Launcher Folder Directory");
-                    Presence_Launcher.Status(0, "Checking Launcher Folder Locations");
+                    Log.Start();
+                    await Task.Run(() => Log_Location.RemoveLegacyLogs());
 
+                    LogToFileAddons.Parent_Log_Screen(1, "CURRENT DATE", Time_Clock.GetTime("Date"));
+                    LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER MIGRATION", "Appdata and/or Roaming Folders");
+                    /* Deletes Folders that will Crash the Launcher (Cleanup Migration) */
                     await Task.Run(() =>
                     {
-                        switch (FunctionStatus.CheckFolder(Locations.LauncherFolder))
+                        try
                         {
-                            case FolderType.IsTempFolder:
-                            case FolderType.IsUsersFolders:
-                            case FolderType.IsProgramFilesFolder:
-                            case FolderType.IsWindowsFolder:
-                            case FolderType.IsRootFolder:
-                                string Constructed_Msg = string.Empty;
-
-                                Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher") + "\n\n";
-                                Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P2") + "\n";
-                                Constructed_Msg += "• X:\\GameLauncher.exe " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P3") + "\n";
-                                Constructed_Msg += "• C:\\Program Files\n";
-                                Constructed_Msg += "• C:\\Program Files (x86)\n";
-                                Constructed_Msg += "• C:\\Users " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P4") + "\n";
-                                Constructed_Msg += "• C:\\Windows\n\n";
-                                Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P5") + "\n";
-                                Constructed_Msg += "• 'C:\\Soapbox Race World' " + Translations.Database("Program_TextBox_Folder_Check_Launcher_P6") + " 'C:\\SBRW'\n";
-                                Constructed_Msg += Translations.Database("Program_TextBox_Folder_Check_Launcher_P7") + "\n\n";
-
-                                MessageBox.Show(null, Constructed_Msg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                FunctionStatus.LauncherForceClose = true;
-                                break;
+                            if (!Directory.Exists(Locations.RoamingAppDataFolder_Launcher))
+                            {
+                                Directory.CreateDirectory(Locations.RoamingAppDataFolder_Launcher);
+                            }
+                            if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World")))
+                            {
+                                Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World"), true);
+                            }
+                            if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World")))
+                            {
+                                Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World"), true);
+                            }
+                            if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld")))
+                            {
+                                Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld"), true);
+                            }
+                            if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld")))
+                            {
+                                Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld"), true);
+                            }
+                            if (Directory.Exists(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg")))
+                            {
+                                Directory.Delete(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg"), true);
+                            }
+                            if (Directory.Exists(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg")))
+                            {
+                                Directory.Delete(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg"), true);
+                            }
+                            if (!Directory.Exists(Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "Game Files")))
+                            {
+                                Directory.CreateDirectory(Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "Game Files"));
+                            }
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("LAUNCHER MIGRATION", string.Empty, Error, string.Empty, true);
+                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                            {
+                                LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER MIGRATION", Error.InnerException.Message, false, true);
+                            }
+                        }
+                        finally
+                        {
+                            LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER MIGRATION", "Done");
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                            GC.Collect();
+#endif
                         }
                     });
 
-                    LogToFileAddons.Parent_Log_Screen(3, "FOLDER LOCATION", "Done");
+                    LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER XML", "If File Exists or Not");
+                    Presence_Launcher.Status(0, "Checking if UserSettings XML Exists");
+                    /* Create Default Configuration Files (if they don't already exist) */
+                    await Task.Run(() =>
+                    {
+                        if (!File.Exists(Locations.UserSettingsXML))
+                        {
+                            try
+                            {
+                                if (!Directory.Exists(Locations.UserSettingsFolder))
+                                {
+                                    Directory.CreateDirectory(Locations.UserSettingsFolder);
+                                }
+
+                                File.WriteAllBytes(Locations.UserSettingsXML, Core.Extra.Conversion_.Embeded_Files.User_Settings_XML_Bytes());
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("LAUNCHER XML", string.Empty, Error, string.Empty, true);
+                            }
+                            finally
+                            {
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                GC.Collect();
 #endif
+                            }
+                        }
+
+                        LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER XML", "Done");
+                    });
+
+                    LogToFileAddons.Parent_Log_Screen(8,
+                        EnableInsiderDeveloper.Allowed() ? "DEV TEST " : (EnableInsiderBetaTester.Allowed() ? "BETA TEST " : ""),
+                        "GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
+
+                    LogToFileAddons.Parent_Log_Screen(2, "OS", "Detecting");
+                    Presence_Launcher.Status(0, "Checking Operating System");
+                    await Task.Run(() =>
+                    {
+                        try
+                        {
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                            LogToFileAddons.Parent_Log_Screen(7, "Detected OS", Launcher_Value.System_OS_Name = Product_Version.ConvertWindowsNumberToName());
+                            LogToFileAddons.Parent_Log_Screen(7, "Windows Build", Product_Version.GetWindowsBuildNumber().ToString());
+                            LogToFileAddons.Parent_Log_Screen(7, "NT Version", Environment.OSVersion.VersionString);
+                            LogToFileAddons.Parent_Log_Screen(7, "Video Card", HardwareInfo.GPU.CardName());
+                            LogToFileAddons.Parent_Log_Screen(7, "Driver Version", HardwareInfo.GPU.DriverVersion());
+#else
+                            LogToFileAddons.Parent_Log_Screen(7, "Detected OS", Launcher_Value.System_OS_Name = UnixOS.FullName());
+                            LogToFileAddons.Parent_Log_Screen(7, "Wine Version", DLL_NTDLL.WineVersion());
+                            LogToFileAddons.Parent_Log_Screen(7, "Wine Build ID", DLL_NTDLL.WineBuildId());
+#endif
+                            LogToFileAddons.Parent_Log_Screen(3, "OS", "Detected");
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("SYSTEM", string.Empty, Error, string.Empty, true);
+                            FunctionStatus.LauncherForceCloseReason = "Code: 0\n" + Translations.Database("Program_TextBox_System_Detection") + "\n" + Error.Message;
+                            FunctionStatus.LauncherForceClose = true;
+                            if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                            {
+                                LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER XML", Error.InnerException.Message, false, true);
+                            }
+                        }
+                        finally
+                        {
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                            GC.Collect();
+#endif
+                        }
+                    });
 
                     if (FunctionStatus.LauncherForceClose)
                     {
-                        FunctionStatus.ErrorCloseLauncher("Closing From Invalid Launcher Location", false);
+                        FunctionStatus.ErrorCloseLauncher("Closing From Operating System Check", false);
                     }
                     else
                     {
@@ -421,9 +431,9 @@ namespace SBRW.Launcher.App.UI_Forms
                                     }
                                     finally
                                     {
-                                        #if !(RELEASE_UNIX || DEBUG_UNIX)
-                                        GC.Collect(); 
-                                        #endif
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                        GC.Collect();
+#endif
                                     }
                                 }
                                 else
@@ -439,10 +449,38 @@ namespace SBRW.Launcher.App.UI_Forms
                             {
                                 ///@DavidCarbon or @Zacam - Remember to Translate This!
                                 FunctionStatus.LauncherForceCloseReason = "Failed to Successfully Migrate Ini File(s)";
-                                FunctionStatus.ErrorCloseLauncher("Closing Ini Migration", false);
+                                FunctionStatus.ErrorCloseLauncher("Closing Ini Migration", false, this);
                             }
                             else
                             {
+                                LogToFileAddons.Parent_Log_Screen(1, "File Archive Path", "Checking Default Game Archive Locations");
+                                await Task.Run(() =>
+                                {
+                                    try
+                                    {
+                                        if (Hashes.Hash_SHA(InformationCache.Secondary_Game_Archive_Path) == "88C886B6D131C052365C3D6D14E14F67A4E2C253")
+                                        {
+                                            Save_Settings.Live_Data.Game_Archive_Location = InformationCache.Secondary_Game_Archive_Path;
+                                        }
+                                        else if (Hashes.Hash_SHA(InformationCache.Legacy_Game_Archive_Path) == "88C886B6D131C052365C3D6D14E14F67A4E2C253")
+                                        {
+                                            Save_Settings.Live_Data.Game_Archive_Location = InformationCache.Legacy_Game_Archive_Path;
+                                        }
+
+                                        if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Archive_Location))
+                                        {
+                                            LogToFileAddons.Parent_Log_Screen(1, "File Archive Path", "Using Pre-downloaded File: " + Save_Settings.Live_Data.Game_Archive_Location);
+                                        }
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        LogToFileAddons.OpenLog("File Archive Path", string.Empty, Error, string.Empty, true);
+                                        if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                                        {
+                                            LogToFileAddons.Parent_Log_Screen(5, "File Archive Path", Error.InnerException.Message, false, true);
+                                        }
+                                    }
+                                });
                                 LogToFileAddons.Parent_Log_Screen(2, "INI FILES", "Doing Nullsafe");
                                 Presence_Launcher.Status(0, "Doing NullSafe ini Files");
                                 await Task.Run(() =>
@@ -513,9 +551,9 @@ namespace SBRW.Launcher.App.UI_Forms
                                     }
                                     finally
                                     {
-                                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                                        GC.Collect(); 
-                                        #endif
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                        GC.Collect();
+#endif
                                     }
                                 }
 
@@ -571,9 +609,9 @@ namespace SBRW.Launcher.App.UI_Forms
                                     }
                                     finally
                                     {
-                                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                                        GC.Collect(); 
-                                        #endif
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                        GC.Collect();
+#endif
                                     }
                                 }
 
@@ -600,9 +638,9 @@ namespace SBRW.Launcher.App.UI_Forms
                                 finally
                                 {
                                     LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Launcher Data Done");
-                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                                    GC.Collect(); 
-                                    #endif
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                    GC.Collect();
+#endif
                                 }
 
                                 await Task.Run(() =>
@@ -653,9 +691,9 @@ namespace SBRW.Launcher.App.UI_Forms
                                     finally
                                     {
                                         LogToFileAddons.Parent_Log_Screen(3, "FOLDER", "Done");
-                                        #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                                        GC.Collect(); 
-                                        #endif
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                        GC.Collect();
+#endif
                                     }
                                 });
 

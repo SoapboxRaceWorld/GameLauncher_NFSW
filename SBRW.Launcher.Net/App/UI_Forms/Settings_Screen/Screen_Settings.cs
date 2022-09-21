@@ -48,7 +48,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
 #pragma warning restore CS8618
         private int LastSelectedLanguage { get; set; }
 
-        private bool RestartRequired { get; set; }
+        public static bool RestartRequired { get; set; }
+        public static bool Insider_Settings_Lock { get; set; }
         private string NewLauncherPath { get; set; }
         private string NewGameFilesPath { get; set; }
         public string New_Choosen_CDN { get; set; }
@@ -251,47 +252,53 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 ButtonsColorSet(Button_Clear_Server_Mods, 4, false);
             }
 
-            try
+            await Task.Run(() =>
             {
-                DirectoryInfo CrashLogFilesDirectory = new DirectoryInfo(Save_Settings.Live_Data.Game_Path);
+                try
+                {
+                    DirectoryInfo CrashLogFilesDirectory = new DirectoryInfo(Save_Settings.Live_Data.Game_Path);
 
-                if (CrashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp", SearchOption.TopDirectoryOnly).Count() != 0)
-                {
-                    ButtonsColorSet(Button_Clear_Crash_Logs, 2, true);
+                    if (CrashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp", SearchOption.TopDirectoryOnly).Count() != 0)
+                    {
+                        ButtonsColorSet(Button_Clear_Crash_Logs, 2, true);
+                    }
+                    else if (CrashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp", SearchOption.TopDirectoryOnly).Count() == 0)
+                    {
+                        ButtonsColorSet(Button_Clear_Crash_Logs, 4, false);
+                    }
+                    else
+                    {
+                        ButtonsColorSet(Button_Clear_Crash_Logs, 1, false);
+                    }
                 }
-                else if (CrashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp", SearchOption.TopDirectoryOnly).Count() == 0)
+                catch (Exception Error)
                 {
-                    ButtonsColorSet(Button_Clear_Crash_Logs, 4, false);
+                    ButtonsColorSet(Button_Clear_Crash_Logs, 3, false);
+                    LogToFileAddons.OpenLog("SettingsScreen [SBRCrashDump_Check]", string.Empty, Error, string.Empty, true);
                 }
-                else
-                {
-                    ButtonsColorSet(Button_Clear_Crash_Logs, 1, false);
-                }
-            }
-            catch (Exception Error)
-            {
-                ButtonsColorSet(Button_Clear_Crash_Logs, 3, false);
-                LogToFileAddons.OpenLog("SettingsScreen [SBRCrashDump_Check]", string.Empty, Error, string.Empty, true);
-            }
+            });
 
-            try
+            await Task.Run(() =>
             {
-                DirectoryInfo LauncherLogFilesDirectory = new DirectoryInfo(Log_Location.LogFolder);
+                try
+                {
+                    DirectoryInfo LauncherLogFilesDirectory = new DirectoryInfo(Log_Location.LogFolder);
 
-                if (LauncherLogFilesDirectory.EnumerateDirectories().Count() != 1)
-                {
-                    ButtonsColorSet(Button_Launcher_logs, 2, true);
+                    if (LauncherLogFilesDirectory.EnumerateDirectories().Count() != 1)
+                    {
+                        ButtonsColorSet(Button_Launcher_logs, 2, true);
+                    }
+                    else
+                    {
+                        ButtonsColorSet(Button_Launcher_logs, 1, false);
+                    }
                 }
-                else
+                catch (Exception Error)
                 {
-                    ButtonsColorSet(Button_Launcher_logs, 1, false);
+                    ButtonsColorSet(Button_Launcher_logs, 3, false);
+                    LogToFileAddons.OpenLog("SettingsScreen [Launcher Log Check]", string.Empty, Error, string.Empty, true);
                 }
-            }
-            catch (Exception Error)
-            {
-                ButtonsColorSet(Button_Launcher_logs, 3, false);
-                LogToFileAddons.OpenLog("SettingsScreen [Launcher Log Check]", string.Empty, Error, string.Empty, true);
-            }
+            });
 
             try
             {
@@ -308,7 +315,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             /********************************/
 
             /* Check If Launcher Failed to Connect to any APIs */
-            if (!VisualsAPIChecker.CarbonAPITwo())
+            if (!VisualsAPIChecker.Local_Cached_API())
             {
                 MessageBox.Show(null, "Unable to Connect to any CDN List API. Please check your connection." +
                 "\nCDN Dropdown List will not be available on Settings Screen",
@@ -603,7 +610,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 Save_Settings.Live_Data.Launcher_Discord_Presence = CheckBox_RPC.Checked ? "1" : "0";
             }
 
-            if (Save_Settings.Live_Data.Launcher_Insider != (CheckBox_Opt_Insider.Checked ? "1" : "0"))
+            if ((Save_Settings.Live_Data.Launcher_Insider != (CheckBox_Opt_Insider.Checked ? "1" : "0")) && 
+                !Insider_Settings_Lock && !EnableInsiderDeveloper.Allowed())
             {
                 EnableInsiderBetaTester.Allowed((Save_Settings.Live_Data.Launcher_Insider = CheckBox_Opt_Insider.Checked ? "1" : "0") == "1");
                 RestartRequired = true;

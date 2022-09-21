@@ -216,8 +216,8 @@ namespace SBRW.Launcher.Net
                 return isOk;
             };
 #endif
-#endregion
-#region Application Library File Checks and Process
+            #endregion
+            #region Application Library File Checks and Process
             if (Debugger.IsAttached && !NFSW.IsRunning())
             {
                 Start();
@@ -328,7 +328,7 @@ namespace SBRW.Launcher.Net
                     else if (UnixOS.Detected())
                     {
                         FunctionStatus.LauncherForceCloseReason = "Running Windows Build on Unix is Not Allowed";
-                        FunctionStatus.ErrorCloseLauncher(FunctionStatus.LauncherForceCloseReason, LauncherMustRestart, true, true);
+                        FunctionStatus.ErrorCloseLauncher(FunctionStatus.LauncherForceCloseReason, LauncherMustRestart, null, true, true);
                     }
 #else
                     else if (!UnixOS.Detected())
@@ -360,10 +360,11 @@ namespace SBRW.Launcher.Net
                                         "SBRW.Launcher.Core.dll - 0.1.1",
                                         "SBRW.Nancy.dll - 2.0.13",
                                         "SBRW.Nancy.Hosting.Self.dll - 2.0.11",
-                                        "SBRW.Launcher.Core.Extra.dll - 0.1.0",
+                                        "SBRW.Launcher.Core.Extra.dll - 0.1.2",
                                         "SBRW.Launcher.Core.Discord.dll - 0.1.0",
                                         "SBRW.Launcher.Core.Proxy.dll - 0.1.0",
-                                        "SBRW.Launcher.Core.Theme.dll - 0.1.0"
+                                        "SBRW.Launcher.Core.Theme.dll - 0.1.0",
+                                        "SBRW.Launcher.Core.Downloader.dll - 0.1.6"
                                 };
 
                                 List<string> Missing_File_List = new List<string>();

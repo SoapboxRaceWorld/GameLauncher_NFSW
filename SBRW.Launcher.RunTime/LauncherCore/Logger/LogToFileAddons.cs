@@ -17,7 +17,8 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Logger
 
         public static void OpenLog(string From, string MessageDetails, Exception Error, string Icon, bool Suppress = true, IWin32Window Window_Handle = default, bool Ignore_Log_Alert = false)
         {
-            if (File.Exists(Path.Combine(Locations.LauncherFolder, "SBRW.Launcher.Core.dll")))
+            bool Core_File = File.Exists(Path.Combine(Locations.LauncherFolder, "SBRW.Launcher.Core.dll"));
+            if (Core_File)
             {
                 Log_Detail.Full(From, Error, Ignore_Log_Alert);
             }
@@ -39,7 +40,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Logger
                 DialogResult OpenLogFile = MessageBox.Show(Window_Handle, FormattedMessage + OpenLogMessage, "SBRW Launcher Error Log",
                     MessageBoxButtons.YesNo, IconBox);
 
-                if (OpenLogFile == DialogResult.Yes)
+                if (OpenLogFile == DialogResult.Yes && Core_File)
                 {
                     try
                     {
