@@ -334,7 +334,7 @@ namespace SBRW.Launcher.Net
                     else if (!UnixOS.Detected())
                     {
                         FunctionStatus.LauncherForceCloseReason = "Running Unix Build on Windows is Not Allowed";
-                        FunctionStatus.ErrorCloseLauncher(FunctionStatus.LauncherForceCloseReason, LauncherMustRestart, true, true);
+                        FunctionStatus.ErrorCloseLauncher(FunctionStatus.LauncherForceCloseReason, LauncherMustRestart, null, true, true);
                     }
 #endif
                     else
