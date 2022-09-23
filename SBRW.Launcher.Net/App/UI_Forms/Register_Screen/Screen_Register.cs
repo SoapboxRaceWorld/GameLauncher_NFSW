@@ -203,7 +203,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                                     Picture_Information_Window.Image = Image_Other.Information_Window_Warning;
                                 }
 
-                                DialogResult passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1]) +
+                                DialogResult passwordCheckReply = MessageBox.Show(this, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1]) +
                                     " times, you should consider using a different one.\n\nAlternatively you can use the unsafe password anyway." +
                                     "\nWould you like to continue to use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                                 if (passwordCheckReply == DialogResult.Yes)
@@ -249,7 +249,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                                 Picture_Information_Window.Image = !string.IsNullOrWhiteSpace(Tokens.Warning) ? Image_Other.Information_Window_Warning : Image_Other.Information_Window_Success;
                             }
 
-                            DialogResult Success = MessageBox.Show(null, Tokens.Success, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            DialogResult Success = MessageBox.Show(this, Tokens.Success, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                             if (Success == DialogResult.OK)
                             {
@@ -263,7 +263,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                                 Picture_Information_Window.Image = Image_Other.Information_Window_Error;
                             }
 
-                            MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(this, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     });
                 }
@@ -281,7 +281,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                         Picture_Information_Window.Image = Image_Other.Information_Window_Error;
                     }
 
-                    MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else if (Picture_Information_Window.Image != Image_Other.Information_Window_Error)

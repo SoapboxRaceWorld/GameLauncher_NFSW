@@ -380,7 +380,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     TempEmailCache = Input_Email.Text;
                     Input_Email.Text = "EMAIL IS HIDDEN";
                 }
-                MessageBox.Show(null, "Please wait while the GameLauncher is still downloading the game files.", "GameLauncher", MessageBoxButtons.OK);
+                MessageBox.Show(this, "Please wait while the GameLauncher is still downloading the game files.", "GameLauncher", MessageBoxButtons.OK);
                 if (!string.IsNullOrWhiteSpace(TempEmailCache))
                 {
                     Input_Email.Text = TempEmailCache;
@@ -502,7 +502,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 if (!string.IsNullOrWhiteSpace(Tokens.Warning))
                 {
                     Input_Email.Text = "EMAIL IS HIDDEN";
-                    MessageBox.Show(null, Tokens.Warning, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(this, Tokens.Warning, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     Input_Email.Text = Email;
                 }
 
@@ -525,7 +525,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Picture_Information_Window.Image = Image_Other.Information_Window_Error;
                 }
                 Input_Email.Text = "EMAIL IS HIDDEN";
-                MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Input_Email.Text = Email;
             }
         }
@@ -576,7 +576,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #else
                     Process.Start(new ProcessStartInfo { FileName = Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page, UseShellExecute = true });
 #endif
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " +
+                    MessageBox.Show(this, "A browser window has been opened to complete registration on " +
                         ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if (Launcher_Value.Launcher_Select_Server_Data.Name.ToUpper() == "WORLDUNITED OFFICIAL")
@@ -586,7 +586,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #else
                     Process.Start(new ProcessStartInfo { FileName = "https://signup.worldunited.gg/", UseShellExecute = true });
 #endif
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " +
+                    MessageBox.Show(this, "A browser window has been opened to complete registration on " +
                         Launcher_Value.Launcher_Select_Server_Data.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
@@ -608,7 +608,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
             else
             {
-                MessageBox.Show(null, "Server seems to be Offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Server seems to be Offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -896,7 +896,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     Display_Color_Icons(2);
                     Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                    MessageBox.Show(null, "You do not have the Game Downloaded. Please Verify Game Files installation path.", "GameLauncher",
+                    MessageBox.Show(this, "You do not have the Game Downloaded. Please Verify Game Files installation path.", "GameLauncher",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Button_Login_Logout_Modes(true, true);
                     Display_Color_Icons();
@@ -905,7 +905,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     Display_Color_Icons(2);
                     Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                    MessageBox.Show(null, "Your NFSW.exe is Modified. Please Verify Game Files.", "GameLauncher",
+                    MessageBox.Show(this, "Your NFSW.exe is Modified. Please Verify Game Files.", "GameLauncher",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Button_Login_Logout_Modes(true, true);
                     Display_Color_Icons();
@@ -1513,7 +1513,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 Picture_Information_Window.Image = Image_Other.Information_Window_Error;
                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                MessageBox.Show(
+                MessageBox.Show(this,
                     $"Playing the game on a non-NTFS-formatted drive is not supported.\nDrive '{driveInfo.Name}' is formatted with: {driveInfo.DriveFormat}",
                     "Compatibility",
                     MessageBoxButtons.OK,
@@ -1533,7 +1533,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 Display_Color_Icons(3);
                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                MessageBox.Show("GameLauncher has detected a GameFiles Integrity Error\nPlease 'Verify GameFiles' in the Settings Screen",
+                MessageBox.Show(this, "GameLauncher has detected a GameFiles Integrity Error\nPlease 'Verify GameFiles' in the Settings Screen",
                     "Game Files Integrity", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Display_Color_Icons();
                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Save_Account.Live_Data.User_Raw_Email).ToUpper();
@@ -1544,7 +1544,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 Picture_Information_Window.Image = Image_Other.Information_Window_Error;
                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                MessageBox.Show("GameLauncher has detected that the 2015-2019 VC++ Redistributable Package is not installed\n" +
+                MessageBox.Show(this, "GameLauncher has detected that the 2015-2019 VC++ Redistributable Package is not installed\n" +
                     "Please manually Install the Packages for your Operating System",
                     "VC++ Redistributable Package Check", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Picture_Information_Window.Image = Image_Other.Information_Window_Success;
@@ -3345,7 +3345,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 long Game_Folder_Size = File_and_Folder_Extention.GetDirectorySize_GameFiles(new DirectoryInfo(Save_Settings.Live_Data.Game_Path));
                 /* TODO: Check for other files and Folder Size */
                 if ((Game_Folder_Size == -1) &&
-                    (MessageBox.Show(null, "Seems like we are unable to determine the Games Folder Size" +
+                    (MessageBox.Show(this, "Seems like we are unable to determine the Games Folder Size" +
                         "\nDo you have the Game Files Already Downloaded?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes))
                 {
                     Game_Folder_Size = 3295097405;
@@ -3432,7 +3432,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                                     break;
                                             }
 
-                                            DialogResult User_Prompt_Box = MessageBox.Show(null, Status_Code_Explaination, "GameLauncher",
+                                            DialogResult User_Prompt_Box = MessageBox.Show(this, Status_Code_Explaination, "GameLauncher",
                                                 Allow_Restart ? MessageBoxButtons.RetryCancel : MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                             if (User_Prompt_Box == DialogResult.Retry)
                                             {
@@ -4165,7 +4165,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             TempEmailCache = Input_Email.Text;
                             Input_Email.Text = "EMAIL IS HIDDEN";
                         }
-                        MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.",
+                        MessageBox.Show(this, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.",
                             Drive, Locations.GameFilesFailSafePath),
                             "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         if (!string.IsNullOrWhiteSpace(TempEmailCache))
