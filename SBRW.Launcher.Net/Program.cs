@@ -360,7 +360,7 @@ namespace SBRW.Launcher.Net
                                         "SBRW.Launcher.Core.dll - 0.1.1",
                                         "SBRW.Nancy.dll - 2.0.13",
                                         "SBRW.Nancy.Hosting.Self.dll - 2.0.11",
-                                        "SBRW.Launcher.Core.Extra.dll - 0.1.2",
+                                        "SBRW.Launcher.Core.Extra.dll - 0.1.3",
                                         "SBRW.Launcher.Core.Discord.dll - 0.1.0",
                                         "SBRW.Launcher.Core.Proxy.dll - 0.1.0",
                                         "SBRW.Launcher.Core.Theme.dll - 0.1.0",
