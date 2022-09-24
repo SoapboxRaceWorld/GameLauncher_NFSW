@@ -716,6 +716,7 @@ namespace SBRW.Launcher.App.UI_Forms
                                 }
 
                                 LogToFileAddons.Parent_Log_Screen(2, "PROXY", "Checking if Proxy Is Disabled from User Settings! It's value is " + Save_Settings.Live_Data.Launcher_Proxy);
+                                LogToFileAddons.Parent_Log_Screen(2, "CLIENT", "Checking Alternative WebCalls, it's value is " + Save_Settings.Live_Data.Launcher_WebClient_Method);
 
                                 LogToFileAddons.Parent_Log_Screen(2, "PRELOAD", "Headers");
                                 await Task.Run(() => Custom_Header.Headers_WHC());
