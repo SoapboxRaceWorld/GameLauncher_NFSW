@@ -15,7 +15,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Logger
         public static string OpenLogMessage { get; set; } = "Would you Like to Open the Launcher Error Log and Send it to a Support Channel?" +
                     "\nThis would be Useful for Fixing Issues and Potential Solutions";
 
-        public static void OpenLog(string From, string MessageDetails, Exception Error, string Icon, bool Suppress = true, IWin32Window Window_Handle = default, bool Ignore_Log_Alert = false)
+        public static void OpenLog(string From, string MessageDetails, Exception Error, string Icon, bool Suppress = true, IWin32Window? Window_Handle = default, bool Ignore_Log_Alert = false)
         {
             bool Core_File = File.Exists(Path.Combine(Locations.LauncherFolder, "SBRW.Launcher.Core.dll"));
             if (Core_File)

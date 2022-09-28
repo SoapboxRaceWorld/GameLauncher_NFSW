@@ -171,7 +171,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                     if (Is_Json.Valid(VersionJSON) && VisualsAPIChecker.GitHubAPI)
                     {
 #pragma warning disable CS8602 // Null Safe Check Done Above
-                        LatestLauncherBuild = EnableInsiderBetaTester.Allowed() ?
+                        LatestLauncherBuild = (!EnableInsiderDeveloper.Allowed() && EnableInsiderBetaTester.Allowed()) ?
                             Insider_Release_Tag(VersionJSON) : JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON).TagName;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                         LogToFileAddons.Parent_Log_Screen(1, "LAUNCHER UPDATE", "GitHub Latest Version -> " + LatestLauncherBuild);
@@ -251,8 +251,11 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                             string UpdaterPath = Path.Combine(Locations.LauncherFolder, Locations.NameUpdater);
                             if (File.Exists(UpdaterPath))
                             {
+                                LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER POPUP", Process.GetCurrentProcess().Id.ToString() + " " +
+                                    (EnableInsiderDeveloper.Allowed() ? "Developer" + " \"" + CurrentLauncherBuild + "\"": EnableInsiderBetaTester.Allowed() ? "Preview" : "Stable"));
+                            
                                 Process.Start(UpdaterPath, Process.GetCurrentProcess().Id.ToString() + " " +
-                                    (EnableInsiderDeveloper.Allowed() ? "Developer" + " " + CurrentLauncherBuild : EnableInsiderBetaTester.Allowed() ? "Preview" : "Stable"));
+                                    (EnableInsiderDeveloper.Allowed() ? "Developer" + " \"" + CurrentLauncherBuild + "\"": EnableInsiderBetaTester.Allowed() ? "Preview" : "Stable"));
                             }
                             else
                             {

@@ -3072,11 +3072,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 if (Screen_Instance != null && !(IsDisposed || Disposing))
                 {
-                    if (Panel_Server_Information.Visible && (Launcher_Value.Launcher_Select_Server_JSON != null))
+                    if (Launcher_Value.Launcher_Select_Server_JSON != null)
                     {
                         if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_Category))
                         {
-                            if ((Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "DEV" || Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "OFFLINE"))
+                            if (Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "DEV" || 
+                                Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "OFFLINE")
                             {
                                 Panel_Server_Information.SafeInvokeAction(() => Panel_Server_Information.Visible = false, this);
                             }
@@ -3204,11 +3205,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Error);
                     }
 
-                    if (Panel_Server_Information.Visible && (Launcher_Value.Launcher_Select_Server_JSON != null))
+                    if (Launcher_Value.Launcher_Select_Server_JSON != null)
                     {
                         if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_Category))
                         {
-                            if ((Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "DEV" || Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "OFFLINE"))
+                            if (Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "DEV" || 
+                                Launcher_Value.Launcher_Select_Server_Category.ToUpper() == "OFFLINE")
                             {
                                 Panel_Server_Information.SafeInvokeAction(() => Panel_Server_Information.Visible = false, this);
                             }
