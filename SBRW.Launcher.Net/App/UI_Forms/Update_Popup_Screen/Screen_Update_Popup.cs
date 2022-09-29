@@ -114,7 +114,7 @@ namespace SBRW.Launcher.App.UI_Forms.Update_Popup_Screen
             Bitmap Icon_Handle = Bitmap.FromHicon(SystemIcons.Information.Handle);
             Icon_Information.Image = Icon_Handle;
 
-            Label_Text_Update.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion +
+            Label_Text_Update.Text = "An update is available. Would you like to update?\nYour version: " + LauncherUpdateCheck.CurrentLauncherBuild +
                 "\nUpdated version: " + LauncherUpdateCheck.LatestLauncherBuild;
 
             this.Button_Update.DialogResult = DialogResult.OK;

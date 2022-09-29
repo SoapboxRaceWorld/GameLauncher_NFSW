@@ -343,11 +343,11 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                     status.BackgroundImage = Image_Icon.Engine_Warning;
                     text.ForeColor = Color_Text.S_Warning;
                     description.Text = Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Stable") + " " + LatestLauncherBuild +
-                        "\n" + Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Current") + " " + Application.ProductVersion;
+                        "\n" + Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Current") + " " + CurrentLauncherBuild;
 
                     if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Update_Version_Skip))
                     {
-                        Save_Settings.Live_Data.Update_Version_Skip = String.Empty;
+                        Save_Settings.Live_Data.Update_Version_Skip = string.Empty;
                         Save_Settings.Save();
                         Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. " +
                             "You are currenly using a " + WhatBuildAmI + " Build!");
@@ -358,11 +358,11 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                     text.Text = Translations.Database("LauncherUpdateCheck_VS_Text_No_Update");
                     status.BackgroundImage = Image_Icon.Engine_Good;
                     text.ForeColor = Color_Text.S_Sucess;
-                    description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Version") + " " + Application.ProductVersion;
+                    description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Version") + " " + CurrentLauncherBuild;
 
-                    if (Save_Settings.Live_Data.Update_Version_Skip == Application.ProductVersion)
+                    if (Save_Settings.Live_Data.Update_Version_Skip == CurrentLauncherBuild)
                     {
-                        Save_Settings.Live_Data.Update_Version_Skip = String.Empty;
+                        Save_Settings.Live_Data.Update_Version_Skip = string.Empty;
                         Save_Settings.Save();
                         Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You're now on the Latest Game Launcher!");
                     }
@@ -373,7 +373,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                     status.BackgroundImage = Image_Icon.Engine_Warning;
                     text.ForeColor = Color_Text.S_Warning;
                     description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Update_New") + " " + LatestLauncherBuild + "\n" +
-                        Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Current") + " " + Application.ProductVersion;
+                        Translations.Database("LauncherUpdateCheck_VS_Insider_Text_Current") + " " + CurrentLauncherBuild;
                     UpgradeAvailable = true;
                     if (SkipAvailableUpgrade)
                     {
@@ -388,14 +388,14 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                 text.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Invalid_JSON");
                 status.BackgroundImage = Image_Icon.Engine_Error;
                 text.ForeColor = Color_Text.S_Error;
-                description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Version") + " " + Application.ProductVersion;
+                description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Version") + " " + CurrentLauncherBuild;
             }
             else
             {
                 text.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Invalid_Error");
                 status.BackgroundImage = Image_Icon.Engine_Unknown;
                 text.ForeColor = Color_Text.L_Three;
-                description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Version") + " " + Application.ProductVersion;
+                description.Text = Translations.Database("LauncherUpdateCheck_VS_Text_Version") + " " + CurrentLauncherBuild;
             }
         }
     }
