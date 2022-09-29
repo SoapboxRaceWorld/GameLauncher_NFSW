@@ -14,6 +14,7 @@
 	<AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
 	<PlatformTarget>x86</PlatformTarget>
+	<ApplicationIcon>SBRW.ico</ApplicationIcon>
 	<Configurations>Debug;Release;Release.Unix;Debug.Unix</Configurations>
   
 </PropertyGroup>

@@ -1,20 +1,23 @@
-﻿using SBRW.Launcher.RunTime.LauncherCore.Languages.Visual_Forms;
-using SBRW.Launcher.RunTime.LauncherCore.Lists;
+﻿using SBRW.Launcher.RunTime.LauncherCore.Lists;
 using SBRW.Launcher.RunTime.LauncherCore.Logger;
+using System;
+using System.IO;
+using SBRW.Launcher.Core.Extension.Registry_;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
 using SBRW.Launcher.RunTime.SystemPlatform.Unix;
 using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Extension.Api_;
 using SBRW.Launcher.Core.Extension.Logging_;
 using SBRW.Launcher.Core.Extension.Web_;
 using SBRW.Launcher.Core.Discord.RPC_;
-using System;
+using SBRW.Launcher.RunTime.LauncherCore.Languages.Visual_Forms;
 using System.Diagnostics;
-using System.IO;
 using System.Net;
 using System.Windows.Forms;
-using SBRW.Launcher.Core.Extension.Registry_;
 using System.Net.Cache;
 using System.Threading.Tasks;
+#endif
+
 
 // based on https://github.com/bitbeans/RedistributableChecker/blob/master/RedistributableChecker/RedistributablePackage.cs
 namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
@@ -99,7 +102,12 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
     class Redistributable
     {
         public static bool Error_Free { get; set; } = true;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
         public static async void Check()
+
+#else
+        public static void Check()
+#endif
         {
 #if !(RELEASE_UNIX || DEBUG_UNIX)
             LogToFileAddons.Parent_Log_Screen(2, "REDISTRIBUTABLE", "Is Installed or Not");
@@ -165,9 +173,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                     Client.Dispose();
                                 }
 
-                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                                 GC.Collect(); 
-                                #endif
+#endif
                             }
                         }
                         catch (Exception Error)
@@ -180,9 +188,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                         }
                         finally
                         {
-                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                             GC.Collect(); 
-                            #endif
+#endif
                         }
                     });
 
@@ -250,9 +258,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                             }
                             finally
                             {
-                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                                 GC.Collect(); 
-                                #endif
+#endif
                             }
                         });
                     }
@@ -342,9 +350,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                         Client.Dispose();
                                     }
 
-                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                                     GC.Collect(); 
-                                    #endif
+#endif
                                 }
                             }
                             catch (Exception Error)
@@ -357,9 +365,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                             }
                             finally
                             {
-                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                                 GC.Collect(); 
-                                #endif
+#endif
                             }
                         });
 
@@ -427,9 +435,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                 }
                                 finally
                                 {
-                                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                                     GC.Collect(); 
-                                    #endif
+#endif
                                 }
                             });
                         }
@@ -462,7 +470,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
             LogToFileAddons.Parent_Log_Screen(3, "REDISTRIBUTABLE", "Done");
 #endif
 
-            LogToFileAddons.Parent_Log_Screen(1, "LIST", "Moved to Function");
+        LogToFileAddons.Parent_Log_Screen(1, "LIST", "Moved to Function");
             /* (Start Process) Sets Up Langauge List */
             LanguageListUpdater.GetList();
         }

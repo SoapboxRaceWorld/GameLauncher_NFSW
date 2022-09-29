@@ -26,14 +26,17 @@
     <FileVersion>$(GlobalVersion)</FileVersion>
     <StartupObject>SBRW.Launcher.Net.Program</StartupObject>
     <ApplicationIcon>SBRW.ico</ApplicationIcon>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
     <Configurations>Debug;Release;Release.Unix;Debug.Unix</Configurations>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="SBRW.ico" />
-  </ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
+	  <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows' ">
+	  <ApplicationManifest>net.app.manifest</ApplicationManifest>
+  </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />

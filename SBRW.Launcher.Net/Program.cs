@@ -178,8 +178,9 @@ namespace SBRW.Launcher.Net
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.ThreadException += Application_ThreadException;
 #if !NETFRAMEWORK
-#if NET6_0
+#if NET5_0_OR_GREATER
             AppContext.SetSwitch("System.Drawing.EnableUnixSupport", true);
+            Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
 #endif
             ApplicationConfiguration.Initialize();
 #else
