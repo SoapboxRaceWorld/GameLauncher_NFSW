@@ -18,7 +18,7 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
         private static XmlDocument? XML_Doc { get; set; }
         private static bool IsAboutOpen { get; set; }
         private static List<AboutNoteBlock> PatchNoteBlocks { get; set; } = new List<AboutNoteBlock>();
-        private static string AboutXMLRevision { get; set; } = "2.1.8.A";
+        private static string AboutXMLRevision { get; set; } = "2.1.10.A";
         private static string AboutXML { get; set; } = "/Launcher/SBRW/Official/" + AboutXMLRevision + "/about.xml";
 
         public static void OpenScreen()
@@ -42,7 +42,6 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
         {
             IsAboutOpen = true;
             InitializeComponent();
-            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             SetVisuals();
             this.Closing += (x, y) =>
             {
@@ -206,7 +205,7 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
                                             block.Title = node.ChildNodes[i].InnerText;
                                             break;
                                         case 1:
-                                            block.Text = node.ChildNodes[i].InnerText;
+                                            block.Text = node.ChildNodes[i].InnerText.Replace("\\n", Environment.NewLine.ToString());
                                             break;
                                         case 2:
                                             block.Link = node.ChildNodes[i].InnerText;

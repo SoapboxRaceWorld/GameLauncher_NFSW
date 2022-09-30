@@ -453,7 +453,6 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
         {
             IsSelectServerOpen = true;
             InitializeComponent();
-            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
             SetVisuals();
             this.Closing += (x, y) =>
             {
