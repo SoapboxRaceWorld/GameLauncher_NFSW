@@ -358,7 +358,7 @@ namespace SBRW.Launcher.Net
                                         "@Branch: release/2.1 @SrcCode: https://github.com/dotnet/corefx/tree/30ab651fcb4354552bd4891619a0bdd81e0ebdbf",
                                         "WindowsFirewallHelper.dll - 2.2.0.85",
                                         "SBRW.Ini.Parser.dll - 2.6.5",
-                                        "SBRW.Launcher.Core.dll - 0.1.1",
+                                        "SBRW.Launcher.Core.dll - 0.1.3",
                                         "SBRW.Nancy.dll - 2.0.13",
                                         "SBRW.Nancy.Hosting.Self.dll - 2.0.11",
                                         "SBRW.Launcher.Core.Extra.dll - 0.1.3",

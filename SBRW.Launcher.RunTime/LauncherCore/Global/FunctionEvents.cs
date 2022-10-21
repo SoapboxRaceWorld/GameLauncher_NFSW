@@ -19,6 +19,7 @@ using System.Net;
 using System.Text;
 using System.Windows.Forms;
 using SBRW.Launcher.App.UI_Forms.Settings_Screen;
+using SBRW.Launcher.Core.Required.System;
 
 namespace SBRW.Launcher.RunTime.LauncherCore.Global
 {
@@ -430,6 +431,19 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
                                         }
                                     }
                                 }
+                            }
+                        }
+                        break;
+                    case "hwid":
+                    case "hw!d":
+                        if (Screen_Settings.Screen_Instance != null)
+                        {
+                            string Live_ID = FingerPrint.Api_ID(Live_Commands == "hw!d");
+                            if (MessageBox.Show(Screen_Settings.Screen_Instance, "ID:" +
+                                Live_ID +
+                                "\n\nClick Yes to Copy to Clipboard", "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                            {
+                                Clipboard.SetText(Live_ID);
                             }
                         }
                         break;
