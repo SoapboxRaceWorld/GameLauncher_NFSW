@@ -368,6 +368,10 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
                         {
                             LauncherUpdateCheck.UpdateStatusResult(true);
                         }
+                        else
+                        {
+                            LauncherUpdateCheck.Latest(false);
+                        }
                         break;
                     case "build":
                     case "build date":

@@ -105,10 +105,15 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
             return Temp_Latest_Launcher_Build;
         }
 
-        public static async void Latest()
+        public static async void Latest(bool Start_Up_Function = true)
         {
-            LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER UPDATE", "Is Version Up to Date or not");
-            Presence_Launcher.Status(0, "Checking Latest Launcher Release Information");
+            LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER UPDATE", "Is Version Up to Date or not" + (Start_Up_Function ? "" : " (Settings)"));
+
+            if (Start_Up_Function)
+            {
+                Presence_Launcher.Status(0, "Checking Latest Launcher Release Information");
+            }
+            
             await Task.Run(() =>
             {
                 try
@@ -179,7 +184,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                     }
                     else
                     {
-                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATE", "Failed to retrieve Latest Build information from GitHub");
+                        LogToFileAddons.Parent_Log_Screen(5, "LAUNCHER UPDATE", "Failed to retrieve Latest Build information from GitHub" + (Start_Up_Function ? "" : " (Settings)"));
                         ValidJSONDownload = false;
                     }
                 }
@@ -198,13 +203,16 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                     #endif
                 }
             });
-            LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER UPDATE", "Done");
+            LogToFileAddons.Parent_Log_Screen(3, "LAUNCHER UPDATE", "Done" + (Start_Up_Function ? "" : " (Settings)"));
 
             if (!UpdateStatusResult())
             {
-                LogToFileAddons.Parent_Log_Screen(1, "FIRST TIME RUN", "Moved to Function");
-                /* Do First Time Run Checks */
-                Parent_Screen.First_Time_Run();
+                if (Start_Up_Function)
+                {
+                    LogToFileAddons.Parent_Log_Screen(1, "FIRST TIME RUN", "Moved to Function");
+                    /* Do First Time Run Checks */
+                    Parent_Screen.First_Time_Run();
+                }
             }
             else
             {
