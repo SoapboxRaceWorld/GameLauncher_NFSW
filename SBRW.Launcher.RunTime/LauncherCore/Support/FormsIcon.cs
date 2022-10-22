@@ -31,19 +31,15 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Support
                 {
                     if (File.Exists(Path.Combine(Locations.LauncherFolder, "SBRW.Icon.ico")))
                     {
-                        using (var stream = File.OpenRead(Path.Combine(Locations.LauncherFolder, "SBRW.Icon.ico")))
-                        {
-                            Cached_Icon = new Icon(stream);
-                            Set_Cached_Icon = true;
-                        }
+                        using var stream = File.OpenRead(Path.Combine(Locations.LauncherFolder, "SBRW.Icon.ico"));
+                        Cached_Icon = new Icon(stream);
+                        Set_Cached_Icon = true;
                     }
                     else if (Embeded_Files.SBRW_Ico_Bytes().Length > 0)
                     {
-                        using (MemoryStream Live_Memory_Cache = new MemoryStream(Embeded_Files.SBRW_Ico_Bytes()))
-                        {
-                            Cached_Icon = new Icon(Live_Memory_Cache);
-                            Set_Cached_Icon = true;
-                        }
+                        using MemoryStream Live_Memory_Cache = new MemoryStream(Embeded_Files.SBRW_Ico_Bytes());
+                        Cached_Icon = new Icon(Live_Memory_Cache);
+                        Set_Cached_Icon = true;
                     }
                     else if (!string.IsNullOrWhiteSpace(Assembly.GetExecutingAssembly().Location) && !Error_Encountered)
                     {

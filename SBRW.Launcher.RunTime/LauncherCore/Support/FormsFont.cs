@@ -23,10 +23,8 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Support
         {
             if (!Primary_Cached())
             {
-                using (MemoryStream Live_Memory_Cache = new MemoryStream(Embeded_Files.DejaVuSans_Ttf_Bytes()))
-                {
-                    Font_Wrapper.Launcher_Font = Font_Wrapper.Instance.GetFontFamily("DejaVuSans.ttf", Live_Memory_Cache);
-                }
+                using MemoryStream Live_Memory_Cache = new MemoryStream(Embeded_Files.DejaVuSans_Ttf_Bytes());
+                Font_Wrapper.Launcher_Font = Font_Wrapper.Instance.GetFontFamily("DejaVuSans.ttf", Live_Memory_Cache);
             }
 
             return Font_Wrapper.Launcher_Font;
@@ -44,10 +42,8 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Support
         {
             if (!Primary_Bold_Cached())
             {
-                using (MemoryStream Live_Memory_Cache = new MemoryStream(Embeded_Files.DejaVuSans_Bold_Ttf_Bytes()))
-                {
-                    Font_Wrapper.Launcher_Font_Bold = Font_Wrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf", Live_Memory_Cache);
-                }
+                using MemoryStream Live_Memory_Cache = new MemoryStream(Embeded_Files.DejaVuSans_Bold_Ttf_Bytes());
+                Font_Wrapper.Launcher_Font_Bold = Font_Wrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf", Live_Memory_Cache);
             }
 
             return Font_Wrapper.Launcher_Font_Bold;

@@ -23,18 +23,16 @@ namespace SBRW.Launcher.RunTime.LauncherCore.FileReadWrite
                         if (TheRun.GetManifestResourceStream(File_Name) != null)
                         {
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                            using (Stream LiveStream = TheRun.GetManifestResourceStream(File_Name))
+                            using Stream LiveStream = TheRun.GetManifestResourceStream(File_Name);
+                            if (LiveStream == null)
                             {
-                                if (LiveStream == null)
-                                {
-                                    return default;
-                                }
-                                else
-                                {
-                                    byte[] ba = new byte[LiveStream.Length];
-                                    LiveStream.Read(ba, 0, ba.Length);
-                                    return ba;
-                                }
+                                return default;
+                            }
+                            else
+                            {
+                                byte[] ba = new byte[LiveStream.Length];
+                                LiveStream.Read(ba, 0, ba.Length);
+                                return ba;
                             }
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                         }

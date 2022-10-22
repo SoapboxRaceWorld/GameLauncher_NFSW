@@ -27,13 +27,10 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Languages.Visual_Forms
             {
                 if (Lang_Launcher == null || ResetCache)
                 {
-                    switch (UI(Application_Language))
+                    Lang_Launcher = UI(Application_Language) switch
                     {
-                        default:
-                            Lang_Launcher = new ResourceManager("SBRW.Launcher.App.Languages.English_Texts", Assembly.GetExecutingAssembly());
-                            break;
-                    }
-
+                        _ => new ResourceManager("SBRW.Launcher.App.Languages.English_Texts", Assembly.GetExecutingAssembly()),
+                    };
                     ResetCache = false;
                 }
 

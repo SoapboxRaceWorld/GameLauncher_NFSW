@@ -114,11 +114,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Client.Auth
                         }
 
                         ServerResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                        using (var sr = new StreamReader(ServerResponse.GetResponseStream(), Encoding.UTF8, false))
-                        {
-                            ServerErrorCode = (int)ServerResponse.StatusCode;
-                            LoginResponse = sr.ReadToEnd();
-                        }
+                        using var sr = new StreamReader(ServerResponse.GetResponseStream(), Encoding.UTF8, false);
+                        ServerErrorCode = (int)ServerResponse.StatusCode;
+                        LoginResponse = sr.ReadToEnd();
                     }
                 }
             }
@@ -136,12 +134,10 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Client.Auth
                 }
                 else
                 {
-                    using (var sr = new StreamReader(ServerResponse.GetResponseStream(), Encoding.UTF8, false))
-                    {
-                        ServerErrorCode = (int)ServerResponse.StatusCode;
-                        ServerErrorResponse = Modern_Auth ? "{\"error\":\"" + ServerResponse.StatusDescription + "\"}" : string.Empty;
-                        LoginResponse = sr.ReadToEnd();
-                    }
+                    using var sr = new StreamReader(ServerResponse.GetResponseStream(), Encoding.UTF8, false);
+                    ServerErrorCode = (int)ServerResponse.StatusCode;
+                    ServerErrorResponse = Modern_Auth ? "{\"error\":\"" + ServerResponse.StatusDescription + "\"}" : string.Empty;
+                    LoginResponse = sr.ReadToEnd();
                 }
             }
 
