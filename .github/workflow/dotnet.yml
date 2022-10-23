@@ -1,0 +1,38 @@
+name: Stable Development Build
+
+on: [push]
+    paths:
+      - SBRW.Launcher.Net/App/Classes/LauncherCore/InsiderKit/**
+ 
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Branch Checkout
+      uses: actions/checkout@v2.4.0
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.5
+      with:
+        nuget-version: 'latest'
+    - name: Restore NuGet Packages
+      run: |
+        nuget sources add -name "SBRW Launcher Libraries" -Source ${env:PrivateNuGetUrl} -Username ${env:GHUserName} -Password ${env:Password}
+        nuget restore GameLauncher.sln
+      env:
+        PrivateNuGetUrl: ${{ secrets.SBRW_LIBRARIES_LAUNCHER_NUGET_URL }}
+        GHUserName: ${{ secrets.SBRW_LIBRARIES_LAUNCHER_USERNAME }}
+        Password: ${{ secrets.SBRW_LIBRARIES_LAUNCHER_OUTHTOKEN }}
+        working-directory: ${{ github.workspace }}
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.1
+    - name: Build with MSBuild
+      run: msbuild  GameLauncher.sln -p:Configuration=Release
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        name: Release_GitHub_Actions
+        path: |
+          ${{ github.workspace }}/GameLauncher/bin/Release/GameLauncher.exe
+          ${{ github.workspace }}/GameLauncher/bin/Release/GameLauncher.exe.config
+          ${{ github.workspace }}/GameLauncher/bin/Release/*.dll
