@@ -349,7 +349,7 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
             Button_Server_Add.Click += new EventHandler(Button_Server_Add_Click);
             Button_Close.Click += new EventHandler(Button_Close_Click);
 
-            Label_Version.Text = "Version: " + Application.ProductVersion;
+            Label_Version.Text = "Version: v" + Application.ProductVersion;
 
             /* And one for keeping data about server, IP tbh */
             ListView_Server_List.View = View.Details;

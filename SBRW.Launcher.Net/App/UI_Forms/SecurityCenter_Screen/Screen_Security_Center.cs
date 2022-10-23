@@ -1852,7 +1852,7 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
             /* Set Hardcoded Text           /
             /*******************************/
 
-            VersionLabel.Text = "Version : v" + Application.ProductVersion;
+            VersionLabel.Text = "Version: v" + Application.ProductVersion;
 
             /********************************/
             /* Set Theme Colors & Images     /

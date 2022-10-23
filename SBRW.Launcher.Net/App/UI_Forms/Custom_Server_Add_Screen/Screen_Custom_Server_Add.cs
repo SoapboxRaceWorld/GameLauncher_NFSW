@@ -325,7 +325,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
             /* Set Hardcoded Text           /
             /*******************************/
 
-            Label_Version.Text = "Version : " + Application.ProductVersion;
+            Label_Version.Text = "Version: v" + Application.ProductVersion;
 
             /*******************************/
             /* Set Font                     /
