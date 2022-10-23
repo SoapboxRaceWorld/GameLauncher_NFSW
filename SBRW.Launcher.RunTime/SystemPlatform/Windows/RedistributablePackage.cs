@@ -126,7 +126,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                     {
                         try
                         {
-                            Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x86.exe");
+                            Uri URLCall = new Uri("https://aka.ms/vs/17/release/VC_redist.x86.exe");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             var Client = new WebClient()
@@ -303,7 +303,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                         {
                             try
                             {
-                                Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x64.exe");
+                                Uri URLCall = new Uri("https://aka.ms/vs/17/release/VC_redist.x64.exe");
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 var Client = new WebClient()
