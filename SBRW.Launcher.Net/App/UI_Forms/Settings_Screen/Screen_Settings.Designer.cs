@@ -475,7 +475,7 @@
             this.Label_Version_Build.Name = "Label_Version_Build";
             this.Label_Version_Build.Size = new System.Drawing.Size(164, 14);
             this.Label_Version_Build.TabIndex = 78;
-            this.Label_Version_Build.Text = "Version: vXX.XX.XX.XXXX";
+            this.Label_Version_Build.Text = "Version: XX.XX.XX.XXXX";
             this.Label_Version_Build.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // fileSystemWatcher1

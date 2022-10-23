@@ -1846,13 +1846,13 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
             /*******************************/
 
             Icon = FormsIcon.Retrive_Icon();
-            Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
+            Text = "Security Center - SBRW Launcher: " + Application.ProductVersion;
 
             /*******************************/
             /* Set Hardcoded Text           /
             /*******************************/
 
-            VersionLabel.Text = "Version: v" + Application.ProductVersion;
+            VersionLabel.Text = "Version: " + Application.ProductVersion;
 
             /********************************/
             /* Set Theme Colors & Images     /

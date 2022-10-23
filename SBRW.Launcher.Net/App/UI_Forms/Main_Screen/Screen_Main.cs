@@ -597,7 +597,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Panel_Register_Screen.Controls.Add(Custom_Instance_Register);
                         Panel_Register_Screen.Visible = true;
                         Custom_Instance_Register.Show();
-                        Text = "Register - SBRW Launcher: v" + Application.ProductVersion;
+                        Text = "Register - SBRW Launcher: " + Application.ProductVersion;
                     }
                     catch (Exception Error)
                     {
@@ -621,7 +621,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
                 Panel_Form_Screens.Visible = true;
                 Custom_Instance_Settings.Show();
-                Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
+                Text = "Settings - SBRW Launcher: " + Application.ProductVersion;
             }
             catch (Exception Error)
             {
@@ -639,7 +639,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
                 Screen_Security_Center.RPCStateCache = "Idle Ready";
                 Custom_Instance_Settings.Show();
-                Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
+                Text = "Security Center - SBRW Launcher: " + Application.ProductVersion;
             }
             catch (Exception Error)
             {
@@ -4199,7 +4199,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         Label_Status_Launcher.ForeColor = Color_Text.S_Sucess;
                         Label_Status_Launcher.Text = "Launcher Status:\n - Linux Build";
-                        Label_Status_Launcher_Version.Text = "Version: v" + Application.ProductVersion;
+                        Label_Status_Launcher_Version.Text = "Version: " + Application.ProductVersion;
 #endif
                 }
 
@@ -4248,7 +4248,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             /*******************************/
 
             Icon = FormsIcon.Retrive_Icon();
-            Text = "SBRW Launcher: v" + Application.ProductVersion;
+            Text = "SBRW Launcher: " + Application.ProductVersion;
 
             /*******************************/
             /* Set Font                     /
@@ -4606,7 +4606,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             if (Parent_Screen.Screen_Instance != null)
             {
-                Parent_Screen.Screen_Instance.Text = "SBRW Launcher: v" + Application.ProductVersion;
+                Parent_Screen.Screen_Instance.Text = "SBRW Launcher: " + Application.ProductVersion;
             }
         }
 

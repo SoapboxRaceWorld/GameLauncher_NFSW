@@ -120,7 +120,7 @@
             this.Label_Version.Name = "Label_Version";
             this.Label_Version.Size = new System.Drawing.Size(164, 14);
             this.Label_Version.TabIndex = 33;
-            this.Label_Version.Text = "Version: vXX.XX.XX.XXXX";
+            this.Label_Version.Text = "Version: XX.XX.XX.XXXX";
             this.Label_Version.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Button_CDN_Sources

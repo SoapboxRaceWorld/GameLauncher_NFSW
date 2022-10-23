@@ -689,7 +689,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             this.labelLauncherVersion.Name = "labelLauncherVersion";
             this.labelLauncherVersion.Size = new System.Drawing.Size(164, 14);
             this.labelLauncherVersion.TabIndex = 49;
-            this.labelLauncherVersion.Text = "Version: vXX.XX.XX.XXXX";
+            this.labelLauncherVersion.Text = "Version: XX.XX.XX.XXXX";
             this.labelLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.labelLauncherVersion.Click += new System.EventHandler(this.LabelLauncherVersion_Click);
             // 

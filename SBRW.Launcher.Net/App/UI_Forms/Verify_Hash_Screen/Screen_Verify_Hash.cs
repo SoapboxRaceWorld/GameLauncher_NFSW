@@ -106,7 +106,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
 
         private void VerifyHash_Load(object sender, EventArgs e)
         {
-            VersionLabel.Text = "Version: v" + Application.ProductVersion;
+            VersionLabel.Text = "Version: " + Application.ProductVersion;
             Log.Core("VERIFY HASH: Opened");
 
             if (!FunctionStatus.IsVerifyHashDisabled)

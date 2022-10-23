@@ -1236,7 +1236,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             /*******************************/
 
             Icon = FormsIcon.Retrive_Icon();
-            Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
+            Text = "Settings - SBRW Launcher: " + Application.ProductVersion;
 
             /*******************************/
             /* Set Background Image         /
@@ -1252,7 +1252,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             LinkLabel_CDN_Current.Text = Save_Settings.Live_Data.Launcher_CDN;
             LinkLabel_Game_Path.Text = Save_Settings.Live_Data.Game_Path;
             LinkLabel_Launcher_Path.Text = AppDomain.CurrentDomain.BaseDirectory;
-            Label_Version_Build.Text = "Version: v" + Application.ProductVersion;
+            Label_Version_Build.Text = "Version: " + Application.ProductVersion;
 
             /*******************************/
             /* Set Font                     /
@@ -1513,7 +1513,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Screen_Panel_Forms.Visible = false;
             if (Parent_Screen.Screen_Instance != null)
             {
-                Parent_Screen.Screen_Instance.Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
+                Parent_Screen.Screen_Instance.Text = "Settings - SBRW Launcher: " + Application.ProductVersion;
             }
         }
 

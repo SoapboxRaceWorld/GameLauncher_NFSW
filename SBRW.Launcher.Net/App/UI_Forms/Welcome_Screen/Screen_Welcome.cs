@@ -72,7 +72,7 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
             /* Set Hardcoded Text           /
             /*******************************/
 
-            Label_Version.Text = "Version: v" + Application.ProductVersion;
+            Label_Version.Text = "Version: " + Application.ProductVersion;
             bool Is_Game_Path_Empty = string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path);
             if (!Is_Game_Path_Empty)
             {

@@ -1083,7 +1083,7 @@ namespace SBRW.Launcher.App.UI_Forms
                       
                         if (Screen_Instance != null)
                         {
-                            Screen_Instance.Text = "SBRW Launcher: v" + Application.ProductVersion;
+                            Screen_Instance.Text = "SBRW Launcher: " + Application.ProductVersion;
                             Screen_Main Custom_Instance_Settings = new Screen_Main() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
                             Screen_Instance.Panel_Form_Screens.Visible = true;
                             Screen_Instance.Panel_Form_Screens.Controls.Add(Custom_Instance_Settings);
@@ -1337,7 +1337,7 @@ namespace SBRW.Launcher.App.UI_Forms
             /*******************************/
 
             Icon = FormsIcon.Retrive_Icon();
-            Text = "SBRW Launcher: v" + Application.ProductVersion;
+            Text = "SBRW Launcher: " + Application.ProductVersion;
 
             this.Closing += (x, y) =>
             {

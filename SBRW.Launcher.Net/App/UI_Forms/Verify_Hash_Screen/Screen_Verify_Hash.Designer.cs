@@ -115,7 +115,7 @@
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(164, 14);
             this.VersionLabel.TabIndex = 5;
-            this.VersionLabel.Text = "Version: vXX.XX.XX.XXXX";
+            this.VersionLabel.Text = "Version: XX.XX.XX.XXXX";
             this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // VerifyHashWelcome

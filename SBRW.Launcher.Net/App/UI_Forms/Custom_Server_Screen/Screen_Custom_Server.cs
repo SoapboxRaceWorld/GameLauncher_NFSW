@@ -463,7 +463,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
             Button_Server_Add.Click += new EventHandler(Button_Server_Add_Click);
             Button_Close.Click += new EventHandler(Button_Close_Click);
 
-            Label_Version.Text = "Version: v" + Application.ProductVersion;
+            Label_Version.Text = "Version: " + Application.ProductVersion;
 
             /* And one for keeping data about server, IP tbh */
             ListView_Server_List.View = View.Details;

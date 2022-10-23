@@ -547,7 +547,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.Label_Status_Launcher_Version.Name = "Label_Status_Launcher_Version";
             this.Label_Status_Launcher_Version.Size = new System.Drawing.Size(152, 30);
             this.Label_Status_Launcher_Version.TabIndex = 27;
-            this.Label_Status_Launcher_Version.Text = "Version: vXX.XX.XX.XXXX";
+            this.Label_Status_Launcher_Version.Text = "Version: XX.XX.XX.XXXX";
             // 
             // Label_Status_Game_Server_Data
             // 

@@ -801,7 +801,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             /* Set Hardcoded Text and Values /
             /********************************/
 
-            labelLauncherVersion.Text = "Version: v" + Application.ProductVersion;
+            labelLauncherVersion.Text = "Version: " + Application.ProductVersion;
             labelOverRideAspect.Text = XML_File.XML_Settings_Data.PostProcessingEnable;
             AmountofCenterTimes = 0;
 

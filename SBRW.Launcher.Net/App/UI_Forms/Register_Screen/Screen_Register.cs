@@ -421,7 +421,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             Icon = FormsIcon.Retrive_Icon();
             if (Parent_Screen.Screen_Instance != null)
             {
-                Parent_Screen.Screen_Instance.Text = "Register - SBRW Launcher: v" + Application.ProductVersion;
+                Parent_Screen.Screen_Instance.Text = "Register - SBRW Launcher: " + Application.ProductVersion;
             }
 
             /*******************************/
