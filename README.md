@@ -11,6 +11,10 @@ A Rewrite of GameLauncher taken from Need For Speed: World
 - [X] Self-Signed Code Sign Certificate
 
 ### Screenshot
-![](screenshot.png)
-![](screenshot2.png)
-![](screenshot3.png)
+![](01-Main_Screen.png)
+![](02-Add_Server.png)
+![](03-Security_Center.png)
+![](04-Settings_Screen.png)
+![](05-CDN_Picker.png)
+![](06-Verify_Hash.png)
+![](07-User_Settings.png)
