@@ -348,7 +348,7 @@ namespace SBRW.Launcher.App.UI_Forms
 
                     LogToFileAddons.Parent_Log_Screen(8,
                         EnableInsiderDeveloper.Allowed() ? "DEV TEST " : (EnableInsiderBetaTester.Allowed() ? "BETA TEST " : ""),
-                        "GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
+                        "SBRW.Launcher " + Application.ProductVersion + " - (" + InsiderInfo.BuildNumberOnly() + ")");
 
                     LogToFileAddons.Parent_Log_Screen(2, "OS", "Detecting");
                     Presence_Launcher.Status(0, "Checking Operating System");
