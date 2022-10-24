@@ -24,6 +24,7 @@ using SBRW.Launcher.Core.Theme;
 using System.Net.Cache;
 using SBRW.Launcher.App.UI_Forms;
 using System.Threading.Tasks;
+using SBRW.Launcher.Core.Extension.String_;
 
 namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
 {
@@ -235,7 +236,8 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
             bool StatusUpdate = false;
             if (!string.IsNullOrWhiteSpace(LatestLauncherBuild))
             {
-                Revisions = CurrentLauncherBuild.CompareTo(LatestLauncherBuild);
+                Revisions = !EnableInsiderDeveloper.Allowed() ? 
+                Strings.Comparisons(CurrentLauncherBuild, LatestLauncherBuild) : CurrentLauncherBuild.CompareTo(LatestLauncherBuild);
 
                 if (Revisions < 0)
                 {

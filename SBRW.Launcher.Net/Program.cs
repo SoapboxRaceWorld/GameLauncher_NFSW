@@ -349,7 +349,7 @@ namespace SBRW.Launcher.Net
                                 /* MONO Hates this... */
                                 string[] File_List =
                                 {
-                                        "DiscordRPC.dll - 1.0.175.0",
+                                        "DiscordRPC.dll - 1.1.1.14",
                                         "Flurl.dll - 3.0.6",
                                         "Flurl.Http.dll - 3.2.4",
                                         "LZMA.dll - 9.10 beta",
@@ -358,12 +358,12 @@ namespace SBRW.Launcher.Net
                                         "@Branch: release/2.1 @SrcCode: https://github.com/dotnet/corefx/tree/30ab651fcb4354552bd4891619a0bdd81e0ebdbf",
                                         "WindowsFirewallHelper.dll - 2.2.0.85",
                                         "SBRW.Ini.Parser.dll - 2.6.5",
-                                        "SBRW.Launcher.Core.dll - 0.1.4",
+                                        "SBRW.Launcher.Core.dll - 0.1.5",
                                         "SBRW.Nancy.dll - 2.0.13",
                                         "SBRW.Nancy.Hosting.Self.dll - 2.0.11",
-                                        "SBRW.Launcher.Core.Extra.dll - 0.1.3",
-                                        "SBRW.Launcher.Core.Discord.dll - 0.1.0",
-                                        "SBRW.Launcher.Core.Proxy.dll - 0.1.0",
+                                        "SBRW.Launcher.Core.Extra.dll - 0.1.4",
+                                        "SBRW.Launcher.Core.Discord.dll - 0.1.1",
+                                        "SBRW.Launcher.Core.Proxy.dll - 0.1.1",
                                         "SBRW.Launcher.Core.Theme.dll - 0.1.0",
                                         "SBRW.Launcher.Core.Downloader.dll - 0.1.6"
                                 };
