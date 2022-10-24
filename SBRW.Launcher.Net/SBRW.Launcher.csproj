@@ -19,7 +19,7 @@
 	You can specify this option only for projects that target .NET Framework 4.5 or later.-->
     <PlatformTarget>x86</PlatformTarget>
     <Copyright>© Soapbox Race World</Copyright>
-    <GlobalVersion>2.2.0.0000</GlobalVersion>
+    <GlobalVersion>2.2.0.0</GlobalVersion>
     <GlobalVersion Condition=" '$(GlobalVersion)' == '' ">2.2.0.$([System.DateTime]::UtcNow.ToString(mmff))</GlobalVersion>
     <Version>$(GlobalVersion)</Version>
     <AssemblyVersion>$(GlobalVersion)</AssemblyVersion>
@@ -73,10 +73,10 @@
     <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
     <PackageReference Include="SBRW.Ini.Parser" Version="2.6.5" />
     <PackageReference Include="SBRW.Launcher.Core" Version="0.1.6" />
-    <PackageReference Include="SBRW.Launcher.Core.Discord" Version="0.1.1" />
+    <PackageReference Include="SBRW.Launcher.Core.Discord" Version="0.1.0" />
     <PackageReference Include="SBRW.Launcher.Core.Downloader" Version="0.1.6" />
-    <PackageReference Include="SBRW.Launcher.Core.Extra" Version="0.1.4" />
-    <PackageReference Include="SBRW.Launcher.Core.Proxy" Version="0.1.1" />
+    <PackageReference Include="SBRW.Launcher.Core.Extra" Version="0.1.5" />
+    <PackageReference Include="SBRW.Launcher.Core.Proxy" Version="0.1.0" />
     <PackageReference Include="SBRW.Launcher.Core.Theme" Version="0.1.0" />
     <PackageReference Include="SBRW.Nancy" Version="2.0.13" />
     <PackageReference Include="SBRW.Nancy.Hosting.Self" Version="2.0.11" />
