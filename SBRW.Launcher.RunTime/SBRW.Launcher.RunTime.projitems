@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>0dafb5da-35f4-4fdb-8887-6c7980f6dd65</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SBRW.Launcher.RunTime</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\API\APIChecker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Client\Auth\Authentication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Client\Auth\Tokens.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Client\NFSW.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\FileReadWrite\ExtractResource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\FileReadWrite\File_and_Folder_Extention.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Global\EnumTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Global\FunctionEvents.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Global\FunctionStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Global\Locations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Global\URLs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InsiderKit\KitEnabler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Languages\Visual_Forms\Translations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\LauncherUpdater\Updater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\LauncherUpdater\UpdaterExecutable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\LauncherUpdater\UpdaterSchema.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Lists\CDNListUpdater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Lists\JSON\JsonServerList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Lists\LanguageListUpdater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Lists\ResolutionsListUpdater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Lists\ServerListUpdater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Logger\LogToFileAddons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\ModNet\JSON\JsonServerModNet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\ModNet\ModNetHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Support\FormsControls.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Support\FormsFont.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Support\FormsIcon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Support\SecurityCenter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Visuals\AboutNoteBlock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Visuals\Prompt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LauncherCore\Visuals\Theming.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemovedClasses.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemPlatform\Components\HardwareInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemPlatform\Unix\UnixOS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemPlatform\Windows\ManagementSearcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemPlatform\Windows\RedistributablePackage.cs" />
+  </ItemGroup>
+</Project>
