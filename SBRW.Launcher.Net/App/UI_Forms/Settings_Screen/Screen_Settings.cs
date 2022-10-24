@@ -506,6 +506,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         private async void SettingsSave_Click(object sender, EventArgs e)
         {
             bool Stop_and_Restart_Downloader = false;
+            bool CDN_Changed_Button_Update = false;
+
             Button_Save.Text = "SAVING";
             /* TODO null check */
             if (ComboBox_Language_List.SelectedItem != null && !string.IsNullOrWhiteSpace(((Json_List_Language)ComboBox_Language_List.SelectedItem).Value_Ini))
@@ -580,17 +582,12 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(New_Choosen_CDN) && Save_Settings.Live_Data.Launcher_CDN != New_Choosen_CDN)
+            if (Save_Settings.Live_Data.Launcher_CDN != New_Choosen_CDN)
             {
-                Save_Settings.Live_Data.Launcher_CDN = New_Choosen_CDN.EndsWith("/") ? New_Choosen_CDN.TrimEnd('/') : New_Choosen_CDN;
+                Save_Settings.Live_Data.Launcher_CDN = New_Choosen_CDN;
                 Label_CDN_Current.Text = "CHANGED CDN:";
-                LinkLabel_CDN_Current.Text = Save_Settings.Live_Data.Launcher_CDN;
-                Stop_and_Restart_Downloader = RestartRequired = true;
+                CDN_Changed_Button_Update = Stop_and_Restart_Downloader = RestartRequired = true;
                 ButtonsColorSet(Button_Game_Verify_Files, 0, false);
-            }
-            else
-            {
-                Log.Error("SETTINGS: Selected CDN does not contain a URL, unable to Save Contents");
             }
 
             if (Save_Settings.Live_Data.Launcher_Proxy != (CheckBox_Proxy.Checked ? "1" : "0"))
@@ -714,29 +711,32 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                     LogToFileAddons.OpenLog("SETTINGS to Main Screen Instance", string.Empty, Error, string.Empty, true);
                 }
 
-                await Task.Run(() => 
+                if (CDN_Changed_Button_Update)
                 {
-                    if (Screen_Instance != null)
+                    await Task.Run(() =>
                     {
-                        switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/unpacked/checksums.dat", 10))
+                        if (Screen_Instance != null)
                         {
-                            case APIStatus.Online:
-                                if (Screen_Instance != null)
-                                {
-                                    FunctionStatus.DoesCDNSupportVerifyHash = true;
-                                    ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
-                                }
-                                break;
-                            default:
-                                if (Screen_Instance != null)
-                                {
-                                    FunctionStatus.DoesCDNSupportVerifyHash = false;
-                                    ButtonsColorSet(Button_Game_Verify_Files, 3, true);
-                                }
-                                break;
+                            switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/unpacked/checksums.dat", 10))
+                            {
+                                case APIStatus.Online:
+                                    if (Screen_Instance != null)
+                                    {
+                                        FunctionStatus.DoesCDNSupportVerifyHash = true;
+                                        ButtonsColorSet(Button_Game_Verify_Files, (Save_Settings.Live_Data.Game_Integrity != "Good" ? 2 : 0), true);
+                                    }
+                                    break;
+                                default:
+                                    if (Screen_Instance != null)
+                                    {
+                                        FunctionStatus.DoesCDNSupportVerifyHash = false;
+                                        ButtonsColorSet(Button_Game_Verify_Files, 3, true);
+                                    }
+                                    break;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
 
@@ -1091,7 +1091,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
         /// <param name="EnabledORDisabled">Enables or Disables the Button</param>
         /// <remarks>Range 0-3 Sets Colored Button.
         /// <code>"0" Checking Blue</code><code>"1" Success Green</code><code>"2" Warning Orange</code><code>"3" Error Red</code></remarks>
-        private static void ButtonsColorSet(Button Elements, int Color, bool EnabledORDisabled)
+        public static void ButtonsColorSet(Button Elements, int Color, bool EnabledORDisabled)
         {
             switch (Color)
             {
@@ -1249,7 +1249,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             /* Set Hardcoded Text           /
             /*******************************/
 
-            LinkLabel_CDN_Current.Text = Save_Settings.Live_Data.Launcher_CDN;
+            New_Choosen_CDN = LinkLabel_CDN_Current.Text = Save_Settings.Live_Data.Launcher_CDN;
             LinkLabel_Game_Path.Text = Save_Settings.Live_Data.Game_Path;
             LinkLabel_Launcher_Path.Text = AppDomain.CurrentDomain.BaseDirectory;
             Label_Version_Build.Text = "Version: " + Application.ProductVersion;

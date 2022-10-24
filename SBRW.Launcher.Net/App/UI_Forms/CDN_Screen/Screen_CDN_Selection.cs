@@ -387,8 +387,21 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                 Json_List_CDN Selected_CDN = ServerListBook[ListView_Server_List.SelectedIndices[0] + 1];
                 if (string.IsNullOrWhiteSpace(Selected_CDN.Url))
                 {
-                    MessageBox.Show(null, "Selected CDN does not have a Valid URL. Please Choose Another CDN.",
+                    switch (Screen_Mode_Update)
+                    {
+                        case 1:
+                            MessageBox.Show(Screen_Welcome.Screen_Instance, "Selected CDN does not have a Valid URL. Please Choose Another CDN.",
                             "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                        case 2:
+                            MessageBox.Show(Screen_Settings.Screen_Instance, "Selected CDN does not have a Valid URL. Please Choose Another CDN.",
+                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                        default:
+                            MessageBox.Show(null, "Selected CDN does not have a Valid URL. Please Choose Another CDN.",
+                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                    }
                 }
                 else if (Selected_CDN.Url.StartsWith("https://") || Selected_CDN.Url.StartsWith("http://"))
                 {
@@ -409,12 +422,26 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                             Save_Settings.Live_Data.Launcher_CDN = Selected_CDN.Url.EndsWith("/") ? Selected_CDN.Url.TrimEnd('/') : Selected_CDN.Url;
                             break;
                     }
+
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show(null, "Selected CDN does not have a Valid URL. Please Choose Another CDN.",
+                    switch (Screen_Mode_Update)
+                    {
+                        case 1:
+                            MessageBox.Show(Screen_Welcome.Screen_Instance, "Selected CDN does not have a Valid URL. Please Choose Another CDN.",
                             "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                        case 2:
+                            MessageBox.Show(Screen_Settings.Screen_Instance, "Selected CDN does not have a Valid URL. Please Choose Another CDN.",
+                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                        default:
+                            MessageBox.Show(null, "Selected CDN does not have a Valid URL. Please Choose Another CDN.",
+                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                    }
                 }
             }
         }
