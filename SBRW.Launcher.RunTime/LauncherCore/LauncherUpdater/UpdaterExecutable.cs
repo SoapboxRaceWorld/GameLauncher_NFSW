@@ -15,13 +15,14 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net.Cache;
 using System.Threading.Tasks;
+using SBRW.Launcher.Core.Extension.String_;
 
 namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
 {
     class UpdaterExecutable
     {
         /* Hardcoded Default Version for Updater Version  */
-        private static string LatestUpdaterBuildVersion { get; set; } = "1.0.0.8";
+        private static string LatestUpdaterBuildVersion { get; set; } = "1.0.1.18";
         private static string VersionJSON { get; set; } = string.Empty;
 
         /* Check If Updater Exists or Requires an Update */
@@ -271,7 +272,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                 {
                     FileVersionInfo LauncherUpdaterBuild = FileVersionInfo.GetVersionInfo(UpdaterPath);
                     string LauncherUpdaterBuildNumber = LauncherUpdaterBuild.FileVersion??string.Empty;
-                    int UpdaterBuildNumberResult = LauncherUpdaterBuildNumber.CompareTo(LatestUpdaterBuildVersion);
+                    int UpdaterBuildNumberResult = Strings.Comparisons(LauncherUpdaterBuildNumber, LatestUpdaterBuildVersion);
 
                     LogToFileAddons.Parent_Log_Screen(8, "LAUNCHER UPDATER BUILD", "GameLauncherUpdater " + LauncherUpdaterBuildNumber, false, true);
 
