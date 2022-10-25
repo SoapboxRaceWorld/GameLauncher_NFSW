@@ -1000,7 +1000,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     Parent_Screen.Screen_Instance.WindowState = FormWindowState.Normal;
                     Parent_Screen.Screen_Instance.ShowInTaskbar = Button_Close.Visible = Button_Logout.Visible = EnablePlayButton(true);
-                    Button_Play_OR_Update.SafeInvokeAction(() => Button_Play_OR_Update.Visible = false, this, false);
                 }
                 
                 DisableLogout = false;
@@ -1011,6 +1010,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper(), this, false);
                     Label_Download_Information.SafeInvokeAction(() =>
                     Label_Download_Information.Text = Error_Msg.ToUpper(), this);
+                    Button_Play_OR_Update.SafeInvokeAction(() => Button_Play_OR_Update.Visible = false, this, false);
                 }
 
                 if (Did_Game_Start)
@@ -1018,12 +1018,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Presence_Launcher.Status(0, "Game Closed with Error Code: " + Process_Exit_Code.ToString());
                     Log.Error("GAME CRASH [EXIT CODE]: " + Process_Exit_Code.ToString() + " HEX: (0x" + Process_Exit_Code.ToString("X") + ")" + " REASON: " + Error_Msg);
                     
-                    if ((Screen_Instance != null) && (ProgressBar_Preload.ForeColor != Color_Text.S_Error))
+                    if (Screen_Instance != null)
                     {
-                        ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.ForeColor = Color_Text.S_Error, this, false);
+                        Display_Color_Icons(3);
                     }
-
-                    ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Value = 100, this);
                 }
                 else
                 {
@@ -1031,7 +1029,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Log.Core("LAUNCHER: Game failed to Launch. Forcing User to Login again.");
                 }
 
-                MessageBox.Show(Screen_Instance, Error_Msg, "GameLauncher", MessageBoxButtons.OK, Icon_Box_Art);
+                if (MessageBox.Show(Screen_Instance, Error_Msg, "GameLauncher", MessageBoxButtons.OK, Icon_Box_Art) == DialogResult.OK)
+                {
+                    Display_Color_Icons(1);
+                }
             }));
         }
 
@@ -1330,8 +1331,18 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 try
                 {
                     Client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
-                    Client.DownloadFileCompleted += (test, stuff) =>
+                    Client.DownloadFileCompleted += (Live_Object, Live_Final_Results) =>
                     {
+#if Debug
+                        if (Live_Final_Results.Error != null)
+                        {
+                            LogToFileAddons.OpenLog("Modnet Server Files", string.Empty, Live_Final_Results.Error, string.Empty, true);
+                        }
+                        else if (Live_Final_Results.Cancelled)
+                        {
+                            Log.Core("LAUNCHER: Modnet Server Files Download was Cancelled");
+                        }
+#endif
                         Log.Core("LAUNCHER: Downloaded: " + FileName);
                         IsDownloadingModNetFiles = false;
                         if (!ModFilesDownloadUrls.Any())
@@ -1372,8 +1383,23 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         {
             try
             {
-                ProgressBar_Extracting.Value = 100;
-                ProgressBar_Extracting.Width = 519;
+                if (ProgressBar_Extracting.Value < 100)
+                {
+                    ProgressBar_Extracting.SafeInvokeAction(() =>
+                    {
+                        ProgressBar_Extracting.Value = 100;
+                        ProgressBar_Extracting.Width = 519;
+                    }, this);
+                }
+
+                if (ProgressBar_Preload.Value < 100)
+                {
+                    ProgressBar_Preload.SafeInvokeAction(() =>
+                    {
+                        ProgressBar_Preload.Value = 100;
+                        ProgressBar_Preload.Width = 519;
+                    }, this);
+                }
 
                 switch (Color_Mode)
                 {
@@ -1674,9 +1700,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             catch { }
                             finally
                             {
-                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                                 GC.Collect(); 
-                                #endif
+#endif
                             }
 
                             string[] modules_newlines = ModulesJSON.Split(new string[] { "\n" }, StringSplitOptions.None);
@@ -2154,9 +2180,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #region Game Server Information Download
         private void ComboBox_Server_List_SelectedIndexChanged(object sender, EventArgs e)
         {
-            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
             GC.Collect(); 
-            #endif
+#endif
             if (Picture_Input_Email.Image != Image_Other.Text_Border_Email)
             {
                 Picture_Input_Email.Image = Image_Other.Text_Border_Email;
@@ -2795,9 +2821,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                                 Client_A.Dispose();
                                             }
 
-                                            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                                             GC.Collect(); 
-                                            #endif
+#endif
                                         }
                                     }
                                 };
@@ -2816,9 +2842,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             else if (!Application.OpenForms[this.Name].IsDisposed)
                             {
                                 Picture_Server_Banner.BackColor = Color_Winform_Other.Server_Banner_BackColor;
-                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                                 GC.Collect(); 
-                                #endif
+#endif
                             }
                         }
                         catch (Exception Error)
@@ -2832,15 +2858,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 if (Application.OpenForms[this.Name] != null)
                 {
-                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                     GC.Collect(); 
-                    #endif
+#endif
                 }
             };
 
-            #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
             GC.Collect(); 
-            #endif
+#endif
         }
 #endregion
 
@@ -2888,9 +2914,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
             else
             {
-                #if !(RELEASE_UNIX || DEBUG_UNIX)
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                 GC.Collect(); 
-                #endif
+#endif
             }
         }
 
@@ -2996,9 +3022,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
             else
             {
-                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                 GC.Collect(); 
-                #endif
+#endif
             }
         }
 
@@ -3116,9 +3142,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
                 else
                 {
-                    #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                     GC.Collect(); 
-                    #endif
+#endif
                 }
             }
             catch (Exception Error_Live)
