@@ -54,7 +54,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
         {
             string Temp_Latest_Launcher_Build = string.Empty;
 
-            if (Is_Json.Valid(JSON_Data))
+            if (JSON_Data.Valid_Json())
             {
                 int Top_Ten = 0;
                 bool Latest_Found_Build = false;
@@ -174,7 +174,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                         #endif
                     }
 
-                    if (Is_Json.Valid(VersionJSON) && VisualsAPIChecker.GitHubAPI)
+                    if (VersionJSON.Valid_Json() && VisualsAPIChecker.GitHubAPI)
                     {
 #pragma warning disable CS8602 // Null Safe Check Done Above
                         LatestLauncherBuild = (!EnableInsiderDeveloper.Allowed() && EnableInsiderBetaTester.Allowed()) ?

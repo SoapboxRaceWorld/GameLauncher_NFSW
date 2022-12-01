@@ -1039,10 +1039,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private void Game_Live_Data(string UserID, string LoginToken, string ServerIP, Form Live_Form)
         {
             if (new Process_Start_Game().Initialize(Save_Settings.Live_Data.Game_Path, ServerIP, LoginToken,
-                UserID, Launcher_Value.Launcher_Select_Server_Data.ID.ToUpper()) != null)
+                UserID, Launcher_Value.Launcher_Select_Server_Data.ID.ToUpper(), true, "nfsw.exe") != null)
             {
                 /* Request a New Session */
-                new Time_Window().Client_Session();
+                Time_Window.Client_Session();
                 Session_Timer.Remaining = Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0 ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 2 * 60 * 60;
                 FunctionStatus.LauncherBattlePass = Process_Start_Game.Live_Process.EnableRaisingEvents = true;
                 NfswPid = Process_Start_Game.Live_Process.Id;
@@ -1653,7 +1653,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Application.DoEvents();
                     }
 
-                    if (string.IsNullOrWhiteSpace(ModulesJSON) || !Is_Json.Valid(ModulesJSON))
+                    if (string.IsNullOrWhiteSpace(ModulesJSON) || !ModulesJSON.Valid_Json())
                     {
                         Display_Color_Icons(2);
                         Label_Download_Information.Text = ("JSON: Invalid ModNet Files Information").ToUpper();
@@ -1823,7 +1823,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Application.DoEvents();
                         }
 
-                        if (string.IsNullOrWhiteSpace(ServerModInfo) || !Is_Json.Valid(ServerModInfo))
+                        if (string.IsNullOrWhiteSpace(ServerModInfo) || !ServerModInfo.Valid_Json())
                         {
                             Display_Color_Icons(2);
                             Label_Download_Information.Text = ("JSON: Invalid Server Mod Information").ToUpper();
@@ -1906,7 +1906,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
 
                             /* Version 1.3 @metonator - DavidCarbon */
-                            if (Is_Json.Valid(remoteCarsFile))
+                            if (remoteCarsFile.Valid_Json())
                             {
                                 Log.Info("DISCORD: Found RemoteRPC List for cars.json");
                                 Cars.List_File = remoteCarsFile;
@@ -1918,7 +1918,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Cars.List_File = string.Empty;
                             }
 
-                            if (Is_Json.Valid(remoteEventsFile))
+                            if (remoteEventsFile.Valid_Json())
                             {
                                 Log.Info("DISCORD: Found RemoteRPC List for events.json");
                                 SBRW.Launcher.Core.Discord.Reference_.List_.Events.List_File = remoteEventsFile;
@@ -1977,7 +1977,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Application.DoEvents();
                             }
 
-                            if (string.IsNullOrWhiteSpace(ServerModListJSON) || !Is_Json.Valid(ServerModListJSON))
+                            if (string.IsNullOrWhiteSpace(ServerModListJSON) || !ServerModListJSON.Valid_Json())
                             {
                                 Display_Color_Icons(2);
                                 Label_Download_Information.Text = ("JSON: Invalid Server Mod List Information").ToUpper();
@@ -2307,7 +2307,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Label_Status_Game_Server.Text = "Server Status:\n - Offline ( OFF )";
                     Label_Status_Game_Server.ForeColor = Color_Text.S_Error;
                     Label_Status_Game_Server_Data.Text = (e2.Error != null) ?
-                    Strings.Encode(e2.Error.Message ?? "Server Seems to be Offline") : "Failed to Connect to Server";
+                    (e2.Error.Message ?? "Server Seems to be Offline").Encode_UTF8() : "Failed to Connect to Server";
 
                     if (!InformationCache.ServerStatusBook.ContainsKey(Launcher_Value.Launcher_Select_Server_Data.ID))
                     {
@@ -2895,7 +2895,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                 if (Parent_Screen.Screen_Instance != null)
                 {
-                    Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
+                    Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Indeterminate);
                 }
 
                 string SpecificTracksFilePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Tracks", "STREAML5RA_98.BUN");
@@ -2935,7 +2935,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (Parent_Screen.Screen_Instance != null)
                     {
-                        Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
+                        Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Indeterminate);
                     }
 
                     try
@@ -3136,8 +3136,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (Parent_Screen.Screen_Instance != null)
                     {
-                        Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
-                        Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+                        Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100);
+                        Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Normal);
                     }
                 }
                 else
@@ -3227,8 +3227,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (Parent_Screen.Screen_Instance != null)
                     {
-                        Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
-                        Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Error);
+                        Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100);
+                        Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Error);
                     }
 
                     if (Launcher_Value.Launcher_Select_Server_JSON != null)
@@ -3315,7 +3315,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
                             {
-                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
+                                Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100u);
                             }, Parent_Screen.Screen_Instance);
                         }
 
@@ -3516,7 +3516,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         {
                                             Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
                                             {
-                                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
+                                                Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(Converted_Value, 100u);
                                             }, Parent_Screen.Screen_Instance);
                                         }
 
@@ -3536,7 +3536,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         {
                                             Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
                                             {
-                                                Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
+                                                Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100u);
                                             }, Parent_Screen.Screen_Instance);
                                         }
 
@@ -3566,21 +3566,16 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         {
                                             Game_Pack_Unpacker(D_Live_Events.Download_Location ?? Last_Known_Location);
                                         }
-                                        else if ((Pack_SBRW_Downloader_Error_Rate >= 0) && (Pack_SBRW_Downloader_Error_Rate <= 10))
-                                        {
-                                            Pack_SBRW_Downloader_Error_Rate++;
-                                            Game_Pack_Downloader();
-                                        }
                                         else
                                         {
-                                            OnDownloadFailed(new Exception((Pack_SBRW_Downloader_Error_Rate > 0) ? "Game Files Package Downloader Encountered too many Errors" : "Game Files Package hash does not Match"));
+                                            OnDownloadFailed(new Exception("Check Source Code"));
                                         }
                                     }
                                 };
                                 /* Main Note: Current Revision File Size (in long) is: 3862102244 */
-                                Pack_SBRW_Downloader.Download(Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack", Save_Settings.Live_Data.Game_Path,
-                                    Save_Settings.Live_Data.Game_Archive_Location, 3862102244,
-                                    new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore), Save_Settings.Live_Data.Launcher_CDN);
+                                Pack_SBRW_Downloader.Download(Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack", Save_Settings.Live_Data.Game_Path, Save_Settings.Live_Data.Game_Archive_Location, 3862102244,
+                                    Save_Settings.Live_Data.Launcher_CDN, "", new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore));
+
                                 break;
                             case APIStatus.Forbidden:
                             case APIStatus.NotFound:
@@ -3810,7 +3805,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                             {
                                                 Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
                                                 {
-                                                    Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, Converted_Value, 100);
+                                                    Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(Converted_Value, 100u);
                                                 }, Parent_Screen.Screen_Instance);
                                             }
                                         }
@@ -3832,7 +3827,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         {
                                             Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
                                             {
-                                                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Normal);
+                                                Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Normal);
                                             }, Parent_Screen.Screen_Instance);
                                         }
                                     }
@@ -3872,7 +3867,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                             if (Parent_Screen.Screen_Instance != null)
                             {
-                                Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Indeterminate);
+                                Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Indeterminate);
                             }
                         }
 
@@ -3977,8 +3972,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         if (Parent_Screen.Screen_Instance != null)
                         {
-                            Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
-                            Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
+                            Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Paused);
+                            Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100u);
                         }
                     }
                     else if (Save_Settings.Live_Data.Launcher_CDN.StartsWith("http://localhost") || Save_Settings.Live_Data.Launcher_CDN.StartsWith("https://localhost"))
@@ -3998,8 +3993,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         if (Parent_Screen.Screen_Instance != null)
                         {
-                            Taskbar_Progress.SetState(Parent_Screen.Screen_Instance.Handle, Taskbar_Progress.TaskbarStates.Paused);
-                            Taskbar_Progress.SetValue(Parent_Screen.Screen_Instance.Handle, 100, 100);
+                            Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Paused);
+                            Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100u);
                         }
                     }
                     else
@@ -4558,7 +4553,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         StillCheckingLastServer = true;
                                         bool GSIErrorFree = true;
 
-                                        if (!Is_Json.Valid(JsonGSI))
+                                        if (!JsonGSI.Valid_Json())
                                         {
                                             GSIErrorFree = false;
                                             if (EnableInsiderBetaTester.Allowed() || EnableInsiderBetaTester.Allowed())

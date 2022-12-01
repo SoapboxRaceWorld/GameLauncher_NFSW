@@ -75,7 +75,7 @@ namespace SBRW.Launcher.App.UI_Forms.Update_Popup_Screen
             {
                 try
                 {
-                    if (Is_Json.Valid(LauncherUpdateCheck.VersionJSON))
+                    if (LauncherUpdateCheck.VersionJSON.Valid_Json())
                     {
 #pragma warning disable CS8602 // Null Safe Check Done Above
                         if(EnableInsiderBetaTester.Allowed())

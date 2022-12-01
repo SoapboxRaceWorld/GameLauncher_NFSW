@@ -258,7 +258,7 @@ namespace SBRW.Launcher.App.UI_Forms
                     Log.Start();
                     await Task.Run(() => Log_Location.RemoveLegacyLogs());
 
-                    LogToFileAddons.Parent_Log_Screen(1, "CURRENT DATE", Time_Clock.GetTime("Date"));
+                    LogToFileAddons.Parent_Log_Screen(1, "CURRENT DATE", Time_Clock.GetTime(0));
                     LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER MIGRATION", "Appdata and/or Roaming Folders");
                     /* Deletes Folders that will Crash the Launcher (Cleanup Migration) */
                     await Task.Run(() =>

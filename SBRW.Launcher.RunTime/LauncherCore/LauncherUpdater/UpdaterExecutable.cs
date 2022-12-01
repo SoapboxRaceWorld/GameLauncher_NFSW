@@ -96,7 +96,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
 
                     try
                     {
-                        if (Is_Json.Valid(VersionJSON) && IsGithubOnline)
+                        if (VersionJSON.Valid_Json() && IsGithubOnline)
                         {
 #pragma warning disable CS8600 // Null Safe Check Done Above
                             GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON);

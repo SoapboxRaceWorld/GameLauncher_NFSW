@@ -57,7 +57,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Lists
                 #endif
             }
 
-            if (Is_Json.Valid(json_language))
+            if (json_language.Valid_Json())
             {
                 try
                 {

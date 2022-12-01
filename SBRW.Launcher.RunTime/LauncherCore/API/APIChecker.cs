@@ -204,7 +204,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.APICheckers
 
                     if (File.Exists(Server_List_Cache))
                     {
-                        if (Is_Json.Valid(File.ReadAllText(Server_List_Cache)))
+                        if (File.ReadAllText(Server_List_Cache).Valid_Json())
                         {
                             Local_Cached_SL = RetrieveJSON(Server_List_Cache, "SL", Local_Cached_SC, true, File.ReadAllText(Server_List_Cache));
                         }
@@ -220,7 +220,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.APICheckers
 
                     if (File.Exists(CDN_List_Cache))
                     {
-                        if (Is_Json.Valid(File.ReadAllText(CDN_List_Cache)))
+                        if (File.ReadAllText(CDN_List_Cache).Valid_Json())
                         {
                             Local_Cached_CDNL = RetrieveJSON(CDN_List_Cache, "CDNL", Local_Cached_SC, true, File.ReadAllText(CDN_List_Cache));
                         }
@@ -355,7 +355,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.APICheckers
                     OnlineListJson = ByPass_List;
                 }
 
-                if (Is_Json.Valid(OnlineListJson))
+                if (OnlineListJson.Valid_Json())
                 {
                     switch (Function)
                     {

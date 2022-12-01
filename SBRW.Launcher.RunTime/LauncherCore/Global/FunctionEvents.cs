@@ -105,7 +105,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
 
                     if (!string.IsNullOrWhiteSpace(send))
                     {
-                        if (!Is_Email.Valid(send))
+                        if (!send.Valid_Email())
                         {
                             MessageBox.Show(null, "Email Address is not Valid. Please Check and Try Again", "GameLauncher",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
