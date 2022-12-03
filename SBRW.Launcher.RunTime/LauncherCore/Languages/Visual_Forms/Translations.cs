@@ -5,10 +5,11 @@ using System;
 using System.Reflection;
 using System.Resources;
 using System.Text.RegularExpressions;
+using SBRW.Launcher.RunTime.LauncherCore.Global;
 
 namespace SBRW.Launcher.RunTime.LauncherCore.Languages.Visual_Forms
 {
-    class Translations
+    static class Translations
     {
         private static ResourceManager? Lang_Launcher = null;
 
@@ -58,10 +59,53 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Languages.Visual_Forms
             }
         }
 
+        /// <summary>
+        /// Check System Language and Return Current Lang for Speech Files
+        /// </summary>
+        /// <param name="Language"></param>
+        /// <returns></returns>
+        public static string Speech_Files(string Provided_Language)
+        {
+            switch (Provided_Language.ToLowerInvariant())
+            {
+                case "ger":
+                case "deu":
+                case "de":
+                    return "de";
+                case "rus":
+                case "ru":
+                    return "ru";
+                case "spa":
+                case "es":
+                    return "es";
+                default:
+                    return "en";
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static int Speech_Files_Size()
+        {
+            switch (Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName.ToLowerInvariant()))
+            {
+                case "de":
+                    return 105948386;
+                case "ru":
+                    return 121367723;
+                case "es":
+                    return 101540466;
+                default:
+                    return 141805935;
+            }
+        }
+
         public static string UI(string Chosen_Lang)
         {
             if (!string.IsNullOrWhiteSpace(Chosen_Lang))
             {
+                /* French */
                 if (Chosen_Lang.Contains("fr"))
                 {
                     return "fr";

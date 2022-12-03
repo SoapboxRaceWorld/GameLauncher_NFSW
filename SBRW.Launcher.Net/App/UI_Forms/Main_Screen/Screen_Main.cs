@@ -2978,8 +2978,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
                             else
                             {
-                                speechFile = Download_LZMA_Support.SpeechFiles();
-                                speechSize = Download_LZMA_Support.SpeechFilesSize();
+                                speechFile = Translations.Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName);
+                                speechSize = Translations.Speech_Files_Size();
                             }
                         }
                         catch
@@ -2997,8 +2997,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     catch (Exception Error)
                     {
                         LogToFileAddons.OpenLog("Download Speech Files", string.Empty, Error, string.Empty, true);
-                        speechFile = Download_LZMA_Support.SpeechFiles();
-                        speechSize = Download_LZMA_Support.SpeechFilesSize();
+                        speechFile = Translations.Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName??string.Empty);
+                        speechSize = Translations.Speech_Files_Size();
                     }
 
                     Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper(), this);
@@ -3864,9 +3864,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
                             Log.Info("DOWNLOAD: Getting Core Game Files");
 #if (RELEASE_UNIX || DEBUG_UNIX)
-                            Download_Settings.System_Unix = true;
+                            Download_LZMA_Settings.System_Unix = Download_Settings.System_Unix = true;
 #endif
-                            Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
+                            Download_LZMA_Settings.Alternative_WebCalls = Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
                             LZMA_Downloader.StartDownload(Save_Settings.Live_Data.Launcher_CDN, string.Empty, Save_Settings.Live_Data.Game_Path, false, false, 1130632198);
                         }
                         else

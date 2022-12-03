@@ -26,7 +26,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Lists
                 Resolution_Results.DEVMODE vDevMode = new Resolution_Results.DEVMODE();
 
                 JSONResolutions += "[";
-                while (Resolution_Results.EnumDisplaySettings(null, AmountOfRes, vDevMode))
+                while (Resolution_Results.EnumDisplaySettings(null, AmountOfRes, ref vDevMode))
                 {
                     JSONResolutions += "{\"resolution\": \"" + vDevMode.dmPelsWidth + "x" + vDevMode.dmPelsHeight + "\", \"dmPelsWidth\": \"" +
                         vDevMode.dmPelsWidth + "\", \"dmPelsHeight\": \"" + vDevMode.dmPelsHeight + "\"},";
