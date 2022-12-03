@@ -22,7 +22,7 @@ using SBRW.Launcher.Core.Cache;
 using SBRW.Launcher.Core.Discord.Reference_.List_;
 using SBRW.Launcher.Core.Discord.RPC_;
 using SBRW.Launcher.Core.Downloader;
-using SBRW.Launcher.Core.Downloader.LZMA_;
+using SBRW.Launcher.Core.Downloader.LZMA;
 #if NETFRAMEWORK
 using SBRW.Launcher.App.UI_Forms.About_Screen;
 #endif
@@ -3732,7 +3732,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             if (D_Live_Events.Recorded_Exception != null && LZMA_Downloader.Downloading)
                             {
                                 LogToFileAddons.OpenLog("LZMA_SBRW_Downloader", string.Empty, D_Live_Events.Recorded_Exception, string.Empty, true);
-                                OnDownloadFailed(new Exception((Pack_SBRW_Downloader_Error_Rate > 0) ? "Game Files Package Downloader Encountered too many Errors" : "Game Files Package hash does not Match"));
+                                OnDownloadFailed(D_Live_Events.Recorded_Exception);
                             }
                         };
 
@@ -3740,7 +3740,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             if ((!IsDisposed || !Disposing) && Live_Data.Complete)
                             {
-                                Game_Downloaders();
+                                OnDownloadFinished();
                             }
                         };
 
@@ -3780,13 +3780,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     }
                                     catch
                                     {
-
-                                    }
-                                    finally
-                                    {
-#if !(RELEASE_UNIX || DEBUG_UNIX)
-                                        GC.Collect();
-#endif
+                                        /* Ignore Exception */
                                     }
 
                                     try
@@ -3812,13 +3806,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     }
                                     catch
                                     {
-
-                                    }
-                                    finally
-                                    {
-#if !(RELEASE_UNIX || DEBUG_UNIX)
-                                        GC.Collect();
-#endif
+                                        /* Ignore Exception */
                                     }
 
                                     try
@@ -3833,13 +3821,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     }
                                     catch
                                     {
-
-                                    }
-                                    finally
-                                    {
-#if !(RELEASE_UNIX || DEBUG_UNIX)
-                                        GC.Collect();
-#endif
+                                        /* Ignore Exception */
                                     }
                                 }
                                 else if (LZMA_Downloader != null)
@@ -3902,8 +3884,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         public void Game_Folder_Checks()
         {
-            bool Force_Restart_Download_Request = false;
-
             if (Screen_Instance != null && (!IsDisposed || !Disposing))
             {
                 ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Width = 0, this, false);
@@ -4012,20 +3992,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
                 catch (Exception Error)
                 {
-                    Force_Restart_Download_Request = true;
                     LogToFileAddons.OpenLog("Game Folder Checks", string.Empty, Error, string.Empty, true);
-                }
-                finally
-                {
-                    //@DavidCarbon or @Launcher_Dev_Team (4-22-2022)
-#if !(RELEASE_UNIX || DEBUG_UNIX)
-                    GC.Collect(); 
-#endif
-                }
-
-                if (Force_Restart_Download_Request)
-                {
-                    Game_Downloaders();
                 }
             }
         }

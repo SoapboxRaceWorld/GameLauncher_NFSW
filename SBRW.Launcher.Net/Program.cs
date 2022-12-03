@@ -349,23 +349,24 @@ namespace SBRW.Launcher.Net
                                 /* MONO Hates this... */
                                 string[] File_List =
                                 {
-                                        "DiscordRPC.dll - 1.1.175.0",
+                                        "DiscordRPC.dll - 1.1.3.18",
                                         "Flurl.dll - 3.0.6",
                                         "Flurl.Http.dll - 3.2.4",
-                                        "LZMA.dll - 9.20",
-                                        "Newtonsoft.Json.dll - 13.0.1",
+                                        "LZMA.dll - 9.10 beta",
+                                        "Newtonsoft.Json.dll - 13.0.2",
                                         "System.ValueTuple.dll - 4.6.26515.06 @BuiltBy: dlab-DDVSOWINAGE059 " +
                                         "@Branch: release/2.1 @SrcCode: https://github.com/dotnet/corefx/tree/30ab651fcb4354552bd4891619a0bdd81e0ebdbf",
                                         "WindowsFirewallHelper.dll - 2.2.0.85",
                                         "SBRW.Ini.Parser.dll - 2.6.5",
-                                        "SBRW.Launcher.Core.dll - 0.1.6",
+                                        "SBRW.Launcher.Core.dll - 0.2.2",
                                         "SBRW.Nancy.dll - 2.0.13",
                                         "SBRW.Nancy.Hosting.Self.dll - 2.0.11",
-                                        "SBRW.Launcher.Core.Extra.dll - 0.1.6-preview001",
-                                        "SBRW.Launcher.Core.Discord.dll - 0.1.3",
-                                        "SBRW.Launcher.Core.Proxy.dll - 0.1.3",
-                                        "SBRW.Launcher.Core.Theme.dll - 0.1.0",
-                                        "SBRW.Launcher.Core.Downloader.dll - 0.1.6"
+                                        "SBRW.Launcher.Core.Extra.dll - 0.2.2",
+                                        "SBRW.Launcher.Core.Discord.dll - 0.2.2",
+                                        "SBRW.Launcher.Core.Proxy.dll - 0.2.2",
+                                        "SBRW.Launcher.Core.Theme.dll - 0.1.1",
+                                        "SBRW.Launcher.Core.Downloader.dll - 0.2.2",
+                                        "SBRW.Launcher.Core.Downloader.LZMA.dll - 0.2.0"
                                 };
 
                                 List<string> Missing_File_List = new List<string>();
