@@ -109,7 +109,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                 {
                     case AuthHash.H10:
                         Email = Input_Email.Text.ToString();
-                        Password = Input_Email.Text.ToString();
+                        Password = Input_Password.Text.ToString();
                         break;
                     case AuthHash.H11:
                         Email = Input_Email.Text.ToString();
