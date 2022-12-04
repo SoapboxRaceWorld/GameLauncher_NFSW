@@ -1219,9 +1219,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private void Client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e)
         {
-            try
+            if (Screen_Instance != null && !IsDisposed && !Disposing)
             {
-                if (Screen_Instance != null && (!IsDisposed || !Disposing))
+                try
                 {
                     long BytesReceived = e.BytesReceived;
                     long TotalBytesToReceive = e.TotalBytesToReceive;
@@ -1245,7 +1245,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Label_Download_Information.Text = Text_B;
                             }, false);
                         }
-                        
+
                         try
                         {
                             decimal Calulated_Division = decimal.Divide(BytesReceived, TotalBytesToReceive);
@@ -1266,10 +1266,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
                     }
                 }
-            }
-            catch (StackOverflowException)
-            {
-                if (Screen_Instance != null && (!IsDisposed || !Disposing))
+                catch (StackOverflowException)
                 {
                     string Text_A = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
                     if (Label_Download_Information_Support.Text != Text_A)
@@ -1289,16 +1286,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         });
                     }
                 }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("Client_DownloadProgressChanged_RELOADED", string.Empty, Error, string.Empty, true);
-            }
-            finally
-            {
-                #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                GC.Collect(); 
-                #endif
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Client_DownloadProgressChanged_RELOADED", string.Empty, Error, string.Empty, true);
+                }
             }
         }
 
@@ -3273,9 +3264,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 FunctionStatus.IsVerifyHashDisabled = true;
             }
         }
-#endregion
+        #endregion
 
-#region Game Files Downloader (SBRW Pack [.pack.sbrw])
+        #region Game Files Downloader (SBRW Pack [.pack.sbrw])
+        /* potential error is that the Pack_SBRW_Unpacker variable is being assigned a new Download_Extract object every time the 
+         * Game_Pack_Downloader method is called, but it's not being disposed of or set to null afterwards. 
+         * This could lead to memory leaks if the method is called repeatedly. 
+         * @DavidCarbon or @DavidCarbon-SBRW/launcher-team
+         */
         private void Game_Pack_Unpacker(string Provided_File_Path)
         {
             if (!Pack_SBRW_Downloader_Unpack_Lock)
@@ -3284,24 +3280,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Pack_SBRW_Unpacker = new Download_Extract();
                 Pack_SBRW_Unpacker.Internal_Error += (x, U_Live_Events) =>
                 {
-                    if (U_Live_Events.Recorded_Exception != null)
+                    if (U_Live_Events.Recorded_Exception != null && !Disposing && !IsDisposed)
                     {
                         LogToFileAddons.OpenLog("Pack_SBRW_Unpacker", string.Empty, U_Live_Events.Recorded_Exception, string.Empty, true);
-
-                        if ((Pack_SBRW_Downloader_Error_Rate >= 0) && (Pack_SBRW_Downloader_Error_Rate <= 10))
-                        {
-                            Pack_SBRW_Downloader_Error_Rate++;
-                            Game_Pack_Downloader();
-                        }
-                        else
-                        {
-                            OnDownloadFailed(new Exception("Game Files Package Unpacker Encountered too many Errors", U_Live_Events.Recorded_Exception));
-                        }
+                        OnDownloadFailed(U_Live_Events.Recorded_Exception);
                     }
                 };
                 Pack_SBRW_Unpacker.Live_Progress += (x, U_Live_Events) =>
                 {
-                    if (U_Live_Events != null && (!Disposing || !IsDisposed))
+                    if (U_Live_Events != null && !Disposing && !IsDisposed)
                     {
                         ProgressBar_Extracting.SafeInvokeAction(() =>
                         {
@@ -3331,7 +3318,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 };
                 Pack_SBRW_Unpacker.Complete += (x, U_Live_Events) =>
                 {
-                    if (U_Live_Events != null && (!Disposing || !IsDisposed))
+                    if (U_Live_Events != null && !Disposing && !IsDisposed)
                     {
                         Label_Download_Information_Support.SafeInvokeAction(() =>
                         {
