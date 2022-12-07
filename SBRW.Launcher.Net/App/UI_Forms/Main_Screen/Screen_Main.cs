@@ -59,7 +59,6 @@ using System.Net.Cache;
 using SBRW.Launcher.Core.Extension.Numbers_;
 using SBRW.Launcher.Core.Extension.Api_;
 using SBRW.Launcher.App.UI_Forms.Register_Screen;
-using System.Reflection;
 using SBRW.Launcher.Core.Extra.Reference.System_;
 using System.Threading.Tasks;
 
@@ -3466,18 +3465,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                                 OnDownloadFailed(D_Live_Events.Recorded_Exception);
                                             }
                                         }
-                                        else if (D_Live_Events.Recorded_Exception is IOException)
-                                        {
-                                            OnDownloadFailed(D_Live_Events.Recorded_Exception);
-                                        }
-                                        else if ((Pack_SBRW_Downloader_Error_Rate >= 0) && (Pack_SBRW_Downloader_Error_Rate <= 10))
-                                        {
-                                            Pack_SBRW_Downloader_Error_Rate++;
-                                            Game_Pack_Downloader();
-                                        }
                                         else
                                         {
-                                            OnDownloadFailed(new Exception((Pack_SBRW_Downloader_Error_Rate > 0) ? "Game Files Package Downloader Encountered too many Errors" : "Game Files Package hash does not Match", D_Live_Events.Recorded_Exception));
+                                            OnDownloadFailed(D_Live_Events.Recorded_Exception);
                                         }
                                     }
                                 };
@@ -3561,7 +3551,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 };
                                 /* Main Note: Current Revision File Size (in long) is: 3862102244 */
                                 Pack_SBRW_Downloader.Download(Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack", Save_Settings.Live_Data.Game_Path, Save_Settings.Live_Data.Game_Archive_Location, 3862102244,
-                                    Save_Settings.Live_Data.Launcher_CDN, "", new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore));
+                                    Save_Settings.Live_Data.Launcher_CDN, "GameFiles.sbrwpack");
 
                                 break;
                             case APIStatus.Forbidden:
