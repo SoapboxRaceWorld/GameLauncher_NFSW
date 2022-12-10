@@ -3657,7 +3657,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             if ((!IsDisposed || !Disposing) && Live_Data.Complete)
                             {
-                                OnDownloadFinished();
+                                Game_Downloaders();
                             }
                         };
 
