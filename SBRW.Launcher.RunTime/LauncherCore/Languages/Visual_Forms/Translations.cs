@@ -88,17 +88,13 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Languages.Visual_Forms
         /// <returns></returns>
         public static int Speech_Files_Size()
         {
-            switch (Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName.ToLowerInvariant()))
+            return Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName.ToLowerInvariant()) switch
             {
-                case "de":
-                    return 105948386;
-                case "ru":
-                    return 121367723;
-                case "es":
-                    return 101540466;
-                default:
-                    return 141805935;
-            }
+                "de" => 105948386,
+                "ru" => 121367723,
+                "es" => 101540466,
+                _ => 141805935,
+            };
         }
 
         public static string UI(string Chosen_Lang)
