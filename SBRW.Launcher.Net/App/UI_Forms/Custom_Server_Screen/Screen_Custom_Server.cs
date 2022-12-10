@@ -199,10 +199,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                                         }, this);
                                     }
 
-                                    if (Client != null)
-                                    {
-                                        Client.Dispose();
-                                    }
+                                    Client?.Dispose();
                                 }
                                 else
                                 {
@@ -307,10 +304,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                                             }
                                             finally
                                             {
-                                                if (CheckMate != null)
-                                                {
-                                                    CheckMate.Dispose();
-                                                }
+                                                CheckMate?.Dispose();
 
                                                 #if !(RELEASE_UNIX || DEBUG_UNIX) 
                                                 GC.Collect(); 
@@ -329,10 +323,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                                             }, this);
                                         }
 
-                                        if (Client != null)
-                                        {
-                                            Client.Dispose();
-                                        }
+                                        Client?.Dispose();
                                     }
                                 }
                             };

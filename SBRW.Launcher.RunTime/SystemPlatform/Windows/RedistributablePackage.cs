@@ -168,10 +168,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                             }
                             finally
                             {
-                                if (Client != null)
-                                {
-                                    Client.Dispose();
-                                }
+                                Client?.Dispose();
 
 #if !(RELEASE_UNIX || DEBUG_UNIX)
                                 GC.Collect(); 
@@ -209,10 +206,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                 });
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
-                                if (proc != null)
-                                {
-                                    proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
-                                }
+                                proc?.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
 
                                 if (proc == null)
                                 {
@@ -345,10 +339,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                 }
                                 finally
                                 {
-                                    if (Client != null)
-                                    {
-                                        Client.Dispose();
-                                    }
+                                    Client?.Dispose();
 
 #if !(RELEASE_UNIX || DEBUG_UNIX)
                                     GC.Collect(); 
@@ -384,10 +375,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                         FileName = "VC_redist.x64.exe"
                                     });
 
-                                    if (proc != null)
-                                    {
-                                        proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
-                                    }
+                                    proc?.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
 
                                     if (proc == null)
                                     {

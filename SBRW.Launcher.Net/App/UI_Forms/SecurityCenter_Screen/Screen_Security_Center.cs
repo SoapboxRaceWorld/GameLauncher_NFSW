@@ -170,8 +170,8 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                 }
                 finally
                 {
-                    if (ObjectPath != null) { ObjectPath.Dispose(); }
-                    if (ObjectCollection != null) { ObjectCollection.Dispose(); }
+                    ObjectPath?.Dispose();
+                    ObjectCollection?.Dispose();
                 }
             }
 #endif
@@ -226,8 +226,8 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
                 }
                 finally
                 {
-                    if (ObjectPath != null) { ObjectPath.Dispose(); }
-                    if (ObjectCollection != null) { ObjectCollection.Dispose(); }
+                    ObjectPath?.Dispose();
+                    ObjectCollection?.Dispose();
                 }
 #endif
 

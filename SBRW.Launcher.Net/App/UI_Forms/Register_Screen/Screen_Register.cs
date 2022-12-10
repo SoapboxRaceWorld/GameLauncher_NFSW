@@ -182,10 +182,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                         }
                         finally
                         {
-                            if (Client != null)
-                            {
-                                Client.Dispose();
-                            }
+                            Client?.Dispose();
                         }
                     });
 

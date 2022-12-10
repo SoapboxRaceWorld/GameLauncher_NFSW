@@ -70,10 +70,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Client.Auth
                     }
                     finally
                     {
-                        if (Client != null)
-                        {
-                            Client.Dispose();
-                        }
+                        Client?.Dispose();
                     }
                 }
                 else

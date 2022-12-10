@@ -29,7 +29,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
         {
             if (IsUSXEditorOpen || Application.OpenForms["Screen_User_Settings_Editor"] != null)
             {
-                if (Application.OpenForms["Screen_User_Settings_Editor"] != null) { Application.OpenForms["Screen_User_Settings_Editor"].Activate(); }
+                Application.OpenForms["Screen_User_Settings_Editor"]?.Activate();
             }
             else
             {

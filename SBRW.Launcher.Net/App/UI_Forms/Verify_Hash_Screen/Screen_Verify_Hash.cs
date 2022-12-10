@@ -464,10 +464,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                         }
                         finally
                         {
-                            if (Client != null)
-                            {
-                                Client.Dispose();
-                            }
+                            Client?.Dispose();
                         }
 
                         if (ErrorFree)
@@ -708,10 +705,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                                 }
                                 finally
                                 {
-                                    if (Client != null)
-                                    {
-                                        Client.Dispose();
-                                    }
+                                    Client?.Dispose();
                                 }
                             }
                             else

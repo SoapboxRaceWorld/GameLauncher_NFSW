@@ -312,10 +312,7 @@ namespace SBRW.Launcher.Net
                             }
                             finally
                             {
-                                if (Client != null)
-                                {
-                                    Client.Dispose();
-                                }
+                                Client?.Dispose();
                             }
                         }
                         catch { }

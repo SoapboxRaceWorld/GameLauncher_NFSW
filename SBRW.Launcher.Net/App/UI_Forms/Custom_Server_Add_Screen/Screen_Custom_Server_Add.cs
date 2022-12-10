@@ -118,10 +118,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                         }
                         finally
                         {
-                            if (Client != null)
-                            {
-                                Client.Dispose();
-                            }
+                            Client?.Dispose();
                         }
                     }
                     catch (Exception Error)
@@ -198,10 +195,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                             }
                             finally
                             {
-                                if (Client != null)
-                                {
-                                    Client.Dispose();
-                                }
+                                Client?.Dispose();
                             }
 
                             try
@@ -403,7 +397,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
         {
             if (IsAddServerOpen || Application.OpenForms["Screen_Custom_Server_Add"] != null)
             {
-                if (Application.OpenForms["Screen_Custom_Server_Add"] != null) { Application.OpenForms["Screen_Custom_Server_Add"].Activate(); }
+                Application.OpenForms["Screen_Custom_Server_Add"]?.Activate();
             }
             else
             {

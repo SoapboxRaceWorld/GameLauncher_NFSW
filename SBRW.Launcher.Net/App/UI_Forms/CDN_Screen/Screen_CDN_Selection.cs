@@ -224,10 +224,7 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
                                         }
                                         finally
                                         {
-                                            if (CheckMate != null)
-                                            {
-                                                CheckMate.Dispose();
-                                            }
+                                            CheckMate?.Dispose();
 #if !(RELEASE_UNIX || DEBUG_UNIX)
                                             GC.Collect();
 #endif

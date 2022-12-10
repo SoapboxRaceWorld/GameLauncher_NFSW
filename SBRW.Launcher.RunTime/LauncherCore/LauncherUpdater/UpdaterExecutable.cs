@@ -82,10 +82,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                     }
                     finally
                     {
-                        if (Client != null)
-                        {
-                            Client.Dispose();
-                        }
+                        Client?.Dispose();
 
                         #if !(RELEASE_UNIX || DEBUG_UNIX) 
                         GC.Collect(); 
@@ -240,10 +237,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                         }
                         finally
                         {
-                            if (Client != null)
-                            {
-                                Client.Dispose();
-                            }
+                            Client?.Dispose();
 
                             #if !(RELEASE_UNIX || DEBUG_UNIX) 
                             GC.Collect(); 
@@ -363,10 +357,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                             }
                             finally
                             {
-                                if (Client != null)
-                                {
-                                    Client.Dispose();
-                                }
+                                Client?.Dispose();
 
                                 #if !(RELEASE_UNIX || DEBUG_UNIX) 
                                 GC.Collect(); 
