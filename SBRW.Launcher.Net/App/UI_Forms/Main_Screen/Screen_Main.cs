@@ -978,10 +978,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
 
 #if NETFRAMEWORK
-            if (Nfswstarted != null)
-            {
-                Nfswstarted.Abort();
-            }
+            Nfswstarted?.Abort();
 #endif
             string Error_Msg = NFSW.ErrorTranslation(Process_Exit_Code);
 
@@ -1101,10 +1098,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     }
                     if (exitCode == 0 && !Launcher_Value.Game_In_Event_Bug && AC_Core.Stop_Check())
                     {
-                        if (Parent_Screen.Screen_Instance != null)
-                        {
-                            Parent_Screen.Screen_Instance.Button_Close_Click(new object(), new EventArgs());
-                        }
+                        Parent_Screen.Screen_Instance?.Button_Close_Click(new object(), new EventArgs());
                     }
                     else if (AC_Core.Stop_Check())
                     {
@@ -1198,14 +1192,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Button_Close.SafeInvokeAction(() => Button_Close.Visible = false, this);
                     }
 
-                    if (Parent_Screen.Screen_Instance != null)
-                    {
-                        Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                    Parent_Screen.Screen_Instance?.SafeInvokeAction(() =>
                         {
                             Parent_Screen.Screen_Instance.WindowState = FormWindowState.Minimized;
                             Parent_Screen.Screen_Instance.ShowInTaskbar = false;
                         });
-                    }
 
                     Log.Core("LAUNCHER: Game has Fully Launched, Minimized Launcher");
                 }
@@ -1359,10 +1350,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
                 finally
                 {
-                    if (Client != null)
-                    {
-                        Client.Dispose();
-                    }
+                    Client?.Dispose();
                 }
 
                 IsDownloadingModNetFiles = true;
@@ -1635,10 +1623,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     }
                     finally
                     {
-                        if (ModNetJsonURI != null)
-                        {
-                            ModNetJsonURI.Dispose();
-                        }
+                        ModNetJsonURI?.Dispose();
 
                         Application.DoEvents();
                     }
@@ -1805,10 +1790,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
                         finally
                         {
-                            if (ModInfoJson != null)
-                            {
-                                ModInfoJson.Dispose();
-                            }
+                            ModInfoJson?.Dispose();
 
                             Application.DoEvents();
                         }
@@ -1858,10 +1840,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             catch { }
                             finally
                             {
-                                if (CarsJson != null)
-                                {
-                                    CarsJson.Dispose();
-                                }
+                                CarsJson?.Dispose();
                             }
 
                             Uri URLCall_B = new Uri(json2.basePath + "/events.json");
@@ -1889,10 +1868,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             catch { }
                             finally
                             {
-                                if (EventsJson != null)
-                                {
-                                    EventsJson.Dispose();
-                                }
+                                EventsJson?.Dispose();
                             }
 
                             /* Version 1.3 @metonator - DavidCarbon */
@@ -1959,10 +1935,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
                             finally
                             {
-                                if (ServerModsList != null)
-                                {
-                                    ServerModsList.Dispose();
-                                }
+                                ServerModsList?.Dispose();
 
                                 Application.DoEvents();
                             }
@@ -2313,10 +2286,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         LogToFileAddons.OpenLog("JSON GSI", string.Empty, e2.Error, string.Empty, true);
                     }
 
-                    if (Client != null)
-                    {
-                        Client.Dispose();
-                    }
+                    Client?.Dispose();
                 }
                 else
                 {
@@ -2623,10 +2593,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
                         finally
                         {
-                            if (Client != null)
-                            {
-                                Client.Dispose();
-                            }
+                            Client?.Dispose();
                         }
 
                         /* For Thread Safety */
@@ -2690,10 +2657,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
                         finally
                         {
-                            if (CheckMate != null)
-                            {
-                                CheckMate.Dispose();
-                            }
+                            CheckMate?.Dispose();
                         }
 
                         ServerEnabled = true;
@@ -2742,10 +2706,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 {
                                     if (Events_A.Cancelled)
                                     {
-                                        if (Client_A != null)
-                                        {
-                                            Client_A.Dispose();
-                                        }
+                                        Client_A?.Dispose();
                                     }
                                     else if (Events_A.Error != null)
                                     {
@@ -2761,10 +2722,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #endif
                                         }
 
-                                        if (Client_A != null)
-                                        {
-                                            Client_A.Dispose();
-                                        }
+                                        Client_A?.Dispose();
                                     }
                                     else if (!ServerChangeTriggered && Events_A.Result != null)
                                     {
@@ -2806,10 +2764,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         }
                                         finally
                                         {
-                                            if (Client_A != null)
-                                            {
-                                                Client_A.Dispose();
-                                            }
+                                            Client_A?.Dispose();
 
 #if !(RELEASE_UNIX || DEBUG_UNIX)
                                             GC.Collect(); 
@@ -2883,10 +2838,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Width = 0, this);
                 ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Width = 0, this);
 
-                if (Parent_Screen.Screen_Instance != null)
-                {
-                    Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Indeterminate);
-                }
+                Parent_Screen.Screen_Instance?.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Indeterminate);
 
                 string SpecificTracksFilePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Tracks", "STREAML5RA_98.BUN");
                 if (!File.Exists(SpecificTracksFilePath) && (LZMA_Downloader != null))
@@ -2923,10 +2875,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     ProgressBar_Preload.SafeInvokeAction(() => ProgressBar_Preload.Width = 0, this);
                     ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Width = 0, this);
 
-                    if (Parent_Screen.Screen_Instance != null)
-                    {
-                        Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Indeterminate);
-                    }
+                    Parent_Screen.Screen_Instance?.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Indeterminate);
 
                     try
                     {
@@ -2978,10 +2927,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
                         finally
                         {
-                            if (Client != null)
-                            {
-                                Client.Dispose();
-                            }
+                            Client?.Dispose();
                         }
                     }
                     catch (Exception Error)
@@ -3163,10 +3109,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         {
             try
             {
-                if (LZMA_Downloader != null)
-                {
-                    LZMA_Downloader.Stop();
-                }
+                LZMA_Downloader?.Stop();
 
                 if (Pack_SBRW_Downloader != null)
                 {
@@ -3509,13 +3452,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 {
                                     if (D_Live_Events.Complete && x != null)
                                     {
-                                        if (Parent_Screen.Screen_Instance != null)
-                                        {
-                                            Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                                        Parent_Screen.Screen_Instance?.SafeInvokeAction(() =>
                                             {
                                                 Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100u);
                                             }, Parent_Screen.Screen_Instance);
-                                        }
 
                                         ProgressBar_Extracting.SafeInvokeAction(() =>
                                         {
@@ -3788,13 +3728,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                     try
                                     {
-                                        if (Parent_Screen.Screen_Instance != null)
-                                        {
-                                            Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
+                                        Parent_Screen.Screen_Instance?.SafeInvokeAction(() =>
                                             {
                                                 Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Normal);
                                             }, Parent_Screen.Screen_Instance);
-                                        }
                                     }
                                     catch
                                     {
@@ -3824,10 +3761,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             ProgressBar_Extracting.SafeInvokeAction(() => ProgressBar_Extracting.Width = 0, this, false);
                             Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Checking Core Files...".ToUpper(), this);
 
-                            if (Parent_Screen.Screen_Instance != null)
-                            {
-                                Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Indeterminate);
-                            }
+                            Parent_Screen.Screen_Instance?.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Indeterminate);
                         }
 
                         string GameExePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe");
@@ -4524,10 +4458,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     {
                                         StillCheckingLastServer = false;
 
-                                        if (Client != null)
-                                        {
-                                            Client.Dispose();
-                                        }
+                                        Client?.Dispose();
                                     }
                                 }
                                 catch (Exception Error)

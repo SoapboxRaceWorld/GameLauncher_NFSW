@@ -38,7 +38,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
         {
             if (IsSelectServerOpen || Application.OpenForms["Screen_Custom_Server"] != null)
             {
-                if (Application.OpenForms["Screen_Custom_Server"] != null) { Application.OpenForms["Screen_Custom_Server"].Activate(); }
+                Application.OpenForms["Screen_Custom_Server"]?.Activate();
             }
             else
             {

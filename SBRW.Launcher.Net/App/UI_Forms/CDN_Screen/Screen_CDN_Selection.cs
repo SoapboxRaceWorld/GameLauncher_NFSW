@@ -38,7 +38,7 @@ namespace SBRW.Launcher.App.UI_Forms.Selection_CDN_Screen
         {
             if (IsSelectServerOpen || Application.OpenForms["Screen_CDN_Selection"] != null)
             {
-                if (Application.OpenForms["Screen_CDN_Selection"] != null) { Application.OpenForms["Screen_CDN_Selection"].Activate(); }
+                Application.OpenForms["Screen_CDN_Selection"]?.Activate();
             }
             else
             {
