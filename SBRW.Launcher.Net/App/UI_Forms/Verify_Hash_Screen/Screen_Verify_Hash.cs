@@ -506,7 +506,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                         {
                             string FileHash = file[0].Trim();
                             string FileName = file[1].Trim();
-                            string RealPathToFile = Path.Combine(Save_Settings.Live_Data.Game_Path, FileName);
+                            string RealPathToFile = Path.Combine(Save_Settings.Live_Data.Game_Path + FileName);
 
                             if (!File.Exists(RealPathToFile))
                             {
