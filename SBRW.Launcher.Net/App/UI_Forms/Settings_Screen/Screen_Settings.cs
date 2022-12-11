@@ -702,7 +702,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 {
                     if (Screen_Main.Screen_Instance != null)
                     {
-                        Screen_Main.Pack_SBRW_Downloader_Error_Rate = 0;
                         Screen_Main.Screen_Instance.Game_Folder_Checks();
                     }
                 }

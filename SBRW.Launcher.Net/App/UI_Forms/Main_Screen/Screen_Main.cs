@@ -88,7 +88,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public static Download_Queue? Pack_SBRW_Downloader { get; set; }
         public static Download_Extract? Pack_SBRW_Unpacker { get; set; }
         private static int Pack_SBRW_Downloader_Time_Span { get; set; }
-        public static int Pack_SBRW_Downloader_Error_Rate { get; set; }
         public static bool Pack_SBRW_Downloader_Unpack_Lock { get; set; }
 
 
