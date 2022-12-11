@@ -9,7 +9,7 @@ using SBRW.Launcher.RunTime.LauncherCore.Global;
 
 namespace SBRW.Launcher.RunTime.LauncherCore.Languages.Visual_Forms
 {
-    static class Translations
+    public static class Translations
     {
         private static ResourceManager? Lang_Launcher = null;
 

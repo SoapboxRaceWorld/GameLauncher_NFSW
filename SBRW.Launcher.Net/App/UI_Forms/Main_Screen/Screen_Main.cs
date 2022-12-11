@@ -83,7 +83,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private static bool StillCheckingLastServer { get; set; }
         private static bool ServerChangeTriggered { get; set; }
 
-        private static DateTime? DownloadStartTime { get; set; }
         
         public static Download_LZMA_Data? LZMA_Downloader { get; set; }
         public static Download_Queue? Pack_SBRW_Downloader { get; set; }
@@ -2843,7 +2842,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 string SpecificTracksFilePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Tracks", "STREAML5RA_98.BUN");
                 if (!File.Exists(SpecificTracksFilePath) && (LZMA_Downloader != null))
                 {
-                    DownloadStartTime = DateTime.Now;
                     Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Downloading: Tracks Data".ToUpper(), this);
                     Log.Info("DOWNLOAD: Getting Tracks Folder");
                     Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
@@ -2879,7 +2877,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     try
                     {
-                        speechFile = Download_LZMA_Support.SpeechFiles(Save_Settings.Live_Data.Launcher_Language);
+                        speechFile = Translations.Speech_Files(Save_Settings.Live_Data.Launcher_Language);
 
                         Uri URLCall = new Uri(Save_Settings.Live_Data.Launcher_CDN + "/" + speechFile + "/index.xml");
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
@@ -2943,7 +2941,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 string SoundSpeechPath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Sound", "Speech", "copspeechsth_" + speechFile + ".big");
                 if (!File.Exists(SoundSpeechPath) && InformationCache.EnableLZMADownloader && LZMA_Downloader != null)
                 {
-                    DownloadStartTime = DateTime.Now;
                     Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Downloading: Language Audio".ToUpper(), this);
                     Log.Info("DOWNLOAD: Getting Speech/Audio Files");
                     Download_Settings.Alternative_WebCalls = Launcher_Value.Launcher_Alternative_Webcalls();
@@ -3639,8 +3636,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     try
                     {
-                        LZMA_Downloader = new Download_LZMA_Data(this, 3, 2, 16, DownloadStartTime ?? DateTime.Now)
+                        LZMA_Downloader = new Download_LZMA_Data(3, 2, 16)
                         {
+                            /* NOT IMPLEMENTED */
                             Progress_Update_Frequency = 800
                         };
 
@@ -3682,8 +3680,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     {
                                         Label_Download_Information.SafeInvokeAction(() =>
                                         Label_Download_Information.Text = string.Format("{0} of {1} ({3}%) — {2}", Time_Conversion.FormatFileSize(Live_Data.Bytes_Received),
-                                        Time_Conversion.FormatFileSize(Live_Data.Bytes_To_Receive_Total), Time_Conversion.EstimateFinishTime(Live_Data.Bytes_Received, Live_Data.Bytes_To_Receive_Total,
-                                        Live_Data.Start_Time), Math_Core.Clamp(Math.Round(Calulated_Division * 100, 0), 0, 100)), this);
+                                        Live_Data.Bytes_To_Receive_Total.FormatFileSize(), Live_Data.Bytes_Received.EstimateFinishTime(Live_Data.Bytes_To_Receive_Total,
+                                        Live_Data.Start_Time), Math.Round(Calulated_Division * 100, 0).Clamp(0, 100)), this);
 
                                         if (EnableInsiderDeveloper.Allowed())
                                         {
@@ -3768,7 +3766,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         if (!File.Exists(GameExePath) && LZMA_Downloader != null)
                         {
-                            DownloadStartTime = DateTime.Now;
                             if (Screen_Instance != null && (!IsDisposed || !Disposing))
                             {
                                 Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Downloading: Core GameFiles".ToUpper(), this);
