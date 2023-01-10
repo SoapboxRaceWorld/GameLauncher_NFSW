@@ -3065,12 +3065,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Ready!".ToUpper(), this);
 
                     EnablePlayButton();
-
-                    if (Parent_Screen.Screen_Instance != null)
-                    {
-                        Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100);
-                        Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Normal);
-                    }
                 }
                 else
                 {
@@ -3154,12 +3148,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = ((Error != null) ? Error.Message : "Download Failed. No Reason Provided").ToUpper(), this);
 
-                    if (Parent_Screen.Screen_Instance != null)
-                    {
-                        Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100);
-                        Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Error);
-                    }
-
                     if (Launcher_Value.Launcher_Select_Server_JSON != null)
                     {
                         if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_Category))
@@ -3235,14 +3223,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }, this);
 
                         Presence_Launcher.Status(1, string.Format("Unpacking Game: {0}%", U_Live_Events.Extract_Percentage));
-
-                        if (Parent_Screen.Screen_Instance != null && ulong.TryParse(U_Live_Events.Extract_Percentage.ToString(), out ulong Converted_Value))
-                        {
-                            Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
-                            {
-                                Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100u);
-                            }, Parent_Screen.Screen_Instance);
-                        }
 
                         Label_Download_Information_Support.SafeInvokeAction(() =>
                         Label_Download_Information_Support.Text = U_Live_Events.Extract_Percentage + "% [" + U_Live_Events.File_Current + " / " + U_Live_Events.File_Total + "]", this);
@@ -3329,7 +3309,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     Label_Download_Information_Support.Text = "Downloading: Core Game Files Package".ToUpper();
                                 }, this);
 
-                                Pack_SBRW_Downloader = new Download_Queue();
+                                Pack_SBRW_Downloader = new Download_Queue()
+                                {
+                                    Folder_Path = Save_Settings.Live_Data.Game_Path,
+                                    File_Path = Save_Settings.Live_Data.Game_Archive_Location,
+                                    File_Name = "GameFiles.sbrwpack",
+                                    Web_File_Size = 3862102244,
+                                    Web_URL = Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack",
+                                };
                                 /* @DavidCarbon or @Zacam (Translation Strings Required) */
                                 Pack_SBRW_Downloader.Internal_Error += (x, D_Live_Events) =>
                                 {
@@ -3428,14 +3415,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                             Pack_SBRW_Downloader_Time_Span = Time_Clock.Seconds;
                                         }
 
-                                        if (Parent_Screen.Screen_Instance != null && ulong.TryParse((100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total).ToString(), out ulong Converted_Value))
-                                        {
-                                            Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
-                                            {
-                                                Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(Converted_Value, 100u);
-                                            }, Parent_Screen.Screen_Instance);
-                                        }
-
                                         Label_Download_Information.SafeInvokeAction(() =>
                                         {
                                             Label_Download_Information.Text = (Time_Conversion.FormatFileSize(D_Live_Events.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(D_Live_Events.File_Size_Total) +
@@ -3448,11 +3427,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 {
                                     if (D_Live_Events.Complete && x != null)
                                     {
-                                        Parent_Screen.Screen_Instance?.SafeInvokeAction(() =>
-                                            {
-                                                Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100u);
-                                            }, Parent_Screen.Screen_Instance);
-
                                         ProgressBar_Extracting.SafeInvokeAction(() =>
                                         {
                                             ProgressBar_Extracting.Value = 0;
@@ -3486,8 +3460,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     }
                                 };
                                 /* Main Note: Current Revision File Size (in long) is: 3862102244 */
-                                Pack_SBRW_Downloader.Download(Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack", Save_Settings.Live_Data.Game_Path, Save_Settings.Live_Data.Game_Archive_Location, 3862102244,
-                                    Save_Settings.Live_Data.Launcher_CDN, "GameFiles.sbrwpack");
+                                Pack_SBRW_Downloader.Download();
 
                                 break;
                             case APIStatus.Forbidden:
@@ -3706,17 +3679,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         }, this);
 
                                         Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100)));
-
-                                        if (Parent_Screen.Screen_Instance != null)
-                                        {
-                                            if (ulong.TryParse(Math_Core.Clamp(Math.Round(Calulated_Division * 100), 0, 100).ToString(), out ulong Converted_Value))
-                                            {
-                                                Parent_Screen.Screen_Instance.SafeInvokeAction(() =>
-                                                {
-                                                    Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(Converted_Value, 100u);
-                                                }, Parent_Screen.Screen_Instance);
-                                            }
-                                        }
                                     }
                                     catch
                                     {
@@ -3856,12 +3818,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #endif
 
                         FunctionStatus.IsVerifyHashDisabled = true;
-
-                        if (Parent_Screen.Screen_Instance != null)
-                        {
-                            Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Paused);
-                            Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100u);
-                        }
                     }
                     else if (Save_Settings.Live_Data.Launcher_CDN.StartsWith("http://localhost") || Save_Settings.Live_Data.Launcher_CDN.StartsWith("https://localhost"))
                     {
@@ -3877,12 +3833,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Failsafe CDN Detected".ToUpper(), this, false);
                         Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Please Choose a CDN from Settings Screen".ToUpper(), this);
-
-                        if (Parent_Screen.Screen_Instance != null)
-                        {
-                            Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_State(Taskbar_Progress.TaskbarStates.Paused);
-                            Parent_Screen.Screen_Instance.Handle.Set_Progress_Taskbar_Value(100u, 100u);
-                        }
                     }
                     else
                     {
