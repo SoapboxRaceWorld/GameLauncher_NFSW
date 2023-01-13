@@ -85,7 +85,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         
         public static Download_LZMA_Data? LZMA_Downloader { get; set; }
-        public static Download_Queue? Pack_SBRW_Downloader { get; set; }
+        public static Download_Client? Pack_SBRW_Downloader { get; set; }
         public static Download_Extract? Pack_SBRW_Unpacker { get; set; }
         private static int Pack_SBRW_Downloader_Time_Span { get; set; }
         public static bool Pack_SBRW_Downloader_Unpack_Lock { get; set; }
@@ -3309,7 +3309,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     Label_Download_Information_Support.Text = "Downloading: Core Game Files Package".ToUpper();
                                 }, this);
 
-                                Pack_SBRW_Downloader = new Download_Queue()
+                                Pack_SBRW_Downloader = new Download_Client()
                                 {
                                     Folder_Path = Save_Settings.Live_Data.Game_Path,
                                     File_Path = Save_Settings.Live_Data.Game_Archive_Location,

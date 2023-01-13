@@ -75,7 +75,7 @@
     <PackageReference Include="SBRW.Ini.Parser" Version="2.6.5" />
     <PackageReference Include="SBRW.Launcher.Core" Version="0.2.3" />
     <PackageReference Include="SBRW.Launcher.Core.Discord" Version="0.2.3" />
-    <PackageReference Include="SBRW.Launcher.Core.Downloader" Version="0.2.4-preview002" />
+    <PackageReference Include="SBRW.Launcher.Core.Downloader" Version="0.3.0" />
     <PackageReference Include="SBRW.Launcher.Core.Downloader.LZMA" Version="0.2.4" />
     <PackageReference Include="SBRW.Launcher.Core.Extra" Version="0.2.3" />
     <PackageReference Include="SBRW.Launcher.Core.Proxy" Version="0.2.3" />
