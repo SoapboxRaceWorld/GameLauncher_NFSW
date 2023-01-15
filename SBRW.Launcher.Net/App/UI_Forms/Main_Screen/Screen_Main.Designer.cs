@@ -31,8 +31,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Drawing.Drawing2D.Blend blend1 = new System.Drawing.Drawing2D.Blend();
-            System.Drawing.Drawing2D.Blend blend2 = new System.Drawing.Drawing2D.Blend();
             this.Picture_Logo = new System.Windows.Forms.PictureBox();
             this.Picture_Server_Banner = new System.Windows.Forms.PictureBox();
             this.Picture_Bar_Outline = new System.Windows.Forms.PictureBox();
@@ -76,8 +74,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.Label_Status_API_Details = new System.Windows.Forms.Label();
             this.NotifyIcon_Notification = new System.Windows.Forms.NotifyIcon(this.components);
             this.Button_Select_Server = new System.Windows.Forms.Button();
-            this.ProgressBar_Preload = new SBRW.Launcher.Core.Theme.Control_ProgressBar();
-            this.ProgressBar_Extracting = new SBRW.Launcher.Core.Theme.Control_ProgressBar();
+            this.ProgressBar = new SBRW.Launcher.Core.Theme.Control_ProgressBar();
             this.LinkLabel_Forgot_Password = new System.Windows.Forms.LinkLabel();
             this.Label_Download_Information_Support = new System.Windows.Forms.Label();
             this.Picture_Information_Window = new System.Windows.Forms.PictureBox();
@@ -586,57 +583,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.Button_Select_Server.Text = "Select Server";
             this.Button_Select_Server.UseVisualStyleBackColor = false;
             // 
-            // ProgressBar_Preload
+            // ProgressBar
             // 
-            this.ProgressBar_Preload.BackColor = System.Drawing.Color.Transparent;
-            blend1.Factors = new float[] {
-        0.8F,
-        0.7F,
-        0.6F,
-        0.4F,
-        0F,
-        0F};
-            blend1.Positions = new float[] {
-        0F,
-        0.2F,
-        0.4F,
-        0.6F,
-        0.8F,
-        1F};
-            this.ProgressBar_Preload.BBlend = blend1;
-            this.ProgressBar_Preload.Border = false;
-            this.ProgressBar_Preload.Image = null;
-            this.ProgressBar_Preload.Location = new System.Drawing.Point(30, 430);
-            this.ProgressBar_Preload.Name = "ProgressBar_Preload";
-            this.ProgressBar_Preload.RoundedCorners = false;
-            this.ProgressBar_Preload.Size = new System.Drawing.Size(519, 13);
-            this.ProgressBar_Preload.Text = "control_ProgressBar1";
-            // 
-            // ProgressBar_Extracting
-            // 
-            this.ProgressBar_Extracting.BackColor = System.Drawing.Color.Transparent;
-            blend2.Factors = new float[] {
-        0.8F,
-        0.7F,
-        0.6F,
-        0.4F,
-        0F,
-        0F};
-            blend2.Positions = new float[] {
-        0F,
-        0.2F,
-        0.4F,
-        0.6F,
-        0.8F,
-        1F};
-            this.ProgressBar_Extracting.BBlend = blend2;
-            this.ProgressBar_Extracting.Border = false;
-            this.ProgressBar_Extracting.Image = null;
-            this.ProgressBar_Extracting.Location = new System.Drawing.Point(30, 430);
-            this.ProgressBar_Extracting.Name = "ProgressBar_Extracting";
-            this.ProgressBar_Extracting.RoundedCorners = false;
-            this.ProgressBar_Extracting.Size = new System.Drawing.Size(519, 13);
-            this.ProgressBar_Extracting.Text = "control_ProgressBar1";
+            this.ProgressBar.DrawHorizontalBar = false;
+            this.ProgressBar.InnerRectangle = 2;
+            this.ProgressBar.Location = new System.Drawing.Point(30, 430);
+            this.ProgressBar.Name = "ProgressBar";
+            this.ProgressBar.Size = new System.Drawing.Size(519, 13);
+            this.ProgressBar.TabIndex = 48;
+            this.ProgressBar.Text = "control_ProgressBar1";
             // 
             // LinkLabel_Forgot_Password
             // 
@@ -729,8 +684,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.Controls.Add(this.Panel_Form_Screens);
             this.Controls.Add(this.Panel_Register_Screen);
             this.Controls.Add(this.Panel_Launch);
-            this.Controls.Add(this.ProgressBar_Extracting);
-            this.Controls.Add(this.ProgressBar_Preload);
+            this.Controls.Add(this.ProgressBar);
             this.Controls.Add(this.Label_Download_Information_Support);
             this.Controls.Add(this.Button_Select_Server);
             this.Controls.Add(this.Label_Status_API_Details);
@@ -833,8 +787,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public LinkLabel LinkLabel_Server_Facebook;
         public LinkLabel LinkLabel_Server_Twitter;
         public Button Button_Select_Server;
-        public Core.Theme.Control_ProgressBar ProgressBar_Preload;
-        public Core.Theme.Control_ProgressBar ProgressBar_Extracting;
+        public Core.Theme.Control_ProgressBar ProgressBar;
         public LinkLabel LinkLabel_Forgot_Password;
         public Label Label_Download_Information_Support;
         public PictureBox Picture_Information_Window;

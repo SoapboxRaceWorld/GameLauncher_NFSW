@@ -639,27 +639,11 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarChecking")))
-                    {
-                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarChecking")))
-                        {
-                            Image_ProgressBar.Checking = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarChecking"));
-                        }
-                    }
-
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarPreloadOutline")))
                     {
                         if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarPreloadOutline")))
                         {
                             Image_ProgressBar.Preload_Outline = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarPreloadOutline"));
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarPreload")))
-                    {
-                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarPreload")))
-                        {
-                            Image_ProgressBar.Preload = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarPreload"));
                         }
                     }
 
@@ -671,15 +655,6 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarWarning")))
-                    {
-                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarWarning")))
-                        {
-                            Image_ProgressBar.Warning = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarWarning"));
-                        }
-                    }
-
-
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarErrorOutline")))
                     {
                         if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarErrorOutline")))
@@ -688,27 +663,11 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarError")))
-                    {
-                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarError")))
-                        {
-                            Image_ProgressBar.Error = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarError"));
-                        }
-                    }
-
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarCompleteOutline")))
                     {
                         if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarCompleteOutline")))
                         {
                             Image_ProgressBar.Complete_Outline = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarCompleteOutline"));
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressBarComplete")))
-                    {
-                        if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarComplete")))
-                        {
-                            Image_ProgressBar.Complete = new Bitmap(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Key_Read("ProgressBarComplete"));
                         }
                     }
 
@@ -861,9 +820,29 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Visuals
                         Color_Winform_Other.Server_Banner_BackColor = Color_Converter.Value(ThemeFile.Key_Read("BannerBackColor"));
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ExtractingProgressColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorWarning")))
                     {
-                        Color_Winform_Other.Progress_Color_Extracting = Color_Converter.Value(ThemeFile.Key_Read("ExtractingProgressColor"));
+                        Color_Winform_Other.ProgressBar_Warning = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorWarning"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorError")))
+                    {
+                        Color_Winform_Other.ProgressBar_Error = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorError"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorChecking")))
+                    {
+                        Color_Winform_Other.ProgressBar_Loading = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorChecking"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorSucess")))
+                    {
+                        Color_Winform_Other.ProgressBar_Sucess = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorSucess"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorUnknown")))
+                    {
+                        Color_Winform_Other.ProgressBar_Warning = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorUnknown"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("MainScreenTransparencyKey")))
