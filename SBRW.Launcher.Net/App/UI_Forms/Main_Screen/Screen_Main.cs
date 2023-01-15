@@ -2671,7 +2671,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 /* Disable Social Panel */
                                 DisableSocialPanelandClearIt();
                             }
-                            else if (!IsDownloading)
+                            else
                             {
                                 /* Enable Social Panel  */
                                 Panel_Server_Information.Visible = true;
