@@ -95,7 +95,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
         /// <param name="Check_Mode"></param>
         /// <param name="Form_Window_Handle"></param>
         /// <returns></returns>
-        public static bool IsRestrictedGameFolderLocation(this string Game_Location_Path, int Check_Mode, IWin32Window Form_Window_Handle)
+        public static bool IsRestrictedGameFolderLocation(this string Game_Location_Path, int Check_Mode, IWin32Window? Form_Window_Handle)
         {
             if(Check_Mode == 0)
             {
