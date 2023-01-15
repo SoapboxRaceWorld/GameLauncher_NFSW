@@ -3658,12 +3658,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         {
                                             ProgressBar.Invoke(new Action(delegate ()
                                             {
-                                                ProgressBar.Value = (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total);
+                                                ProgressBar.Value = (int)(D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total * 100);
                                             }));
                                         }
                                         else
                                         {
-                                            ProgressBar.Value = (int)(100 * D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total);
+                                            ProgressBar.Value = (int)(D_Live_Events.File_Size_Current / D_Live_Events.File_Size_Total * 100);
                                         }
 
                                         TimeSpan Time_Clock = DateTime.Now - D_Live_Events.Start_Time;
