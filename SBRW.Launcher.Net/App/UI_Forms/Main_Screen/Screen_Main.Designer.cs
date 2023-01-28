@@ -82,6 +82,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.Button_Login = new System.Windows.Forms.Button();
             this.Panel_Form_Screens = new System.Windows.Forms.Panel();
             this.Panel_Register_Screen = new System.Windows.Forms.Panel();
+            this.UI_Timer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.Picture_Logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Picture_Server_Banner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Picture_Bar_Outline)).BeginInit();
@@ -675,6 +676,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.Panel_Register_Screen.TabIndex = 47;
             this.Panel_Register_Screen.Visible = false;
             // 
+            // UI_Timer
+            // 
+            this.UI_Timer.Enabled = true;
+            this.UI_Timer.Interval = 1000;
+            this.UI_Timer.Tick += new System.EventHandler(this.UI_Timer_Tick);
+            // 
             // Screen_Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -800,5 +807,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public PictureBox Button_Settings;
         public Panel Panel_Launch;
         public Button Button_Play_OR_Update;
+        public Timer UI_Timer;
     }
 }
