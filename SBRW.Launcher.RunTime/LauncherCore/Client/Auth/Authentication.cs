@@ -93,6 +93,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Client.Auth
                         httpWebRequest.Method = "POST";
                         httpWebRequest.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
                         httpWebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+                        httpWebRequest.Headers.Add(Custom_Header.Headers_WHC());
 
                         using (StreamWriter streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                         {
