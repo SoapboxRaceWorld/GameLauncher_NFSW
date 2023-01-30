@@ -3530,11 +3530,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     try
                     {
-                        LZMA_Downloader = new Download_LZMA_Data(3, 2, 16)
-                        {
-                            Download_Percentage_Parts = LZMA_Downloader != null ? 
-                            LZMA_Downloader.Download_Percentage_Parts > 1 ? LZMA_Downloader.Download_Percentage_Parts-- : 1 : 3
-                        };
+                        LZMA_Downloader = new Download_LZMA_Data(3, 2, 16);
                         
                         LZMA_Downloader.Internal_Error += (_, D_Live_Events) =>
                         {
@@ -4420,7 +4416,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                 if (!string.IsNullOrWhiteSpace(Cached_Status.File_Current_Name))
                                 {
+#pragma warning disable CS8602 // Dereference of a possibly null reference. (.NET 6)
                                     Label_Download_Information.Text = ("Unpacking " + Cached_Status.File_Current_Name.Replace(Pack_SBRW_Unpacker.File_Extension_Replacement, string.Empty)).ToUpper();
+#pragma warning restore CS8602 // Dereference of a possibly null reference. (.NET 6)
                                 }
 
                                 Label_Download_Information_Support.Text = Cached_Status.Extract_Percentage + "% [" + Cached_Status.File_Current + " / " + Cached_Status.File_Total + "]".ToUpper();
