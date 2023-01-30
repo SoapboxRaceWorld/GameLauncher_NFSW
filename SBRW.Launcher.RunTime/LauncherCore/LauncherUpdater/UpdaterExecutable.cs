@@ -82,10 +82,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                     }
                     finally
                     {
-                        if (Client != null)
-                        {
-                            Client.Dispose();
-                        }
+                        Client?.Dispose();
 
                         #if !(RELEASE_UNIX || DEBUG_UNIX) 
                         GC.Collect(); 
@@ -96,7 +93,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
 
                     try
                     {
-                        if (Is_Json.Valid(VersionJSON) && IsGithubOnline)
+                        if (VersionJSON.Valid_Json() && IsGithubOnline)
                         {
 #pragma warning disable CS8600 // Null Safe Check Done Above
                             GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON);
@@ -240,10 +237,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                         }
                         finally
                         {
-                            if (Client != null)
-                            {
-                                Client.Dispose();
-                            }
+                            Client?.Dispose();
 
                             #if !(RELEASE_UNIX || DEBUG_UNIX) 
                             GC.Collect(); 
@@ -363,10 +357,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                             }
                             finally
                             {
-                                if (Client != null)
-                                {
-                                    Client.Dispose();
-                                }
+                                Client?.Dispose();
 
                                 #if !(RELEASE_UNIX || DEBUG_UNIX) 
                                 GC.Collect(); 

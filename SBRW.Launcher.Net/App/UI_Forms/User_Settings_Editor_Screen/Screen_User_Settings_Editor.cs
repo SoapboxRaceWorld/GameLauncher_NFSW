@@ -29,7 +29,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
         {
             if (IsUSXEditorOpen || Application.OpenForms["Screen_User_Settings_Editor"] != null)
             {
-                if (Application.OpenForms["Screen_User_Settings_Editor"] != null) { Application.OpenForms["Screen_User_Settings_Editor"].Activate(); }
+                Application.OpenForms["Screen_User_Settings_Editor"]?.Activate();
             }
             else
             {
@@ -346,7 +346,7 @@ namespace SBRW.Launcher.App.UI_Forms.USXEditor_Screen
             XML_File.XML_Settings_Data.VSyncOn = (radioVSyncOff.Checked == true) ? "0" : "1";
             XML_File.XML_Settings_Data.EnableAero = (radioAeroOff.Checked == true) ? "0" : "1";
             XML_File.XML_Settings_Data.ScreenWindowed = (radioWindowedOff.Checked == true) ? "0" : "1";
-            XML_File.XML_Settings_Data.Damage = (radioDamageOn.Checked == true) ? "0" : "1";
+            XML_File.XML_Settings_Data.Damage = (radioDamageOff.Checked == true) ? "0" : "1";
             XML_File.XML_Settings_Data.SpeedUnits = (radioKmH.Checked == true) ? "0" : "1";
 
             XML_File.XML_Settings_Data.TransmissionType = comboBoxTransmisson.SelectedValue.ToString(); // Physics

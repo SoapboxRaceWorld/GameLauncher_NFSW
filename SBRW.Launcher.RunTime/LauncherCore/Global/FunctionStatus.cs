@@ -16,6 +16,8 @@ using SBRW.Launcher.RunTime.InsiderKit;
 using System.Linq;
 using System.Net.Sockets;
 using SBRW.Launcher.App.UI_Forms;
+using SBRW.Launcher.Core.Extra.XML_;
+using System.Threading.Tasks;
 
 namespace SBRW.Launcher.RunTime.LauncherCore.Global
 {
@@ -55,7 +57,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
     }
 
     /* This is Used to call Certain Functions (Such as Completion Status or Function Callbacks) */
-    class FunctionStatus
+    static class FunctionStatus
     {
         /* Launcher had Encounterd an Error and It Must Close */
         public static bool LauncherForceClose { get; set; }
@@ -76,8 +78,113 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
         /* Prevents Launcher from bring Closed when Game is Loading */
         public static bool LauncherBattlePass { get; set; }
 
-        /* Checks if we have Write Permissions */
-        public static bool HasWriteAccessToFolder(string path)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Game_Location_Path"></param>
+        /// <param name="Check_Mode"></param>
+        /// <returns></returns>
+        public static bool IsRestrictedGameFolderLocation(this string Game_Location_Path, int Check_Mode)
+        {
+            return Game_Location_Path.IsRestrictedGameFolderLocation(Check_Mode, null);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Game_Location_Path"></param>
+        /// <param name="Check_Mode"></param>
+        /// <param name="Form_Window_Handle"></param>
+        /// <returns></returns>
+        public static bool IsRestrictedGameFolderLocation(this string Game_Location_Path, int Check_Mode, IWin32Window? Form_Window_Handle)
+        {
+            if(Check_Mode == 0)
+            {
+                Presence_Launcher.Status(0, "Verifying Game Files Folder Location");
+            }
+
+            Log.Debug(Locations.LauncherFolder);
+
+            int Write_Test = HasWriteAccessToFolder(Game_Location_Path);
+
+            if (Write_Test <= 0)
+            {
+                if (Write_Test == 0)
+                {
+                    LogToFileAddons.Parent_Log_Screen(5, "FOLDER FUNCTION CHECK", "Not enough permissions.");
+                    string ErrorMessage = "You don't have enough permission to select this path as the Installation folder. " +
+                        "Please select another directory by manually setting a new path.";
+                    MessageBox.Show(Form_Window_Handle, ErrorMessage, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (Check_Mode == 0)
+                    {
+                        LauncherForceClose = true;
+                        LauncherForceCloseReason = ErrorMessage;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                switch (CheckFolder(Game_Location_Path))
+                {
+                    case FolderType.IsRootFolder:
+                        LogToFileAddons.Parent_Log_Screen(4, "FOLDER FUNCTION CHECK", "Installing NFSW in root of the harddisk is not allowed.");
+                        MessageBox.Show(Form_Window_Handle, string.Format("Installing NFSW in root of the harddisk is not allowed. " +
+                            "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
+                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                        if (Check_Mode == 0)
+                        {
+                            Save_Settings.Save();
+                            XML_File.Save(1);
+                        }
+
+                        return Save_Settings.Live_Data.Game_Path.IsRestrictedGameFolderLocation(Check_Mode, Form_Window_Handle);
+                    case FolderType.IsSameAsLauncherFolder:
+                        LogToFileAddons.Parent_Log_Screen(4, "FOLDER FUNCTION CHECK", "Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
+                        MessageBox.Show(Form_Window_Handle, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n " +
+                            "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
+                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
+                        if (Check_Mode == 0)
+                        {
+                            Save_Settings.Save();
+                            XML_File.Save(1);
+                        }
+
+                        return Save_Settings.Live_Data.Game_Path.IsRestrictedGameFolderLocation(Check_Mode, Form_Window_Handle);
+                    default:
+                        LogToFileAddons.Parent_Log_Screen(11, "FOLDER FUNCTION CHECK", "Directory Set at " + Game_Location_Path);
+                        Save_Settings.Live_Data.Game_Path = Game_Location_Path;
+
+                        if (Check_Mode == 0)
+                        {
+                            Save_Settings.Save();
+                            XML_File.Save(1);
+                        }
+
+                        if (!Directory.Exists(Save_Settings.Live_Data.Game_Path))
+                        {
+                            Directory.CreateDirectory(Save_Settings.Live_Data.Game_Path);
+
+                            if (Check_Mode == 0)
+                            {
+                                LogToFileAddons.Parent_Log_Screen(11, "FOLDER FUNCTION CHECK", "Created Game Files Directory at " + Save_Settings.Live_Data.Game_Path);
+                            }
+                        }
+                        break;
+                }
+            }
+
+            return false;
+        }
+        /// <summary>
+        /// Checks if we have Write Permissions
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static int HasWriteAccessToFolder(string path)
         {
             if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
             {
@@ -86,22 +193,31 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
 
             try
             {
-                Log.Checking("WRITE TEST: Folder Write Test");
-                File.Create(Path.Combine(path, "temp.txt")).Close();
-                File.Delete(Path.Combine(path, "temp.txt"));
+                if (!Directory.Exists(path))
+                {
+                    Log.Checking("WRITE TEST: Folder [CREATE]");
+                    Directory.CreateDirectory(path);
+                    Log.Checking("WRITE TEST: Folder [SUCCESS]");
+                }
             }
             catch
             {
-                return false;
-            }
-            finally
-            {
-                #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                GC.Collect(); 
-                #endif
+                return -1;
             }
 
-            return true;
+            try
+            {
+                Log.Checking("WRITE TEST: File [CREATE & REMOVE]");
+                File.Create(Path.Combine(path, "temp.txt")).Close();
+                File.Delete(Path.Combine(path, "temp.txt"));
+                Log.Checking("WRITE TEST: File [SUCCESS]");
+            }
+            catch
+            {
+                return 0;
+            }
+
+            return 1;
         }
 
         /* Used to Center WinForms Forms (Parent Screen) */
@@ -126,6 +242,12 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
                 Live_Form.StartPosition = FormStartPosition.CenterScreen;
             }
         }
+#if NETFRAMEWORK
+        public static bool Beta_Contains(this string source, string toCheck, StringComparison comp)
+        {
+            return source != null && toCheck != null && source.IndexOf(toCheck, comp) >= 0;
+        }
+#endif
 
         /* Check if Folder Location is Acceptable and Returns a Value
         /* Let's actually make it cleaner and nicer - MeTonaTOR */
@@ -137,13 +259,50 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
             }
             else
             {
-                if (FolderName.Contains(Path.Combine("C:\\", "Users")) && FolderName.Contains("Temp")) { return FolderType.IsTempFolder; }
-                else if (FolderName.Contains(Path.Combine("C:\\", "Users"))) { return FolderType.IsUsersFolders; }
-                else if (FolderName.Contains(Path.Combine("C:\\", "Program Files"))) { return FolderType.IsProgramFilesFolder; }
-                else if (FolderName.Contains(Path.Combine("C:\\", "Windows"))) { return FolderType.IsWindowsFolder; }
-                else if (FolderName.Length == 3) { return FolderType.IsRootFolder; }
-                else if (Path.Combine(FolderName, "\\") == Locations.LauncherFolder ||
-                    FolderName == Locations.LauncherFolder) { return FolderType.IsSameAsLauncherFolder; }
+#if NETFRAMEWORK
+                if (FolderName.Beta_Contains(@"C:\Users", StringComparison.OrdinalIgnoreCase) && FolderName.Beta_Contains("Temp", StringComparison.OrdinalIgnoreCase))
+                {
+                    return FolderType.IsTempFolder;
+                }
+                else if (FolderName.Beta_Contains(@"C:\Users", StringComparison.OrdinalIgnoreCase))
+                {
+                    return FolderType.IsUsersFolders;
+                }
+                else if (FolderName.Beta_Contains(@"C:\Program Files", StringComparison.OrdinalIgnoreCase))
+                {
+                    return FolderType.IsProgramFilesFolder;
+                }
+                else if (FolderName.Beta_Contains(@"C:\Windows", StringComparison.OrdinalIgnoreCase))
+                {
+                    return FolderType.IsWindowsFolder;
+                }
+#else
+                if (FolderName.Contains(@"C:\Users", StringComparison.OrdinalIgnoreCase) && FolderName.Contains("Temp", StringComparison.OrdinalIgnoreCase))
+                {
+                    return FolderType.IsTempFolder;
+                }
+                else if (FolderName.Contains(@"C:\Users", StringComparison.OrdinalIgnoreCase))
+                {
+                    return FolderType.IsUsersFolders;
+                }
+                else if (FolderName.Contains(@"C:\Program Files", StringComparison.OrdinalIgnoreCase))
+                {
+                    return FolderType.IsProgramFilesFolder;
+                }
+                else if (FolderName.Contains(@"C:\Windows", StringComparison.OrdinalIgnoreCase))
+                {
+                    return FolderType.IsWindowsFolder;
+                }
+#endif
+                else if (FolderName.Length == 3) 
+                {
+                    return FolderType.IsRootFolder;
+                }
+                else if (Locations.LauncherFolder.Equals(FolderName, StringComparison.OrdinalIgnoreCase) ||
+                    Locations.LauncherFolder.Equals(FolderName + @"\", StringComparison.OrdinalIgnoreCase))
+                {
+                    return FolderType.IsSameAsLauncherFolder;
+                }
                 else
                 {
                     return FolderType.Unknown;
@@ -178,15 +337,15 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
                     }
                 }
             }
-            catch
+            catch (Exception Error)
             {
-
+                LogToFileAddons.OpenLog("Host Name to IP", string.Empty, Error, string.Empty);
             }
             finally
             {
-                #if !(RELEASE_UNIX || DEBUG_UNIX) 
+#if !(RELEASE_UNIX || DEBUG_UNIX)
                 GC.Collect(); 
-                #endif
+#endif
             }
 
             return hostname;

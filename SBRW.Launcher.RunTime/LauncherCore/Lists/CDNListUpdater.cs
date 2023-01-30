@@ -31,7 +31,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Lists
 
             try
             {
-                if (Is_Json.Valid(CachedJSONList))
+                if (CachedJSONList.Valid_Json())
                 {
 #pragma warning disable CS8604 //Is Null Safe with the check above
                     cdnInfos.AddRange(JsonConvert.DeserializeObject<List<Json_List_CDN>>(CachedJSONList));

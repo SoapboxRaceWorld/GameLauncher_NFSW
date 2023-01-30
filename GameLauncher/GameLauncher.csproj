@@ -5,7 +5,7 @@
 	<TargetFrameworks>net6.0;net461</TargetFrameworks>
 	<Platforms>AnyCPU;x86</Platforms>
 	<Copyright>© Soapbox Race World</Copyright>
-	<GlobalVersion>2.2.0.0</GlobalVersion>
+	<GlobalVersion>2.2.0.3</GlobalVersion>
 	<GlobalVersion Condition=" '$(GlobalVersion)' == '' ">2.2.0.$([System.DateTime]::UtcNow.ToString(mmff))</GlobalVersion>
 	<Version>$(GlobalVersion)</Version>
 	<AssemblyVersion>$(GlobalVersion)</AssemblyVersion>
@@ -13,7 +13,6 @@
 	<StartupObject>GameLauncher.Program</StartupObject>
 	<AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
-	<PlatformTarget>x86</PlatformTarget>
 	<ApplicationIcon>SBRW.ico</ApplicationIcon>
 	<Configurations>Debug;Release;Release.Unix;Debug.Unix</Configurations>
   

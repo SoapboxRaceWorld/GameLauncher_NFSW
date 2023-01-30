@@ -25,7 +25,7 @@ namespace SBRW.Launcher.App.UI_Forms.About_Screen
         {
             if (Application.OpenForms["Screen_About"] != null || IsAboutOpen)
             {
-                if (Application.OpenForms["Screen_About"] != null) { Application.OpenForms["Screen_About"].Activate(); }
+                Application.OpenForms["Screen_About"]?.Activate();
             }
             else
             {

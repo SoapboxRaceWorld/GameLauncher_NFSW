@@ -45,7 +45,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
         {
             Label_Alert.Visible = false;
             this.Refresh();
-            if (string.IsNullOrWhiteSpace(TextBox_Server_Address.Text) || string.IsNullOrWhiteSpace(Strings.Encode(Textbox_Server_Name.Text)))
+            if (string.IsNullOrWhiteSpace(TextBox_Server_Address.Text) || string.IsNullOrWhiteSpace(Textbox_Server_Name.Text.Encode_UTF8()))
             {
                 if (string.IsNullOrWhiteSpace(TextBox_Server_Address.Text))
                 {
@@ -118,10 +118,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                         }
                         finally
                         {
-                            if (Client != null)
-                            {
-                                Client.Dispose();
-                            }
+                            Client?.Dispose();
                         }
                     }
                     catch (Exception Error)
@@ -135,7 +132,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                         ButtonControls(true);
                         return;
                     }
-                    else if (!Is_Json.Valid(ServerInfomationJSON))
+                    else if (!ServerInfomationJSON.Valid_Json())
                     {
                         Label_Alert.Text = "Unstable Connection";
                         DrawErrorAroundTextBox(TextBox_Server_Address);
@@ -198,10 +195,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                             }
                             finally
                             {
-                                if (Client != null)
-                                {
-                                    Client.Dispose();
-                                }
+                                Client?.Dispose();
                             }
 
                             try
@@ -221,11 +215,11 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
                                 {
                                     Servers.Add(new Json_List_Server
                                     {
-                                        Name = Strings.Encode(Textbox_Server_Name.Text),
+                                        Name = Textbox_Server_Name.Text.Encode_UTF8(),
                                         IPAddress = FormattedURL,
                                         IsSpecial = false,
                                         ID = ServerID,
-                                        Category = string.IsNullOrWhiteSpace(Strings.Encode(TextBox_Server_Category.Text)) ? "Custom" : Strings.Encode(TextBox_Server_Category.Text)
+                                        Category = string.IsNullOrWhiteSpace(TextBox_Server_Category.Text.Encode_UTF8()) ? "Custom" : TextBox_Server_Category.Text.Encode_UTF8()
                                     });
 
                                     File.WriteAllText(Locations.LauncherCustomServers, JsonConvert.SerializeObject(Servers));
@@ -290,7 +284,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
             {
                 if (!ActiveForm.IsDisposed)
                 {
-                    if (string.IsNullOrWhiteSpace(Strings.Encode(TextBox_Server_Category.Text)))
+                    if (string.IsNullOrWhiteSpace(TextBox_Server_Category.Text.Encode_UTF8()))
                     {
                         TextBox_Server_Category.Text = "Custom";
                     }
@@ -403,7 +397,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Add_Screen
         {
             if (IsAddServerOpen || Application.OpenForms["Screen_Custom_Server_Add"] != null)
             {
-                if (Application.OpenForms["Screen_Custom_Server_Add"] != null) { Application.OpenForms["Screen_Custom_Server_Add"].Activate(); }
+                Application.OpenForms["Screen_Custom_Server_Add"]?.Activate();
             }
             else
             {

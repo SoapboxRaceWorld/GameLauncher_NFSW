@@ -38,7 +38,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
         {
             if (IsSelectServerOpen || Application.OpenForms["Screen_Custom_Server"] != null)
             {
-                if (Application.OpenForms["Screen_Custom_Server"] != null) { Application.OpenForms["Screen_Custom_Server"].Activate(); }
+                Application.OpenForms["Screen_Custom_Server"]?.Activate();
             }
             else
             {
@@ -199,10 +199,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                                         }, this);
                                     }
 
-                                    if (Client != null)
-                                    {
-                                        Client.Dispose();
-                                    }
+                                    Client?.Dispose();
                                 }
                                 else
                                 {
@@ -217,7 +214,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                                             ListView_Server_List.Items[serverid].SubItems[5].Text = "---";
                                         }, this);
                                     }
-                                    else if (!Is_Json.Valid(e2.Result) && IsSelectServerOpen)
+                                    else if (!e2.Result.Valid_Json() && IsSelectServerOpen)
                                     {
                                         ListView_Server_List.SafeInvokeAction(() =>
                                         {
@@ -307,10 +304,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                                             }
                                             finally
                                             {
-                                                if (CheckMate != null)
-                                                {
-                                                    CheckMate.Dispose();
-                                                }
+                                                CheckMate?.Dispose();
 
                                                 #if !(RELEASE_UNIX || DEBUG_UNIX) 
                                                 GC.Collect(); 
@@ -329,10 +323,7 @@ namespace SBRW.Launcher.App.UI_Forms.Custom_Server_Screen
                                             }, this);
                                         }
 
-                                        if (Client != null)
-                                        {
-                                            Client.Dispose();
-                                        }
+                                        Client?.Dispose();
                                     }
                                 }
                             };

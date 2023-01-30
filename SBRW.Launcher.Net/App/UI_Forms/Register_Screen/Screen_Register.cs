@@ -44,7 +44,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                     Picture_Input_Email.Image = Image_Other.Text_Border_Email_Error;
                 }
             }
-            else if (!Is_Email.Valid(Input_Email.Text))
+            else if (!Input_Email.Text.Valid_Email())
             {
                 registerErrors.Add("Please enter a valid e-mail address.");
                 if (Picture_Input_Email.Image != Image_Other.Text_Border_Email_Error)
@@ -109,7 +109,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                 {
                     case AuthHash.H10:
                         Email = Input_Email.Text.ToString();
-                        Password = Input_Email.Text.ToString();
+                        Password = Input_Password.Text.ToString();
                         break;
                     case AuthHash.H11:
                         Email = Input_Email.Text.ToString();
@@ -182,10 +182,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                         }
                         finally
                         {
-                            if (Client != null)
-                            {
-                                Client.Dispose();
-                            }
+                            Client?.Dispose();
                         }
                     });
 

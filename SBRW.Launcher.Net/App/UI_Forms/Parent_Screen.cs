@@ -242,7 +242,7 @@ namespace SBRW.Launcher.App.UI_Forms
                 {
                     FunctionStatus.ErrorCloseLauncher("Closing From Invalid Launcher Location", false);
                 }
-                else if (!FunctionStatus.HasWriteAccessToFolder(Locations.LauncherFolder))
+                else if (FunctionStatus.HasWriteAccessToFolder(Locations.LauncherFolder) == 0)
                 {
                     FunctionStatus.LauncherForceClose = true;
                     FunctionStatus.LauncherForceCloseReason = Translations.Database("Program_TextBox_Folder_Write_Test");
@@ -258,7 +258,7 @@ namespace SBRW.Launcher.App.UI_Forms
                     Log.Start();
                     await Task.Run(() => Log_Location.RemoveLegacyLogs());
 
-                    LogToFileAddons.Parent_Log_Screen(1, "CURRENT DATE", Time_Clock.GetTime("Date"));
+                    LogToFileAddons.Parent_Log_Screen(1, "CURRENT DATE", Time_Clock.GetTime(0));
                     LogToFileAddons.Parent_Log_Screen(2, "LAUNCHER MIGRATION", "Appdata and/or Roaming Folders");
                     /* Deletes Folders that will Crash the Launcher (Cleanup Migration) */
                     await Task.Run(() =>
@@ -393,7 +393,7 @@ namespace SBRW.Launcher.App.UI_Forms
                     }
                     else
                     {
-                        if (!FunctionStatus.HasWriteAccessToFolder(Locations.LauncherFolder))
+                        if (FunctionStatus.HasWriteAccessToFolder(Locations.LauncherFolder) == 0)
                         {
                             FunctionStatus.LauncherForceClose = true;
                             FunctionStatus.LauncherForceCloseReason = Translations.Database("Program_TextBox_Folder_Write_Test");
@@ -797,7 +797,6 @@ namespace SBRW.Launcher.App.UI_Forms
                         try
                         {
 #if !(RELEASE_UNIX || DEBUG_UNIX)
-                            string GameFolderPath = string.Empty;
 
                             OpenFileDialog FolderDialog = new OpenFileDialog
                             {
@@ -814,65 +813,11 @@ namespace SBRW.Launcher.App.UI_Forms
                             {
                                 if (!string.IsNullOrWhiteSpace(FolderDialog.FileName))
                                 {
-                                    GameFolderPath = Path.GetDirectoryName(FolderDialog.FileName) ?? string.Empty;
+                                    Save_Settings.Live_Data.Game_Path = Path.GetDirectoryName(FolderDialog.FileName) ?? string.Empty;
                                 }
                             }
 
                             FolderDialog.Dispose();
-
-                            await Task.Run(() =>
-                            {
-                                if (!string.IsNullOrWhiteSpace(GameFolderPath))
-                                {
-                                    Presence_Launcher.Status(0, "Verifying Game Files Folder Location");
-
-                                    if (!FunctionStatus.HasWriteAccessToFolder(GameFolderPath))
-                                    {
-                                        LogToFileAddons.Parent_Log_Screen(5, "FOLDER SELECT DIALOG", "Not enough permissions.");
-                                        string ErrorMessage = "You don't have enough permission to select this path as the Installation folder. " +
-                                            "Please select another directory by manually setting a new path.";
-                                        MessageBox.Show(null, ErrorMessage, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                        FunctionStatus.LauncherForceClose = true;
-                                        FunctionStatus.LauncherForceCloseReason = ErrorMessage;
-                                    }
-                                    else
-                                    {
-                                        if (GameFolderPath.Length == 3)
-                                        {
-                                            Directory.CreateDirectory("Game Files");
-                                            LogToFileAddons.Parent_Log_Screen(4, "FOLDER SELECT DIALOG", "Installing NFSW in root of the harddisk is not allowed.");
-                                            MessageBox.Show(null, string.Format("Installing NFSW in root of the harddisk is not allowed. " +
-                                                "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
-                                                "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                                            Save_Settings.Save();
-                                            XML_File.Save(1);
-                                        }
-                                        else if (GameFolderPath == Locations.LauncherFolder)
-                                        {
-                                            Directory.CreateDirectory("Game Files");
-                                            LogToFileAddons.Parent_Log_Screen(4, "FOLDER SELECT DIALOG", "Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
-                                            MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n " +
-                                                "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath),
-                                                "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                            Save_Settings.Live_Data.Game_Path = Locations.GameFilesFailSafePath;
-                                            Save_Settings.Save();
-                                            XML_File.Save(1);
-                                        }
-                                        else
-                                        {
-                                            LogToFileAddons.Parent_Log_Screen(11, "FOLDER SELECT DIALOG", "Directory Set at " + GameFolderPath);
-                                            Save_Settings.Live_Data.Game_Path = GameFolderPath;
-                                            Save_Settings.Save();
-                                            XML_File.Save(1);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    FunctionStatus.LauncherForceClose = true;
-                                }
-                            });
 #endif
                             if (string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
                             {
@@ -889,17 +834,19 @@ namespace SBRW.Launcher.App.UI_Forms
                                 });
                             }
 
-                            if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
+                            await Task.Run(() =>
                             {
-                                await Task.Run(() =>
+                                if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
                                 {
-                                    if (!Directory.Exists(Save_Settings.Live_Data.Game_Path))
-                                    {
-                                        LogToFileAddons.Parent_Log_Screen(11, "FOLDER SELECT DIALOG", "Created Game Files Directory at " + Save_Settings.Live_Data.Game_Path);
-                                        Directory.CreateDirectory(Save_Settings.Live_Data.Game_Path);
-                                    }
-                                });
-                            }
+#pragma warning disable CS8604
+                                    Save_Settings.Live_Data.Game_Path.IsRestrictedGameFolderLocation(0, Screen_Instance??null);
+#pragma warning restore CS8604
+                                }
+                                else
+                                {
+                                    FunctionStatus.LauncherForceClose = true;
+                                }
+                            });
 
                             if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
                             {
@@ -935,35 +882,21 @@ namespace SBRW.Launcher.App.UI_Forms
                             #endif
                         }
                     }
-                    else if (!Directory.Exists(Save_Settings.Live_Data.Game_Path))
+#pragma warning disable CS8604 // Possible null reference argument.
+                    else if (Save_Settings.Live_Data.Game_Path.IsRestrictedGameFolderLocation(1, Screen_Instance??null))
                     {
-                        await Task.Run(() =>
-                        {
-                            try
-                            {
-                                Directory.CreateDirectory(Save_Settings.Live_Data.Game_Path);
-                                LogToFileAddons.Parent_Log_Screen(11, "FOLDER", "Created Game Files Directory at " + Save_Settings.Live_Data.Game_Path);
-                            }
-                            catch (Exception Error)
-                            {
-                                FunctionStatus.LauncherForceClose = true;
-                                FunctionStatus.LauncherForceCloseReason = Error.Message;
-                                LogToFileAddons.OpenLog("FOLDER CREATE", string.Empty, Error, string.Empty, true);
-                                if (Error.InnerException != null && !string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                                {
-                                    LogToFileAddons.Parent_Log_Screen(5, "FOLDER Create", Error.InnerException.Message, false, true);
-                                }
-                            }
-                            finally
-                            {
-                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                                GC.Collect(); 
-                                #endif
-                            }
-                        });
+                        LogToFileAddons.Parent_Log_Screen(12, "LAUNCHER", "Folder Check Trigger in 'FOLDER SELECT DIALOG'");
                     }
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
+#pragma warning disable CS8604 // Possible null reference argument.
+            else if (Save_Settings.Live_Data.Game_Path.IsRestrictedGameFolderLocation(1, Screen_Instance ?? null))
+            {
+                LogToFileAddons.Parent_Log_Screen(12, "LAUNCHER", "Folder Check Trigger");
+            }
+#pragma warning restore CS8604 // Possible null reference argument.
+
             LogToFileAddons.Parent_Log_Screen(11, "LAUNCHER", "Game Installation Path Done");
 
             if (FunctionStatus.LauncherForceClose)

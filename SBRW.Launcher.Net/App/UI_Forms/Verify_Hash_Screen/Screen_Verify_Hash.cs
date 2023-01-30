@@ -464,10 +464,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                         }
                         finally
                         {
-                            if (Client != null)
-                            {
-                                Client.Dispose();
-                            }
+                            Client?.Dispose();
                         }
 
                         if (ErrorFree)
@@ -507,9 +504,9 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                     {
                         if (!ForceStopScan)
                         {
-                            String FileHash = file[0].Trim();
-                            String FileName = file[1].Trim();
-                            String RealPathToFile = Save_Settings.Live_Data.Game_Path + FileName;
+                            string FileHash = file[0].Trim();
+                            string FileName = file[1].Trim();
+                            string RealPathToFile = Path.Combine(Save_Settings.Live_Data.Game_Path + FileName);
 
                             if (!File.Exists(RealPathToFile))
                             {
@@ -708,10 +705,7 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
                                 }
                                 finally
                                 {
-                                    if (Client != null)
-                                    {
-                                        Client.Dispose();
-                                    }
+                                    Client?.Dispose();
                                 }
                             }
                             else

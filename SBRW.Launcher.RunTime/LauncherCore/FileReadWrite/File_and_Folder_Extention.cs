@@ -81,7 +81,14 @@ namespace SBRW.Launcher.RunTime.LauncherCore.FileReadWrite
                     /* Add size of files in the Current Directory to main size. */
                     foreach (System.IO.FileInfo File_Info in Directory_Info.GetFiles())
                     {
-                        System.Threading.Interlocked.Add(ref Start_Directory_Size, File_Info.Length);
+                        string File_Name = File_Info.Extension.ToLowerInvariant();
+                        if (File_Name.EndsWith(".txt", System.StringComparison.InvariantCultureIgnoreCase) ||
+                            File_Name.EndsWith(".dmp", System.StringComparison.InvariantCultureIgnoreCase) ||
+                            File_Name.EndsWith(".orig", System.StringComparison.InvariantCultureIgnoreCase) ||
+                            File_Name.EndsWith(".bak", System.StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            System.Threading.Interlocked.Add(ref Start_Directory_Size, File_Info.Length);
+                        }
                     }
 
                     /* Loop on Sub Direcotries in the Current Directory and Calculate it's files size. */

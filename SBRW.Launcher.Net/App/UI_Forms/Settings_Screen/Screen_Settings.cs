@@ -702,7 +702,6 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 {
                     if (Screen_Main.Screen_Instance != null)
                     {
-                        Screen_Main.Pack_SBRW_Downloader_Error_Rate = 0;
                         Screen_Main.Screen_Instance.Game_Folder_Checks();
                     }
                 }
@@ -1037,8 +1036,14 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             else
             {
                 Label_API_Status_One.ForeColor = Color_Text.S_Warning;
-                if (VisualsAPIChecker.UnitedSL && !VisualsAPIChecker.UnitedCDNL) { Label_API_Status_One.Text = "[API] United: Server List Only"; }
-                else if (!VisualsAPIChecker.UnitedSL && VisualsAPIChecker.UnitedCDNL) { Label_API_Status_One.Text = "[API] United: CDN List Only"; }
+                if (VisualsAPIChecker.UnitedSL && !VisualsAPIChecker.UnitedCDNL) 
+                {
+                    Label_API_Status_One.Text = "[API] United: Server List Only"; 
+                }
+                else if (!VisualsAPIChecker.UnitedSL && VisualsAPIChecker.UnitedCDNL) 
+                { 
+                    Label_API_Status_One.Text = "[API] United: CDN List Only"; 
+                }
                 else
                 {
                     Label_API_Status_One.Text = "[API] United: " + Strings.Truncate(APIChecker.StatusStrings(VisualsAPIChecker.UnitedSC), 32);
@@ -1055,8 +1060,14 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             else
             {
                 Label_API_Status_Two.ForeColor = Color_Text.S_Warning;
-                if (VisualsAPIChecker.CarbonSL && !VisualsAPIChecker.CarbonCDNL) { Label_API_Status_Two.Text = "[API] Carbon: Server List Only"; }
-                else if (!VisualsAPIChecker.CarbonSL && VisualsAPIChecker.CarbonCDNL) { Label_API_Status_Two.Text = "[API] Carbon: CDN List Only"; }
+                if (VisualsAPIChecker.CarbonSL && !VisualsAPIChecker.CarbonCDNL) 
+                { 
+                    Label_API_Status_Two.Text = "[API] Carbon: Server List Only"; 
+                }
+                else if (!VisualsAPIChecker.CarbonSL && VisualsAPIChecker.CarbonCDNL) 
+                { 
+                    Label_API_Status_Two.Text = "[API] Carbon: CDN List Only"; 
+                }
                 else
                 {
                     Label_API_Status_Two.Text = "[API] Carbon: " + Strings.Truncate(APIChecker.StatusStrings(VisualsAPIChecker.CarbonSC), 32);
@@ -1073,8 +1084,14 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             else
             {
                 Label_API_Status_Three.ForeColor = Color_Text.S_Warning;
-                if (VisualsAPIChecker.CarbonTwoSL && !VisualsAPIChecker.CarbonTwoCDNL) { Label_API_Status_Three.Text = "[API] Carbon (2nd): Server List Only"; }
-                else if (!VisualsAPIChecker.CarbonTwoSL && VisualsAPIChecker.CarbonTwoCDNL) { Label_API_Status_Three.Text = "[API] Carbon (2nd): CDN List Only"; }
+                if (VisualsAPIChecker.CarbonTwoSL && !VisualsAPIChecker.CarbonTwoCDNL) 
+                { 
+                    Label_API_Status_Three.Text = "[API] Carbon (2nd): Server List Only"; 
+                }
+                else if (!VisualsAPIChecker.CarbonTwoSL && VisualsAPIChecker.CarbonTwoCDNL) 
+                { 
+                    Label_API_Status_Three.Text = "[API] Carbon (2nd): CDN List Only"; 
+                }
                 else
                 {
                     Label_API_Status_Three.Text = "[API] Carbon (2nd): " + Strings.Truncate(APIChecker.StatusStrings(VisualsAPIChecker.CarbonTwoSC), 32);
