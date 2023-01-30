@@ -253,7 +253,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
         {
             try
             {
-                Live_Commands = Live_Commands.ToLower();
+                Live_Commands = Live_Commands.ToLowerInvariant();
                 switch (Live_Commands)
                 {
                     case "what if...":
