@@ -361,9 +361,9 @@ namespace SBRW.Launcher.Net
                                         "SBRW.Launcher.Core.Extra.dll - 0.2.3",
                                         "SBRW.Launcher.Core.Discord.dll - 0.2.3",
                                         "SBRW.Launcher.Core.Proxy.dll - 0.2.3",
-                                        "SBRW.Launcher.Core.Theme.dll - 0.1.3",
+                                        "SBRW.Launcher.Core.Theme.dll - 0.1.5",
                                         "SBRW.Launcher.Core.Downloader.dll - 0.3.4",
-                                        "SBRW.Launcher.Core.Downloader.LZMA.dll - 0.2.4"
+                                        "SBRW.Launcher.Core.Downloader.LZMA.dll - 0.3.1"
                                 };
 
                                 List<string> Missing_File_List = new List<string>();

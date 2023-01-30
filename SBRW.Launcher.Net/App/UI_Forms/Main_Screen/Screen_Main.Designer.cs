@@ -586,12 +586,17 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // 
             // ProgressBar
             // 
-            this.ProgressBar.DrawHorizontalBar = false;
+            this.ProgressBar.DrawHorizontalBarCustomColor = true;
+            this.ProgressBar.DrawHorizontalBarDefault = false;
             this.ProgressBar.InnerRectangle = 2;
+            this.ProgressBar.InnerRectangleLinearGradient = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
             this.ProgressBar.Location = new System.Drawing.Point(30, 430);
             this.ProgressBar.Name = "ProgressBar";
+            this.ProgressBar.OuterRectangleBackColor = System.Drawing.Color.WhiteSmoke;
             this.ProgressBar.Size = new System.Drawing.Size(519, 13);
+            this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.ProgressBar.TabIndex = 48;
+            this.ProgressBar.TabStop = false;
             this.ProgressBar.Text = "control_ProgressBar1";
             // 
             // LinkLabel_Forgot_Password

@@ -819,30 +819,55 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Visuals
                     {
                         Color_Winform_Other.Server_Banner_BackColor = Color_Converter.Value(ThemeFile.Key_Read("BannerBackColor"));
                     }
+                    
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorWarning")))
+                    {
+                        Color_Winform_Other.ProgressBar_Warning_Top = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorWarning"));
+                    }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorWarning")))
                     {
-                        Color_Winform_Other.ProgressBar_Warning = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorWarning"));
+                        Color_Winform_Other.ProgressBar_Warning_Bottom = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorWarningAccent"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorError")))
                     {
-                        Color_Winform_Other.ProgressBar_Error = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorError"));
+                        Color_Winform_Other.ProgressBar_Error_Top = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorError"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorError")))
+                    {
+                        Color_Winform_Other.ProgressBar_Error_Bottom = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorErrorAccent"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorChecking")))
                     {
-                        Color_Winform_Other.ProgressBar_Loading = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorChecking"));
+                        Color_Winform_Other.ProgressBar_Loading_Top = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorChecking"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorChecking")))
+                    {
+                        Color_Winform_Other.ProgressBar_Loading_Bottom = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorCheckingAccent"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorSucess")))
                     {
-                        Color_Winform_Other.ProgressBar_Sucess = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorSucess"));
+                        Color_Winform_Other.ProgressBar_Sucess_Top = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorSucess"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorSucess")))
+                    {
+                        Color_Winform_Other.ProgressBar_Sucess_Bottom = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorSucessAccent"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorUnknown")))
                     {
-                        Color_Winform_Other.ProgressBar_Warning = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorUnknown"));
+                        Color_Winform_Other.ProgressBar_Warning_Top = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorUnknown"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("ProgressColorUnknown")))
+                    {
+                        Color_Winform_Other.ProgressBar_Warning_Bottom = Color_Converter.Value(ThemeFile.Key_Read("ProgressColorUnknownAccent"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Key_Read("MainScreenTransparencyKey")))
