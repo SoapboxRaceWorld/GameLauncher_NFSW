@@ -560,6 +560,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         {
             if (LauncherUpdateCheck.UpgradeAvailable)
             {
+                /* Reason: The specified executable is not a valid application for this OS platform.
+                 * Code: -2147467259
+                 * Full Log: System.ComponentModel.Win32Exception (0x80004005): The specified executable is not a valid application for this OS platform.*/
                 LauncherUpdateCheck.UpdateStatusResult(true);
             }
         }
