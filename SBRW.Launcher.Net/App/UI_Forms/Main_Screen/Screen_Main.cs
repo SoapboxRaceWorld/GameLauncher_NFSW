@@ -3690,7 +3690,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Label_Download_Information.SafeInvokeAction(() =>
                         Label_Download_Information.Text = ("Make sure you have at least 8GB of free space on hard drive.").ToUpperInvariant(), this);
 
-                        DialogResult Live_Prompt_Data = new Update_Popup_Screen.Screen_Update_Popup() { Update_Mode = false }.ShowDialog();
+                        DialogResult Live_Prompt_Data = new Update_Popup_Screen.Screen_Update_Popup(false).ShowDialog();
                         /*"Click Ignore to Enable Storage Detection Bypass (Unix Builds Only) and Restarts the Downloader" +
                             "Click Retry to temporary bypass the Storage Detection." +
                             "Click Ok, to Close this Message";

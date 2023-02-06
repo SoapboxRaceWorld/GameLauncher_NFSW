@@ -19,10 +19,6 @@ namespace SBRW.Launcher.App.UI_Forms.Update_Popup_Screen
         /// <summary>
         /// 
         /// </summary>
-        public bool Update_Mode { get; set; } = true;
-        /// <summary>
-        /// 
-        /// </summary>
         private void SetVisuals()
         {
             /*******************************/
@@ -71,13 +67,17 @@ namespace SBRW.Launcher.App.UI_Forms.Update_Popup_Screen
             Button_Skip.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Blue_Mouse_Over_Back_Color;
         }
 
-        public Screen_Update_Popup()
+        public Screen_Update_Popup(bool Update_Mode = true)
         {
             if (Update_Mode)
             {
                 Presence_Launcher.Status(0, "New Version Is Available: " + LauncherUpdateCheck.LatestLauncherBuild);
             }
-            
+            else
+            {
+                this.Text = "Storage Alert Check";
+            }
+
             InitializeComponent();
             Icon = FormsIcon.Retrive_Icon();
             SetVisuals();
@@ -123,10 +123,16 @@ namespace SBRW.Launcher.App.UI_Forms.Update_Popup_Screen
             else
             {
                 GroupBox_Changelog.Text = "Details:";
-                TextBox_Changelog.Text =
-                            "\nClick Ignore to Enable Storage Detection Bypass (Unix Builds Only) and Restarts the Downloader" +
-                            "\nClick Retry to temporary bypass the Storage Detection." +
-                            "\nClick Ok, to Close this Message";
+                TextBox_Changelog.Text = string.Empty;
+                TextBox_Changelog.AppendText(Environment.NewLine);
+                TextBox_Changelog.AppendText(Environment.NewLine);
+                TextBox_Changelog.AppendText("Click Ignore to Enable Storage Detection Bypass (Unix Builds Only) and Restarts the Downloader");
+                TextBox_Changelog.AppendText(Environment.NewLine);
+                TextBox_Changelog.AppendText(Environment.NewLine);
+                TextBox_Changelog.AppendText("Click Retry to temporary bypass the Storage Detection.");
+                TextBox_Changelog.AppendText(Environment.NewLine);
+                TextBox_Changelog.AppendText(Environment.NewLine);
+                TextBox_Changelog.AppendText("Click Ok, to Close this Message");
             }
 
             TextBox_Changelog.Select(0, 0);
