@@ -16,6 +16,13 @@ namespace SBRW.Launcher.App.UI_Forms.Update_Popup_Screen
 {
     public partial class Screen_Update_Popup : Form
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Update_Mode { get; set; } = true;
+        /// <summary>
+        /// 
+        /// </summary>
         private void SetVisuals()
         {
             /*******************************/
@@ -66,45 +73,60 @@ namespace SBRW.Launcher.App.UI_Forms.Update_Popup_Screen
 
         public Screen_Update_Popup()
         {
-            Presence_Launcher.Status(0, "New Version Is Available: " + LauncherUpdateCheck.LatestLauncherBuild);
+            if (Update_Mode)
+            {
+                Presence_Launcher.Status(0, "New Version Is Available: " + LauncherUpdateCheck.LatestLauncherBuild);
+            }
+            
             InitializeComponent();
             Icon = FormsIcon.Retrive_Icon();
             SetVisuals();
 
-            if (VisualsAPIChecker.GitHubAPI)
+            if (Update_Mode)
             {
-                try
+                if (VisualsAPIChecker.GitHubAPI)
                 {
-                    if (LauncherUpdateCheck.VersionJSON.Valid_Json())
+                    try
                     {
-#pragma warning disable CS8602 // Null Safe Check Done Above
-                        if(EnableInsiderBetaTester.Allowed())
+                        if (LauncherUpdateCheck.VersionJSON.Valid_Json())
                         {
-                            TextBox_Changelog.Text = JsonConvert.DeserializeObject<List<GitHubRelease>>(LauncherUpdateCheck.VersionJSON)[0].Body.Replace("\r", Environment.NewLine);
+#pragma warning disable CS8602 // Null Safe Check Done Above
+                            if (EnableInsiderBetaTester.Allowed())
+                            {
+                                TextBox_Changelog.Text = JsonConvert.DeserializeObject<List<GitHubRelease>>(LauncherUpdateCheck.VersionJSON)[0].Body.Replace("\r", Environment.NewLine);
+                            }
+                            else
+                            {
+                                TextBox_Changelog.Text = JsonConvert.DeserializeObject<GitHubRelease>(LauncherUpdateCheck.VersionJSON).Body.Replace("\r", Environment.NewLine);
+                            }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                         }
                         else
                         {
-                            TextBox_Changelog.Text = JsonConvert.DeserializeObject<GitHubRelease>(LauncherUpdateCheck.VersionJSON).Body.Replace("\r", Environment.NewLine);
+                            TextBox_Changelog.Text = "\nUnable to Phrase Changelog";
+                            GroupBox_Changelog.Text = "Changelog Error:";
                         }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
                     }
-                    else
+                    catch (Exception Error)
                     {
-                        TextBox_Changelog.Text = "\nUnable to Phrase Changelog";
+                        LogToFileAddons.OpenLog("Update Popup", string.Empty, Error, string.Empty, true);
+                        TextBox_Changelog.Text = "\n" + Error.Message;
                         GroupBox_Changelog.Text = "Changelog Error:";
                     }
                 }
-                catch (Exception Error)
+                else
                 {
-                    LogToFileAddons.OpenLog("Update Popup", string.Empty, Error, string.Empty, true);
-                    TextBox_Changelog.Text = "\n" + Error.Message;
+                    TextBox_Changelog.Text = "\nUnable to Retrieve Changelog";
                     GroupBox_Changelog.Text = "Changelog Error:";
                 }
             }
             else
             {
-                TextBox_Changelog.Text = "\nUnable to Retrieve Changelog";
-                GroupBox_Changelog.Text = "Changelog Error:";
+                GroupBox_Changelog.Text = "Details:";
+                TextBox_Changelog.Text =
+                            "\nClick Ignore to Enable Storage Detection Bypass (Unix Builds Only) and Restarts the Downloader" +
+                            "\nClick Retry to temporary bypass the Storage Detection." +
+                            "\nClick Ok, to Close this Message";
             }
 
             TextBox_Changelog.Select(0, 0);
@@ -114,12 +136,24 @@ namespace SBRW.Launcher.App.UI_Forms.Update_Popup_Screen
             Bitmap Icon_Handle = Bitmap.FromHicon(SystemIcons.Information.Handle);
             Icon_Information.Image = Icon_Handle;
 
-            Label_Text_Update.Text = "An update is available. Would you like to update?\nYour version: " + LauncherUpdateCheck.CurrentLauncherBuild +
+            if (Update_Mode)
+            {
+                Label_Text_Update.Text = "An update is available. Would you like to update?\nYour version: " + LauncherUpdateCheck.CurrentLauncherBuild +
                 "\nUpdated version: " + LauncherUpdateCheck.LatestLauncherBuild;
 
-            this.Button_Update.DialogResult = DialogResult.OK;
-            this.Button_Ignore.DialogResult = DialogResult.Cancel;
-            this.Button_Skip.DialogResult = DialogResult.Ignore;
+                this.Button_Update.DialogResult = DialogResult.OK;
+                this.Button_Ignore.DialogResult = DialogResult.Cancel;
+                this.Button_Skip.DialogResult = DialogResult.Ignore;
+            }
+            else
+            {
+                Label_Text_Update.Text = "Did the launcher correctly detect limited free space?";
+                this.Button_Update.Text = "OK";
+                this.Button_Update.DialogResult = DialogResult.OK;
+                this.Button_Ignore.DialogResult = DialogResult.Ignore;
+                this.Button_Skip.Text = "Retry";
+                this.Button_Skip.DialogResult = DialogResult.Retry;
+            }
         }
     }
 }
