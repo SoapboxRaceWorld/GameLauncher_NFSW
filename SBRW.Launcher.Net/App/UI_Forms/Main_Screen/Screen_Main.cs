@@ -3630,8 +3630,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
             });
         }
-
+#if DEBUG_UNIX || RELEASE_UNIX
+        public void Game_Folder_Checks(bool Bypass_Storage_Requirement = false)
+#else
         public void Game_Folder_Checks()
+#endif
         {
             if (Screen_Instance != null && (!IsDisposed || !Disposing))
             {
@@ -3663,12 +3666,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     if (Detected_Drive.TotalFreeSpace < 8000000000 ||
                         !string.Equals(Detected_Drive.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
 #else
-                    double Converted_Available_Free_Space = default;
-                    Log.Debug("LINUX SPACE: " + Detected_Drive.AvailableFreeSpace_Linux);
-                    double.TryParse(Detected_Drive.AvailableFreeSpace_Linux.ToUpper().TrimEnd(new char[] { 'K', 'M', 'G', 'T', 'P' }),
-                    out Converted_Available_Free_Space);
-
-                    if (Converted_Available_Free_Space < 8.0D)
+                    if (Detected_Drive.TotalFreeSpace < 8000000000 && !Bypass_Storage_Requirement)
 #endif
                     {
                         if (UI_MODE != 6)
@@ -3687,11 +3685,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         else
                         {
                             Label_Download_Information.SafeInvokeAction(() =>
-                            Label_Download_Information.Text = ("Make sure you have at least 8GB of free space on hard drive.").ToUpper(), this);
+                            Label_Download_Information.Text = ("Make sure you have at least 8GB of free space on hard drive.").ToUpperInvariant(), this);
                         }
 #else
                         Label_Download_Information.SafeInvokeAction(() =>
-                        Label_Download_Information.Text = ("Make sure you have at least 8GB of free space on hard drive.").ToUpper(), this);
+                        Label_Download_Information.Text = ("Make sure you have at least 8GB of free space on hard drive.").ToUpperInvariant(), this);
 #endif
 
                         FunctionStatus.IsVerifyHashDisabled = true;
@@ -3703,8 +3701,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             UI_MODE = 6;
                         }
 
-                        Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Failsafe CDN Detected".ToUpper(), this, false);
-                        Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Please Choose a CDN from Settings Screen".ToUpper(), this);
+                        Label_Download_Information_Support.SafeInvokeAction(() => Label_Download_Information_Support.Text = "Failsafe CDN Detected".ToUpperInvariant(), this, false);
+                        Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Please Choose a CDN from Settings Screen".ToUpperInvariant(), this);
                     }
                     else
                     {
@@ -4351,7 +4349,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 {
                                     Label_Download_Information.Text = (Time_Conversion.FormatFileSize(Cached_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(Cached_Status.File_Size_Total) +
                                         " (" + Cached_Status.Download_Percentage + "%) - " +
-                                        Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpper();
+                                        Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
 
                                     ProgressBar.Value = Cached_Status.Download_Percentage;
                                     ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
@@ -4370,7 +4368,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 {
                                     Label_Download_Information.Text = (Time_Conversion.FormatFileSize(Cached_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(Cached_Status.File_Size_Total) +
                                         " (" + Cached_Status.Download_Percentage + "%) - " +
-                                        Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpper();
+                                        Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
 
                                     ProgressBar.Value = Cached_Status.Download_Percentage;
                                     ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
@@ -4389,8 +4387,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
                             ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
 
-                            Label_Download_Information.Text = "Checking Package Integrity".ToUpper();
-                            Label_Download_Information_Support.Text = "Downloaded: SBRW Game Files Package".ToUpper();
+                            Label_Download_Information.Text = "Checking Package Integrity".ToUpperInvariant();
+                            Label_Download_Information_Support.Text = "Downloaded: SBRW Game Files Package".ToUpperInvariant();
                         }
                         break;
                     /* Generic Loading */
@@ -4402,7 +4400,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
 
-                        Label_Download_Information.Text = "Loading".ToUpper();
+                        Label_Download_Information.Text = "Loading".ToUpperInvariant();
 
                         ProgressBar.Value = 0;
                         ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
@@ -4420,11 +4418,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 if (!string.IsNullOrWhiteSpace(Cached_Status.File_Current_Name))
                                 {
 #pragma warning disable CS8602 // Dereference of a possibly null reference. (.NET 6)
-                                    Label_Download_Information.Text = ("Unpacking " + Cached_Status.File_Current_Name.Replace(Pack_SBRW_Unpacker.File_Extension_Replacement, string.Empty)).ToUpper();
+                                    Label_Download_Information.Text = ("Unpacking " + Cached_Status.File_Current_Name.Replace(Pack_SBRW_Unpacker.File_Extension_Replacement, string.Empty)).ToUpperInvariant();
 #pragma warning restore CS8602 // Dereference of a possibly null reference. (.NET 6)
                                 }
 
-                                Label_Download_Information_Support.Text = Cached_Status.Extract_Percentage + "% [" + Cached_Status.File_Current + " / " + Cached_Status.File_Total + "]".ToUpper();
+                                Label_Download_Information_Support.Text = Cached_Status.Extract_Percentage + "% [" + Cached_Status.File_Current + " / " + Cached_Status.File_Total + "]".ToUpperInvariant();
 
                                 Presence_Launcher.Status(1, string.Format("Unpacking Game: {0}%", Cached_Status.Extract_Percentage));
                             }
@@ -4471,8 +4469,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
                             else
                             {
-                                Label_Download_Information_Support.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
-                                Label_Download_Information.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + Time_Conversion.FormatFileSize(ModNet_Download_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(ModNet_Download_Status.File_Size_Total)).ToUpper();
+                                Label_Download_Information_Support.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpperInvariant();
+                                Label_Download_Information.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + Time_Conversion.FormatFileSize(ModNet_Download_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(ModNet_Download_Status.File_Size_Total)).ToUpperInvariant();
 
                                 Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
 
@@ -4495,12 +4493,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         if (Builtinserver)
                         {
-                            Label_Download_Information.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
+                            Label_Download_Information.Text = "Soapbox server launched. Waiting for queries.".ToUpperInvariant();
                         }
                         else
                         {
                             Display_Color_Icons();
-                            Label_Download_Information.Text = "Loading game. Launcher will minimize once Game has Loaded".ToUpper();
+                            Label_Download_Information.Text = "Loading game. Launcher will minimize once Game has Loaded".ToUpperInvariant();
                             Label_Download_Information_Support.Text = string.Empty;
                             Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
 #if NETFRAMEWORK
