@@ -572,41 +572,48 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         {
             if (FunctionStatus.AllowRegistration)
             {
-                if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page))
+                if(Launcher_Value.Launcher_Select_Server_JSON != default)
                 {
+                    if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page))
+                    {
 #if NETFRAMEWORK
                     Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page);
 #else
-                    Process.Start(new ProcessStartInfo { FileName = Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page, UseShellExecute = true });
+                        Process.Start(new ProcessStartInfo { FileName = Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page, UseShellExecute = true });
 #endif
-                    MessageBox.Show(this, "A browser window has been opened to complete registration on " +
-                        ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (Launcher_Value.Launcher_Select_Server_Data.Name.ToUpper() == "WORLDUNITED OFFICIAL")
-                {
+                        MessageBox.Show(this, "A browser window has been opened to complete registration on " +
+                            ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else if (Launcher_Value.Launcher_Select_Server_Data.Name.ToUpper() == "WORLDUNITED OFFICIAL")
+                    {
 #if NETFRAMEWORK
                     Process.Start("https://signup.worldunited.gg/");
 #else
-                    Process.Start(new ProcessStartInfo { FileName = "https://signup.worldunited.gg/", UseShellExecute = true });
+                        Process.Start(new ProcessStartInfo { FileName = "https://signup.worldunited.gg/", UseShellExecute = true });
 #endif
-                    MessageBox.Show(this, "A browser window has been opened to complete registration on " +
-                        Launcher_Value.Launcher_Select_Server_Data.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(this, "A browser window has been opened to complete registration on " +
+                            Launcher_Value.Launcher_Select_Server_Data.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Screen_Register Custom_Instance_Register = new Screen_Register() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
+                            Panel_Register_Screen.Controls.Add(Custom_Instance_Register);
+                            Panel_Register_Screen.Visible = true;
+                            Custom_Instance_Register.Show();
+                            Text = "Register - SBRW Launcher: " + Application.ProductVersion;
+                        }
+                        catch (Exception Error)
+                        {
+                            string ErrorMessage = "Register Screen Encountered an Error";
+                            LogToFileAddons.OpenLog("SETTINGS Register", ErrorMessage, Error, "Exclamation", false);
+                        }
+                    }
                 }
                 else
                 {
-                    try
-                    {
-                        Screen_Register Custom_Instance_Register = new Screen_Register() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
-                        Panel_Register_Screen.Controls.Add(Custom_Instance_Register);
-                        Panel_Register_Screen.Visible = true;
-                        Custom_Instance_Register.Show();
-                        Text = "Register - SBRW Launcher: " + Application.ProductVersion;
-                    }
-                    catch (Exception Error)
-                    {
-                        string ErrorMessage = "Register Screen Encountered an Error";
-                        LogToFileAddons.OpenLog("SETTINGS Register", ErrorMessage, Error, "Exclamation", false);
-                    }
+                    MessageBox.Show(this, "Loading Server Information. Please try again.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else
