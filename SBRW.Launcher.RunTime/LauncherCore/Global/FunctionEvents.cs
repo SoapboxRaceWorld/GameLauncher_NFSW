@@ -373,6 +373,11 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
                             LauncherUpdateCheck.Latest(false);
                         }
                         break;
+#if DEBUG
+                    case "storage":
+                        new SBRW.Launcher.App.UI_Forms.Update_Popup_Screen.Screen_Update_Popup(false).ShowDialog();
+                        break;
+#endif
                     case "build":
                     case "build date":
                         if (Screen_Settings.Screen_Instance != null)

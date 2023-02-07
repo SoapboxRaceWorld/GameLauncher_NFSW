@@ -33,10 +33,15 @@ namespace SBRW.Launcher.RunTime.LauncherCore.FileReadWrite
 
             try
             {
-                if (Directory_Info == null || !Directory_Info.Exists)
+                if (Directory_Info == null)
+                {
+                    /* Return -1 while Directory does not exist. */
+                    Start_Directory_Size = -1;
+                }
+                else if (!Directory_Info.Exists)
                 {
                     /* Return 0 while Directory does not exist. */
-                    return Start_Directory_Size;
+                    Start_Directory_Size = 0;
                 }
                 else
                 {
@@ -71,10 +76,15 @@ namespace SBRW.Launcher.RunTime.LauncherCore.FileReadWrite
 
             try
             {
-                if (Directory_Info == null || !Directory_Info.Exists)
+                if (Directory_Info == null)
+                {
+                    /* Return -1 while Directory does not exist. */
+                    Start_Directory_Size = -1;
+                }
+                else if (!Directory_Info.Exists)
                 {
                     /* Return 0 while Directory does not exist. */
-                    return Start_Directory_Size;
+                    Start_Directory_Size = 0;
                 }
                 else
                 {
