@@ -822,11 +822,23 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (!VisualsAPIChecker.CarbonAPITwo())
                     {
-                        Label_Status_API.Text = "Connection API:\n - Error";
-                        Label_Status_API.ForeColor = Color_Text.S_Error;
-                        Label_Status_API_Details.Text = "Launcher is Offline";
-                        Picture_Icon_API.BackgroundImage = Image_Icon.Plug_Offline;
-                        Log.Api("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
+                        Label_Status_API.Text = "Cached API:\n - Local";
+                        Label_Status_API.ForeColor = Color_Text.S_Warning;
+                        Label_Status_API_Details.Text = "Using Local Cache";
+                        Picture_Icon_API.BackgroundImage = Image_Icon.Plug_Warning;
+
+                        if (!VisualsAPIChecker.Local_Cached_API())
+                        {
+                            Label_Status_API.Text = "Connection API:\n - Error";
+                            Label_Status_API.ForeColor = Color_Text.S_Error;
+                            Label_Status_API_Details.Text = "Launcher is Offline";
+                            Picture_Icon_API.BackgroundImage = Image_Icon.Plug_Offline;
+                            Log.Api("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
+                        }
+                        else
+                        {
+                            Log.Api("PINGING API: Failed to Connect to APIs! Using Local Cache! (Ask for help)");
+                        }
                     }
                 }
             }

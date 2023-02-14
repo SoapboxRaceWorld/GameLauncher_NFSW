@@ -79,6 +79,7 @@
             this.Button_CDN_List = new System.Windows.Forms.Button();
             this.Button_Console_Submit = new System.Windows.Forms.Button();
             this.Input_Console = new System.Windows.Forms.TextBox();
+            this.Label_API_Status_Five = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.Panel_Display_Timer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_WebClient_Timeout)).BeginInit();
@@ -530,7 +531,7 @@
             // Radio_Button_Static_Timer
             // 
             this.Radio_Button_Static_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.Radio_Button_Static_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Radio_Button_Static_Timer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Radio_Button_Static_Timer.ForeColor = System.Drawing.Color.Blue;
             this.Radio_Button_Static_Timer.Location = new System.Drawing.Point(5, 2);
             this.Radio_Button_Static_Timer.Name = "Radio_Button_Static_Timer";
@@ -544,7 +545,7 @@
             // Radio_Button_Dynamic_Timer
             // 
             this.Radio_Button_Dynamic_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.Radio_Button_Dynamic_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Radio_Button_Dynamic_Timer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Radio_Button_Dynamic_Timer.ForeColor = System.Drawing.Color.Blue;
             this.Radio_Button_Dynamic_Timer.Location = new System.Drawing.Point(99, 2);
             this.Radio_Button_Dynamic_Timer.Name = "Radio_Button_Dynamic_Timer";
@@ -558,7 +559,7 @@
             // Radio_Button_No_Timer
             // 
             this.Radio_Button_No_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.Radio_Button_No_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Radio_Button_No_Timer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Radio_Button_No_Timer.ForeColor = System.Drawing.Color.Blue;
             this.Radio_Button_No_Timer.Location = new System.Drawing.Point(193, 2);
             this.Radio_Button_No_Timer.Name = "Radio_Button_No_Timer";
@@ -572,7 +573,7 @@
             // Label_Display_Timer
             // 
             this.Label_Display_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.Label_Display_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label_Display_Timer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label_Display_Timer.ForeColor = System.Drawing.Color.DarkGray;
             this.Label_Display_Timer.Location = new System.Drawing.Point(556, 335);
             this.Label_Display_Timer.Name = "Label_Display_Timer";
@@ -584,7 +585,7 @@
             // Label_WebClient_Timeout
             // 
             this.Label_WebClient_Timeout.BackColor = System.Drawing.Color.Transparent;
-            this.Label_WebClient_Timeout.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label_WebClient_Timeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label_WebClient_Timeout.ForeColor = System.Drawing.Color.DarkGray;
             this.Label_WebClient_Timeout.Location = new System.Drawing.Point(556, 381);
             this.Label_WebClient_Timeout.Name = "Label_WebClient_Timeout";
@@ -597,7 +598,7 @@
             // 
             this.NumericUpDown_WebClient_Timeout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.NumericUpDown_WebClient_Timeout.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.NumericUpDown_WebClient_Timeout.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.NumericUpDown_WebClient_Timeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.NumericUpDown_WebClient_Timeout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.NumericUpDown_WebClient_Timeout.Location = new System.Drawing.Point(556, 399);
             this.NumericUpDown_WebClient_Timeout.Maximum = new decimal(new int[] {
@@ -645,6 +646,18 @@
             this.Input_Console.TabIndex = 149;
             this.Input_Console.Visible = false;
             // 
+            // Label_API_Status_Five
+            // 
+            this.Label_API_Status_Five.BackColor = System.Drawing.Color.Transparent;
+            this.Label_API_Status_Five.ForeColor = System.Drawing.Color.DarkGray;
+            this.Label_API_Status_Five.Location = new System.Drawing.Point(418, 305);
+            this.Label_API_Status_Five.Name = "Label_API_Status_Five";
+            this.Label_API_Status_Five.Size = new System.Drawing.Size(360, 14);
+            this.Label_API_Status_Five.TabIndex = 150;
+            this.Label_API_Status_Five.Text = "Backup CDN List API: PINGING";
+            this.Label_API_Status_Five.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label_API_Status_Five.Visible = false;
+            // 
             // Screen_Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -662,6 +675,7 @@
             this.Controls.Add(this.Label_Version_Build);
             this.Controls.Add(this.Label_Theme_Author);
             this.Controls.Add(this.Label_Theme_Name);
+            this.Controls.Add(this.Label_API_Status_Five);
             this.Controls.Add(this.Label_API_Status_Four);
             this.Controls.Add(this.Label_API_Status_Three);
             this.Controls.Add(this.Label_API_Status_Two);
@@ -764,5 +778,6 @@
         public System.Windows.Forms.LinkLabel LinkLabel_CDN_Current;
         public System.Windows.Forms.Button Button_Console_Submit;
         public System.Windows.Forms.TextBox Input_Console;
+        public System.Windows.Forms.Label Label_API_Status_Five;
     }
 }

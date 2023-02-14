@@ -1097,6 +1097,31 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                     Label_API_Status_Three.Text = "[API] Carbon (2nd): " + Strings.Truncate(APIChecker.StatusStrings(VisualsAPIChecker.CarbonTwoSC), 32);
                     Label_API_Status_Three.ForeColor = Color_Text.S_Error;
                 }
+
+                Label_API_Status_Four.Visible = true;
+            }
+
+            if (VisualsAPIChecker.Local_Cached_API())
+            {
+                Label_API_Status_Four.Text = "[API] Local Cache: Active";
+                Label_API_Status_Four.ForeColor = Color_Text.S_Warning;
+            }
+            else
+            {
+                Label_API_Status_Four.ForeColor = Color_Text.S_Warning;
+                if (VisualsAPIChecker.Local_Cached_SL && !VisualsAPIChecker.Local_Cached_CDNL)
+                {
+                    Label_API_Status_Four.Text = "[API] Local Cache: Server List Only";
+                }
+                else if (!VisualsAPIChecker.Local_Cached_SL && VisualsAPIChecker.Local_Cached_CDNL)
+                {
+                    Label_API_Status_Four.Text = "[API] Local Cache: CDN List Only";
+                }
+                else
+                {
+                    Label_API_Status_Four.Text = "[API] Local Cache: Not Found";
+                    Label_API_Status_Four.ForeColor = Color_Text.S_Error;
+                }
             }
         }
         /// <summary>
@@ -1322,6 +1347,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Label_API_Status_Two.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_API_Status_Three.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_API_Status_Four.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            Label_API_Status_Five.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_Version_Build.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Button_Save.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Button_Exit.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
