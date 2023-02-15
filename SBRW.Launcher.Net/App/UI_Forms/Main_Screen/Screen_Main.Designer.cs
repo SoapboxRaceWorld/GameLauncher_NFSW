@@ -588,7 +588,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // 
             this.ProgressBar.DrawHorizontalBarCustomColor = true;
             this.ProgressBar.DrawHorizontalBarDefault = false;
-            this.ProgressBar.InnerRectangle = 2;
+            this.ProgressBar.InnerRectangle = 0;
             this.ProgressBar.InnerRectangleLinearGradient = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
             this.ProgressBar.Location = new System.Drawing.Point(30, 430);
             this.ProgressBar.Name = "ProgressBar";
