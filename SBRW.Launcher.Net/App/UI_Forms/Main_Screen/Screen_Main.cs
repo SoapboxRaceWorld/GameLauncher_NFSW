@@ -2661,49 +2661,56 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         try
                         {
-                            if (CheckMate != default)
+                            if (!IsDownloading)
                             {
-                                CheckMate.SendAsyncCancel();
-                            }
+                                if (CheckMate != default)
+                                {
+                                    CheckMate.SendAsyncCancel();
+                                }
 
-                            Label_Client_Ping.Text = string.Empty;
-                            CheckMate = new Ping();
-                            CheckMate.PingCompleted += (_sender, _e) =>
-                            {
-                                if (_e.Cancelled)
+                                Label_Client_Ping.Text = string.Empty;
+                                CheckMate = new Ping();
+                                CheckMate.PingCompleted += (_sender, _e) =>
                                 {
-                                    Log.Warning("SERVER PING: Ping Canceled for " + ServerListUpdater.ServerName("Ping"));
-                                }
-                                else if (_e.Error != null)
-                                {
-                                    Log.Error("SERVER PING: Ping Failed for " + ServerListUpdater.ServerName("Ping") + " -> " + _e.Error.ToString());
-                                }
-                                else if (_e.Reply != null)
-                                {
-                                    if (_e.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
+                                    if (_e.Cancelled)
                                     {
-                                        Label_Client_Ping.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
-                                        Log.Info("SERVER PING: " + _e.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
+                                        Log.Warning("SERVER PING: Ping Canceled for " + ServerListUpdater.ServerName("Ping"));
+                                    }
+                                    else if (_e.Error != null)
+                                    {
+                                        Log.Error("SERVER PING: Ping Failed for " + ServerListUpdater.ServerName("Ping") + " -> " + _e.Error.ToString());
+                                    }
+                                    else if (_e.Reply != null)
+                                    {
+                                        if (_e.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
+                                        {
+                                            Label_Client_Ping.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
+                                            Log.Info("SERVER PING: " + _e.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
+                                        }
+                                        else
+                                        {
+                                            Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + _e.Reply.Status);
+                                        }
                                     }
                                     else
                                     {
-                                        Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + _e.Reply.Status);
+                                        Log.Warning("SERVER PING:  Unable to Ping " + ServerListUpdater.ServerName("Ping"));
                                     }
-                                }
-                                else
-                                {
-                                    Log.Warning("SERVER PING:  Unable to Ping " + ServerListUpdater.ServerName("Ping"));
-                                }
 
-                                if (_e.UserState != null)
-                                {
+                                    if (_e.UserState != null)
+                                    {
 #pragma warning disable CS8602 // Null Safe Check is done Above.
-                                    (_e.UserState as AutoResetEvent).Set();
+                                        (_e.UserState as AutoResetEvent).Set();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-                                }
-                            };
+                                    }
+                                };
 
-                            CheckMate.SendAsync(ServerURI.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
+                                CheckMate.SendAsync(ServerURI.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
+                            }
+                            else if (!Label_Client_Ping.Equals(string.Empty))
+                            {
+                                Label_Client_Ping.Text = string.Empty;
+                            }
                         }
                         catch (PingException Error)
                         {
