@@ -531,7 +531,7 @@
             // Radio_Button_Static_Timer
             // 
             this.Radio_Button_Static_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.Radio_Button_Static_Timer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Radio_Button_Static_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Radio_Button_Static_Timer.ForeColor = System.Drawing.Color.Blue;
             this.Radio_Button_Static_Timer.Location = new System.Drawing.Point(5, 2);
             this.Radio_Button_Static_Timer.Name = "Radio_Button_Static_Timer";
@@ -545,7 +545,7 @@
             // Radio_Button_Dynamic_Timer
             // 
             this.Radio_Button_Dynamic_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.Radio_Button_Dynamic_Timer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Radio_Button_Dynamic_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Radio_Button_Dynamic_Timer.ForeColor = System.Drawing.Color.Blue;
             this.Radio_Button_Dynamic_Timer.Location = new System.Drawing.Point(99, 2);
             this.Radio_Button_Dynamic_Timer.Name = "Radio_Button_Dynamic_Timer";
@@ -559,7 +559,7 @@
             // Radio_Button_No_Timer
             // 
             this.Radio_Button_No_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.Radio_Button_No_Timer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Radio_Button_No_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Radio_Button_No_Timer.ForeColor = System.Drawing.Color.Blue;
             this.Radio_Button_No_Timer.Location = new System.Drawing.Point(193, 2);
             this.Radio_Button_No_Timer.Name = "Radio_Button_No_Timer";
@@ -573,7 +573,7 @@
             // Label_Display_Timer
             // 
             this.Label_Display_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.Label_Display_Timer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label_Display_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label_Display_Timer.ForeColor = System.Drawing.Color.DarkGray;
             this.Label_Display_Timer.Location = new System.Drawing.Point(556, 335);
             this.Label_Display_Timer.Name = "Label_Display_Timer";
@@ -585,7 +585,7 @@
             // Label_WebClient_Timeout
             // 
             this.Label_WebClient_Timeout.BackColor = System.Drawing.Color.Transparent;
-            this.Label_WebClient_Timeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label_WebClient_Timeout.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label_WebClient_Timeout.ForeColor = System.Drawing.Color.DarkGray;
             this.Label_WebClient_Timeout.Location = new System.Drawing.Point(556, 381);
             this.Label_WebClient_Timeout.Name = "Label_WebClient_Timeout";
@@ -598,7 +598,7 @@
             // 
             this.NumericUpDown_WebClient_Timeout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.NumericUpDown_WebClient_Timeout.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.NumericUpDown_WebClient_Timeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.NumericUpDown_WebClient_Timeout.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.NumericUpDown_WebClient_Timeout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.NumericUpDown_WebClient_Timeout.Location = new System.Drawing.Point(556, 399);
             this.NumericUpDown_WebClient_Timeout.Maximum = new decimal(new int[] {
