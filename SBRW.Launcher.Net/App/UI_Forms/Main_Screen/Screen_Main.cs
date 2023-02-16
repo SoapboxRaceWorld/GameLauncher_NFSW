@@ -109,6 +109,78 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public static int TotalModFileCount { get; set; }
         public static string Custom_SBRW_Pack { get { return Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack"); } }
 
+        private void Server_Ping(string Server_Host_Url, int Ping_Timeout)
+        {
+            try
+            {
+                if (!IsDownloading)
+                {
+                    if (CheckMate != default)
+                    {
+                        CheckMate.SendAsyncCancel();
+                    }
+
+                    Label_Client_Ping.Text = string.Empty;
+                    CheckMate = new Ping();
+                    CheckMate.PingCompleted += (_sender, _e) =>
+                    {
+                        if (_e.Cancelled)
+                        {
+                            Log.Warning("SERVER PING: Ping Canceled for " + ServerListUpdater.ServerName("Ping"));
+                        }
+                        else if (_e.Error != null)
+                        {
+                            Log.Error("SERVER PING: Ping Failed for " + ServerListUpdater.ServerName("Ping") + " -> " + _e.Error.ToString());
+                        }
+                        else if (_e.Reply != null)
+                        {
+                            if (_e.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
+                            {
+                                Label_Client_Ping.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
+                                Log.Info("SERVER PING: " + _e.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
+                            }
+                            else
+                            {
+                                Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + _e.Reply.Status);
+                            }
+                        }
+                        else
+                        {
+                            Log.Warning("SERVER PING:  Unable to Ping " + ServerListUpdater.ServerName("Ping"));
+                        }
+
+                        if (_e.UserState != null)
+                        {
+#pragma warning disable CS8602 // Null Safe Check is done Above.
+                            (_e.UserState as AutoResetEvent).Set();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                        }
+                    };
+                    CheckMate.SendAsync(new Uri(Server_Host_Url).Host, Ping_Timeout, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
+                }
+                else if (!Label_Client_Ping.Equals(string.Empty))
+                {
+                    Label_Client_Ping.Text = string.Empty;
+                }
+            }
+            catch (PingException Error)
+            {
+                LogToFileAddons.OpenLog("Pinging", string.Empty, Error, string.Empty, true);
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("Ping", string.Empty, Error, string.Empty, true);
+            }
+            finally
+            {
+                if (CheckMate != default)
+                {
+                    CheckMate.Dispose();
+                    CheckMate = null;
+                }
+            }
+        }
+
         private void ButtonClose_MouseDown(object sender, EventArgs e)
         {
             Button_Close.BackgroundImage = Image_Icon.Close_Click;
@@ -1771,6 +1843,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             }
                         }
 
+                        Server_Ping(Launcher_Value.Launcher_Select_Server_Data.IPAddress, 5000);
+
                         Uri newModNetUri = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress + "/Modding/GetModInfo");
                         ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
                                     Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
@@ -2659,75 +2733,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         }
 
-                        try
-                        {
-                            if (!IsDownloading)
-                            {
-                                if (CheckMate != default)
-                                {
-                                    CheckMate.SendAsyncCancel();
-                                }
-
-                                Label_Client_Ping.Text = string.Empty;
-                                CheckMate = new Ping();
-                                CheckMate.PingCompleted += (_sender, _e) =>
-                                {
-                                    if (_e.Cancelled)
-                                    {
-                                        Log.Warning("SERVER PING: Ping Canceled for " + ServerListUpdater.ServerName("Ping"));
-                                    }
-                                    else if (_e.Error != null)
-                                    {
-                                        Log.Error("SERVER PING: Ping Failed for " + ServerListUpdater.ServerName("Ping") + " -> " + _e.Error.ToString());
-                                    }
-                                    else if (_e.Reply != null)
-                                    {
-                                        if (_e.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
-                                        {
-                                            Label_Client_Ping.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
-                                            Log.Info("SERVER PING: " + _e.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
-                                        }
-                                        else
-                                        {
-                                            Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + _e.Reply.Status);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Log.Warning("SERVER PING:  Unable to Ping " + ServerListUpdater.ServerName("Ping"));
-                                    }
-
-                                    if (_e.UserState != null)
-                                    {
-#pragma warning disable CS8602 // Null Safe Check is done Above.
-                                        (_e.UserState as AutoResetEvent).Set();
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-                                    }
-                                };
-
-                                CheckMate.SendAsync(ServerURI.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
-                            }
-                            else if (!Label_Client_Ping.Equals(string.Empty))
-                            {
-                                Label_Client_Ping.Text = string.Empty;
-                            }
-                        }
-                        catch (PingException Error)
-                        {
-                            LogToFileAddons.OpenLog("Pinging", string.Empty, Error, string.Empty, true);
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("Ping", string.Empty, Error, string.Empty, true);
-                        }
-                        finally
-                        {
-                            if (CheckMate != default)
-                            {
-                                CheckMate.Dispose();
-                                CheckMate = null;
-                            }
-                        }
+                        Server_Ping(ServerURI.Host, 5000);
 
                         ServerEnabled = true;
 
@@ -3138,6 +3144,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 LogToFileAddons.OpenLog("Progress Bar/Outline ODF", string.Empty, Error_Live, string.Empty, true);
             }
+
+            Server_Ping(Launcher_Value.Launcher_Select_Server_Data.IPAddress, 5000);
 
             try
             {
