@@ -84,7 +84,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public static int NfswPid { get; set; }
         public static Thread? Nfswstarted { get; set; }
         private static bool StillCheckingLastServer { get; set; }
-        private static bool ServerChangeTriggered { get; set; }
 
         
         public static Download_LZMA_Data? LZMA_Downloader { get; set; }
@@ -2170,8 +2169,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Button_Login.Enabled = Button_Register.Enabled = false;
             /* Disable Social Panel when switching */
             DisableSocialPanelandClearIt();
-            /* Stops any actions for a Server */
-            ServerChangeTriggered = true;
 
             if (!ServerListUpdater.LoadedList && Launcher_Value.Launcher_Select_Server_Data == null)
             {
@@ -2185,7 +2182,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 return;
             }
 
-            Launcher_Value.Launcher_Select_Server_Data = (Json_List_Server)ComboBox_Server_List.SelectedItem;
+            /* Stops any actions for a Server by comparing Live Instance of the Selected Cache */
+            Json_List_Server Cached_Server_GSI = Launcher_Value.Launcher_Select_Server_Data = (Json_List_Server)ComboBox_Server_List.SelectedItem;
 
             if (Launcher_Value.Launcher_Select_Server_Data.IsSpecial)
             {
@@ -2258,14 +2256,60 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Client.DownloadStringAsync(ServerURI);
 
             System.Timers.Timer aTimer = new System.Timers.Timer(Launcher_Value.Launcher_WebCall_Timeout_Enable ? Launcher_Value.Launcher_WebCall_Timeout() * 1000 : 10000);
-            aTimer.Elapsed += (x, y) => { Client.CancelAsync(); try { aTimer.Dispose(); } catch { } };
+            aTimer.Elapsed += (x, y) => 
+            {
+                if (Client != default)
+                {
+                    Client.CancelAsync();
+                }
+
+                try
+                {
+                    if (aTimer != default)
+                    {
+                        if (aTimer.Enabled)
+                        {
+                            aTimer.Stop();
+                            aTimer.Dispose();
+                        }
+                    }
+                }
+#if (DEBUG || DEBUG_UNIX)
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("aTimer", string.Empty, Error, string.Empty, true);
+                }
+#else
+                catch
+                {
+
+                }
+#endif
+            };
             aTimer.AutoReset = false;
             aTimer.Enabled = true;
 
             Client.DownloadStringCompleted += (sender2, e2) =>
             {
-                aTimer.Enabled = false;
-                try { aTimer.Dispose(); } catch { }
+                try 
+                {
+                    if(aTimer.Enabled)
+                    {
+                        aTimer.Stop();
+                        aTimer.Dispose();
+                    } 
+                }
+#if (DEBUG || DEBUG_UNIX)
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("aTimer [Download Complete]", string.Empty, Error, string.Empty, true);
+                }
+#else
+                catch
+                {
+
+                }
+#endif
 
                 bool GSIErrorFree = true;
 
@@ -2297,7 +2341,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     Client?.Dispose();
                 }
-                else
+                else if (Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data))
                 {
                     if (ServerListUpdater.ServerName("Ping") == "Offline Built-In Server")
                     {
@@ -2349,9 +2393,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         ServerBannerResult = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Banner, UriKind.Absolute, out Uri? uriResult) &&
                                         (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                     }
-                                    catch 
-                                    { 
-                                        ServerBannerResult = false; 
+                                    catch
+                                    {
+                                        ServerBannerResult = false;
                                     }
 
                                     ImageUrl = ServerBannerResult ? Launcher_Value.Launcher_Select_Server_JSON.Server_Banner : string.Empty;
@@ -2361,8 +2405,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     ImageUrl = string.Empty;
                                 }
                             }
-                            catch 
-                            { 
+                            catch
+                            {
 
                             }
 
@@ -2377,9 +2421,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     ServerDiscordLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord, UriKind.Absolute, out Uri? uriResult) &&
                                                              (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
-                                catch 
-                                { 
-                                    ServerDiscordLink = false; 
+                                catch
+                                {
+                                    ServerDiscordLink = false;
                                 }
                                 if (Picture_Icon_Server_Discord.BackgroundImage != (ServerDiscordLink ? Image_Icon.Discord : Image_Icon.Discord_Disabled))
                                 {
@@ -2388,8 +2432,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 LinkLabel_Server_Discord.Enabled = ServerDiscordLink;
                                 LinkLabel_Server_Discord.Text = ServerDiscordLink ? "Discord Invite" : string.Empty;
                             }
-                            catch 
-                            { 
+                            catch
+                            {
 
                             }
 
@@ -2402,9 +2446,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     ServerWebsiteLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Home, UriKind.Absolute, out Uri? uriResult) &&
                                               (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
-                                catch 
-                                { 
-                                    ServerWebsiteLink = false; 
+                                catch
+                                {
+                                    ServerWebsiteLink = false;
                                 }
                                 if (Picture_Icon_Server_Home.BackgroundImage != (ServerWebsiteLink ? Image_Icon.Home : Image_Icon.Home_Disabled))
                                 {
@@ -2413,9 +2457,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 LinkLabel_Server_Home.Enabled = ServerWebsiteLink;
                                 LinkLabel_Server_Home.Text = ServerWebsiteLink ? "Home Page" : string.Empty;
                             }
-                            catch 
+                            catch
                             {
-                                
+
                             }
 
                             /* Facebook Group Display */
@@ -2427,9 +2471,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     ServerFacebookLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Facebook, UriKind.Absolute, out Uri? uriResult) &&
                                                          (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
-                                catch 
-                                { 
-                                    ServerFacebookLink = false; 
+                                catch
+                                {
+                                    ServerFacebookLink = false;
                                 }
                                 if (Picture_Icon_Server_Facebook.BackgroundImage != (ServerFacebookLink ? Image_Icon.Facebook : Image_Icon.Facebook_Disabled))
                                 {
@@ -2438,8 +2482,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 LinkLabel_Server_Facebook.Enabled = ServerFacebookLink;
                                 LinkLabel_Server_Facebook.Text = ServerFacebookLink ? "Facebook Page" : string.Empty;
                             }
-                            catch 
-                            { 
+                            catch
+                            {
 
                             }
 
@@ -2455,8 +2499,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 LinkLabel_Server_Twitter.Enabled = ServerTwitterLink;
                                 LinkLabel_Server_Twitter.Text = ServerTwitterLink ? "Twitter Feed" : string.Empty;
                             }
-                            catch 
-                            { 
+                            catch
+                            {
 
                             }
 
@@ -2468,9 +2512,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Label_Server_Force_Restart_Timer.Text = string.Format(Translations.Database("MainScreen_Text_ServerShutDown") +
                                     " " + Time_Conversion.RelativeTime(ServerSecondsToShutDown));
                             }
-                            catch 
+                            catch
                             {
-                                
+
                             }
 
                             try
@@ -2486,7 +2530,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 };
                                 Label_Server_Scenery.Text = SceneryStatus;
                             }
-                            catch 
+                            catch
                             {
 
                             }
@@ -2562,9 +2606,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Warning;
                             }
                         }
-                        catch 
-                        { 
-                            /* Sad Noises */ 
+                        catch
+                        {
+                            /* Sad Noises */
                         }
                     }
                     else
@@ -2596,9 +2640,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Panel_Server_Information.Visible = true;
                             }
                         }
-                        catch 
-                        { 
-                            /* ¯\_(ツ)_/¯ */ 
+                        catch
+                        {
+                            /* ¯\_(ツ)_/¯ */
                         }
                         finally
                         {
@@ -2610,13 +2654,18 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             Label_Status_Game_Server_Data.Text = string.Format("Online: {0}\nRegistered: {1}", numPlayers, numRegistered);
                         }
-                        catch 
-                        { 
+                        catch
+                        {
 
                         }
 
                         try
                         {
+                            if (CheckMate != default)
+                            {
+                                CheckMate.SendAsyncCancel();
+                            }
+
                             Label_Client_Ping.Text = string.Empty;
                             CheckMate = new Ping();
                             CheckMate.PingCompleted += (_sender, _e) =>
@@ -2666,148 +2715,160 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
                         finally
                         {
-                            CheckMate?.Dispose();
+                            if (CheckMate != default)
+                            {
+                                CheckMate.Dispose();
+                                CheckMate = null;
+                            }
                         }
 
                         ServerEnabled = true;
 
-                        try
+                        if (Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data))
                         {
-                            if (!Directory.Exists(Banner_Cache_Folder)) { Directory.CreateDirectory(Banner_Cache_Folder); }
-
-                            if (!string.IsNullOrWhiteSpace(ImageUrl))
+                            try
                             {
+                                if (!Directory.Exists(Banner_Cache_Folder)) { Directory.CreateDirectory(Banner_Cache_Folder); }
 
-                                Uri URICall_A = new Uri(ImageUrl);
-                                ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ? 
-                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
-                                var Client_A = new WebClient
+                                if (!string.IsNullOrWhiteSpace(ImageUrl))
                                 {
-                                    Encoding = Encoding.UTF8,
-                                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                                };
-                                if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                                { 
-                                    Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
-                                }
-                                else
-                                {
-                                    Client_A.Headers.Add("user-agent", "SBRW Launcher " +
-                                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                }
 
-                                Client_A.DownloadDataAsync(URICall_A);
-                                Client_A.DownloadProgressChanged += (Object_A, Events_A) =>
-                                {
-                                    if (ServerChangeTriggered)
+                                    Uri URICall_A = new Uri(ImageUrl);
+                                    ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                        Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
+                                    var Client_A = new WebClient
                                     {
-                                        Client_A.CancelAsync();
-                                        Log.Info("BANNER: Stopping " + ServerListUpdater.ServerName("Ping") + " Server Banner Download");
-                                    }
-                                    else if (Events_A.TotalBytesToReceive > 2000000)
+                                        Encoding = Encoding.UTF8,
+                                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                                    };
+                                    if (!Launcher_Value.Launcher_Alternative_Webcalls())
                                     {
-                                        Client_A.CancelAsync();
-                                        Log.Warning("BANNER: Unable to Cache " + ServerListUpdater.ServerName("Ping") + " Server Banner! {Over 2MB?}");
+                                        Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
                                     }
-                                };
+                                    else
+                                    {
+                                        Client_A.Headers.Add("user-agent", "SBRW Launcher " +
+                                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                    }
 
-                                Client_A.DownloadDataCompleted += (Object_A, Events_A) =>
-                                {
-                                    if (Events_A.Cancelled)
+                                    Client_A.DownloadDataAsync(URICall_A);
+                                    Client_A.DownloadProgressChanged += (Object_A, Events_A) =>
                                     {
-                                        Client_A?.Dispose();
-                                    }
-                                    else if (Events_A.Error != null)
-                                    {
-                                        if (!ServerChangeTriggered)
+                                        if (!Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data))
                                         {
-                                            /* Load cached banner! */
-                                            if (Picture_Server_Banner.Image != (Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
-                                            {
-                                                Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
-                                            }
-#if !(RELEASE_UNIX || DEBUG_UNIX)
-                                            GC.Collect(); 
-#endif
+                                            Client_A.CancelAsync();
+                                            Log.Info("BANNER: Stopping " + ServerListUpdater.ServerName("Ping") + " Server Banner Download");
                                         }
+                                        else if (Events_A.TotalBytesToReceive > 2000000)
+                                        {
+                                            Client_A.CancelAsync();
+                                            Log.Warning("BANNER: Unable to Cache " + ServerListUpdater.ServerName("Ping") + " Server Banner! {Over 2MB?}");
+                                        }
+                                    };
 
-                                        Client_A?.Dispose();
-                                    }
-                                    else if (!ServerChangeTriggered && Events_A.Result != null)
+                                    Client_A.DownloadDataCompleted += (Object_A, Events_A) =>
                                     {
-                                        try
-                                        {
-                                            try
-                                            {
-                                                if (ServerRawBanner != null)
-                                                {
-                                                    ServerRawBanner.Close();
-                                                    ServerRawBanner.Dispose();
-                                                }
-                                            }
-                                            catch { }
-
-                                            ServerRawBanner = new MemoryStream(Events_A.Result)
-                                            {
-                                                Position = 0
-                                            };
-
-                                            if (Picture_Server_Banner.Image != (Image.FromStream(ServerRawBanner) ?? Image_Other.Server_Banner))
-                                            {
-                                                Picture_Server_Banner.Image = Image.FromStream(ServerRawBanner) ?? Image_Other.Server_Banner;
-                                            }
-
-                                            if (Strings.GetExtension(ImageUrl) == "gif")
-                                            {
-                                                Image.FromStream(ServerRawBanner).Save(Banner_Cache_File);
-                                            }
-                                            else
-                                            {
-                                                File.WriteAllBytes(Banner_Cache_File, ServerRawBanner.ToArray());
-                                            }
-                                        }
-                                        catch (Exception Error)
-                                        {
-                                            LogToFileAddons.OpenLog("Server Banner", string.Empty, Error, string.Empty, true);
-                                            Picture_Server_Banner.BackColor = Color_Winform_Other.Server_Banner_BackColor;
-                                        }
-                                        finally
+                                        if (Events_A.Cancelled)
                                         {
                                             Client_A?.Dispose();
-
-#if !(RELEASE_UNIX || DEBUG_UNIX)
-                                            GC.Collect(); 
-#endif
                                         }
-                                    }
-                                };
-                            }
-                            else if (File.Exists(Banner_Cache_File) && !(Application.OpenForms[this.Name].IsDisposed || Application.OpenForms[this.Name].Disposing))
-                            {
-                                /* Load cached banner! */
-                                if (Picture_Server_Banner.Image != (Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
-                                {
-                                    Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
-                                }
+                                        else if (Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data))
+                                        {
+                                            if (Events_A.Error != null)
+                                            {
+                                                if (Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data))
+                                                {
+                                                    /* Load cached banner! */
+                                                    if (Picture_Server_Banner.Image != (Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
+                                                    {
+                                                        Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
+                                                    }
 #if !(RELEASE_UNIX || DEBUG_UNIX)
-                                GC.Collect(); 
+                                                    GC.Collect();
 #endif
-                            }
-                            else if (!Application.OpenForms[this.Name].IsDisposed)
-                            {
-                                Picture_Server_Banner.BackColor = Color_Winform_Other.Server_Banner_BackColor;
-#if !(RELEASE_UNIX || DEBUG_UNIX)
-                                GC.Collect(); 
-#endif
-                            }
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("BANNER Cache", string.Empty, Error, string.Empty, true);
-                        }
+                                                }
 
-                        ServerChangeTriggered = false;
+                                                Client_A?.Dispose();
+                                            }
+                                            else if (Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data) && Events_A.Result != null)
+                                            {
+                                                try
+                                                {
+                                                    try
+                                                    {
+                                                        if (ServerRawBanner != null)
+                                                        {
+                                                            ServerRawBanner.Close();
+                                                            ServerRawBanner.Dispose();
+                                                        }
+                                                    }
+                                                    catch { }
+
+                                                    ServerRawBanner = new MemoryStream(Events_A.Result)
+                                                    {
+                                                        Position = 0
+                                                    };
+
+                                                    if (Picture_Server_Banner.Image != (Image.FromStream(ServerRawBanner) ?? Image_Other.Server_Banner))
+                                                    {
+                                                        Picture_Server_Banner.Image = Image.FromStream(ServerRawBanner) ?? Image_Other.Server_Banner;
+                                                    }
+
+                                                    if (Strings.GetExtension(ImageUrl) == "gif")
+                                                    {
+                                                        Image.FromStream(ServerRawBanner).Save(Banner_Cache_File);
+                                                    }
+                                                    else
+                                                    {
+                                                        File.WriteAllBytes(Banner_Cache_File, ServerRawBanner.ToArray());
+                                                    }
+                                                }
+                                                catch (Exception Error)
+                                                {
+                                                    LogToFileAddons.OpenLog("Server Banner", string.Empty, Error, string.Empty, true);
+                                                    Picture_Server_Banner.BackColor = Color_Winform_Other.Server_Banner_BackColor;
+                                                }
+                                                finally
+                                                {
+                                                    Client_A?.Dispose();
+
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                                    GC.Collect();
+#endif
+                                                }
+                                            }
+                                        }
+                                    };
+                                }
+                                else if (File.Exists(Banner_Cache_File) && !(Application.OpenForms[this.Name].IsDisposed || Application.OpenForms[this.Name].Disposing))
+                                {
+                                    /* Load cached banner! */
+                                    if (Picture_Server_Banner.Image != (Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
+                                    {
+                                        Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
+                                    }
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                    GC.Collect();
+#endif
+                                }
+                                else if (!Application.OpenForms[this.Name].IsDisposed)
+                                {
+                                    Picture_Server_Banner.BackColor = Color_Winform_Other.Server_Banner_BackColor;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                    GC.Collect();
+#endif
+                                }
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("BANNER Cache", string.Empty, Error, string.Empty, true);
+                            }
+                        }
                     }
+                }
+                else
+                {
+                    /* Just ingore this. */
                 }
 
                 if (Application.OpenForms[this.Name] != null)
@@ -3204,9 +3265,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 FunctionStatus.IsVerifyHashDisabled = true;
             }
         }
-        #endregion
+#endregion
 
-        #region Game Files Downloader (SBRW Pack [.pack.sbrw])
+#region Game Files Downloader (SBRW Pack [.pack.sbrw])
         /* potential error is that the Pack_SBRW_Unpacker variable is being assigned a new Download_Extract object every time the 
          * Game_Pack_Downloader method is called, but it's not being disposed of or set to null afterwards. 
          * This could lead to memory leaks if the method is called repeatedly. 
