@@ -39,6 +39,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
         public static bool EnableInsiderPreview { get { return Save_Settings.Live_Data.Launcher_Insider == "1" || Save_Settings.Live_Data.Launcher_Insider == "2"; } }
         public static bool EnableThemeSupport { get { return Save_Settings.Live_Data.Launcher_Theme_Support == "1"; } }
         public static bool EnableLZMADownloader { get { return Save_Settings.Live_Data.Launcher_LZMA_Downloader == "1"; } }
+        public static bool EnableProxyDomain { get { return Save_Settings.Live_Data.Launcher_Proxy_Domain == "1"; } }
         /// <summary>
         /// Default Path Location for Game Files Archive File
         /// </summary>

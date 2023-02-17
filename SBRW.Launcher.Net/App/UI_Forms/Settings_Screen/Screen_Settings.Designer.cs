@@ -80,9 +80,14 @@
             this.Button_Console_Submit = new System.Windows.Forms.Button();
             this.Input_Console = new System.Windows.Forms.TextBox();
             this.Label_API_Status_Five = new System.Windows.Forms.Label();
+            this.CheckBox_Proxy_Domain = new System.Windows.Forms.CheckBox();
+            this.CheckBox_Host_to_IP = new System.Windows.Forms.CheckBox();
+            this.NumericUpDown_Proxy_Port = new System.Windows.Forms.NumericUpDown();
+            this.Label_Proxy_Port = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.Panel_Display_Timer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_WebClient_Timeout)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_Proxy_Port)).BeginInit();
             this.SuspendLayout();
             // 
             // Button_Exit
@@ -307,7 +312,7 @@
             // 
             this.CheckBox_Opt_Insider.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_Opt_Insider.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_Opt_Insider.Location = new System.Drawing.Point(295, 403);
+            this.CheckBox_Opt_Insider.Location = new System.Drawing.Point(295, 421);
             this.CheckBox_Opt_Insider.Name = "CheckBox_Opt_Insider";
             this.CheckBox_Opt_Insider.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Opt_Insider.TabIndex = 61;
@@ -318,7 +323,7 @@
             // 
             this.CheckBox_Alt_WebCalls.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_Alt_WebCalls.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_Alt_WebCalls.Location = new System.Drawing.Point(295, 357);
+            this.CheckBox_Alt_WebCalls.Location = new System.Drawing.Point(295, 377);
             this.CheckBox_Alt_WebCalls.Name = "CheckBox_Alt_WebCalls";
             this.CheckBox_Alt_WebCalls.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_Alt_WebCalls.TabIndex = 64;
@@ -498,7 +503,7 @@
             // 
             this.CheckBox_LZMA_Downloader.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_LZMA_Downloader.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_LZMA_Downloader.Location = new System.Drawing.Point(295, 379);
+            this.CheckBox_LZMA_Downloader.Location = new System.Drawing.Point(295, 399);
             this.CheckBox_LZMA_Downloader.Name = "CheckBox_LZMA_Downloader";
             this.CheckBox_LZMA_Downloader.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_LZMA_Downloader.TabIndex = 80;
@@ -509,7 +514,7 @@
             // 
             this.CheckBox_JSON_Update_Cache.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_JSON_Update_Cache.ForeColor = System.Drawing.Color.White;
-            this.CheckBox_JSON_Update_Cache.Location = new System.Drawing.Point(38, 403);
+            this.CheckBox_JSON_Update_Cache.Location = new System.Drawing.Point(38, 401);
             this.CheckBox_JSON_Update_Cache.Name = "CheckBox_JSON_Update_Cache";
             this.CheckBox_JSON_Update_Cache.Size = new System.Drawing.Size(222, 18);
             this.CheckBox_JSON_Update_Cache.TabIndex = 81;
@@ -522,7 +527,7 @@
             this.Panel_Display_Timer.Controls.Add(this.Radio_Button_Static_Timer);
             this.Panel_Display_Timer.Controls.Add(this.Radio_Button_Dynamic_Timer);
             this.Panel_Display_Timer.Controls.Add(this.Radio_Button_No_Timer);
-            this.Panel_Display_Timer.Location = new System.Drawing.Point(556, 355);
+            this.Panel_Display_Timer.Location = new System.Drawing.Point(556, 374);
             this.Panel_Display_Timer.Name = "Panel_Display_Timer";
             this.Panel_Display_Timer.Size = new System.Drawing.Size(288, 22);
             this.Panel_Display_Timer.TabIndex = 142;
@@ -531,7 +536,7 @@
             // Radio_Button_Static_Timer
             // 
             this.Radio_Button_Static_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.Radio_Button_Static_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Radio_Button_Static_Timer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Radio_Button_Static_Timer.ForeColor = System.Drawing.Color.Blue;
             this.Radio_Button_Static_Timer.Location = new System.Drawing.Point(5, 2);
             this.Radio_Button_Static_Timer.Name = "Radio_Button_Static_Timer";
@@ -545,7 +550,7 @@
             // Radio_Button_Dynamic_Timer
             // 
             this.Radio_Button_Dynamic_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.Radio_Button_Dynamic_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Radio_Button_Dynamic_Timer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Radio_Button_Dynamic_Timer.ForeColor = System.Drawing.Color.Blue;
             this.Radio_Button_Dynamic_Timer.Location = new System.Drawing.Point(99, 2);
             this.Radio_Button_Dynamic_Timer.Name = "Radio_Button_Dynamic_Timer";
@@ -559,7 +564,7 @@
             // Radio_Button_No_Timer
             // 
             this.Radio_Button_No_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.Radio_Button_No_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Radio_Button_No_Timer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Radio_Button_No_Timer.ForeColor = System.Drawing.Color.Blue;
             this.Radio_Button_No_Timer.Location = new System.Drawing.Point(193, 2);
             this.Radio_Button_No_Timer.Name = "Radio_Button_No_Timer";
@@ -573,9 +578,9 @@
             // Label_Display_Timer
             // 
             this.Label_Display_Timer.BackColor = System.Drawing.Color.Transparent;
-            this.Label_Display_Timer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label_Display_Timer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label_Display_Timer.ForeColor = System.Drawing.Color.DarkGray;
-            this.Label_Display_Timer.Location = new System.Drawing.Point(556, 335);
+            this.Label_Display_Timer.Location = new System.Drawing.Point(556, 354);
             this.Label_Display_Timer.Name = "Label_Display_Timer";
             this.Label_Display_Timer.Size = new System.Drawing.Size(288, 18);
             this.Label_Display_Timer.TabIndex = 143;
@@ -585,9 +590,9 @@
             // Label_WebClient_Timeout
             // 
             this.Label_WebClient_Timeout.BackColor = System.Drawing.Color.Transparent;
-            this.Label_WebClient_Timeout.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label_WebClient_Timeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label_WebClient_Timeout.ForeColor = System.Drawing.Color.DarkGray;
-            this.Label_WebClient_Timeout.Location = new System.Drawing.Point(556, 381);
+            this.Label_WebClient_Timeout.Location = new System.Drawing.Point(556, 398);
             this.Label_WebClient_Timeout.Name = "Label_WebClient_Timeout";
             this.Label_WebClient_Timeout.Size = new System.Drawing.Size(288, 14);
             this.Label_WebClient_Timeout.TabIndex = 144;
@@ -598,9 +603,9 @@
             // 
             this.NumericUpDown_WebClient_Timeout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.NumericUpDown_WebClient_Timeout.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.NumericUpDown_WebClient_Timeout.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.NumericUpDown_WebClient_Timeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.NumericUpDown_WebClient_Timeout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.NumericUpDown_WebClient_Timeout.Location = new System.Drawing.Point(556, 399);
+            this.NumericUpDown_WebClient_Timeout.Location = new System.Drawing.Point(556, 416);
             this.NumericUpDown_WebClient_Timeout.Maximum = new decimal(new int[] {
             179,
             0,
@@ -658,6 +663,58 @@
             this.Label_API_Status_Five.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Label_API_Status_Five.Visible = false;
             // 
+            // CheckBox_Proxy_Domain
+            // 
+            this.CheckBox_Proxy_Domain.BackColor = System.Drawing.Color.Transparent;
+            this.CheckBox_Proxy_Domain.ForeColor = System.Drawing.Color.White;
+            this.CheckBox_Proxy_Domain.Location = new System.Drawing.Point(295, 355);
+            this.CheckBox_Proxy_Domain.Name = "CheckBox_Proxy_Domain";
+            this.CheckBox_Proxy_Domain.Size = new System.Drawing.Size(222, 18);
+            this.CheckBox_Proxy_Domain.TabIndex = 151;
+            this.CheckBox_Proxy_Domain.Text = "Enable Proxy Domain";
+            this.CheckBox_Proxy_Domain.UseVisualStyleBackColor = false;
+            // 
+            // CheckBox_Host_to_IP
+            // 
+            this.CheckBox_Host_to_IP.BackColor = System.Drawing.Color.Transparent;
+            this.CheckBox_Host_to_IP.ForeColor = System.Drawing.Color.White;
+            this.CheckBox_Host_to_IP.Location = new System.Drawing.Point(38, 421);
+            this.CheckBox_Host_to_IP.Name = "CheckBox_Host_to_IP";
+            this.CheckBox_Host_to_IP.Size = new System.Drawing.Size(222, 18);
+            this.CheckBox_Host_to_IP.TabIndex = 152;
+            this.CheckBox_Host_to_IP.Text = "Disable Legacy I.P. Convertor";
+            this.CheckBox_Host_to_IP.UseVisualStyleBackColor = false;
+            // 
+            // NumericUpDown_Proxy_Port
+            // 
+            this.NumericUpDown_Proxy_Port.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.NumericUpDown_Proxy_Port.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.NumericUpDown_Proxy_Port.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.NumericUpDown_Proxy_Port.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.NumericUpDown_Proxy_Port.Location = new System.Drawing.Point(657, 334);
+            this.NumericUpDown_Proxy_Port.Maximum = new decimal(new int[] {
+            65353,
+            0,
+            0,
+            0});
+            this.NumericUpDown_Proxy_Port.Name = "NumericUpDown_Proxy_Port";
+            this.NumericUpDown_Proxy_Port.Size = new System.Drawing.Size(61, 17);
+            this.NumericUpDown_Proxy_Port.TabIndex = 154;
+            this.NumericUpDown_Proxy_Port.Tag = "WebClientTimeNumeric";
+            this.NumericUpDown_Proxy_Port.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // Label_Proxy_Port
+            // 
+            this.Label_Proxy_Port.BackColor = System.Drawing.Color.Transparent;
+            this.Label_Proxy_Port.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label_Proxy_Port.ForeColor = System.Drawing.Color.DarkGray;
+            this.Label_Proxy_Port.Location = new System.Drawing.Point(556, 335);
+            this.Label_Proxy_Port.Name = "Label_Proxy_Port";
+            this.Label_Proxy_Port.Size = new System.Drawing.Size(95, 14);
+            this.Label_Proxy_Port.TabIndex = 153;
+            this.Label_Proxy_Port.Text = "Proxy Port:";
+            this.Label_Proxy_Port.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // Screen_Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -665,6 +722,10 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.Panel_Form_Screens);
+            this.Controls.Add(this.Label_Proxy_Port);
+            this.Controls.Add(this.NumericUpDown_Proxy_Port);
+            this.Controls.Add(this.CheckBox_Host_to_IP);
+            this.Controls.Add(this.CheckBox_Proxy_Domain);
             this.Controls.Add(this.Input_Console);
             this.Controls.Add(this.Button_Console_Submit);
             this.Controls.Add(this.Button_CDN_List);
@@ -721,6 +782,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
             this.Panel_Display_Timer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_WebClient_Timeout)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_Proxy_Port)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -779,5 +841,9 @@
         public System.Windows.Forms.Button Button_Console_Submit;
         public System.Windows.Forms.TextBox Input_Console;
         public System.Windows.Forms.Label Label_API_Status_Five;
+        public System.Windows.Forms.CheckBox CheckBox_Proxy_Domain;
+        public System.Windows.Forms.CheckBox CheckBox_Host_to_IP;
+        public System.Windows.Forms.NumericUpDown NumericUpDown_Proxy_Port;
+        public System.Windows.Forms.Label Label_Proxy_Port;
     }
 }
