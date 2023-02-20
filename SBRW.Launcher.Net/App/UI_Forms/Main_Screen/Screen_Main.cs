@@ -867,6 +867,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             { IsBackground = true };
 
             Nfswstarted.Start();
+            Presence_Launcher.Status(28, string.Empty);
         }
 
         /* Check Serverlist API Status Upon Main Screen load - DavidCarbon */
@@ -3243,6 +3244,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             if (Screen_Instance != null && (!IsDisposed || !Disposing))
             {
+                Presence_Launcher.Download = false;
                 Presence_Launcher.Status(3);
 
                 try
@@ -3725,7 +3727,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
             });
         }
-#if DEBUG_UNIX || RELEASE_UNIX
+#if (DEBUG_UNIX || RELEASE_UNIX)
         public void Game_Folder_Checks(bool Bypass_Storage_Requirement = false)
 #else
         public void Game_Folder_Checks()
@@ -4586,7 +4588,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
                                 ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
 
-                                Presence_Launcher.Status(2, string.Format("Downloaded {0}% of Server Game Mods!", ModNet_Download_Status.Download_Percentage));
+                                if (ModNet_Download_Status.Download_Percentage >= 100)
+                                {
+                                    Presence_Launcher.Status(28, string.Empty);
+                                }
+                                else
+                                {
+                                    Presence_Launcher.Status(2, string.Format("Downloaded {0}% of Server Game Mods!", ModNet_Download_Status.Download_Percentage));
+                                }
                             }
                         }
                         break;

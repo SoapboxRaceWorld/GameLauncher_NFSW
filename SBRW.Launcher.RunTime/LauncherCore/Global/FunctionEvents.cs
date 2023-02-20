@@ -20,6 +20,8 @@ using System.Text;
 using System.Windows.Forms;
 using SBRW.Launcher.App.UI_Forms.Settings_Screen;
 using SBRW.Launcher.Core.Required.System;
+using SBRW.Launcher.Core.Extension.Logging_;
+using SBRW.Launcher.Core.Proxy.Nancy_;
 
 namespace SBRW.Launcher.RunTime.LauncherCore.Global
 {
@@ -462,6 +464,64 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
 #else
                         Process.Start(new ProcessStartInfo { FileName = "https://www.youtube.com/watch?v=BEX3pd3vHks/", UseShellExecute = true });
 #endif
+                        break;
+                    case "proxy domain preview":
+                    case "pdp":
+                        if (Save_Settings.Live_Data != null)
+                        {
+                            if (Save_Settings.Live_Data.Launcher_Proxy.Equals("0"))
+                            {
+                                if (Screen_Settings.Screen_Instance != null)
+                                {
+                                    string Entry_Text = Prompt.ShowDialog("Enter New Domain Name (Does not Save on Relaunch)", "SBRW Launcher");
+                                    if (!string.IsNullOrWhiteSpace(Entry_Text))
+                                    {
+                                        if (MessageBox.Show(Screen_Settings.Screen_Instance, "Confirm the Following Changes:" +
+                                        "\n\nOLD Domain: " + Proxy_Settings.Domain +
+                                        "\nNEW Domain: " + Entry_Text, "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                                        {
+                                            if (Proxy_Settings.Running())
+                                            {
+                                                Proxy_Server.Instance.Stop("SBRW.Launcher.Core [Console]");
+                                            }
+
+                                            Log.Function("[Console]: Custom Proxy Domain:".ToUpper() + " -> " + (Proxy_Settings.Domain = Entry_Text) + " has been Set");
+
+                                            if (!Proxy_Settings.Running())
+                                            {
+                                                Proxy_Server.Instance.Start("SBRW.Launcher.Core [Console]");
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+#if (DEBUG_UNIX || RELEASE_UNIX)
+                    case "alert storage space":
+                    case "alert storage":
+                    case "ass":
+                    case "storage bypass":
+                    case "sb":
+                        if (!Save_Settings.Live_Data.Alert_Storage_Space.Equals("1"))
+                        {
+                            Save_Settings.Live_Data.Alert_Storage_Space = "1";
+                            Save_Settings.Save();
+
+                            if (Screen_Main.Screen_Instance != default)
+                            {
+                                Screen_Main.Screen_Instance.Game_Folder_Checks(true);
+                            }
+                        }
+                        break;
+#endif
+                    case "restart game download":
+                    case "restart gd":
+                    case "rsgd":
+                        if (Screen_Main.Screen_Instance != default)
+                        {
+                            Screen_Main.Screen_Instance.Game_Folder_Checks();
+                        }
                         break;
                     default:
                         if (!string.IsNullOrWhiteSpace(Live_Commands))
