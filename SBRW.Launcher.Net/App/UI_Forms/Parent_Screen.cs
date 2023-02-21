@@ -462,6 +462,10 @@ namespace SBRW.Launcher.App.UI_Forms
                                         {
                                             Save_Settings.Live_Data.Game_Archive_Location = InformationCache.Secondary_Game_Archive_Path;
                                         }
+                                        else if (Hashes.Hash_SHA(InformationCache.Secondary_Game_Archive_Path_Old) == "88C886B6D131C052365C3D6D14E14F67A4E2C253")
+                                        {
+                                            Save_Settings.Live_Data.Game_Archive_Location = InformationCache.Secondary_Game_Archive_Path_Old;
+                                        }
                                         else if (Hashes.Hash_SHA(InformationCache.Legacy_Game_Archive_Path) == "88C886B6D131C052365C3D6D14E14F67A4E2C253")
                                         {
                                             Save_Settings.Live_Data.Game_Archive_Location = InformationCache.Legacy_Game_Archive_Path;

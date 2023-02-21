@@ -49,7 +49,12 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
         /// Secondary Path Location for Game Files Archive File
         /// </summary>
         /// <remarks>Example: C:\Soapbox Race World\Launcher\Launcher_Data\Archive\Game Files\GameFiles.sbrwpack</remarks>
-        public static string Secondary_Game_Archive_Path { get { return Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "Game Files", "GameFiles.sbrwpack"); } }
+        public static string Secondary_Game_Archive_Path { get { return Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "GameFiles.sbrwpack"); } }
+        /// <summary>
+        /// Secondary Path Location for Game Files Archive File
+        /// </summary>
+        /// <remarks>Example: C:\Soapbox Race World\Launcher\Launcher_Data\Archive\Game Files\GameFiles.sbrwpack</remarks>
+        public static string Secondary_Game_Archive_Path_Old { get { return Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "Game Files", "GameFiles.sbrwpack"); } }
         /// <summary>
         /// Legacy File path that existed for launchers 2.1.4.X - 2.1.5.X
         /// </summary>

@@ -523,6 +523,34 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
                             Screen_Main.Screen_Instance.Game_Folder_Checks();
                         }
                         break;
+                    case "delete game files pack":
+                    case "delete game pack":
+                    case "del gp":
+                    case "dgp":
+                        try
+                        {
+                            if (Save_Settings.Live_Data != default)
+                            {
+                                if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Archive_Location))
+                                {
+                                    if (File.Exists(Save_Settings.Live_Data.Game_Archive_Location))
+                                    {
+                                        File.Delete(Save_Settings.Live_Data.Game_Archive_Location);
+
+                                        if (Screen_Settings.Screen_Instance != default)
+                                        {
+                                            MessageBox.Show(Screen_Settings.Screen_Instance, "Game Files Pack File Removed Successfully",
+                                                "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("Console Commands [dgp]", string.Empty, Error, string.Empty, false, Screen_Settings.Screen_Instance??default);
+                        }
+                        break;
                     default:
                         if (!string.IsNullOrWhiteSpace(Live_Commands))
                         {
