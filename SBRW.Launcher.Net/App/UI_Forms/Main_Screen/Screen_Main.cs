@@ -3359,9 +3359,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         {
             if (Screen_Instance != null)
             {
-                if (UI_MODE != 3)
+                if (UI_MODE != 9)
                 {
-                    UI_MODE = 3;
+                    UI_MODE = 9;
                 }
 
                 long Game_Folder_Size = File_and_Folder_Extention.GetDirectorySize_GameFiles(new DirectoryInfo(Save_Settings.Live_Data.Game_Path));
@@ -3372,7 +3372,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     Game_Folder_Size = 3295097405;
                 }
-                
+
+                if (UI_MODE != 3)
+                {
+                    UI_MODE = 3;
+                }
+
                 if (!File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe")) &&
                     Game_Folder_Size <= 3295097404)
                 {
@@ -4639,6 +4644,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             NotifyIcon_Notification.ContextMenu = ContextMenu;
 #endif
                         }
+                        break;
+                    /* Checking Folder Size (Pack Downloader) */
+                    case 9:
+                        if (UI_MODE != 0)
+                        {
+                            UI_MODE = 0;
+                        }
+
+                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+
+                        Label_Download_Information.Text = "Calculating Game Folder Size".ToUpperInvariant();
+
+                        ProgressBar.Value = 0;
+                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
                         break;
                 }
             }
