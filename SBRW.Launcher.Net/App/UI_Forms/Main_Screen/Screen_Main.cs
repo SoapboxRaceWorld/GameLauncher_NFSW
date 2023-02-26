@@ -63,7 +63,6 @@ using SBRW.Launcher.Core.Extra.Reference.System_;
 using System.Threading.Tasks;
 using SBRW.Launcher.Core.Downloader.Extension_;
 using SBRW.Launcher.Core.Downloader.LZMA.Extension_;
-using System.Reflection;
 
 namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 {
@@ -299,6 +298,33 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 LoginButton_Click(null, null);
                 e.SuppressKeyPress = true;
+            }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Oem3)
+            {
+                // Handle key at form level.
+                // Do not send event to focused control by returning true.
+
+                if (!this.Disposing || !this.IsDisposed)
+                {
+                    if (!Button_Console_Submit.Visible)
+                    {
+                        Button_Console_Submit.Visible = Input_Console.Visible = true;
+                    }
+                    else
+                    {
+                        Button_Console_Submit.Visible = Input_Console.Visible = false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return base.ProcessCmdKey(ref msg, keyData);
             }
         }
 
@@ -636,6 +662,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                  * Code: -2147467259
                  * Full Log: System.ComponentModel.Win32Exception (0x80004005): The specified executable is not a valid application for this OS platform.*/
                 LauncherUpdateCheck.UpdateStatusResult(true);
+            }
+        }
+
+        private void Console_Enter(object sender, EventArgs e)
+        {
+            FunctionEvents.Console_Commands(Input_Console.Text);
+            Input_Console.Text = string.Empty;
+        }
+
+        private void Console_Quick_Send(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                Console_Enter(sender, e);
             }
         }
 
@@ -4268,6 +4308,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Button_Play_OR_Update.Font = new Font(FormsFont.Primary_Bold(), FourthFontSize, FontStyle.Bold);
             Label_Download_Information.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Label_Download_Information_Support.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            /* Console */
+            Button_Console_Submit.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
+            Input_Console.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors & Images     /
@@ -4335,6 +4378,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             LinkLabel_Server_Home.ActiveLinkColor = Color_Text.L_Five;
 
             Label_Insider_Build_Number.ForeColor = Color_Text.L_Five;
+
+            Input_Console.BackColor = Color_Winform_Other.Input;
+            Input_Console.ForeColor = Color_Text.L_Five;
+
+            Button_Console_Submit.ForeColor = Color_Winform_Buttons.Green_Fore_Color;
+            Button_Console_Submit.BackColor = Color_Winform_Buttons.Green_Back_Color;
+            Button_Console_Submit.FlatAppearance.BorderColor = Color_Winform_Buttons.Green_Border_Color;
+            Button_Console_Submit.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Green_Mouse_Over_Back_Color;
 
             /********************************/
             /* Events                        /
@@ -4424,7 +4475,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Button_Register.Click += new EventHandler(Button_Register_Click);
 
             Load += new EventHandler(MainScreen_Load);
-            
+
+            Input_Console.KeyDown += new KeyEventHandler(Console_Quick_Send);
+            Button_Console_Submit.Click += new EventHandler(Console_Enter);
+
+            KeyPreview = true;
+
             /********************************/
             /* Enable/Disable Visuals        /
             /********************************/

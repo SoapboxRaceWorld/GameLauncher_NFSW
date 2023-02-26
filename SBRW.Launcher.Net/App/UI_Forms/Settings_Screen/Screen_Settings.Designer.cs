@@ -635,7 +635,7 @@
             this.Button_Console_Submit.ForeColor = System.Drawing.Color.Black;
             this.Button_Console_Submit.Location = new System.Drawing.Point(213, 18);
             this.Button_Console_Submit.Name = "Button_Console_Submit";
-            this.Button_Console_Submit.Size = new System.Drawing.Size(78, 24);
+            this.Button_Console_Submit.Size = new System.Drawing.Size(78, 23);
             this.Button_Console_Submit.TabIndex = 148;
             this.Button_Console_Submit.Text = "Enter";
             this.Button_Console_Submit.UseVisualStyleBackColor = false;

@@ -445,13 +445,36 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 LogToFileAddons.OpenLog("SETTINGS LANGLIST", string.Empty, Error, string.Empty, true);
             }
         }
-#endregion
-#region Event Functions
+        #endregion
+        #region Event Functions
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Oem3)
+            {
+                // Handle key at form level.
+                // Do not send event to focused control by returning true.
+
+                Label_Version_Build_Click(default, default);
+
+                return true;
+            }
+            else
+            {
+                return base.ProcessCmdKey(ref msg, keyData);
+            }
+        }
         private void Label_Version_Build_Click(object sender, EventArgs e)
         {
-            if (!Button_Console_Submit.Visible && (!this.Disposing || !this.IsDisposed))
+            if (!this.Disposing || !this.IsDisposed)
             {
-                Button_Console_Submit.Visible = Input_Console.Visible = true;
+                if (!Button_Console_Submit.Visible)
+                {
+                    Button_Console_Submit.Visible = Input_Console.Visible = true;
+                }
+                else
+                {
+                    Button_Console_Submit.Visible = Input_Console.Visible = false;
+                }
             }
         }
         private void Button_CDN_Selector_Click(object sender, EventArgs e)
@@ -1541,6 +1564,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             }
 
             Load += new EventHandler(Screen_Settings_Load);
+
+            KeyPreview = true;
 
             /********************************/
             /* Load XML (Only one Section)   /

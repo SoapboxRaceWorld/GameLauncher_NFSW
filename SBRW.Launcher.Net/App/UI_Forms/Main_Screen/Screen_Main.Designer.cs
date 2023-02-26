@@ -83,6 +83,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.Panel_Form_Screens = new System.Windows.Forms.Panel();
             this.Panel_Register_Screen = new System.Windows.Forms.Panel();
             this.UI_Timer = new System.Windows.Forms.Timer(this.components);
+            this.Input_Console = new System.Windows.Forms.TextBox();
+            this.Button_Console_Submit = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Picture_Logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Picture_Server_Banner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Picture_Bar_Outline)).BeginInit();
@@ -410,12 +412,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             // 
             this.Label_Debug_Language.BackColor = System.Drawing.Color.Transparent;
             this.Label_Debug_Language.ForeColor = System.Drawing.Color.DarkGray;
-            this.Label_Debug_Language.Location = new System.Drawing.Point(356, 15);
+            this.Label_Debug_Language.Location = new System.Drawing.Point(355, 41);
             this.Label_Debug_Language.Name = "Label_Debug_Language";
             this.Label_Debug_Language.Size = new System.Drawing.Size(196, 14);
             this.Label_Debug_Language.TabIndex = 13;
             this.Label_Debug_Language.Text = "Language: Neutral";
-            this.Label_Debug_Language.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label_Debug_Language.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Label_Insider_Build_Number
             // 
@@ -687,6 +689,29 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.UI_Timer.Interval = 1000;
             this.UI_Timer.Tick += new System.EventHandler(this.UI_Timer_Tick);
             // 
+            // Input_Console
+            // 
+            this.Input_Console.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
+            this.Input_Console.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Input_Console.Location = new System.Drawing.Point(329, 15);
+            this.Input_Console.Name = "Input_Console";
+            this.Input_Console.Size = new System.Drawing.Size(405, 23);
+            this.Input_Console.TabIndex = 151;
+            this.Input_Console.Visible = false;
+            // 
+            // Button_Console_Submit
+            // 
+            this.Button_Console_Submit.BackColor = System.Drawing.SystemColors.Control;
+            this.Button_Console_Submit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button_Console_Submit.ForeColor = System.Drawing.Color.Black;
+            this.Button_Console_Submit.Location = new System.Drawing.Point(245, 15);
+            this.Button_Console_Submit.Name = "Button_Console_Submit";
+            this.Button_Console_Submit.Size = new System.Drawing.Size(78, 23);
+            this.Button_Console_Submit.TabIndex = 150;
+            this.Button_Console_Submit.Text = "Enter";
+            this.Button_Console_Submit.UseVisualStyleBackColor = false;
+            this.Button_Console_Submit.Visible = false;
+            // 
             // Screen_Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -694,6 +719,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.Panel_Form_Screens);
+            this.Controls.Add(this.Button_Console_Submit);
+            this.Controls.Add(this.Input_Console);
             this.Controls.Add(this.Panel_Register_Screen);
             this.Controls.Add(this.Panel_Launch);
             this.Controls.Add(this.ProgressBar);
@@ -813,5 +840,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public Panel Panel_Launch;
         public Button Button_Play_OR_Update;
         public Timer UI_Timer;
+        public TextBox Input_Console;
+        public Button Button_Console_Submit;
     }
 }
