@@ -330,6 +330,15 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
                         Process.Start(new ProcessStartInfo { FileName = "https://www.youtube.com/watch?v=6TmlR27izRo/", UseShellExecute = true });
 #endif
                         break;
+                    case "who am i? the greatest":
+                    case "who am i the greatest":
+                    case "the greatest":
+#if NETFRAMEWORK
+                        Process.Start("https://youtu.be/wV_5yHp8bqU");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://youtu.be/wV_5yHp8bqU", UseShellExecute = true });
+#endif
+                        break;
                     case "straightuphippo":
 #if NETFRAMEWORK
                         Process.Start("https://youtu.be/Uc57tO6g--I");
@@ -550,6 +559,38 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
                         {
                             LogToFileAddons.OpenLog("Console Commands [dgp]", string.Empty, Error, string.Empty, false, Screen_Settings.Screen_Instance??default);
                         }
+                        break;
+                    case "the buggles":
+                    case "i need a ride":
+#if NETFRAMEWORK
+                        Process.Start("https://www.youtube.com/watch?v=XUywABgU-Ow");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://www.youtube.com/watch?v=XUywABgU-Ow", UseShellExecute = true });
+#endif
+                        break;
+                    case "jun 4 2017":
+                    case "aug 22, 2017":
+#if NETFRAMEWORK
+                        Process.Start("https://www.youtube.com/watch?v=5hv2p0RtVY0");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://www.youtube.com/watch?v=5hv2p0RtVY0", UseShellExecute = true });
+#endif
+                        break;
+                    case "mermaid sisters":
+                    case "the mermaid sisters is here":
+                    case "the mermaid sisters is here!":
+#if NETFRAMEWORK
+                        Process.Start("https://www.youtube.com/watch?v=OFjqEexH0Tg");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://www.youtube.com/watch?v=OFjqEexH0Tg", UseShellExecute = true });
+#endif
+                        break;
+                    case "fireworks":
+#if NETFRAMEWORK
+                        Process.Start("https://youtu.be/2m5vQo81Jik");
+#else
+                        Process.Start(new ProcessStartInfo { FileName = "https://youtu.be/2m5vQo81Jik", UseShellExecute = true });
+#endif
                         break;
                     default:
                         if (!string.IsNullOrWhiteSpace(Live_Commands))

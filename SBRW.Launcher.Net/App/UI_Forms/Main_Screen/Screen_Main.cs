@@ -63,6 +63,7 @@ using SBRW.Launcher.Core.Extra.Reference.System_;
 using System.Threading.Tasks;
 using SBRW.Launcher.Core.Downloader.Extension_;
 using SBRW.Launcher.Core.Downloader.LZMA.Extension_;
+using System.Reflection;
 
 namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 {
@@ -923,13 +924,19 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             try
             {
+                if (UI_MODE != 12)
+                {
+                    UI_MODE = 12;
+                }
+
                 string GameExePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe");
+                string GameExehash = Hashes.Hash_SHA(GameExePath);
                 if
                   (
-                    Hashes.Hash_SHA(GameExePath) == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
-                    Hashes.Hash_SHA(GameExePath) == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
-                    Hashes.Hash_SHA(GameExePath) == "E69890D31919DE1649D319956560269DB88B8F22" ||
-                    Hashes.Hash_SHA(GameExePath) == "3CBE3FAAFF00FAD84F78A2AFEA4FFFC78294EEA2"
+                    GameExehash == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
+                    GameExehash == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
+                    GameExehash == "E69890D31919DE1649D319956560269DB88B8F22" ||
+                    GameExehash == "3CBE3FAAFF00FAD84F78A2AFEA4FFFC78294EEA2"
                   )
                 {
                     Launcher_Value.Game_Server_Name = ServerListUpdater.ServerName("Proxy");
@@ -1772,6 +1779,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #endif
                             }
 
+                            Label_Download_Information.Text = ("ModNet: Checking Local Files. This may take awhile.").ToUpper();
+
                             string[] modules_newlines = ModulesJSON.Split(new string[] { "\n" }, StringSplitOptions.None);
                             foreach (string modules_newline in modules_newlines)
                             {
@@ -2042,6 +2051,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
                                 try
                                 {
+                                    Label_Download_Information.Text = ("Server Mods: Folder & File Check").ToUpper();
                                     json3 = JsonConvert.DeserializeObject<ServerModList>(ServerModListJSON);
                                     ServerModListJSON = string.Empty;
                                     string ModFolderCache = Path.Combine(Save_Settings.Live_Data.Game_Path, "MODS", Hashes.Hash_String(0, json2.serverID).ToLower());
@@ -2068,7 +2078,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                                     }
-
+                                    Label_Download_Information.Text = ("Server Mods: Folder & File Check").ToUpper();
                                     /* (OLD-FILENAME.mods != NEW-FILENAME.mods)
                                      * Checks for the file and if the File Hash does not match it will be added to a list to be downloaded 
                                      * If a file exists and doesn't match a the server provided index json it will be deleted 
@@ -3381,6 +3391,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 if (!File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe")) &&
                     Game_Folder_Size <= 3295097404)
                 {
+                    if (UI_MODE != 10)
+                    {
+                        UI_MODE = 10;
+                    }
+
                     if (Hashes.Hash_SHA(Save_Settings.Live_Data.Game_Archive_Location) == "88C886B6D131C052365C3D6D14E14F67A4E2C253")
                     {
                         Game_Pack_Unpacker(Save_Settings.Live_Data.Game_Archive_Location);
@@ -3390,10 +3405,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack", 10))
                         {
                             case APIStatus.Online:
-                                Label_Download_Information_Support.SafeInvokeAction(() =>
+                                if (UI_MODE != 11)
                                 {
-                                    Label_Download_Information_Support.Text = "Downloading: Core Game Files Package".ToUpper();
-                                }, this);
+                                    UI_MODE = 11;
+                                }
 
                                 Pack_SBRW_Downloader = new Download_Client()
                                 {
@@ -4028,6 +4043,137 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Log.Visuals("CORE: Applyinng ContextMenu");
 #if NETFRAMEWORK
                 ContextMenu = new ContextMenu();
+                try
+                {
+                    /* Internal Message Reference Time: 01/14/2023 1:31 AM PST */
+                    if (DateTime.Now == new DateTime(DateTime.Now.Year, 1, 14) || DateTime.Now == new DateTime(DateTime.Now.Year, 4, 18))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("RIP M.L. (1925-2023)", (_, E) =>
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://www.youtube.com/watch?v=wctrwXZkUK0");
+#else
+                            Process.Start("explorer.exe", "https://www.youtube.com/watch?v=wctrwXZkUK0");
+#endif
+                        }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                }
+                catch
+                {
+                    ContextMenu.MenuItems.Add(new MenuItem("RIP M.L. (1925-2023)", (_, E) =>
+                    {
+#if NETFRAMEWORK
+                        Process.Start("https://www.youtube.com/watch?v=rANqc5br7dc");
+#else
+                        Process.Start("explorer.exe", "https://www.youtube.com/watch?v=rANqc5br7dc");
+#endif
+                    }));
+                    ContextMenu.MenuItems.Add("-");
+                }
+
+                try
+                {
+                    if (DateTime.Now == new DateTime(DateTime.Now.Year, 4, 1))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("The Mermaid Sisters is Here!", (_, E) =>
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://www.youtube.com/watch?v=OFjqEexH0Tg");
+#else
+                            Process.Start("explorer.exe", "https://www.youtube.com/watch?v=OFjqEexH0Tg");
+#endif
+                        }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                }
+                catch
+                {
+                    /* Show it Anyways, lets be real here */
+                    ContextMenu.MenuItems.Add(new MenuItem("The Mermaid Sisters is Here!", (_, E) =>
+                    {
+#if NETFRAMEWORK
+                        Process.Start("https://www.youtube.com/watch?v=OFjqEexH0Tg");
+#else
+                        Process.Start("explorer.exe", "https://www.youtube.com/watch?v=OFjqEexH0Tg");
+#endif
+                    }));
+                    ContextMenu.MenuItems.Add("-");
+                }
+
+                try
+                {
+                    if (DateTime.Now == new DateTime(DateTime.Now.Year, 7, 4))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("Fireworks", (_, E) =>
+                            {
+#if NETFRAMEWORK
+                                Process.Start("https://youtu.be/2m5vQo81Jik");
+#else
+                                Process.Start("explorer.exe", "https://youtu.be/2m5vQo81Jik");
+#endif
+                            }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                    else if (DateTime.Now == new DateTime(DateTime.Now.Year, 6, 4))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem(
+                            ((EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed()) ? 
+                            "": "2017/06/04 - ") + "Development Cycle", (_, E) =>
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://www.youtube.com/watch?v=5hv2p0RtVY0");
+#else
+                            Process.Start("explorer.exe", "https://www.youtube.com/watch?v=5hv2p0RtVY0");
+#endif
+                        }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                    /* Development Release Year: 2017 */
+                    else if (DateTime.Now == new DateTime(DateTime.Now.Year, 6, 18))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("Happy Birthday Interface 1", (_, E) =>
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/interface_v1/screenshot.png");
+#else
+                            Process.Start("explorer.exe", "https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/interface_v1/screenshot.png");
+#endif
+                        }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                    /* Development Release Year: 2017 */
+                    else if (DateTime.Now == new DateTime(DateTime.Now.Year, 11, 2))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("Happy Birthday Interface 2!", (_, E) =>
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/interface_v2/screenshot.png");
+#else
+                            Process.Start("explorer.exe", "https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/interface_v2/screenshot.png");
+#endif
+                        }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                    /* Development Release Year: 2018 */
+                    else if (DateTime.Now == new DateTime(DateTime.Now.Year, 11, 8))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("Happy Birthday Interface 3!", (_, E) =>
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/Net.Standard/01-Main_Screen.png");
+#else
+                            Process.Start("explorer.exe", "https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/Net.Standard/01-Main_Screen.png");
+#endif
+                        }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                }
+                catch
+                {
+                    /* Forget about it Cuh */
+                }
+
                 ContextMenu.MenuItems.Add(new MenuItem("About", (O, K) => { Screen_About.OpenScreen(); }));
                 if (LauncherUpdateCheck.UpgradeAvailable)
                 {
@@ -4659,6 +4805,44 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         ProgressBar.Value = 0;
                         ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
                         ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                        break;
+                    case 10:
+                        if (UI_MODE != 0)
+                        {
+                            UI_MODE = 0;
+                        }
+
+                        Label_Download_Information_Support.Text = "Checking Game Files Package Hash".ToUpper();
+
+                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Preload_Outline;
+
+                        ProgressBar.Value = 100;
+                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Unknown_Top;
+                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Unknown_Bottom;
+                        break;
+                    case 11:
+                        if (UI_MODE != 0)
+                        {
+                            UI_MODE = 0;
+                        }
+
+                        Label_Download_Information_Support.Text = "Downloading: Core Game Files Package".ToUpper();
+
+                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+
+                        ProgressBar.Value = 0;
+                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                        break;
+                    case 12:
+                        if (UI_MODE != 0)
+                        {
+                            UI_MODE = 0;
+                        }
+
+                        Label_Download_Information.Text = "Launcher: Checking NFSW EXE File Hash".ToUpperInvariant();
+                        Label_Download_Information_Support.Text = string.Empty;
+                        Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
                         break;
                 }
             }
