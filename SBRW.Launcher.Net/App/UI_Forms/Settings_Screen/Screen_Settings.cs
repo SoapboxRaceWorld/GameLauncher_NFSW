@@ -1663,10 +1663,12 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 GC.Collect(); 
                 #endif
 
-                if (Screen_Main.Screen_Instance != null)
+                if (Screen_Main.Screen_Instance != default)
                 {
                     Screen_Main.Clear_Hide_Screen_Form_Panel();
                 }
+
+                Screen_Instance = default;
             };
             Screen_Instance = this;
             Screen_Panel_Forms = Panel_Form_Screens;
