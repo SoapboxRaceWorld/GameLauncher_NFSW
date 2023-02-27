@@ -228,6 +228,39 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             CheckBox_Theme_Support.Checked = InformationCache.EnableThemeSupport;
             CheckBox_LZMA_Downloader.Checked = InformationCache.EnableLZMADownloader;
             CheckBox_JSON_Update_Cache.Checked = InformationCache.DisableFrequencyJSONUpdate;
+            CheckBox_Proxy_Domain.Checked = InformationCache.EnableProxyDomain;
+            CheckBox_Host_to_IP.Checked = !Save_Settings.Legacy_Host_To_IP();
+
+            int Proxy_Port_Convert = 0;
+            if(int.TryParse(Save_Settings.Live_Data.Launcher_Proxy_Port, out Proxy_Port_Convert))
+            {
+                if ((Proxy_Port_Convert < 0) || (Proxy_Port_Convert > 65353))
+                {
+                    Proxy_Port_Convert = 0;
+                }
+            }
+            else
+            {
+                Proxy_Port_Convert = 0;
+            }
+
+            NumericUpDown_Proxy_Port.Value = Proxy_Port_Convert;
+
+            int WebClient_Timeout_Convert = 0;
+            if (int.TryParse(Save_Settings.Live_Data.Launcher_WebCall_TimeOut_Time, out WebClient_Timeout_Convert))
+            {
+                if ((WebClient_Timeout_Convert < 0) || (WebClient_Timeout_Convert > 179))
+                {
+                    WebClient_Timeout_Convert = 0;
+                }
+            }
+            else
+            {
+                WebClient_Timeout_Convert = 0;
+            }
+
+            NumericUpDown_WebClient_Timeout.Value = WebClient_Timeout_Convert;
+
             Display_Timer_Button();
 
             /*******************************/
@@ -412,13 +445,36 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 LogToFileAddons.OpenLog("SETTINGS LANGLIST", string.Empty, Error, string.Empty, true);
             }
         }
-#endregion
-#region Event Functions
+        #endregion
+        #region Event Functions
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Oem3)
+            {
+                // Handle key at form level.
+                // Do not send event to focused control by returning true.
+
+                Label_Version_Build_Click(default, default);
+
+                return true;
+            }
+            else
+            {
+                return base.ProcessCmdKey(ref msg, keyData);
+            }
+        }
         private void Label_Version_Build_Click(object sender, EventArgs e)
         {
-            if (!Button_Console_Submit.Visible && (!this.Disposing || !this.IsDisposed))
+            if (!this.Disposing || !this.IsDisposed)
             {
-                Button_Console_Submit.Visible = Input_Console.Visible = true;
+                if (!Button_Console_Submit.Visible)
+                {
+                    Button_Console_Submit.Visible = Input_Console.Visible = true;
+                }
+                else
+                {
+                    Button_Console_Submit.Visible = Input_Console.Visible = false;
+                }
             }
         }
         private void Button_CDN_Selector_Click(object sender, EventArgs e)
@@ -600,6 +656,21 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                             "\nThe launcher will turn on Proxy, even if you have chosen to Disable it",
                             "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+            }
+
+            if (Save_Settings.Live_Data.Launcher_Proxy_Port != NumericUpDown_Proxy_Port.Value.ToStringInvariant())
+            {
+                Save_Settings.Live_Data.Launcher_Proxy_Port = NumericUpDown_Proxy_Port.Value.ToStringInvariant();
+            }
+
+            if (Save_Settings.Live_Data.Launcher_Legacy_Host_To_IP != (CheckBox_Host_to_IP.Checked ? "1" : "0"))
+            {
+                Save_Settings.Live_Data.Launcher_Legacy_Host_To_IP = CheckBox_Host_to_IP.Checked ? "1" : "0";
+            }
+
+            if (Save_Settings.Live_Data.Launcher_Proxy_Domain != (CheckBox_Proxy_Domain.Checked ? "1" : "0"))
+            {
+                Save_Settings.Live_Data.Launcher_Proxy_Domain = CheckBox_Proxy_Domain.Checked ? "1" : "0";
             }
 
             if (Save_Settings.Live_Data.Launcher_Discord_Presence != (CheckBox_RPC.Checked ? "1" : "0"))
@@ -1097,6 +1168,31 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                     Label_API_Status_Three.Text = "[API] Carbon (2nd): " + Strings.Truncate(APIChecker.StatusStrings(VisualsAPIChecker.CarbonTwoSC), 32);
                     Label_API_Status_Three.ForeColor = Color_Text.S_Error;
                 }
+
+                Label_API_Status_Four.Visible = true;
+            }
+
+            if (VisualsAPIChecker.Local_Cached_API())
+            {
+                Label_API_Status_Four.Text = "[API] Local Cache: Active";
+                Label_API_Status_Four.ForeColor = Color_Text.S_Warning;
+            }
+            else
+            {
+                Label_API_Status_Four.ForeColor = Color_Text.S_Warning;
+                if (VisualsAPIChecker.Local_Cached_SL && !VisualsAPIChecker.Local_Cached_CDNL)
+                {
+                    Label_API_Status_Four.Text = "[API] Local Cache: Server List Only";
+                }
+                else if (!VisualsAPIChecker.Local_Cached_SL && VisualsAPIChecker.Local_Cached_CDNL)
+                {
+                    Label_API_Status_Four.Text = "[API] Local Cache: CDN List Only";
+                }
+                else
+                {
+                    Label_API_Status_Four.Text = "[API] Local Cache: Not Found";
+                    Label_API_Status_Four.ForeColor = Color_Text.S_Error;
+                }
             }
         }
         /// <summary>
@@ -1305,12 +1401,16 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             CheckBox_Theme_Support.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             CheckBox_LZMA_Downloader.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             CheckBox_JSON_Update_Cache.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            CheckBox_Host_to_IP.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            CheckBox_Proxy_Domain.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Radio_Button_Static_Timer.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Radio_Button_Dynamic_Timer.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Radio_Button_No_Timer.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_Display_Timer.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Label_WebClient_Timeout.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            Label_Proxy_Port.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             NumericUpDown_WebClient_Timeout.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            NumericUpDown_Proxy_Port.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Label_Game_Current_Path.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             LinkLabel_Game_Path.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_CDN_Current.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
@@ -1322,6 +1422,7 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Label_API_Status_Two.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_API_Status_Three.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_API_Status_Four.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
+            Label_API_Status_Five.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Label_Version_Build.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
             Button_Save.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Button_Exit.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
@@ -1365,10 +1466,13 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             Label_API_Status.ForeColor = Color_Text.L_Five;
             Label_Display_Timer.ForeColor = Color_Text.L_Five;
             Label_WebClient_Timeout.ForeColor = Color_Text.L_Five;
+            Label_Proxy_Port.ForeColor = Color_Text.L_Five;
 
             /* Input Boxes */
             NumericUpDown_WebClient_Timeout.ForeColor = Color_Winform_Other.DropMenu_Text_ForeColor;
             NumericUpDown_WebClient_Timeout.BackColor = Color_Winform_Other.DropMenu_Background_ForeColor;
+            NumericUpDown_Proxy_Port.ForeColor = Color_Winform_Other.DropMenu_Text_ForeColor;
+            NumericUpDown_Proxy_Port.BackColor = Color_Winform_Other.DropMenu_Background_ForeColor;
 
             /* Check boxes */
             CheckBox_Word_Filter_Check.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
@@ -1379,6 +1483,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             CheckBox_Theme_Support.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
             CheckBox_LZMA_Downloader.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
             CheckBox_JSON_Update_Cache.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
+            CheckBox_Host_to_IP.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
+            CheckBox_Proxy_Domain.ForeColor = Color_Winform_Other.CheckBoxes_Settings;
 
             /* Radio Buttons */
             Radio_Button_Static_Timer.ForeColor = Color_Winform.Text_Fore_Color;
@@ -1458,6 +1564,8 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             }
 
             Load += new EventHandler(Screen_Settings_Load);
+
+            KeyPreview = true;
 
             /********************************/
             /* Load XML (Only one Section)   /
@@ -1555,10 +1663,12 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
                 GC.Collect(); 
                 #endif
 
-                if (Screen_Main.Screen_Instance != null)
+                if (Screen_Main.Screen_Instance != default)
                 {
                     Screen_Main.Clear_Hide_Screen_Form_Panel();
                 }
+
+                Screen_Instance = default;
             };
             Screen_Instance = this;
             Screen_Panel_Forms = Panel_Form_Screens;

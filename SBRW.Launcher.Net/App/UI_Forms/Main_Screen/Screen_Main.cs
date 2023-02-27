@@ -84,7 +84,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public static int NfswPid { get; set; }
         public static Thread? Nfswstarted { get; set; }
         private static bool StillCheckingLastServer { get; set; }
-        private static bool ServerChangeTriggered { get; set; }
 
         
         public static Download_LZMA_Data? LZMA_Downloader { get; set; }
@@ -109,6 +108,78 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         public static int CurrentModFileCount { get; set; }
         public static int TotalModFileCount { get; set; }
         public static string Custom_SBRW_Pack { get { return Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack"); } }
+
+        private void Server_Ping(string Server_Host_Url, int Ping_Timeout)
+        {
+            try
+            {
+                if (!IsDownloading)
+                {
+                    if (CheckMate != default)
+                    {
+                        CheckMate.SendAsyncCancel();
+                    }
+
+                    Label_Client_Ping.Text = string.Empty;
+                    CheckMate = new Ping();
+                    CheckMate.PingCompleted += (_sender, _e) =>
+                    {
+                        if (_e.Cancelled)
+                        {
+                            Log.Warning("SERVER PING: Ping Canceled for " + ServerListUpdater.ServerName("Ping"));
+                        }
+                        else if (_e.Error != null)
+                        {
+                            Log.Error("SERVER PING: Ping Failed for " + ServerListUpdater.ServerName("Ping") + " -> " + _e.Error.ToString());
+                        }
+                        else if (_e.Reply != null)
+                        {
+                            if (_e.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
+                            {
+                                Label_Client_Ping.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
+                                Log.Info("SERVER PING: " + _e.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
+                            }
+                            else
+                            {
+                                Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + _e.Reply.Status);
+                            }
+                        }
+                        else
+                        {
+                            Log.Warning("SERVER PING:  Unable to Ping " + ServerListUpdater.ServerName("Ping"));
+                        }
+
+                        if (_e.UserState != null)
+                        {
+#pragma warning disable CS8602 // Null Safe Check is done Above.
+                            (_e.UserState as AutoResetEvent).Set();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                        }
+                    };
+                    CheckMate.SendAsync(new Uri(Server_Host_Url).Host, Ping_Timeout, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
+                }
+                else if (!Label_Client_Ping.Equals(string.Empty))
+                {
+                    Label_Client_Ping.Text = string.Empty;
+                }
+            }
+            catch (PingException Error)
+            {
+                LogToFileAddons.OpenLog("Pinging", string.Empty, Error, string.Empty, true);
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("Ping", string.Empty, Error, string.Empty, true);
+            }
+            finally
+            {
+                if (CheckMate != default)
+                {
+                    CheckMate.Dispose();
+                    CheckMate = null;
+                }
+            }
+        }
 
         private void ButtonClose_MouseDown(object sender, EventArgs e)
         {
@@ -227,6 +298,33 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 LoginButton_Click(null, null);
                 e.SuppressKeyPress = true;
+            }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Oem3)
+            {
+                // Handle key at form level.
+                // Do not send event to focused control by returning true.
+
+                if (!this.Disposing || !this.IsDisposed)
+                {
+                    if (!Button_Console_Submit.Visible)
+                    {
+                        Button_Console_Submit.Visible = Input_Console.Visible = true;
+                    }
+                    else
+                    {
+                        Button_Console_Submit.Visible = Input_Console.Visible = false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return base.ProcessCmdKey(ref msg, keyData);
             }
         }
 
@@ -567,46 +665,67 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
         }
 
+        private void Console_Enter(object sender, EventArgs e)
+        {
+            FunctionEvents.Console_Commands(Input_Console.Text);
+            Input_Console.Text = string.Empty;
+        }
+
+        private void Console_Quick_Send(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                Console_Enter(sender, e);
+            }
+        }
+
         /* Register PAGE LAYOUT */
         public void Button_Register_Click(object sender, EventArgs e)
         {
             if (FunctionStatus.AllowRegistration)
             {
-                if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page))
+                if(Launcher_Value.Launcher_Select_Server_JSON != default)
                 {
+                    if (!string.IsNullOrWhiteSpace(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page))
+                    {
 #if NETFRAMEWORK
                     Process.Start(Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page);
 #else
-                    Process.Start(new ProcessStartInfo { FileName = Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page, UseShellExecute = true });
+                        Process.Start(new ProcessStartInfo { FileName = Launcher_Value.Launcher_Select_Server_JSON.Server_Registration_Page, UseShellExecute = true });
 #endif
-                    MessageBox.Show(this, "A browser window has been opened to complete registration on " +
-                        ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (Launcher_Value.Launcher_Select_Server_Data.Name.ToUpper() == "WORLDUNITED OFFICIAL")
-                {
+                        MessageBox.Show(this, "A browser window has been opened to complete registration on " +
+                            ServerListUpdater.ServerName("Register"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else if (Launcher_Value.Launcher_Select_Server_Data.Name.ToUpper() == "WORLDUNITED OFFICIAL")
+                    {
 #if NETFRAMEWORK
                     Process.Start("https://signup.worldunited.gg/");
 #else
-                    Process.Start(new ProcessStartInfo { FileName = "https://signup.worldunited.gg/", UseShellExecute = true });
+                        Process.Start(new ProcessStartInfo { FileName = "https://signup.worldunited.gg/", UseShellExecute = true });
 #endif
-                    MessageBox.Show(this, "A browser window has been opened to complete registration on " +
-                        Launcher_Value.Launcher_Select_Server_Data.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(this, "A browser window has been opened to complete registration on " +
+                            Launcher_Value.Launcher_Select_Server_Data.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Screen_Register Custom_Instance_Register = new Screen_Register() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
+                            Panel_Register_Screen.Controls.Add(Custom_Instance_Register);
+                            Panel_Register_Screen.Visible = true;
+                            Custom_Instance_Register.Show();
+                            Text = "Register - SBRW Launcher: " + Application.ProductVersion;
+                        }
+                        catch (Exception Error)
+                        {
+                            string ErrorMessage = "Register Screen Encountered an Error";
+                            LogToFileAddons.OpenLog("SETTINGS Register", ErrorMessage, Error, "Exclamation", false);
+                        }
+                    }
                 }
                 else
                 {
-                    try
-                    {
-                        Screen_Register Custom_Instance_Register = new Screen_Register() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true, FormBorderStyle = FormBorderStyle.None };
-                        Panel_Register_Screen.Controls.Add(Custom_Instance_Register);
-                        Panel_Register_Screen.Visible = true;
-                        Custom_Instance_Register.Show();
-                        Text = "Register - SBRW Launcher: " + Application.ProductVersion;
-                    }
-                    catch (Exception Error)
-                    {
-                        string ErrorMessage = "Register Screen Encountered an Error";
-                        LogToFileAddons.OpenLog("SETTINGS Register", ErrorMessage, Error, "Exclamation", false);
-                    }
+                    MessageBox.Show(this, "Loading Server Information. Please try again.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else
@@ -789,6 +908,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             { IsBackground = true };
 
             Nfswstarted.Start();
+            Presence_Launcher.Status(28, string.Empty);
         }
 
         /* Check Serverlist API Status Upon Main Screen load - DavidCarbon */
@@ -815,11 +935,23 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     if (!VisualsAPIChecker.CarbonAPITwo())
                     {
-                        Label_Status_API.Text = "Connection API:\n - Error";
-                        Label_Status_API.ForeColor = Color_Text.S_Error;
-                        Label_Status_API_Details.Text = "Launcher is Offline";
-                        Picture_Icon_API.BackgroundImage = Image_Icon.Plug_Offline;
-                        Log.Api("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
+                        Label_Status_API.Text = "Cached API:\n - Local";
+                        Label_Status_API.ForeColor = Color_Text.S_Warning;
+                        Label_Status_API_Details.Text = "Using Local Cache";
+                        Picture_Icon_API.BackgroundImage = Image_Icon.Plug_Warning;
+
+                        if (!VisualsAPIChecker.Local_Cached_API())
+                        {
+                            Label_Status_API.Text = "Connection API:\n - Error";
+                            Label_Status_API.ForeColor = Color_Text.S_Error;
+                            Label_Status_API_Details.Text = "Launcher is Offline";
+                            Picture_Icon_API.BackgroundImage = Image_Icon.Plug_Offline;
+                            Log.Api("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
+                        }
+                        else
+                        {
+                            Log.Api("PINGING API: Failed to Connect to APIs! Using Local Cache! (Ask for help)");
+                        }
                     }
                 }
             }
@@ -832,13 +964,19 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             try
             {
+                if (UI_MODE != 12)
+                {
+                    UI_MODE = 12;
+                }
+
                 string GameExePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe");
+                string GameExehash = Hashes.Hash_SHA(GameExePath);
                 if
                   (
-                    Hashes.Hash_SHA(GameExePath) == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
-                    Hashes.Hash_SHA(GameExePath) == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
-                    Hashes.Hash_SHA(GameExePath) == "E69890D31919DE1649D319956560269DB88B8F22" ||
-                    Hashes.Hash_SHA(GameExePath) == "3CBE3FAAFF00FAD84F78A2AFEA4FFFC78294EEA2"
+                    GameExehash == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
+                    GameExehash == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
+                    GameExehash == "E69890D31919DE1649D319956560269DB88B8F22" ||
+                    GameExehash == "3CBE3FAAFF00FAD84F78A2AFEA4FFFC78294EEA2"
                   )
                 {
                     Launcher_Value.Game_Server_Name = ServerListUpdater.ServerName("Proxy");
@@ -1681,6 +1819,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #endif
                             }
 
+                            Label_Download_Information.Text = ("ModNet: Checking Local Files. This may take awhile.").ToUpper();
+
                             string[] modules_newlines = ModulesJSON.Split(new string[] { "\n" }, StringSplitOptions.None);
                             foreach (string modules_newline in modules_newlines)
                             {
@@ -1752,6 +1892,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 ModulesJSON = string.Empty;
                             }
                         }
+
+                        Server_Ping(Launcher_Value.Launcher_Select_Server_Data.IPAddress, 5000);
 
                         Uri newModNetUri = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress + "/Modding/GetModInfo");
                         ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
@@ -1949,6 +2091,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
                                 try
                                 {
+                                    Label_Download_Information.Text = ("Server Mods: Folder & File Check").ToUpper();
                                     json3 = JsonConvert.DeserializeObject<ServerModList>(ServerModListJSON);
                                     ServerModListJSON = string.Empty;
                                     string ModFolderCache = Path.Combine(Save_Settings.Live_Data.Game_Path, "MODS", Hashes.Hash_String(0, json2.serverID).ToLower());
@@ -1975,7 +2118,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                                     }
-
+                                    Label_Download_Information.Text = ("Server Mods: Folder & File Check").ToUpper();
                                     /* (OLD-FILENAME.mods != NEW-FILENAME.mods)
                                      * Checks for the file and if the File Hash does not match it will be added to a list to be downloaded 
                                      * If a file exists and doesn't match a the server provided index json it will be deleted 
@@ -2151,8 +2294,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Button_Login.Enabled = Button_Register.Enabled = false;
             /* Disable Social Panel when switching */
             DisableSocialPanelandClearIt();
-            /* Stops any actions for a Server */
-            ServerChangeTriggered = true;
 
             if (!ServerListUpdater.LoadedList && Launcher_Value.Launcher_Select_Server_Data == null)
             {
@@ -2166,7 +2307,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 return;
             }
 
-            Launcher_Value.Launcher_Select_Server_Data = (Json_List_Server)ComboBox_Server_List.SelectedItem;
+            /* Stops any actions for a Server by comparing Live Instance of the Selected Cache */
+            Json_List_Server Cached_Server_GSI = Launcher_Value.Launcher_Select_Server_Data = (Json_List_Server)ComboBox_Server_List.SelectedItem;
 
             if (Launcher_Value.Launcher_Select_Server_Data.IsSpecial)
             {
@@ -2239,14 +2381,60 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Client.DownloadStringAsync(ServerURI);
 
             System.Timers.Timer aTimer = new System.Timers.Timer(Launcher_Value.Launcher_WebCall_Timeout_Enable ? Launcher_Value.Launcher_WebCall_Timeout() * 1000 : 10000);
-            aTimer.Elapsed += (x, y) => { Client.CancelAsync(); try { aTimer.Dispose(); } catch { } };
+            aTimer.Elapsed += (x, y) => 
+            {
+                if (Client != default)
+                {
+                    Client.CancelAsync();
+                }
+
+                try
+                {
+                    if (aTimer != default)
+                    {
+                        if (aTimer.Enabled)
+                        {
+                            aTimer.Stop();
+                            aTimer.Dispose();
+                        }
+                    }
+                }
+#if (DEBUG || DEBUG_UNIX)
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("aTimer", string.Empty, Error, string.Empty, true);
+                }
+#else
+                catch
+                {
+
+                }
+#endif
+            };
             aTimer.AutoReset = false;
             aTimer.Enabled = true;
 
             Client.DownloadStringCompleted += (sender2, e2) =>
             {
-                aTimer.Enabled = false;
-                try { aTimer.Dispose(); } catch { }
+                try 
+                {
+                    if(aTimer.Enabled)
+                    {
+                        aTimer.Stop();
+                        aTimer.Dispose();
+                    } 
+                }
+#if (DEBUG || DEBUG_UNIX)
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("aTimer [Download Complete]", string.Empty, Error, string.Empty, true);
+                }
+#else
+                catch
+                {
+
+                }
+#endif
 
                 bool GSIErrorFree = true;
 
@@ -2278,7 +2466,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     Client?.Dispose();
                 }
-                else
+                else if (Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data))
                 {
                     if (ServerListUpdater.ServerName("Ping") == "Offline Built-In Server")
                     {
@@ -2330,9 +2518,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         ServerBannerResult = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Banner, UriKind.Absolute, out Uri? uriResult) &&
                                         (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                     }
-                                    catch 
-                                    { 
-                                        ServerBannerResult = false; 
+                                    catch
+                                    {
+                                        ServerBannerResult = false;
                                     }
 
                                     ImageUrl = ServerBannerResult ? Launcher_Value.Launcher_Select_Server_JSON.Server_Banner : string.Empty;
@@ -2342,8 +2530,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     ImageUrl = string.Empty;
                                 }
                             }
-                            catch 
-                            { 
+                            catch
+                            {
 
                             }
 
@@ -2358,9 +2546,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     ServerDiscordLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Discord, UriKind.Absolute, out Uri? uriResult) &&
                                                              (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
-                                catch 
-                                { 
-                                    ServerDiscordLink = false; 
+                                catch
+                                {
+                                    ServerDiscordLink = false;
                                 }
                                 if (Picture_Icon_Server_Discord.BackgroundImage != (ServerDiscordLink ? Image_Icon.Discord : Image_Icon.Discord_Disabled))
                                 {
@@ -2369,8 +2557,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 LinkLabel_Server_Discord.Enabled = ServerDiscordLink;
                                 LinkLabel_Server_Discord.Text = ServerDiscordLink ? "Discord Invite" : string.Empty;
                             }
-                            catch 
-                            { 
+                            catch
+                            {
 
                             }
 
@@ -2383,9 +2571,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     ServerWebsiteLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Home, UriKind.Absolute, out Uri? uriResult) &&
                                               (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
-                                catch 
-                                { 
-                                    ServerWebsiteLink = false; 
+                                catch
+                                {
+                                    ServerWebsiteLink = false;
                                 }
                                 if (Picture_Icon_Server_Home.BackgroundImage != (ServerWebsiteLink ? Image_Icon.Home : Image_Icon.Home_Disabled))
                                 {
@@ -2394,9 +2582,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 LinkLabel_Server_Home.Enabled = ServerWebsiteLink;
                                 LinkLabel_Server_Home.Text = ServerWebsiteLink ? "Home Page" : string.Empty;
                             }
-                            catch 
+                            catch
                             {
-                                
+
                             }
 
                             /* Facebook Group Display */
@@ -2408,9 +2596,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     ServerFacebookLink = Uri.TryCreate(Launcher_Value.Launcher_Select_Server_JSON.Server_Social_Facebook, UriKind.Absolute, out Uri? uriResult) &&
                                                          (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
-                                catch 
-                                { 
-                                    ServerFacebookLink = false; 
+                                catch
+                                {
+                                    ServerFacebookLink = false;
                                 }
                                 if (Picture_Icon_Server_Facebook.BackgroundImage != (ServerFacebookLink ? Image_Icon.Facebook : Image_Icon.Facebook_Disabled))
                                 {
@@ -2419,8 +2607,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 LinkLabel_Server_Facebook.Enabled = ServerFacebookLink;
                                 LinkLabel_Server_Facebook.Text = ServerFacebookLink ? "Facebook Page" : string.Empty;
                             }
-                            catch 
-                            { 
+                            catch
+                            {
 
                             }
 
@@ -2436,8 +2624,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 LinkLabel_Server_Twitter.Enabled = ServerTwitterLink;
                                 LinkLabel_Server_Twitter.Text = ServerTwitterLink ? "Twitter Feed" : string.Empty;
                             }
-                            catch 
-                            { 
+                            catch
+                            {
 
                             }
 
@@ -2449,9 +2637,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Label_Server_Force_Restart_Timer.Text = string.Format(Translations.Database("MainScreen_Text_ServerShutDown") +
                                     " " + Time_Conversion.RelativeTime(ServerSecondsToShutDown));
                             }
-                            catch 
+                            catch
                             {
-                                
+
                             }
 
                             try
@@ -2467,7 +2655,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 };
                                 Label_Server_Scenery.Text = SceneryStatus;
                             }
-                            catch 
+                            catch
                             {
 
                             }
@@ -2543,9 +2731,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Warning;
                             }
                         }
-                        catch 
-                        { 
-                            /* Sad Noises */ 
+                        catch
+                        {
+                            /* Sad Noises */
                         }
                     }
                     else
@@ -2577,9 +2765,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Panel_Server_Information.Visible = true;
                             }
                         }
-                        catch 
-                        { 
-                            /* ¯\_(ツ)_/¯ */ 
+                        catch
+                        {
+                            /* ¯\_(ツ)_/¯ */
                         }
                         finally
                         {
@@ -2591,204 +2779,160 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             Label_Status_Game_Server_Data.Text = string.Format("Online: {0}\nRegistered: {1}", numPlayers, numRegistered);
                         }
-                        catch 
-                        { 
+                        catch
+                        {
 
                         }
 
-                        try
-                        {
-                            Label_Client_Ping.Text = string.Empty;
-                            CheckMate = new Ping();
-                            CheckMate.PingCompleted += (_sender, _e) =>
-                            {
-                                if (_e.Cancelled)
-                                {
-                                    Log.Warning("SERVER PING: Ping Canceled for " + ServerListUpdater.ServerName("Ping"));
-                                }
-                                else if (_e.Error != null)
-                                {
-                                    Log.Error("SERVER PING: Ping Failed for " + ServerListUpdater.ServerName("Ping") + " -> " + _e.Error.ToString());
-                                }
-                                else if (_e.Reply != null)
-                                {
-                                    if (_e.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
-                                    {
-                                        Label_Client_Ping.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
-                                        Log.Info("SERVER PING: " + _e.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
-                                    }
-                                    else
-                                    {
-                                        Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + _e.Reply.Status);
-                                    }
-                                }
-                                else
-                                {
-                                    Log.Warning("SERVER PING:  Unable to Ping " + ServerListUpdater.ServerName("Ping"));
-                                }
-
-                                if (_e.UserState != null)
-                                {
-#pragma warning disable CS8602 // Null Safe Check is done Above.
-                                    (_e.UserState as AutoResetEvent).Set();
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-                                }
-                            };
-
-                            CheckMate.SendAsync(ServerURI.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
-                        }
-                        catch (PingException Error)
-                        {
-                            LogToFileAddons.OpenLog("Pinging", string.Empty, Error, string.Empty, true);
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("Ping", string.Empty, Error, string.Empty, true);
-                        }
-                        finally
-                        {
-                            CheckMate?.Dispose();
-                        }
+                        Server_Ping(ServerURI.Host, 5000);
 
                         ServerEnabled = true;
 
-                        try
+                        if (Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data))
                         {
-                            if (!Directory.Exists(Banner_Cache_Folder)) { Directory.CreateDirectory(Banner_Cache_Folder); }
-
-                            if (!string.IsNullOrWhiteSpace(ImageUrl))
+                            try
                             {
+                                if (!Directory.Exists(Banner_Cache_Folder)) { Directory.CreateDirectory(Banner_Cache_Folder); }
 
-                                Uri URICall_A = new Uri(ImageUrl);
-                                ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ? 
-                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
-                                var Client_A = new WebClient
+                                if (!string.IsNullOrWhiteSpace(ImageUrl))
                                 {
-                                    Encoding = Encoding.UTF8,
-                                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                                };
-                                if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                                { 
-                                    Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
-                                }
-                                else
-                                {
-                                    Client_A.Headers.Add("user-agent", "SBRW Launcher " +
-                                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                }
 
-                                Client_A.DownloadDataAsync(URICall_A);
-                                Client_A.DownloadProgressChanged += (Object_A, Events_A) =>
-                                {
-                                    if (ServerChangeTriggered)
+                                    Uri URICall_A = new Uri(ImageUrl);
+                                    ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                        Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
+                                    var Client_A = new WebClient
                                     {
-                                        Client_A.CancelAsync();
-                                        Log.Info("BANNER: Stopping " + ServerListUpdater.ServerName("Ping") + " Server Banner Download");
-                                    }
-                                    else if (Events_A.TotalBytesToReceive > 2000000)
+                                        Encoding = Encoding.UTF8,
+                                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                                    };
+                                    if (!Launcher_Value.Launcher_Alternative_Webcalls())
                                     {
-                                        Client_A.CancelAsync();
-                                        Log.Warning("BANNER: Unable to Cache " + ServerListUpdater.ServerName("Ping") + " Server Banner! {Over 2MB?}");
+                                        Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
                                     }
-                                };
+                                    else
+                                    {
+                                        Client_A.Headers.Add("user-agent", "SBRW Launcher " +
+                                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                    }
 
-                                Client_A.DownloadDataCompleted += (Object_A, Events_A) =>
-                                {
-                                    if (Events_A.Cancelled)
+                                    Client_A.DownloadDataAsync(URICall_A);
+                                    Client_A.DownloadProgressChanged += (Object_A, Events_A) =>
                                     {
-                                        Client_A?.Dispose();
-                                    }
-                                    else if (Events_A.Error != null)
-                                    {
-                                        if (!ServerChangeTriggered)
+                                        if (!Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data))
                                         {
-                                            /* Load cached banner! */
-                                            if (Picture_Server_Banner.Image != (Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
-                                            {
-                                                Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
-                                            }
-#if !(RELEASE_UNIX || DEBUG_UNIX)
-                                            GC.Collect(); 
-#endif
+                                            Client_A.CancelAsync();
+                                            Log.Info("BANNER: Stopping " + ServerListUpdater.ServerName("Ping") + " Server Banner Download");
                                         }
+                                        else if (Events_A.TotalBytesToReceive > 2000000)
+                                        {
+                                            Client_A.CancelAsync();
+                                            Log.Warning("BANNER: Unable to Cache " + ServerListUpdater.ServerName("Ping") + " Server Banner! {Over 2MB?}");
+                                        }
+                                    };
 
-                                        Client_A?.Dispose();
-                                    }
-                                    else if (!ServerChangeTriggered && Events_A.Result != null)
+                                    Client_A.DownloadDataCompleted += (Object_A, Events_A) =>
                                     {
-                                        try
-                                        {
-                                            try
-                                            {
-                                                if (ServerRawBanner != null)
-                                                {
-                                                    ServerRawBanner.Close();
-                                                    ServerRawBanner.Dispose();
-                                                }
-                                            }
-                                            catch { }
-
-                                            ServerRawBanner = new MemoryStream(Events_A.Result)
-                                            {
-                                                Position = 0
-                                            };
-
-                                            if (Picture_Server_Banner.Image != (Image.FromStream(ServerRawBanner) ?? Image_Other.Server_Banner))
-                                            {
-                                                Picture_Server_Banner.Image = Image.FromStream(ServerRawBanner) ?? Image_Other.Server_Banner;
-                                            }
-
-                                            if (Strings.GetExtension(ImageUrl) == "gif")
-                                            {
-                                                Image.FromStream(ServerRawBanner).Save(Banner_Cache_File);
-                                            }
-                                            else
-                                            {
-                                                File.WriteAllBytes(Banner_Cache_File, ServerRawBanner.ToArray());
-                                            }
-                                        }
-                                        catch (Exception Error)
-                                        {
-                                            LogToFileAddons.OpenLog("Server Banner", string.Empty, Error, string.Empty, true);
-                                            Picture_Server_Banner.BackColor = Color_Winform_Other.Server_Banner_BackColor;
-                                        }
-                                        finally
+                                        if (Events_A.Cancelled)
                                         {
                                             Client_A?.Dispose();
-
-#if !(RELEASE_UNIX || DEBUG_UNIX)
-                                            GC.Collect(); 
-#endif
                                         }
-                                    }
-                                };
-                            }
-                            else if (File.Exists(Banner_Cache_File) && !(Application.OpenForms[this.Name].IsDisposed || Application.OpenForms[this.Name].Disposing))
-                            {
-                                /* Load cached banner! */
-                                if (Picture_Server_Banner.Image != (Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
-                                {
-                                    Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
-                                }
+                                        else if (Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data))
+                                        {
+                                            if (Events_A.Error != null)
+                                            {
+                                                if (Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data))
+                                                {
+                                                    /* Load cached banner! */
+                                                    if (Picture_Server_Banner.Image != (Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
+                                                    {
+                                                        Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
+                                                    }
 #if !(RELEASE_UNIX || DEBUG_UNIX)
-                                GC.Collect(); 
+                                                    GC.Collect();
 #endif
-                            }
-                            else if (!Application.OpenForms[this.Name].IsDisposed)
-                            {
-                                Picture_Server_Banner.BackColor = Color_Winform_Other.Server_Banner_BackColor;
-#if !(RELEASE_UNIX || DEBUG_UNIX)
-                                GC.Collect(); 
-#endif
-                            }
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("BANNER Cache", string.Empty, Error, string.Empty, true);
-                        }
+                                                }
 
-                        ServerChangeTriggered = false;
+                                                Client_A?.Dispose();
+                                            }
+                                            else if (Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data) && Events_A.Result != null)
+                                            {
+                                                try
+                                                {
+                                                    try
+                                                    {
+                                                        if (ServerRawBanner != null)
+                                                        {
+                                                            ServerRawBanner.Close();
+                                                            ServerRawBanner.Dispose();
+                                                        }
+                                                    }
+                                                    catch { }
+
+                                                    ServerRawBanner = new MemoryStream(Events_A.Result)
+                                                    {
+                                                        Position = 0
+                                                    };
+
+                                                    if (Picture_Server_Banner.Image != (Image.FromStream(ServerRawBanner) ?? Image_Other.Server_Banner))
+                                                    {
+                                                        Picture_Server_Banner.Image = Image.FromStream(ServerRawBanner) ?? Image_Other.Server_Banner;
+                                                    }
+
+                                                    if (Strings.GetExtension(ImageUrl) == "gif")
+                                                    {
+                                                        Image.FromStream(ServerRawBanner).Save(Banner_Cache_File);
+                                                    }
+                                                    else
+                                                    {
+                                                        File.WriteAllBytes(Banner_Cache_File, ServerRawBanner.ToArray());
+                                                    }
+                                                }
+                                                catch (Exception Error)
+                                                {
+                                                    LogToFileAddons.OpenLog("Server Banner", string.Empty, Error, string.Empty, true);
+                                                    Picture_Server_Banner.BackColor = Color_Winform_Other.Server_Banner_BackColor;
+                                                }
+                                                finally
+                                                {
+                                                    Client_A?.Dispose();
+
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                                    GC.Collect();
+#endif
+                                                }
+                                            }
+                                        }
+                                    };
+                                }
+                                else if (File.Exists(Banner_Cache_File) && !(Application.OpenForms[this.Name].IsDisposed || Application.OpenForms[this.Name].Disposing))
+                                {
+                                    /* Load cached banner! */
+                                    if (Picture_Server_Banner.Image != (Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner))
+                                    {
+                                        Picture_Server_Banner.Image = Image_Handler.Grayscale(Banner_Cache_File) ?? Image_Other.Server_Banner;
+                                    }
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                    GC.Collect();
+#endif
+                                }
+                                else if (!Application.OpenForms[this.Name].IsDisposed)
+                                {
+                                    Picture_Server_Banner.BackColor = Color_Winform_Other.Server_Banner_BackColor;
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                    GC.Collect();
+#endif
+                                }
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("BANNER Cache", string.Empty, Error, string.Empty, true);
+                            }
+                        }
                     }
+                }
+                else
+                {
+                    /* Just ingore this. */
                 }
 
                 if (Application.OpenForms[this.Name] != null)
@@ -3052,6 +3196,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 LogToFileAddons.OpenLog("Progress Bar/Outline ODF", string.Empty, Error_Live, string.Empty, true);
             }
 
+            Server_Ping(Launcher_Value.Launcher_Select_Server_Data.IPAddress, 5000);
+
             try
             {
                 if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
@@ -3148,6 +3294,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             if (Screen_Instance != null && (!IsDisposed || !Disposing))
             {
+                Presence_Launcher.Download = false;
                 Presence_Launcher.Status(3);
 
                 try
@@ -3185,9 +3332,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 FunctionStatus.IsVerifyHashDisabled = true;
             }
         }
-        #endregion
+#endregion
 
-        #region Game Files Downloader (SBRW Pack [.pack.sbrw])
+#region Game Files Downloader (SBRW Pack [.pack.sbrw])
         /* potential error is that the Pack_SBRW_Unpacker variable is being assigned a new Download_Extract object every time the 
          * Game_Pack_Downloader method is called, but it's not being disposed of or set to null afterwards. 
          * This could lead to memory leaks if the method is called repeatedly. 
@@ -3262,9 +3409,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         {
             if (Screen_Instance != null)
             {
-                if (UI_MODE != 3)
+                if (UI_MODE != 9)
                 {
-                    UI_MODE = 3;
+                    UI_MODE = 9;
                 }
 
                 long Game_Folder_Size = File_and_Folder_Extention.GetDirectorySize_GameFiles(new DirectoryInfo(Save_Settings.Live_Data.Game_Path));
@@ -3275,10 +3422,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     Game_Folder_Size = 3295097405;
                 }
-                
+
+                if (UI_MODE != 3)
+                {
+                    UI_MODE = 3;
+                }
+
                 if (!File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe")) &&
                     Game_Folder_Size <= 3295097404)
                 {
+                    if (UI_MODE != 10)
+                    {
+                        UI_MODE = 10;
+                    }
+
                     if (Hashes.Hash_SHA(Save_Settings.Live_Data.Game_Archive_Location) == "88C886B6D131C052365C3D6D14E14F67A4E2C253")
                     {
                         Game_Pack_Unpacker(Save_Settings.Live_Data.Game_Archive_Location);
@@ -3288,10 +3445,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         switch (API_Core.StatusCheck(Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack", 10))
                         {
                             case APIStatus.Online:
-                                Label_Download_Information_Support.SafeInvokeAction(() =>
+                                if (UI_MODE != 11)
                                 {
-                                    Label_Download_Information_Support.Text = "Downloading: Core Game Files Package".ToUpper();
-                                }, this);
+                                    UI_MODE = 11;
+                                }
 
                                 Pack_SBRW_Downloader = new Download_Client()
                                 {
@@ -3630,7 +3787,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
             });
         }
-#if DEBUG_UNIX || RELEASE_UNIX
+#if (DEBUG_UNIX || RELEASE_UNIX)
         public void Game_Folder_Checks(bool Bypass_Storage_Requirement = false)
 #else
         public void Game_Folder_Checks()
@@ -3926,6 +4083,137 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 Log.Visuals("CORE: Applyinng ContextMenu");
 #if NETFRAMEWORK
                 ContextMenu = new ContextMenu();
+                try
+                {
+                    /* Internal Message Reference Time: 01/14/2023 1:31 AM PST */
+                    if (DateTime.Now == new DateTime(DateTime.Now.Year, 1, 14) || DateTime.Now == new DateTime(DateTime.Now.Year, 4, 18))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("RIP M.L. (1925-2023)", (_, E) =>
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://www.youtube.com/watch?v=wctrwXZkUK0");
+#else
+                            Process.Start("explorer.exe", "https://www.youtube.com/watch?v=wctrwXZkUK0");
+#endif
+                        }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                }
+                catch
+                {
+                    ContextMenu.MenuItems.Add(new MenuItem("RIP M.L. (1925-2023)", (_, E) =>
+                    {
+#if NETFRAMEWORK
+                        Process.Start("https://www.youtube.com/watch?v=rANqc5br7dc");
+#else
+                        Process.Start("explorer.exe", "https://www.youtube.com/watch?v=rANqc5br7dc");
+#endif
+                    }));
+                    ContextMenu.MenuItems.Add("-");
+                }
+
+                try
+                {
+                    if (DateTime.Now == new DateTime(DateTime.Now.Year, 4, 1))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("The Mermaid Sisters is Here!", (_, E) =>
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://www.youtube.com/watch?v=OFjqEexH0Tg");
+#else
+                            Process.Start("explorer.exe", "https://www.youtube.com/watch?v=OFjqEexH0Tg");
+#endif
+                        }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                }
+                catch
+                {
+                    /* Show it Anyways, lets be real here */
+                    ContextMenu.MenuItems.Add(new MenuItem("The Mermaid Sisters is Here!", (_, E) =>
+                    {
+#if NETFRAMEWORK
+                        Process.Start("https://www.youtube.com/watch?v=OFjqEexH0Tg");
+#else
+                        Process.Start("explorer.exe", "https://www.youtube.com/watch?v=OFjqEexH0Tg");
+#endif
+                    }));
+                    ContextMenu.MenuItems.Add("-");
+                }
+
+                try
+                {
+                    if (DateTime.Now == new DateTime(DateTime.Now.Year, 7, 4))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("Fireworks", (_, E) =>
+                            {
+#if NETFRAMEWORK
+                                Process.Start("https://youtu.be/2m5vQo81Jik");
+#else
+                                Process.Start("explorer.exe", "https://youtu.be/2m5vQo81Jik");
+#endif
+                            }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                    else if (DateTime.Now == new DateTime(DateTime.Now.Year, 6, 4))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem(
+                            ((EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed()) ? 
+                            "": "2017/06/04 - ") + "Development Cycle", (_, E) =>
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://www.youtube.com/watch?v=5hv2p0RtVY0");
+#else
+                            Process.Start("explorer.exe", "https://www.youtube.com/watch?v=5hv2p0RtVY0");
+#endif
+                        }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                    /* Development Release Year: 2017 */
+                    else if (DateTime.Now == new DateTime(DateTime.Now.Year, 6, 18))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("Happy Birthday Interface 1", (_, E) =>
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/interface_v1/screenshot.png");
+#else
+                            Process.Start("explorer.exe", "https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/interface_v1/screenshot.png");
+#endif
+                        }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                    /* Development Release Year: 2017 */
+                    else if (DateTime.Now == new DateTime(DateTime.Now.Year, 11, 2))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("Happy Birthday Interface 2!", (_, E) =>
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/interface_v2/screenshot.png");
+#else
+                            Process.Start("explorer.exe", "https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/interface_v2/screenshot.png");
+#endif
+                        }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                    /* Development Release Year: 2018 */
+                    else if (DateTime.Now == new DateTime(DateTime.Now.Year, 11, 8))
+                    {
+                        ContextMenu.MenuItems.Add(new MenuItem("Happy Birthday Interface 3!", (_, E) =>
+                        {
+#if NETFRAMEWORK
+                            Process.Start("https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/Net.Standard/01-Main_Screen.png");
+#else
+                            Process.Start("explorer.exe", "https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/Net.Standard/01-Main_Screen.png");
+#endif
+                        }));
+                        ContextMenu.MenuItems.Add("-");
+                    }
+                }
+                catch
+                {
+                    /* Forget about it Cuh */
+                }
+
                 ContextMenu.MenuItems.Add(new MenuItem("About", (O, K) => { Screen_About.OpenScreen(); }));
                 if (LauncherUpdateCheck.UpgradeAvailable)
                 {
@@ -4020,6 +4308,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Button_Play_OR_Update.Font = new Font(FormsFont.Primary_Bold(), FourthFontSize, FontStyle.Bold);
             Label_Download_Information.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
             Label_Download_Information_Support.Font = new Font(FormsFont.Primary_Bold(), MainFontSize, FontStyle.Bold);
+            /* Console */
+            Button_Console_Submit.Font = new Font(FormsFont.Primary_Bold(), SecondaryFontSize, FontStyle.Bold);
+            Input_Console.Font = new Font(FormsFont.Primary(), MainFontSize, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors & Images     /
@@ -4087,6 +4378,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             LinkLabel_Server_Home.ActiveLinkColor = Color_Text.L_Five;
 
             Label_Insider_Build_Number.ForeColor = Color_Text.L_Five;
+
+            Input_Console.BackColor = Color_Winform_Other.Input;
+            Input_Console.ForeColor = Color_Text.L_Five;
+
+            Button_Console_Submit.ForeColor = Color_Winform_Buttons.Green_Fore_Color;
+            Button_Console_Submit.BackColor = Color_Winform_Buttons.Green_Back_Color;
+            Button_Console_Submit.FlatAppearance.BorderColor = Color_Winform_Buttons.Green_Border_Color;
+            Button_Console_Submit.FlatAppearance.MouseOverBackColor = Color_Winform_Buttons.Green_Mouse_Over_Back_Color;
 
             /********************************/
             /* Events                        /
@@ -4176,7 +4475,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             Button_Register.Click += new EventHandler(Button_Register_Click);
 
             Load += new EventHandler(MainScreen_Load);
-            
+
+            Input_Console.KeyDown += new KeyEventHandler(Console_Quick_Send);
+            Button_Console_Submit.Click += new EventHandler(Console_Enter);
+
+            KeyPreview = true;
+
             /********************************/
             /* Enable/Disable Visuals        /
             /********************************/
@@ -4491,7 +4795,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
                                 ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
 
-                                Presence_Launcher.Status(2, string.Format("Downloaded {0}% of Server Game Mods!", ModNet_Download_Status.Download_Percentage));
+                                if (ModNet_Download_Status.Download_Percentage >= 100)
+                                {
+                                    Presence_Launcher.Status(28, string.Empty);
+                                }
+                                else
+                                {
+                                    Presence_Launcher.Status(2, string.Format("Downloaded {0}% of Server Game Mods!", ModNet_Download_Status.Download_Percentage));
+                                }
                             }
                         }
                         break;
@@ -4535,6 +4846,59 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             NotifyIcon_Notification.ContextMenu = ContextMenu;
 #endif
                         }
+                        break;
+                    /* Checking Folder Size (Pack Downloader) */
+                    case 9:
+                        if (UI_MODE != 0)
+                        {
+                            UI_MODE = 0;
+                        }
+
+                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+
+                        Label_Download_Information.Text = "Calculating Game Folder Size".ToUpperInvariant();
+
+                        ProgressBar.Value = 0;
+                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                        break;
+                    case 10:
+                        if (UI_MODE != 0)
+                        {
+                            UI_MODE = 0;
+                        }
+
+                        Label_Download_Information_Support.Text = "Checking Game Files Package Hash".ToUpper();
+
+                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Preload_Outline;
+
+                        ProgressBar.Value = 100;
+                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Unknown_Top;
+                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Unknown_Bottom;
+                        break;
+                    case 11:
+                        if (UI_MODE != 0)
+                        {
+                            UI_MODE = 0;
+                        }
+
+                        Label_Download_Information_Support.Text = "Downloading: Core Game Files Package".ToUpper();
+
+                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+
+                        ProgressBar.Value = 0;
+                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                        break;
+                    case 12:
+                        if (UI_MODE != 0)
+                        {
+                            UI_MODE = 0;
+                        }
+
+                        Label_Download_Information.Text = "Launcher: Checking NFSW EXE File Hash".ToUpperInvariant();
+                        Label_Download_Information_Support.Text = string.Empty;
+                        Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
                         break;
                 }
             }

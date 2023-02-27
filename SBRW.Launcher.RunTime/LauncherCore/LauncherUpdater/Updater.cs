@@ -39,6 +39,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
         public static bool UpgradeAvailable { get; set; }
         private static bool SkipAvailableUpgrade { get; set; }
         public static string VersionJSON { get; set; } = string.Empty;
+        public static int Version_JSON_Index { get; set; }
         private static bool ValidJSONDownload { get; set; }
         public static int Revisions { get; set; }
         public static bool UpdatePopupStoppedSplashScreen { get; set; }
@@ -72,12 +73,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                         {
                             if (EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed())
                             {
-                                if (GH_Releases.Pre_Release)
-                                {
-                                    Log.Info("Github Pre-Release Version");
-                                }
-
-                                Log.Info("Github Release Version Tag: " + GH_Releases.TagName);
+                                Log.Info("Github " + (GH_Releases.Pre_Release ? "Pre-" : "") + "Release Version Tag: " + GH_Releases.TagName);
                             }
 
                             if (!GH_Releases.Pre_Release && !Latest_Found_Build)
@@ -86,11 +82,12 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                                 Temp_Latest_Launcher_Build = GH_Releases.TagName;
                             }
 
-                            if (CurrentLauncherBuild.CompareTo(GH_Releases.TagName) < 0)
+                            if (CurrentLauncherBuild.Comparisons(GH_Releases.TagName) < 0)
                             {
+                                Version_JSON_Index = Top_Ten;
                                 return GH_Releases.TagName;
                             }
-                            else if (Top_Ten >= 10)
+                            else if (Top_Ten >= 20)
                             {
                                 break;
                             }
@@ -233,8 +230,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
             bool StatusUpdate = false;
             if (!string.IsNullOrWhiteSpace(LatestLauncherBuild))
             {
-                Revisions = !EnableInsiderDeveloper.Allowed() ? 
-                Strings.Comparisons(CurrentLauncherBuild, LatestLauncherBuild) : CurrentLauncherBuild.CompareTo(LatestLauncherBuild);
+                Revisions = CurrentLauncherBuild.Comparisons(LatestLauncherBuild);
 
                 if (Revisions < 0)
                 {

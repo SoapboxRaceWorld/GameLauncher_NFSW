@@ -266,7 +266,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                 {
                     FileVersionInfo LauncherUpdaterBuild = FileVersionInfo.GetVersionInfo(UpdaterPath);
                     string LauncherUpdaterBuildNumber = LauncherUpdaterBuild.FileVersion??string.Empty;
-                    int UpdaterBuildNumberResult = Strings.Comparisons(LauncherUpdaterBuildNumber, LatestUpdaterBuildVersion);
+                    int UpdaterBuildNumberResult = LauncherUpdaterBuildNumber.Comparisons(LatestUpdaterBuildVersion);
 
                     LogToFileAddons.Parent_Log_Screen(8, "LAUNCHER UPDATER BUILD", "GameLauncherUpdater " + LauncherUpdaterBuildNumber, false, true);
 

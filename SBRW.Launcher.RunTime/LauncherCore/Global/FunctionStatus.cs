@@ -39,6 +39,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
         public static bool EnableInsiderPreview { get { return Save_Settings.Live_Data.Launcher_Insider == "1" || Save_Settings.Live_Data.Launcher_Insider == "2"; } }
         public static bool EnableThemeSupport { get { return Save_Settings.Live_Data.Launcher_Theme_Support == "1"; } }
         public static bool EnableLZMADownloader { get { return Save_Settings.Live_Data.Launcher_LZMA_Downloader == "1"; } }
+        public static bool EnableProxyDomain { get { return Save_Settings.Live_Data.Launcher_Proxy_Domain == "1"; } }
         /// <summary>
         /// Default Path Location for Game Files Archive File
         /// </summary>
@@ -48,7 +49,12 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
         /// Secondary Path Location for Game Files Archive File
         /// </summary>
         /// <remarks>Example: C:\Soapbox Race World\Launcher\Launcher_Data\Archive\Game Files\GameFiles.sbrwpack</remarks>
-        public static string Secondary_Game_Archive_Path { get { return Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "Game Files", "GameFiles.sbrwpack"); } }
+        public static string Secondary_Game_Archive_Path { get { return Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "GameFiles.sbrwpack"); } }
+        /// <summary>
+        /// Secondary Path Location for Game Files Archive File
+        /// </summary>
+        /// <remarks>Example: C:\Soapbox Race World\Launcher\Launcher_Data\Archive\Game Files\GameFiles.sbrwpack</remarks>
+        public static string Secondary_Game_Archive_Path_Old { get { return Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "Game Files", "GameFiles.sbrwpack"); } }
         /// <summary>
         /// Legacy File path that existed for launchers 2.1.4.X - 2.1.5.X
         /// </summary>
