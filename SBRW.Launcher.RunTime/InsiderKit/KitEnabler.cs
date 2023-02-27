@@ -8,7 +8,7 @@ namespace SBRW.Launcher.RunTime.InsiderKit
     {
         /* Current month, day, year (2 digits), and letter! Ex: 12-15-20-A */
         /* If a second build gets release within the same day bump letter version up (No R2 or D2)*/
-        private static string InsiderBuildNumber { get; set; } = "02-26-23-B";
+        private static string InsiderBuildNumber { get; set; } = "02-26-23-C";
 
         public static string BuildNumberOnly()
         {
@@ -53,7 +53,7 @@ namespace SBRW.Launcher.RunTime.InsiderKit
     /* This is only used for Beta Testers (Treated like a Public Release) */
     public class EnableInsiderBetaTester
     {
-        private static bool Enabled { get; set; } = true;
+        private static bool Enabled { get; set; } = false;
 
         public static bool Allowed()
         {
