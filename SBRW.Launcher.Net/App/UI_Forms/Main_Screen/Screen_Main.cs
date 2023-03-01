@@ -69,14 +69,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
     public partial class Screen_Main : Form
     {
         public static Screen_Main? Screen_Instance { get; set; }
-        public int UI_MODE { get; set; } = 0;
-        private bool LoginEnabled { get; set; }
-        private bool ServerEnabled { get; set; }
-        private bool Builtinserver { get; set; }
-        private bool SkipServerTrigger { get; set; }
-        private bool Playenabled { get; set; }
-        private bool IsDownloading { get; set; } = true;
-        private bool DisableLogout { get; set; }
+        public static int UI_MODE { get; set; } = 0;
+        private static bool LoginEnabled { get; set; }
+        private static bool ServerEnabled { get; set; }
+        private static bool Builtinserver { get; set; }
+        private static bool SkipServerTrigger { get; set; }
+        private static bool Playenabled { get; set; }
+        private static bool IsDownloading { get; set; } = true;
+        private static bool DisableLogout { get; set; }
 
         public static string GetTempName { get; set; } = Path.GetTempFileName();
 
@@ -99,7 +99,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         private string LoginToken { get; set; } = string.Empty;
         private string UserId { get; set; } = string.Empty;
         private static int ServerSecondsToShutDown { get; set; }
-        private static Ping? CheckMate { get; set; }
+        
         private static System.Timers.Timer? Live_Action_Timer { get; set; }
 
         public static string ModNetFileNameInUse { get; set; } = string.Empty;
@@ -111,56 +111,71 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private void Server_Ping(string Server_Host_Url, int Ping_Timeout)
         {
+            Ping? CheckMate = default;
+
             try
             {
-                if (!IsDownloading)
+                if (!(Disposing || IsDisposed))
                 {
-                    if (CheckMate != default)
+                    if (!Label_Client_Ping.Equals(string.Empty))
                     {
-                        CheckMate.SendAsyncCancel();
+                        Label_Client_Ping.Text = string.Empty;
                     }
+                }
 
-                    Label_Client_Ping.Text = string.Empty;
+                if(!string.IsNullOrWhiteSpace(Server_Host_Url))
+                {
+                    Json_List_Server Cached_Server_GSI = Launcher_Value.Launcher_Select_Server_Data;
+
                     CheckMate = new Ping();
                     CheckMate.PingCompleted += (_sender, _e) =>
                     {
-                        if (_e.Cancelled)
+                        if (Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data))
                         {
-                            Log.Warning("SERVER PING: Ping Canceled for " + ServerListUpdater.ServerName("Ping"));
-                        }
-                        else if (_e.Error != null)
-                        {
-                            Log.Error("SERVER PING: Ping Failed for " + ServerListUpdater.ServerName("Ping") + " -> " + _e.Error.ToString());
-                        }
-                        else if (_e.Reply != null)
-                        {
-                            if (_e.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
+                            if (_e.Cancelled)
                             {
-                                Label_Client_Ping.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
-                                Log.Info("SERVER PING: " + _e.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
+                                Log.Warning("SERVER PING: Ping Canceled for " + ServerListUpdater.ServerName("Ping"));
+                            }
+                            else if (_e.Error != null)
+                            {
+                                Log.Error("SERVER PING: Ping Failed for " + ServerListUpdater.ServerName("Ping") + " -> " + _e.Error.ToString());
+                            }
+                            else if (_e.Reply != null)
+                            {
+                                if (_e.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
+                                {
+                                    if (!(Disposing || IsDisposed))
+                                    {
+                                        Label_Client_Ping.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
+                                    }
+
+                                    Log.Info("SERVER PING: " + _e.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
+                                }
+                                else
+                                {
+                                    Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + _e.Reply.Status);
+                                }
                             }
                             else
                             {
-                                Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + _e.Reply.Status);
+                                Log.Warning("SERVER PING:  Unable to Ping " + ServerListUpdater.ServerName("Ping"));
+                            }
+
+                            if (_e.UserState != null)
+                            {
+#pragma warning disable CS8602 // Null Safe Check is done Above.
+                                (_e.UserState as AutoResetEvent).Set();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                             }
                         }
-                        else
-                        {
-                            Log.Warning("SERVER PING:  Unable to Ping " + ServerListUpdater.ServerName("Ping"));
-                        }
-
-                        if (_e.UserState != null)
-                        {
-#pragma warning disable CS8602 // Null Safe Check is done Above.
-                            (_e.UserState as AutoResetEvent).Set();
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-                        }
                     };
-                    CheckMate.SendAsync(new Uri(Server_Host_Url).Host, Ping_Timeout, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
-                }
-                else if (!Label_Client_Ping.Equals(string.Empty))
-                {
-                    Label_Client_Ping.Text = string.Empty;
+
+                    if (Cached_Server_GSI.Equals(Launcher_Value.Launcher_Select_Server_Data))
+                    {
+                        CheckMate.SendAsync(Server_Host_Url,
+                            (Launcher_Value.Launcher_WebCall_Timeout_Enable && (Launcher_Value.Launcher_WebCall_Timeout() > 0) ?
+                                        (Launcher_Value.Launcher_WebCall_Timeout() * 1000) : Ping_Timeout), new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
+                    }
                 }
             }
             catch (PingException Error)
@@ -973,10 +988,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 string GameExehash = Hashes.Hash_SHA(GameExePath);
                 if
                   (
-                    GameExehash == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
-                    GameExehash == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
-                    GameExehash == "E69890D31919DE1649D319956560269DB88B8F22" ||
-                    GameExehash == "3CBE3FAAFF00FAD84F78A2AFEA4FFFC78294EEA2"
+                    GameExehash.Equals("7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC") ||
+                    GameExehash.Equals("DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19") ||
+                    GameExehash.Equals("E69890D31919DE1649D319956560269DB88B8F22") ||
+                    GameExehash.Equals("3CBE3FAAFF00FAD84F78A2AFEA4FFFC78294EEA2")
                   )
                 {
                     Launcher_Value.Game_Server_Name = ServerListUpdater.ServerName("Proxy");
@@ -1437,13 +1452,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         ProgressBar.Invoke(new Action(delegate ()
                         {
                             ProgressBar.Value = 100;
-                            
                         }));
                     }
                     else
                     {
                         ProgressBar.Value = 100;
-                        
                     }
                 }
 
@@ -1453,7 +1466,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     case 1:
                         if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Checking_Outline)
                         {
-                            Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline, this);
+                            if (Picture_Bar_Outline.InvokeRequired)
+                            {
+                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline, this);
+                            }
+                            else
+                            {
+                                Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                            }
                         }
 
                         if (ProgressBar.BackColor != Color_Winform_Other.ProgressBar_Loading_Top)
@@ -1479,7 +1499,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             if (Picture_Information_Window.Image != Image_Other.Information_Window)
                             {
-                                Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window, this);
+                                if (Picture_Information_Window.InvokeRequired)
+                                {
+                                    Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window, this);
+                                }
+                                else
+                                {
+                                    Picture_Information_Window.Image = Image_Other.Information_Window;
+                                }
                             }
                         }
                         break;
@@ -1487,7 +1514,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     case 2:
                         if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Error_Outline)
                         {
-                            Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Error_Outline, this);
+                            if (Picture_Bar_Outline.InvokeRequired)
+                            {
+                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Error_Outline, this);
+                            }
+                            else
+                            {
+                                Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Error_Outline;
+                            }
                         }
 
                         if (ProgressBar.BackColor != Color_Winform_Other.ProgressBar_Error_Top)
@@ -1513,7 +1547,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             if (Picture_Information_Window.Image != Image_Other.Information_Window_Error)
                             {
-                                Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Error, this);
+                                if (Picture_Information_Window.InvokeRequired)
+                                {
+                                    Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Error, this);
+                                }
+                                else
+                                {
+                                    Picture_Information_Window.Image = Image_Other.Information_Window_Error;
+                                }
                             }
                         }
                         break;
@@ -1521,7 +1562,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     case 3:
                         if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Warning_Outline)
                         {
-                            Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline, this);
+                            if (Picture_Bar_Outline.InvokeRequired)
+                            {
+                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline, this);
+                            }
+                            else
+                            {
+                                Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline;
+                            }
                         }
 
                         if (ProgressBar.BackColor != Color_Winform_Other.ProgressBar_Warning_Top)
@@ -1547,7 +1595,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             if (Picture_Information_Window.Image != Image_Other.Information_Window_Warning)
                             {
-                                Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Warning, this);
+                                if (Picture_Information_Window.InvokeRequired)
+                                {
+                                    Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Warning, this);
+                                }
+                                else
+                                {
+                                    Picture_Information_Window.Image = Image_Other.Information_Window_Warning;
+                                }
                             }
                         }
                         break;
@@ -1555,7 +1610,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     case 4:
                         if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Preload_Outline)
                         {
-                            Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Preload_Outline, this);
+                            if (Picture_Bar_Outline.InvokeRequired)
+                            {
+                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Preload_Outline, this);
+                            }
+                            else
+                            {
+                                Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Preload_Outline;
+                            }
                         }
 
                         if (ProgressBar.BackColor != Color_Winform_Other.ProgressBar_Unknown_Top)
@@ -1581,7 +1643,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             if (Picture_Information_Window.Image != Image_Other.Information_Window_Unknown)
                             {
-                                Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Unknown, this);
+                                if (Picture_Information_Window.InvokeRequired)
+                                {
+                                    Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Unknown, this);
+                                }
+                                else
+                                {
+                                    Picture_Information_Window.Image = Image_Other.Information_Window_Unknown;
+                                }
                             }
                         }
                         break;
@@ -1589,7 +1658,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     default:
                         if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Complete_Outline)
                         {
-                            Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Complete_Outline, this);
+                            if (Picture_Bar_Outline.InvokeRequired)
+                            {
+                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Complete_Outline, this);
+                            }
+                            else
+                            {
+                                Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Complete_Outline;
+                            }
                         }
 
                         if (ProgressBar.BackColor != Color_Winform_Other.ProgressBar_Sucess_Top)
@@ -1615,7 +1691,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             if (Picture_Information_Window.Image != Image_Other.Information_Window_Success)
                             {
-                                Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Success, this);
+                                if (Picture_Information_Window.InvokeRequired)
+                                {
+                                    Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Success, this);
+                                }
+                                else
+                                {
+                                    Picture_Information_Window.Image = Image_Other.Information_Window_Success;
+                                }
                             }
                         }
                         break;
@@ -2749,7 +2832,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             /* Enable Login & Register Button */
                             LoginEnabled = true;
                             Button_Login.ForeColor = Color_Text.L_Five;
-                            Button_Login.Enabled = true;
+                            Button_Login.Enabled = !IsDownloading;
                             Button_Register.Enabled = true;
                             Launcher_Value.Launcher_Select_Server_Category = ((Json_List_Server)ComboBox_Server_List.SelectedItem).Category ?? string.Empty;
 
@@ -3196,8 +3279,6 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 LogToFileAddons.OpenLog("Progress Bar/Outline ODF", string.Empty, Error_Live, string.Empty, true);
             }
 
-            Server_Ping(Launcher_Value.Launcher_Select_Server_Data.IPAddress, 5000);
-
             try
             {
                 if (!string.IsNullOrWhiteSpace(Save_Settings.Live_Data.Game_Path))
@@ -3239,6 +3320,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     }
 
                     Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Ready!".ToUpper(), this);
+                    Button_Login.Enabled = LoginEnabled;
 
                     EnablePlayButton();
                 }
@@ -3875,7 +3957,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Label_Download_Information.SafeInvokeAction(() => Label_Download_Information.Text = "Please Choose a CDN from Settings Screen".ToUpperInvariant(), this);
                     }
                     else
-                    {
+                    {                        
                         Game_Downloaders();
                     }
                 }
@@ -4698,15 +4780,14 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         break;
                     /* Pack Downloader (Progress Complete) */
                     case 2:
-                        if (Pack_SBRW_Downloader != null)
-                        {
-                            ProgressBar.Value = 0;
-                            ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
-                            ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
 
-                            Label_Download_Information.Text = "Checking Package Integrity".ToUpperInvariant();
-                            Label_Download_Information_Support.Text = "Downloaded: SBRW Game Files Package".ToUpperInvariant();
-                        }
+                        ProgressBar.Value = 0;
+                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+
+                        Label_Download_Information.Text = "Checking Package Integrity".ToUpperInvariant();
+                        Label_Download_Information_Support.Text = "Downloaded: SBRW Game Files Package".ToUpperInvariant();
                         break;
                     /* Generic Loading */
                     case 3:
