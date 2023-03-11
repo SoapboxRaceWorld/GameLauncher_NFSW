@@ -354,11 +354,11 @@ namespace SBRW.Launcher.Net
                                         "System.ValueTuple.dll - 4.6.26515.06 @BuiltBy: dlab-DDVSOWINAGE059 " +
                                         "@Branch: release/2.1 @SrcCode: https://github.com/dotnet/corefx/tree/30ab651fcb4354552bd4891619a0bdd81e0ebdbf",
                                         "WindowsFirewallHelper.dll - 2.2.0.85",
-                                        "SBRW.Ini.Parser.dll - 3.0.0",
+                                        "SBRW.Ini.Parser.dll - 3.0.2",
                                         "SBRW.Nancy.dll - 2.0.13",
                                         "SBRW.Nancy.Hosting.Self.dll - 2.0.11",
                                         "SBRW.Launcher.Core.dll - 0.2.3",
-                                        "SBRW.Launcher.Core.Extra.dll - 0.3.3",
+                                        "SBRW.Launcher.Core.Extra.dll - 0.3.4",
                                         "SBRW.Launcher.Core.Discord.dll - 0.2.3",
                                         "SBRW.Launcher.Core.Proxy.dll - 0.2.5",
                                         "SBRW.Launcher.Core.Theme.dll - 0.1.5",
