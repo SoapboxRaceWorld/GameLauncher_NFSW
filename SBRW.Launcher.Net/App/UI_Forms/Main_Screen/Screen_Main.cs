@@ -4779,6 +4779,12 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Download_Information? Cached_Status = Pack_SBRW_Downloader.Download_Status();
                             if ((Cached_Status != null) && !Pack_SBRW_Downloader.Cancel)
                             {
+                                if (Cached_Status.Download_Attempts > 0)
+                                {
+                                    Label_Download_Information_Support.Text = string.Format("Download Attempt {0}: Core Game Files Package", 
+                                        Cached_Status.Download_Attempts).ToUpper();
+                                }
+
                                 Label_Download_Information.Text = (Time_Conversion.FormatFileSize(Cached_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(Cached_Status.File_Size_Total) +
                                     " (" + Cached_Status.Download_Percentage + "%) - " +
                                     Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
@@ -4790,6 +4796,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Cached_Status.Download_Percentage));
                             }
                         }
+                        break;
                     /* Pack Downloader (Progress Complete) */
                     case 2:
                         Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
