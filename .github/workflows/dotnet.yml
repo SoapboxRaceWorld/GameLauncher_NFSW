@@ -4,6 +4,15 @@ on:
  push:
     paths:
       - SBRW.Launcher.RunTime/InsiderKit/**
+    branches:
+      - development
+      - Net.Standard
+ pull_request:
+    paths:
+      - SBRW.Launcher.RunTime/InsiderKit/**
+    branches:
+      - development
+      - Net.Standard
  
 jobs:
   build:
@@ -12,6 +21,22 @@ jobs:
     steps:
     - name: Branch Checkout
       uses: actions/checkout@v3.3.0
+    - name: Custom Root Authority
+      env:
+          Root_Authority: ${{ secrets.ROOT_CA }}
+      if: env.Root_Authority != null
+      run: |
+          New-Item -ItemType directory -Path Keys
+          Set-Content -Path "Keys\Public.txt" -Value "{env:Root_Authority}"
+          certutil -decode "Keys\Public.txt" "Keys\Public.crt"
+          certutil -addstore -f "CCP" "Keys\Public.crt"
+    - name: Private Code Sign Certificate
+      env:
+          Code_Sign_Certificate: ${{ secrets.PRIVATE_CODE_SIGN_CRT }}
+      if: env.Code_Sign_Certificate != null
+      run: |
+          Set-Content -Path "Keys\Private.txt" -Value "${env:Code_Sign_Certificate}"
+          certutil -decode "Keys\Private.txt" "Keys\Launcher.p12"
     - name: Set Custom NuGet Packages
       run: |
         dotnet nuget add source "https://nuget.pkg.github.com/DavidCarbon-SBRW/index.json" -n "SBRW Launcher Libraries" -u ${env:UserName} -p ${env:Password} --store-password-in-clear-text
