@@ -3832,9 +3832,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
                                 if (LZMA_Downloader.Downloading)
                                 {
-                                    if (UI_MODE != 1)
+                                    if (UI_MODE != 15)
                                     {
-                                        UI_MODE = 1;
+                                        UI_MODE = 15;
                                     }
                                 }
                                 else if (LZMA_Downloader != null)
@@ -4774,45 +4774,22 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         break;
                     /* Pack Downloader (In-Progress) */
                     case 1:
-                        if(!InformationCache.EnableLZMADownloader)
+                        if (Pack_SBRW_Downloader != null)
                         {
-                            if (Pack_SBRW_Downloader != null)
+                            Download_Information? Cached_Status = Pack_SBRW_Downloader.Download_Status();
+                            if ((Cached_Status != null) && !Pack_SBRW_Downloader.Cancel)
                             {
-                                Download_Information? Cached_Status = Pack_SBRW_Downloader.Download_Status();
-                                if ((Cached_Status != null) && !Pack_SBRW_Downloader.Cancel)
-                                {
-                                    Label_Download_Information.Text = (Time_Conversion.FormatFileSize(Cached_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(Cached_Status.File_Size_Total) +
-                                        " (" + Cached_Status.Download_Percentage + "%) - " +
-                                        Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
+                                Label_Download_Information.Text = (Time_Conversion.FormatFileSize(Cached_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(Cached_Status.File_Size_Total) +
+                                    " (" + Cached_Status.Download_Percentage + "%) - " +
+                                    Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
 
-                                    ProgressBar.Value = Cached_Status.Download_Percentage;
-                                    ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
-                                    ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                                ProgressBar.Value = Cached_Status.Download_Percentage;
+                                ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                                ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
 
-                                    Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Cached_Status.Download_Percentage));
-                                }
+                                Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Cached_Status.Download_Percentage));
                             }
                         }
-                        else
-                        {
-                            if (LZMA_Downloader != null)
-                            {
-                                Download_Information_LZMA? Cached_Status = LZMA_Downloader.Download_Status();
-                                if ((Cached_Status != null) && LZMA_Downloader.Downloading)
-                                {
-                                    Label_Download_Information.Text = (Time_Conversion.FormatFileSize(Cached_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(Cached_Status.File_Size_Total) +
-                                        " (" + Cached_Status.Download_Percentage + "%) - " +
-                                        Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
-
-                                    ProgressBar.Value = Cached_Status.Download_Percentage;
-                                    ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
-                                    ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
-
-                                    Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Cached_Status.Download_Percentage));
-                                }
-                            }
-                        }
-                        break;
                     /* Pack Downloader (Progress Complete) */
                     case 2:
                         Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
@@ -5047,6 +5024,25 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
                                 Parent_Screen.Screen_Instance.WindowState = FormWindowState.Normal;
                                 Parent_Screen.Screen_Instance.ShowInTaskbar = true;
+                            }
+                        }
+                        break;
+                    /* LZMA Downloader Progress */
+                    case 15:
+                        if (LZMA_Downloader != null)
+                        {
+                            Download_Information_LZMA? Cached_Status = LZMA_Downloader.Download_Status();
+                            if ((Cached_Status != null) && LZMA_Downloader.Downloading)
+                            {
+                                Label_Download_Information.Text = (Time_Conversion.FormatFileSize(Cached_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(Cached_Status.File_Size_Total) +
+                                    " (" + Cached_Status.Download_Percentage + "%) - " +
+                                    Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
+
+                                ProgressBar.Value = Cached_Status.Download_Percentage;
+                                ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                                ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+
+                                Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Cached_Status.Download_Percentage));
                             }
                         }
                         break;
