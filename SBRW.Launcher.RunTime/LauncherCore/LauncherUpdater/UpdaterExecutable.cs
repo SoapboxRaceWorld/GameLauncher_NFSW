@@ -22,7 +22,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
     class UpdaterExecutable
     {
         /* Hardcoded Default Version for Updater Version  */
-        private static string LatestUpdaterBuildVersion { get; set; } = "1.0.1.22";
+        private static string LatestUpdaterBuildVersion { get; set; } = "1.0.1.24";
         private static string VersionJSON { get; set; } = string.Empty;
 
         /* Check If Updater Exists or Requires an Update */
