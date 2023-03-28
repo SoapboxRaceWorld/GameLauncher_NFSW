@@ -41,7 +41,6 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
         public static string VersionJSON { get; set; } = string.Empty;
         public static int Version_JSON_Index { get; set; }
         private static bool ValidJSONDownload { get; set; }
-        public static int Revisions { get; set; }
         public static bool UpdatePopupStoppedSplashScreen { get; set; }
 
         public LauncherUpdateCheck(PictureBox statusImage, Label statusText, Label statusDescription)
@@ -82,7 +81,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                                 Temp_Latest_Launcher_Build = GH_Releases.TagName;
                             }
 
-                            if (CurrentLauncherBuild.Comparisons(GH_Releases.TagName) < 0)
+                            if (CurrentLauncherBuild.Outdated(GH_Releases.TagName))
                             {
                                 Version_JSON_Index = Top_Ten;
                                 return GH_Releases.TagName;
@@ -230,9 +229,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
             bool StatusUpdate = false;
             if (!string.IsNullOrWhiteSpace(LatestLauncherBuild))
             {
-                Revisions = CurrentLauncherBuild.Comparisons(LatestLauncherBuild);
-
-                if (Revisions < 0)
+                if (CurrentLauncherBuild.Outdated(LatestLauncherBuild))
                 {
                     if (!Disable_Startup_Functions)
                     {
@@ -325,7 +322,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
         {
             if (!string.IsNullOrWhiteSpace(LatestLauncherBuild))
             {
-                if (Revisions > 0)
+                if (CurrentLauncherBuild.Preview(LatestLauncherBuild))
                 {
                     string WhatBuildAmI;
                     if (EnableInsiderDeveloper.Allowed())
@@ -356,7 +353,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.LauncherUpdater
                             "You are currenly using a " + WhatBuildAmI + " Build!");
                     }
                 }
-                else if (Revisions == 0)
+                else if (CurrentLauncherBuild.Current(LatestLauncherBuild))
                 {
                     text.Text = Translations.Database("LauncherUpdateCheck_VS_Text_No_Update");
                     status.BackgroundImage = Image_Icon.Engine_Good;
