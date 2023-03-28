@@ -887,43 +887,46 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private void Game_Bootup(string UserID, string LoginToken)
         {
-            if (InformationCache.SelectedServerEnforceProxy)
+            if (!(Disposing || IsDisposed))
             {
-                if (!Proxy_Settings.Running())
+                if (InformationCache.SelectedServerEnforceProxy)
                 {
-                    Proxy_Server.Instance.Start("Start Game");
-                }
-            }
-
-            Launcher_Value.Launcher_Proxy = Proxy_Settings.Running();
-
-            Nfswstarted = new Thread(() =>
-            {
-                if (Proxy_Settings.Running())
-                {
-                    Game_Live_Data(UserID, LoginToken, "http://127.0.0.1:" + Proxy_Settings.Port + "/nfsw/Engine.svc", this);
-                }
-                else
-                {
-                    Uri convert = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress);
-
-                    if (convert.Scheme == "http")
+                    if (!Proxy_Settings.Running())
                     {
-                        Match match = Regex.Match(convert.Host, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
-                        if (!match.Success)
-                        {
-                            Launcher_Value.Launcher_Select_Server_Data.IPAddress =
-                            Launcher_Value.Launcher_Select_Server_Data.IPAddress.Replace(convert.Host, FunctionStatus.HostName2IP(convert.Host));
-                        }
+                        Proxy_Server.Instance.Start("Start Game");
                     }
-
-                    Game_Live_Data(UserID, LoginToken, Launcher_Value.Launcher_Select_Server_Data.IPAddress, this);
                 }
-            })
-            { IsBackground = true };
 
-            Nfswstarted.Start();
-            Presence_Launcher.Status(28, string.Empty);
+                Launcher_Value.Launcher_Proxy = Proxy_Settings.Running();
+
+                Nfswstarted = new Thread(() =>
+                {
+                    if (Proxy_Settings.Running())
+                    {
+                        Game_Live_Data(UserID, LoginToken, "http://127.0.0.1:" + Proxy_Settings.Port + "/nfsw/Engine.svc", this);
+                    }
+                    else
+                    {
+                        Uri convert = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress);
+
+                        if (convert.Scheme == "http")
+                        {
+                            Match match = Regex.Match(convert.Host, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
+                            if (!match.Success)
+                            {
+                                Launcher_Value.Launcher_Select_Server_Data.IPAddress =
+                                Launcher_Value.Launcher_Select_Server_Data.IPAddress.Replace(convert.Host, FunctionStatus.HostName2IP(convert.Host));
+                            }
+                        }
+
+                        Game_Live_Data(UserID, LoginToken, Launcher_Value.Launcher_Select_Server_Data.IPAddress, this);
+                    }
+                })
+                { IsBackground = true };
+
+                Nfswstarted.Start();
+                Presence_Launcher.Status(28, string.Empty);
+            }
         }
 
         /* Check Serverlist API Status Upon Main Screen load - DavidCarbon */
@@ -975,66 +978,69 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
         /* Launch game */
         private void Game_Check_Launch()
         {
-            Presence_Launcher.Start(false, Presence_Launcher.ApplicationID());
-
-            try
+            if (!(Disposing || IsDisposed))
             {
-                if (UI_MODE != 12)
+                Presence_Launcher.Start(false, Presence_Launcher.ApplicationID());
+
+                try
                 {
-                    UI_MODE = 12;
-                }
-
-                string GameExePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe");
-                string GameExehash = Hashes.Hash_SHA(GameExePath);
-                if
-                  (
-                    GameExehash.Equals("7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC") ||
-                    GameExehash.Equals("DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19") ||
-                    GameExehash.Equals("E69890D31919DE1649D319956560269DB88B8F22") ||
-                    GameExehash.Equals("3CBE3FAAFF00FAD84F78A2AFEA4FFFC78294EEA2")
-                  )
-                {
-                    Launcher_Value.Game_Server_Name = ServerListUpdater.ServerName("Proxy");
-                    Launcher_Value.Game_Server_IP = Launcher_Value.Launcher_Select_Server_Data.IPAddress;
-
-                    Launcher_Value.Game_User_ID = UserId;
-                    Launcher_Value.Game_Server_IP_Host = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress).Host;
-
-                    /* REMOVED MODNET FILE COMPLETION */
-
-                    if (UI_MODE != 8)
+                    if (UI_MODE != 12)
                     {
-                        UI_MODE = 8;
+                        UI_MODE = 12;
                     }
 
-                    Game_Bootup(UserId, LoginToken);
+                    string GameExePath = Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe");
+                    string GameExehash = Hashes.Hash_SHA(GameExePath);
+                    if
+                      (
+                        GameExehash.Equals("7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC") ||
+                        GameExehash.Equals("DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19") ||
+                        GameExehash.Equals("E69890D31919DE1649D319956560269DB88B8F22") ||
+                        GameExehash.Equals("3CBE3FAAFF00FAD84F78A2AFEA4FFFC78294EEA2")
+                      )
+                    {
+                        Launcher_Value.Game_Server_Name = ServerListUpdater.ServerName("Proxy");
+                        Launcher_Value.Game_Server_IP = Launcher_Value.Launcher_Select_Server_Data.IPAddress;
+
+                        Launcher_Value.Game_User_ID = UserId;
+                        Launcher_Value.Game_Server_IP_Host = new Uri(Launcher_Value.Launcher_Select_Server_Data.IPAddress).Host;
+
+                        /* REMOVED MODNET FILE COMPLETION */
+
+                        if (UI_MODE != 8)
+                        {
+                            UI_MODE = 8;
+                        }
+
+                        Game_Bootup(UserId, LoginToken);
+                    }
+                    else if (!File.Exists(GameExePath))
+                    {
+                        Display_Color_Icons(2);
+                        Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
+                        MessageBox.Show(this, "You do not have the Game Downloaded. Please Verify Game Files installation path.", "GameLauncher",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Button_Login_Logout_Modes(true, true);
+                        Display_Color_Icons();
+                    }
+                    else
+                    {
+                        Display_Color_Icons(2);
+                        Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
+                        MessageBox.Show(this, "Your NFSW.exe is Modified. Please Verify Game Files.", "GameLauncher",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Button_Login_Logout_Modes(true, true);
+                        Display_Color_Icons();
+                    }
                 }
-                else if (!File.Exists(GameExePath))
+                catch (Exception Error)
                 {
                     Display_Color_Icons(2);
                     Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                    MessageBox.Show(this, "You do not have the Game Downloaded. Please Verify Game Files installation path.", "GameLauncher",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    LogToFileAddons.OpenLog("GAME LAUNCH", Error.Message, Error, "Error", false);
                     Button_Login_Logout_Modes(true, true);
                     Display_Color_Icons();
                 }
-                else
-                {
-                    Display_Color_Icons(2);
-                    Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                    MessageBox.Show(this, "Your NFSW.exe is Modified. Please Verify Game Files.", "GameLauncher",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Button_Login_Logout_Modes(true, true);
-                    Display_Color_Icons();
-                }
-            }
-            catch (Exception Error)
-            {
-                Display_Color_Icons(2);
-                Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                LogToFileAddons.OpenLog("GAME LAUNCH", Error.Message, Error, "Error", false);
-                Button_Login_Logout_Modes(true, true);
-                Display_Color_Icons();
             }
         }
 
@@ -1110,11 +1116,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
             Live_Form.SafeEndInvokeAsyncCatch(Live_Form.SafeBeginInvokeActionAsync(Launcher_X_Form =>
             {
-                if (Parent_Screen.Screen_Instance != null)
-                {
-                    Parent_Screen.Screen_Instance.WindowState = FormWindowState.Normal;
-                    Parent_Screen.Screen_Instance.ShowInTaskbar = Button_Close.Visible = Button_Logout.Visible = EnablePlayButton(true);
-                }
+                UI_MODE = 14;
                 
                 DisableLogout = false;
 
@@ -1152,26 +1154,28 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         private void Game_Live_Data(string UserID, string LoginToken, string ServerIP, Form Live_Form)
         {
-            if (new Process_Start_Game().Initialize(Save_Settings.Live_Data.Game_Path, ServerIP, LoginToken,
-                UserID, Launcher_Value.Launcher_Select_Server_Data.ID.ToUpper(), true, "nfsw.exe") != null)
+            if (!(Disposing || IsDisposed))
             {
-                /* Request a New Session */
-                Time_Window.Client_Session();
-                Session_Timer.Remaining = Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0 ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 2 * 60 * 60;
-                FunctionStatus.LauncherBattlePass = Process_Start_Game.Live_Process.EnableRaisingEvents = true;
-                NfswPid = Process_Start_Game.Live_Process.Id;
-                Process_Start_Game.Live_Process.Exited += (Send, It) =>
+                if (new Process_Start_Game().Initialize(Save_Settings.Live_Data.Game_Path, ServerIP, LoginToken,
+                UserID, Launcher_Value.Launcher_Select_Server_Data.ID.ToUpper(), true, "nfsw.exe") != null)
                 {
-                    NfswPid = 0;
-                    int exitCode = Process_Start_Game.Live_Process.ExitCode;
-
-                    FunctionStatus.LauncherBattlePass = false;
-
-                    if (Launcher_Value.Game_In_Event_Bug)
+                    /* Request a New Session */
+                    Time_Window.Client_Session();
+                    Session_Timer.Remaining = Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer != 0 ? Launcher_Value.Launcher_Select_Server_JSON.Server_Session_Timer : 2 * 60 * 60;
+                    FunctionStatus.LauncherBattlePass = Process_Start_Game.Live_Process.EnableRaisingEvents = true;
+                    NfswPid = Process_Start_Game.Live_Process.Id;
+                    Process_Start_Game.Live_Process.Exited += (Send, It) =>
                     {
-                        if (AC_Core.Status)
+                        NfswPid = 0;
+                        int exitCode = Process_Start_Game.Live_Process.ExitCode;
+
+                        FunctionStatus.LauncherBattlePass = false;
+
+                        if (Launcher_Value.Game_In_Event_Bug)
                         {
-                            exitCode = 2017;
+                            if (AC_Core.Status)
+                            {
+                                exitCode = 2017;
 #if NETFRAMEWORK
                             ContextMenu = new ContextMenu();
                             ContextMenu.MenuItems.Add(new MenuItem("Ezekiel was Here - Sent from Mars (C&T)", (b, n) => 
@@ -1190,10 +1194,10 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                             NotifyIcon_Notification.ContextMenu = ContextMenu;
 #endif
-                        }
-                        else
-                        {
-                            exitCode = 2137;
+                            }
+                            else
+                            {
+                                exitCode = 2137;
 #if NETFRAMEWORK
                             ContextMenu = new ContextMenu();
                             ContextMenu.MenuItems.Add(new MenuItem("One more Minute", (b, n) => 
@@ -1212,80 +1216,80 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                             NotifyIcon_Notification.ContextMenu = ContextMenu;
 #endif
+                            }
                         }
-                    }
-                    if (exitCode == 0 && !Launcher_Value.Game_In_Event_Bug && AC_Core.Stop_Check())
-                    {
-                        Parent_Screen.Screen_Instance?.Button_Close_Click(new object(), new EventArgs());
-                    }
-                    else if (AC_Core.Stop_Check())
-                    {
-                        Launcher_Close_Check(Live_Form, exitCode, NfswPid, true, MessageBoxIcon.Error);
-                    }
-                };
-
-                while (Process_Start_Game.Live_Process.MainWindowHandle == IntPtr.Zero && !Process_Start_Game.Live_Process.HasExited)
-                {
-                    /* Loop Here until the game Window Appears */
-                }
-
-                if (!Process_Start_Game.Live_Process.HasExited)
-                {
-                    Presence_Launcher.Status(28, string.Empty);
-
-                    /* TIMER HERE */
-                    Live_Action_Timer = new System.Timers.Timer();
-                    Live_Action_Timer.Elapsed += new System.Timers.ElapsedEventHandler(Time_Window.ClockWork_Planet);
-                    Time_Window.Session_Alert += (x, D_Live_Events) =>
-                    {
-                        if (D_Live_Events != null)
+                        if (exitCode == 0 && !Launcher_Value.Game_In_Event_Bug && AC_Core.Stop_Check())
                         {
-                            try
-                            {
-                                NotifyIcon_Notification.Visible = D_Live_Events.Valid;
-                                NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
-                                NotifyIcon_Notification.BalloonTipTitle = "Force Restart - " + Launcher_Value.Game_Server_Name;
-                                NotifyIcon_Notification.BalloonTipText = "Game will shutdown by " + (D_Live_Events.Session_End_Time ?? DateTime.Now.AddMinutes(5)).ToString("t") + ". Please restart it manually before the launcher does it.";
-                                NotifyIcon_Notification.ShowBalloonTip(TimeSpan.FromMinutes(2).Seconds);
-                                NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
-                                {
-                                    return;
-                                };
-                                NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
-                                {
-                                    return;
-                                };
-                            }
-                            catch (Exception Error)
-                            {
-                                LogToFileAddons.OpenLog("NotifyIcon_Notification Timer", string.Empty, Error, "Error", true);
-                            }
-                            finally
-                            {
-                                #if !(RELEASE_UNIX || DEBUG_UNIX) 
-                                GC.Collect(); 
-                                #endif
-                            }
+                            Parent_Screen.Screen_Instance?.Button_Close_Click(new object(), new EventArgs());
+                        }
+                        else if (AC_Core.Stop_Check())
+                        {
+                            Launcher_Close_Check(Live_Form, exitCode, NfswPid, true, MessageBoxIcon.Error);
                         }
                     };
 
-                    /* 0 = Static Timer, 1 = Dynamic Timer, 2 = No Timer */
-                    if (Save_Settings.Live_Data.Launcher_Display_Timer == "1")
+                    while (Process_Start_Game.Live_Process.MainWindowHandle == IntPtr.Zero && !Process_Start_Game.Live_Process.HasExited)
                     {
-                        Time_Window.Timer_Dynamic = true;
-                    }
-                    else if (Save_Settings.Live_Data.Launcher_Display_Timer == "2")
-                    {
-                        /* Notes: This actually does not Display Timers on the Title Window and 'Time_Window.Live_Stream' will be renamed in the future */
-                        Time_Window.Timer_None = true;
-                    }
-                    else
-                    {
-                        Time_Window.Timer_None = Time_Window.Timer_Dynamic = false;
+                        /* Loop Here until the game Window Appears */
                     }
 
-                    Live_Action_Timer.Interval = 30000;
-                    Live_Action_Timer.Enabled = true;
+                    if (!Process_Start_Game.Live_Process.HasExited)
+                    {
+                        Presence_Launcher.Status(28, string.Empty);
+
+                        /* TIMER HERE */
+                        Live_Action_Timer = new System.Timers.Timer();
+                        Live_Action_Timer.Elapsed += new System.Timers.ElapsedEventHandler(Time_Window.ClockWork_Planet);
+                        Time_Window.Session_Alert += (x, D_Live_Events) =>
+                        {
+                            if (D_Live_Events != null)
+                            {
+                                try
+                                {
+                                    NotifyIcon_Notification.Visible = D_Live_Events.Valid;
+                                    NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                    NotifyIcon_Notification.BalloonTipTitle = "Force Restart - " + Launcher_Value.Game_Server_Name;
+                                    NotifyIcon_Notification.BalloonTipText = "Game will shutdown by " + (D_Live_Events.Session_End_Time ?? DateTime.Now.AddMinutes(5)).ToString("t") + ". Please restart it manually before the launcher does it.";
+                                    NotifyIcon_Notification.ShowBalloonTip(TimeSpan.FromMinutes(2).Seconds);
+                                    NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
+                                    {
+                                        return;
+                                    };
+                                    NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
+                                    {
+                                        return;
+                                    };
+                                }
+                                catch (Exception Error)
+                                {
+                                    LogToFileAddons.OpenLog("NotifyIcon_Notification Timer", string.Empty, Error, "Error", true);
+                                }
+                                finally
+                                {
+#if !(RELEASE_UNIX || DEBUG_UNIX)
+                                    GC.Collect();
+#endif
+                                }
+                            }
+                        };
+
+                        /* 0 = Static Timer, 1 = Dynamic Timer, 2 = No Timer */
+                        if (Save_Settings.Live_Data.Launcher_Display_Timer == "1")
+                        {
+                            Time_Window.Timer_Dynamic = true;
+                        }
+                        else if (Save_Settings.Live_Data.Launcher_Display_Timer == "2")
+                        {
+                            /* Notes: This actually does not Display Timers on the Title Window and 'Time_Window.Live_Stream' will be renamed in the future */
+                            Time_Window.Timer_None = true;
+                        }
+                        else
+                        {
+                            Time_Window.Timer_None = Time_Window.Timer_Dynamic = false;
+                        }
+
+                        Live_Action_Timer.Interval = 30000;
+                        Live_Action_Timer.Enabled = true;
 
 #if NETFRAMEWORK
                     ContextMenu = new ContextMenu();
@@ -1305,22 +1309,13 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                     NotifyIcon_Notification.ContextMenu = ContextMenu;
 #endif
-                    if (Screen_Instance != null && (!IsDisposed || !Disposing))
-                    {
-                        Button_Close.SafeInvokeAction(() => Button_Close.Visible = false, this);
+                        UI_MODE = 13;
+                        Log.Core("LAUNCHER: Game has Fully Launched, Minimized Launcher");
                     }
-
-                    Parent_Screen.Screen_Instance?.SafeInvokeAction(() =>
-                        {
-                            Parent_Screen.Screen_Instance.WindowState = FormWindowState.Minimized;
-                            Parent_Screen.Screen_Instance.ShowInTaskbar = false;
-                        });
-
-                    Log.Core("LAUNCHER: Game has Fully Launched, Minimized Launcher");
-                }
-                else if (FunctionStatus.LauncherBattlePass)
-                {
-                    Launcher_Close_Check(Live_Form, 2020, NfswPid, true, MessageBoxIcon.Warning);
+                    else if (FunctionStatus.LauncherBattlePass)
+                    {
+                        Launcher_Close_Check(Live_Form, 2020, NfswPid, true, MessageBoxIcon.Warning);
+                    }
                 }
             }
         }
@@ -1355,35 +1350,37 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
         public void DownloadModNetFilesRightNow(string path)
         {
-            while (IsDownloadingModNetFiles == false)
+            if (!(Disposing || IsDisposed))
             {
-                CurrentModFileCount++;
-                Uri url = ModFilesDownloadUrls.Dequeue();
-                string FileName = url.ToString().Substring(url.ToString().LastIndexOf("/") + 1, (url.ToString().Length - url.ToString().LastIndexOf("/") - 1));
+                while (IsDownloadingModNetFiles == false)
+                {
+                    CurrentModFileCount++;
+                    Uri url = ModFilesDownloadUrls.Dequeue();
+                    string FileName = url.ToString().Substring(url.ToString().LastIndexOf("/") + 1, (url.ToString().Length - url.ToString().LastIndexOf("/") - 1));
 
-                ModNetFileNameInUse = FileName;
-                ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
-                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
-                var Client = new WebClient
-                {
-                    Encoding = Encoding.UTF8,
-                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                };
-                if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                {
-                    Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
-                }
-                else
-                {
-                    Client.Headers.Add("user-agent", "SBRW Launcher " +
-                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                }
-
-                try
-                {
-                    Client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
-                    Client.DownloadFileCompleted += (Live_Object, Live_Final_Results) =>
+                    ModNetFileNameInUse = FileName;
+                    ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                        Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
+                    var Client = new WebClient
                     {
+                        Encoding = Encoding.UTF8,
+                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                    };
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                    {
+                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+                    }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
+                    try
+                    {
+                        Client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
+                        Client.DownloadFileCompleted += (Live_Object, Live_Final_Results) =>
+                        {
 #if !DEBUG
                         if (Live_Final_Results.Error != null)
                         {
@@ -1416,28 +1413,29 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 #if !DEBUG
                         }
 #endif
-                    };
-                    Client.DownloadFileAsync(url, path + "/" + FileName);
-                }
-                catch (Exception Error)
-                {
-                    LogToFileAddons.OpenLog("Modnet Server Files", string.Empty, Error, string.Empty, true);
-
-                    if (Screen_Instance != null && (!IsDisposed || !Disposing))
-                    {
-                        Label_Information_Window.SafeInvokeAction(() =>
-                        Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper());
+                        };
+                        Client.DownloadFileAsync(url, path + "/" + FileName);
                     }
-                }
-                finally
-                {
-                    if (Client != null)
+                    catch (Exception Error)
                     {
-                        Client.Dispose();
-                    }
-                }
+                        LogToFileAddons.OpenLog("Modnet Server Files", string.Empty, Error, string.Empty, true);
 
-                IsDownloadingModNetFiles = true;
+                        if (Screen_Instance != null && (!IsDisposed || !Disposing))
+                        {
+                            Label_Information_Window.SafeInvokeAction(() =>
+                            Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper());
+                        }
+                    }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
+                    }
+
+                    IsDownloadingModNetFiles = true;
+                }
             }
         }
 
@@ -1729,7 +1727,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             }
         }
 
-        private void PlayButton_Click(object sender, EventArgs e)
+        private async void PlayButton_Click(object sender, EventArgs e)
         {
 #if !(RELEASE_UNIX || DEBUG_UNIX)
             DriveInfo driveInfo = new DriveInfo(Save_Settings.Live_Data.Game_Path);
@@ -1865,59 +1863,71 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     {
                         try
                         {
-                            try
+                            await Task.Run(() => 
                             {
-                                DateTime Time_Check = DateTime.Now.Date;
-                                string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "ModNet");
-                                string Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
-                                if (File.Exists(Time_Stamp))
+                                try
                                 {
-                                    try
+                                    DateTime Time_Check = DateTime.Now.Date;
+                                    string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "ModNet");
+                                    string Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
+                                    if (File.Exists(Time_Stamp))
                                     {
-                                        Time_Check = DateTime.Parse(File.ReadLines(Time_Stamp).First()).Date;
-                                    }
-                                    catch
-                                    {
+                                        try
+                                        {
+                                            Time_Check = DateTime.Parse(File.ReadLines(Time_Stamp).First()).Date;
+                                        }
+                                        catch
+                                        {
 
+                                        }
+                                    }
+
+                                    if ((Time_Check < DateTime.Now.Date) || !File.Exists(Time_Stamp))
+                                    {
+                                        if (!Directory.Exists(Launcher_Data_Folder))
+                                        {
+                                            Directory.CreateDirectory(Launcher_Data_Folder);
+                                        }
+
+                                        string Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Modules.json");
+                                        File.WriteAllText(Server_List_Cache, ModulesJSON);
+                                        File.WriteAllText(Time_Stamp, DateTime.Now.ToString());
                                     }
                                 }
-
-                                if ((Time_Check < DateTime.Now.Date) || !File.Exists(Time_Stamp))
+                                catch { }
+                                finally
                                 {
-                                    if (!Directory.Exists(Launcher_Data_Folder))
-                                    {
-                                        Directory.CreateDirectory(Launcher_Data_Folder);
-                                    }
-
-                                    string Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Modules.json");
-                                    File.WriteAllText(Server_List_Cache, ModulesJSON);
-                                    File.WriteAllText(Time_Stamp, DateTime.Now.ToString());
-                                }
-                            }
-                            catch { }
-                            finally
-                            {
 #if !(RELEASE_UNIX || DEBUG_UNIX)
-                                GC.Collect(); 
+                                    GC.Collect();
 #endif
-                            }
+                                }
+                            });
 
                             Label_Download_Information.Text = ("ModNet: Checking Local Files. This may take awhile.").ToUpper();
 
                             string[] modules_newlines = ModulesJSON.Split(new string[] { "\n" }, StringSplitOptions.None);
                             foreach (string modules_newline in modules_newlines)
                             {
-                                if (modules_newline.Trim() == "{" || modules_newline.Trim() == "}") continue;
+                                if (modules_newline.Trim().ToStringInvariant() == "{" || modules_newline.Trim().ToStringInvariant() == "}")
+                                {
+                                    continue;
+                                }
 
-                                string trim_modules_newline = modules_newline.Trim();
+                                string trim_modules_newline = modules_newline.Trim().ToStringInvariant();
                                 string[] modules_files = trim_modules_newline.Split(new char[] { ':' });
 
-                                string ModNetList = modules_files[0].Replace("\"", "").Trim();
-                                string ModNetSHA = modules_files[1].Replace("\"", "").Replace(",", "").Trim();
+                                string ModNetList = modules_files[0].Replace("\"", "").Trim().ToStringInvariant();
+                                string ModNetSHA = modules_files[1].Replace("\"", "").Replace(",", "").Trim().ToLowerInvariant();
 
                                 string ModNetFilePath = Path.Combine(Save_Settings.Live_Data.Game_Path, ModNetList);
+                                string ModNetLocalFileHash = string.Empty;
 
-                                if (Hashes.Hash_SHA256(ModNetFilePath).ToLower() != ModNetSHA || !File.Exists(ModNetFilePath))
+                                await Task.Run(() =>
+                                {
+                                    ModNetLocalFileHash = Hashes.Hash_SHA256(ModNetFilePath).ToLowerInvariant();
+                                });
+
+                                if (!ModNetLocalFileHash.Equals(ModNetSHA) || !File.Exists(ModNetFilePath))
                                 {
                                     Label_Download_Information.Text = ("ModNet: Downloading " + ModNetList).ToUpper();
 
@@ -1938,9 +1948,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                         Encoding = Encoding.UTF8,
                                         CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
                                     };
-                                    if (!Launcher_Value.Launcher_Alternative_Webcalls()) 
-                                    { 
-                                        newModNetFilesDownload = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) }; 
+                                    if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                                    {
+                                        newModNetFilesDownload = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
                                     }
                                     else
                                     {
@@ -2178,29 +2188,43 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     json3 = JsonConvert.DeserializeObject<ServerModList>(ServerModListJSON);
                                     ServerModListJSON = string.Empty;
                                     string ModFolderCache = Path.Combine(Save_Settings.Live_Data.Game_Path, "MODS", Hashes.Hash_String(0, json2.serverID).ToLower());
-                                    if (!Directory.Exists(ModFolderCache)) Directory.CreateDirectory(ModFolderCache);
-
-                                    /* (FILENAME.mods) 
-                                     * Checks for any Files that Don't match the Server Index Json and Removes that File  */
-                                    foreach (string file in Directory.GetFiles(ModFolderCache))
+                                    if (!Directory.Exists(ModFolderCache))
                                     {
-                                        string name = Path.GetFileName(file);
+                                        Directory.CreateDirectory(ModFolderCache);
+                                    }
+
+                                    string[] Directory_Cache_List_Files = new string[] { };
+
+                                    await Task.Run(() =>
+                                    {
+                                        Directory_Cache_List_Files = Directory.GetFiles(ModFolderCache);
+                                    });
+
+                                    if (Directory_Cache_List_Files.Length > 0)
+                                    {
+                                        /* (FILENAME.mods) 
+                                     * Checks for any Files that Don't match the Server Index Json and Removes that File  */
+                                        foreach (string file in Directory_Cache_List_Files)
+                                        {
+                                            string name = Path.GetFileName(file);
 
 #pragma warning disable CS8602 // Null Safe Check Done Before This Section
-                                        if (json3.entries.All(en => en.Name != name))
-                                        {
-                                            try
+                                            if (json3.entries.All(en => en.Name != name))
                                             {
-                                                File.Delete(file);
-                                                Log.Core("LAUNCHER: Removed Stale Mod Package: " + file);
+                                                try
+                                                {
+                                                    File.Delete(file);
+                                                    Log.Core("LAUNCHER: Removed Stale Mod Package: " + file);
+                                                }
+                                                catch (Exception Error)
+                                                {
+                                                    LogToFileAddons.OpenLog("SERVER MOD CACHE", string.Empty, Error, string.Empty, true);
+                                                }
                                             }
-                                            catch (Exception Error)
-                                            {
-                                                LogToFileAddons.OpenLog("SERVER MOD CACHE", string.Empty, Error, string.Empty, true);
-                                            }
-                                        }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
+                                        }
                                     }
+                                    
                                     Label_Download_Information.Text = ("Server Mods: Folder & File Check").ToUpper();
                                     /* (OLD-FILENAME.mods != NEW-FILENAME.mods)
                                      * Checks for the file and if the File Hash does not match it will be added to a list to be downloaded 
@@ -2214,7 +2238,15 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     foreach (ServerModFileEntry modfile in json3.entries)
                                     {
                                         string ModCachedFile = Path.Combine(ModFolderCache, modfile.Name);
-                                        if (Hashes.Hash_SHA(ModCachedFile).ToLower() != modfile.Checksum)
+                                        string Mod_File_Hash_Local = string.Empty;
+
+                                        await Task.Run(() =>
+                                        {
+                                            Mod_File_Hash_Local = Hashes.Hash_SHA(ModCachedFile).ToLowerInvariant();
+                                        });
+                                        
+
+                                        if (!Mod_File_Hash_Local.Equals(modfile.Checksum))
                                         {
                                             try
                                             {
@@ -2251,14 +2283,17 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 
-                                    if (ModFilesDownloadUrls.Count != 0)
+                                    if(!(Disposing || IsDisposed))
                                     {
-                                        this.DownloadModNetFilesRightNow(ModFolderCache);
-                                        Presence_Launcher.Status(9);
-                                    }
-                                    else
-                                    {
-                                        Game_Check_Launch();
+                                        if (ModFilesDownloadUrls.Count != 0)
+                                        {
+                                            this.DownloadModNetFilesRightNow(ModFolderCache);
+                                            Presence_Launcher.Status(9);
+                                        }
+                                        else
+                                        {
+                                            Game_Check_Launch();
+                                        }
                                     }
                                 }
                                 catch (Exception Error)
@@ -3797,9 +3832,9 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
                                 if (LZMA_Downloader.Downloading)
                                 {
-                                    if (UI_MODE != 1)
+                                    if (UI_MODE != 15)
                                     {
-                                        UI_MODE = 1;
+                                        UI_MODE = 15;
                                     }
                                 }
                                 else if (LZMA_Downloader != null)
@@ -4739,42 +4774,26 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         break;
                     /* Pack Downloader (In-Progress) */
                     case 1:
-                        if(!InformationCache.EnableLZMADownloader)
+                        if (Pack_SBRW_Downloader != null)
                         {
-                            if (Pack_SBRW_Downloader != null)
+                            Download_Information? Cached_Status = Pack_SBRW_Downloader.Download_Status();
+                            if ((Cached_Status != null) && !Pack_SBRW_Downloader.Cancel)
                             {
-                                Download_Information? Cached_Status = Pack_SBRW_Downloader.Download_Status();
-                                if ((Cached_Status != null) && !Pack_SBRW_Downloader.Cancel)
+                                if (Cached_Status.Download_Attempts > 0)
                                 {
-                                    Label_Download_Information.Text = (Time_Conversion.FormatFileSize(Cached_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(Cached_Status.File_Size_Total) +
-                                        " (" + Cached_Status.Download_Percentage + "%) - " +
-                                        Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
-
-                                    ProgressBar.Value = Cached_Status.Download_Percentage;
-                                    ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
-                                    ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
-
-                                    Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Cached_Status.Download_Percentage));
+                                    Label_Download_Information_Support.Text = string.Format("Download Attempt {0}: Core Game Files Package", 
+                                        Cached_Status.Download_Attempts).ToUpper();
                                 }
-                            }
-                        }
-                        else
-                        {
-                            if (LZMA_Downloader != null)
-                            {
-                                Download_Information_LZMA? Cached_Status = LZMA_Downloader.Download_Status();
-                                if ((Cached_Status != null) && LZMA_Downloader.Downloading)
-                                {
-                                    Label_Download_Information.Text = (Time_Conversion.FormatFileSize(Cached_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(Cached_Status.File_Size_Total) +
-                                        " (" + Cached_Status.Download_Percentage + "%) - " +
-                                        Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
 
-                                    ProgressBar.Value = Cached_Status.Download_Percentage;
-                                    ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
-                                    ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                                Label_Download_Information.Text = (Time_Conversion.FormatFileSize(Cached_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(Cached_Status.File_Size_Total) +
+                                    " (" + Cached_Status.Download_Percentage + "%) - " +
+                                    Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
 
-                                    Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Cached_Status.Download_Percentage));
-                                }
+                                ProgressBar.Value = Cached_Status.Download_Percentage;
+                                ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                                ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+
+                                Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Cached_Status.Download_Percentage));
                             }
                         }
                         break;
@@ -4980,6 +4999,59 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Label_Download_Information.Text = "Launcher: Checking NFSW EXE File Hash".ToUpperInvariant();
                         Label_Download_Information_Support.Text = string.Empty;
                         Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
+                        break;
+                    case 13:
+                        if (UI_MODE != 0)
+                        {
+                            UI_MODE = 0;
+                        }
+
+                        if ((!IsDisposed || !Disposing))
+                        {
+                            Button_Close.Visible = false;
+
+                            if (Parent_Screen.Screen_Instance != default)
+                            {
+                                Parent_Screen.Screen_Instance.WindowState = FormWindowState.Minimized;
+                                Parent_Screen.Screen_Instance.ShowInTaskbar = false;
+                            }
+                        }
+                        break;
+                    case 14:
+                        if (UI_MODE != 0)
+                        {
+                            UI_MODE = 0;
+                        }
+
+                        if (!IsDisposed || !Disposing)
+                        {
+                            Button_Close.Visible = Button_Logout.Visible = EnablePlayButton(true);
+
+                            if (Parent_Screen.Screen_Instance != default)
+                            {
+                                Parent_Screen.Screen_Instance.WindowState = FormWindowState.Normal;
+                                Parent_Screen.Screen_Instance.ShowInTaskbar = true;
+                            }
+                        }
+                        break;
+                    /* LZMA Downloader Progress */
+                    case 15:
+                        if (LZMA_Downloader != null)
+                        {
+                            Download_Information_LZMA? Cached_Status = LZMA_Downloader.Download_Status();
+                            if ((Cached_Status != null) && LZMA_Downloader.Downloading)
+                            {
+                                Label_Download_Information.Text = (Time_Conversion.FormatFileSize(Cached_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(Cached_Status.File_Size_Total) +
+                                    " (" + Cached_Status.Download_Percentage + "%) - " +
+                                    Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
+
+                                ProgressBar.Value = Cached_Status.Download_Percentage;
+                                ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                                ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+
+                                Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Cached_Status.Download_Percentage));
+                            }
+                        }
                         break;
                 }
             }

@@ -182,7 +182,10 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                         }
                         finally
                         {
-                            Client?.Dispose();
+                            if (Client != null)
+                            {
+                                Client.Dispose();
+                            }
                         }
                     });
 
@@ -515,6 +518,11 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
             /* Show Ticket Box if its Required  */
             Input_Ticket.Visible = Ticket_Required;
             Picture_Input_Ticket.Visible = Ticket_Required;
+
+            if (Screen_Main.Screen_Instance != null)
+            {
+                Screen_Main.Screen_Instance.Button_Custom_Server.Enabled = Screen_Main.Screen_Instance.ComboBox_Server_List.Enabled = false;
+            }
         }
 
         public Screen_Register()
@@ -528,6 +536,7 @@ namespace SBRW.Launcher.App.UI_Forms.Register_Screen
                 if (Screen_Main.Screen_Instance != null)
                 {
                     Screen_Main.Clear_Hide_Screen_Form_Panel(true);
+                    Screen_Main.Screen_Instance.Button_Custom_Server.Enabled = Screen_Main.Screen_Instance.ComboBox_Server_List.Enabled = true;
                 }
                 #if !(RELEASE_UNIX || DEBUG_UNIX) 
                 GC.Collect(); 

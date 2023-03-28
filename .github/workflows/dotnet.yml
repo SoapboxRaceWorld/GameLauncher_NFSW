@@ -4,6 +4,15 @@ on:
  push:
     paths:
       - SBRW.Launcher.RunTime/InsiderKit/**
+    branches:
+      - development
+      - Net.Standard
+ pull_request:
+    paths:
+      - SBRW.Launcher.RunTime/InsiderKit/**
+    branches:
+      - development
+      - Net.Standard
  
 jobs:
   build:
@@ -11,24 +20,46 @@ jobs:
     timeout-minutes: 15
     steps:
     - name: Branch Checkout
-      uses: actions/checkout@v2.4.0
-    - name: Setup .Net 6 SDK
-      uses: actions/setup-dotnet@v1.9.0
-      with:
-        dotnet-version: '6.0.x'
+      uses: actions/checkout@v3.3.0
+    - name: Custom Root Authority
+      env:
+          Root_Authority: ${{ secrets.ROOT_CA }}
+      if: env.Root_Authority != null
+      run: |
+          New-Item -ItemType directory -Path Keys
+          Set-Content -Path "Keys\Public.txt" -Value "{env:Root_Authority}"
+          certutil -decode "Keys\Public.txt" "Keys\Public.crt"
+          certutil -addstore -f "CCP" "Keys\Public.crt"
+    - name: Private Code Sign Certificate
+      env:
+          Code_Sign_Certificate: ${{ secrets.PRIVATE_CODE_SIGN_CRT }}
+      if: env.Code_Sign_Certificate != null
+      run: |
+          Set-Content -Path "Keys\Private.txt" -Value "${env:Code_Sign_Certificate}"
+          certutil -decode "Keys\Private.txt" "Keys\Launcher.p12"
     - name: Set Custom NuGet Packages
       run: |
         dotnet nuget add source "https://nuget.pkg.github.com/DavidCarbon-SBRW/index.json" -n "SBRW Launcher Libraries" -u ${env:UserName} -p ${env:Password} --store-password-in-clear-text
       env:
-        UserName: ${{ secrets.GITHUB_USERNAME }}
+        UserName: ${{ github.repository_owner }}
         Password: ${{ secrets.GITHUB_TOKEN }}
     - name: Restore Custom NuGet Packages
       run: dotnet restore --ignore-failed-sources
-    - name: Build Project
+    - name: Compile Windows Build
       run: dotnet build --configuration Release
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2.2.4
+    - name: Compile Unix Build
+      run: dotnet build --configuration Release.Unix
+    - name: Upload Windows Build Artifacts
+      uses: actions/upload-artifact@v3.1.2
       with:
-        name: Release_GitHub_Actions
+        name: Release
         path: |
           ${{ github.workspace }}/SBRW.Launcher.Net/bin/Release/*
+        if-no-files-found: error
+    - name: Upload Unix Build Artifacts
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: Unix.Release
+        path: |
+          ${{ github.workspace }}/SBRW.Launcher.Net/bin/Release.Unix/*
+        if-no-files-found: error          
