@@ -5,8 +5,8 @@
 	<TargetFrameworks>net6.0;net461</TargetFrameworks>
 	<Platforms>AnyCPU;x86</Platforms>
 	<Copyright>© Soapbox Race World</Copyright>
-	<GlobalVersion>2.2.0.12</GlobalVersion>
-	<GlobalVersion Condition=" '$(GlobalVersion)' == '' ">2.2.0.$([System.DateTime]::UtcNow.ToString(mmff))</GlobalVersion>
+	<GlobalVersion>2.2.1</GlobalVersion>
+	<GlobalVersion Condition=" '$(GlobalVersion)' == '' ">2.2.1.$([System.DateTime]::UtcNow.ToString(mmff))</GlobalVersion>
 	<Version>$(GlobalVersion)</Version>
 	<AssemblyVersion>$(GlobalVersion)</AssemblyVersion>
 	<FileVersion>$(GlobalVersion)</FileVersion>

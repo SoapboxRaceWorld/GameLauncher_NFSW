@@ -19,8 +19,8 @@
 	You can specify this option only for projects that target .NET Framework 4.5 or later.
     <PlatformTarget>x86</PlatformTarget>-->
     <Copyright>© Soapbox Race World</Copyright>
-    <GlobalVersion>2.2.0.12</GlobalVersion>
-    <GlobalVersion Condition=" '$(GlobalVersion)' == '' ">2.2.0.$([System.DateTime]::UtcNow.ToString(mmff))</GlobalVersion>
+    <GlobalVersion>2.2.1</GlobalVersion>
+    <GlobalVersion Condition=" '$(GlobalVersion)' == '' ">2.2.1.$([System.DateTime]::UtcNow.ToString(mmff))</GlobalVersion>
     <Version>$(GlobalVersion)</Version>
     <AssemblyVersion>$(GlobalVersion)</AssemblyVersion>
     <FileVersion>$(GlobalVersion)</FileVersion>
