@@ -95,7 +95,9 @@ namespace SBRW.Launcher.RunTime.LauncherCore.FileReadWrite
                         if (File_Name.EndsWith(".txt", System.StringComparison.InvariantCultureIgnoreCase) ||
                             File_Name.EndsWith(".dmp", System.StringComparison.InvariantCultureIgnoreCase) ||
                             File_Name.EndsWith(".orig", System.StringComparison.InvariantCultureIgnoreCase) ||
-                            File_Name.EndsWith(".bak", System.StringComparison.InvariantCultureIgnoreCase))
+                            File_Name.EndsWith(".bak", System.StringComparison.InvariantCultureIgnoreCase) ||
+                            File_Name.EndsWith(".mods", System.StringComparison.InvariantCultureIgnoreCase) ||
+                            File_Name.EndsWith(".asi", System.StringComparison.InvariantCultureIgnoreCase))
                         {
                             System.Threading.Interlocked.Add(ref Start_Directory_Size, File_Info.Length);
                         }

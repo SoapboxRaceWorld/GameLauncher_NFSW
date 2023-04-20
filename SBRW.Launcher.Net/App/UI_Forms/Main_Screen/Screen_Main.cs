@@ -3147,95 +3147,92 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     UI_MODE = 3;
                 }
 
-                if (InformationCache.EnableLZMADownloader)
+                if (Label_Download_Information.InvokeRequired)
                 {
-                    if (Label_Download_Information.InvokeRequired)
+                    Label_Download_Information.Invoke(new Action(delegate ()
                     {
-                        Label_Download_Information.Invoke(new Action(delegate ()
-                        {
-                            Label_Download_Information_Support.Text = "Looking for correct Speech Files...".ToUpper();
-                        }));
+                        Label_Download_Information_Support.Text = "Looking for correct Speech Files...".ToUpper();
+                    }));
+                }
+                else
+                {
+                    Label_Download_Information_Support.Text = "Looking for correct Speech Files...".ToUpper();
+                }
+
+                try
+                {
+                    speechFile = Translations.Speech_Files(Save_Settings.Live_Data.Launcher_Language);
+
+                    Uri URLCall = new Uri(Save_Settings.Live_Data.Launcher_CDN + "/" + speechFile + "/index.xml");
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
+                    var Client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8,
+                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                    };
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                    {
+                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
                     }
                     else
                     {
-                        Label_Download_Information_Support.Text = "Looking for correct Speech Files...".ToUpper();
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     }
 
                     try
                     {
-                        speechFile = Translations.Speech_Files(Save_Settings.Live_Data.Launcher_Language);
+                        string response = Client.DownloadString(URLCall);
 
-                        Uri URLCall = new Uri(Save_Settings.Live_Data.Launcher_CDN + "/" + speechFile + "/index.xml");
-                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
-                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
-                        var Client = new WebClient
+                        XmlDocument speechFileXml = new XmlDocument();
+                        speechFileXml.LoadXml(response);
+
+                        if (speechFileXml != default)
                         {
-                            Encoding = Encoding.UTF8,
-                            CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                        };
-                        if (!Launcher_Value.Launcher_Alternative_Webcalls())
-                        {
-                            Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                            XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                            speechSize = Convert.ToInt32(speechSizeNode.InnerText);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                         }
                         else
                         {
-                            Client.Headers.Add("user-agent", "SBRW Launcher " +
-                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        }
-
-                        try
-                        {
-                            string response = Client.DownloadString(URLCall);
-
-                            XmlDocument speechFileXml = new XmlDocument();
-                            speechFileXml.LoadXml(response);
-
-                            if (speechFileXml != default)
-                            {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                                XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                                speechSize = Convert.ToInt32(speechSizeNode.InnerText);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-                            }
-                            else
-                            {
-                                speechFile = Translations.Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName);
-                                speechSize = Translations.Speech_Files_Size();
-                            }
-                        }
-                        catch
-                        {
-                            throw;
-                        }
-                        finally
-                        {
-                            Client?.Dispose();
+                            speechFile = Translations.Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName);
+                            speechSize = Translations.Speech_Files_Size();
                         }
                     }
-                    catch (Exception Error)
+                    catch
                     {
-                        LogToFileAddons.OpenLog("Download Speech Files", string.Empty, Error, string.Empty, true);
-                        speechFile = Translations.Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName??string.Empty);
-                        speechSize = Translations.Speech_Files_Size();
+                        throw;
                     }
-
-                    if (Label_Download_Information.InvokeRequired)
+                    finally
                     {
-                        Label_Download_Information.Invoke(new Action(delegate ()
-                        {
-                            Label_Download_Information_Support.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
-                        }));
+                        Client?.Dispose();
                     }
-                    else
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Download Speech Files", string.Empty, Error, string.Empty, true);
+                    speechFile = Translations.Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName ?? string.Empty);
+                    speechSize = Translations.Speech_Files_Size();
+                }
+
+                if (Label_Download_Information.InvokeRequired)
+                {
+                    Label_Download_Information.Invoke(new Action(delegate ()
                     {
                         Label_Download_Information_Support.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
-                    }
+                    }));
+                }
+                else
+                {
+                    Label_Download_Information_Support.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
                 }
 
                 string SoundSpeechPath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Sound", "Speech", "copspeechsth_" + speechFile + ".big");
-                if (!File.Exists(SoundSpeechPath) && InformationCache.EnableLZMADownloader && LZMA_Downloader != null)
+                if (!File.Exists(SoundSpeechPath) && LZMA_Downloader != null)
                 {
                     if (Label_Download_Information.InvokeRequired)
                     {
@@ -3545,7 +3542,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     UI_MODE = 3;
                 }
 
-                if (!File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe")) &&
+                if (!File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe")) ||
                     Game_Folder_Size <= 3295097404)
                 {
                     if (UI_MODE != 10)
@@ -3575,7 +3572,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     Web_File_Size = 3862102244,
                                     Web_URL = Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack",
                                     File_Hash = "88C886B6D131C052365C3D6D14E14F67A4E2C253",
-                                    File_Removal = true
+                                    File_Removal = true,
+                                    Download_Retry_Attempts = 100
                                 };
                                 /* @DavidCarbon or @Zacam (Translation Strings Required) */
                                 Pack_SBRW_Downloader.Internal_Error += (_, D_Live_Events) =>
@@ -3673,7 +3671,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                             UI_MODE = 2;
                                         }
                                         /* Unpack Local GameFiles Pack */
-                                        Game_Pack_Unpacker(D_Live_Events.Download_Location ?? InformationCache.Default_Game_Archive_Path);
+                                        Game_Pack_Unpacker(D_Live_Events.Download_Location ?? InformationCache.Default_Game_Archive_Path());
                                     }
                                 };
                                 /* Main Note: Current Revision File Size (in long) is: 3862102244 */
@@ -3791,7 +3789,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
 
                 /* Use Local Packed Archive for Install Source - DavidCarbon */
-                if (!InformationCache.EnableLZMADownloader && !From_PackDownloader)
+                if (!InformationCache.EnableLZMADownloader() && !From_PackDownloader)
                 {
                     try
                     {
