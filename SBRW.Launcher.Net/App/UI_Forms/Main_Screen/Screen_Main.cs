@@ -1246,19 +1246,22 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
                                 try
                                 {
-                                    NotifyIcon_Notification.Visible = D_Live_Events.Valid;
-                                    NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
-                                    NotifyIcon_Notification.BalloonTipTitle = "Force Restart - " + Launcher_Value.Game_Server_Name;
-                                    NotifyIcon_Notification.BalloonTipText = "Game will shutdown by " + (D_Live_Events.Session_End_Time ?? DateTime.Now.AddMinutes(5)).ToString("t") + ". Please restart it manually before the launcher does it.";
-                                    NotifyIcon_Notification.ShowBalloonTip(TimeSpan.FromMinutes(2).Seconds);
-                                    NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
+                                    if (NotifyIcon_Notification != default)
                                     {
-                                        return;
-                                    };
-                                    NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
-                                    {
-                                        return;
-                                    };
+                                        NotifyIcon_Notification.Visible = D_Live_Events.Valid;
+                                        NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                        NotifyIcon_Notification.BalloonTipTitle = "Force Restart - " + Launcher_Value.Game_Server_Name;
+                                        NotifyIcon_Notification.BalloonTipText = "Game will shutdown by " + (D_Live_Events.Session_End_Time ?? DateTime.Now.AddMinutes(5)).ToString("t") + ". Please restart it manually before the launcher does it.";
+                                        NotifyIcon_Notification.ShowBalloonTip(TimeSpan.FromMinutes(2).Seconds);
+                                        NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
+                                        {
+                                            return;
+                                        };
+                                        NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
+                                        {
+                                            return;
+                                        };
+                                    }
                                 }
                                 catch (Exception Error)
                                 {
@@ -3492,19 +3495,22 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         OnDownloadFinished();
                         try
                         {
-                            NotifyIcon_Notification.Visible = true;
-                            NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
-                            NotifyIcon_Notification.BalloonTipTitle = "SBRW Launcher";
-                            NotifyIcon_Notification.BalloonTipText = "Your game is now ready to launch!";
-                            NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
+                            if (NotifyIcon_Notification != default)
                             {
-                                return;
-                            };
-                            NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
-                            {
-                                return;
-                            };
-                            NotifyIcon_Notification.ShowBalloonTip(5000);
+                                NotifyIcon_Notification.Visible = true;
+                                NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                NotifyIcon_Notification.BalloonTipTitle = "SBRW Launcher";
+                                NotifyIcon_Notification.BalloonTipText = "Your game is now ready to launch!";
+                                NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
+                                {
+                                    return;
+                                };
+                                NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
+                                {
+                                    return;
+                                };
+                                NotifyIcon_Notification.ShowBalloonTip(5000);
+                            }
                         }
                         catch (Exception Error)
                         {
@@ -4787,7 +4793,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     " (" + Cached_Status.Download_Percentage + "%) - " +
                                     Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
 
-                                ProgressBar.Value = Cached_Status.Download_Percentage;
+                                ProgressBar.Value = Cached_Status.Download_Percentage.Clamp(0, 100);
                                 ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
                                 ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
 
@@ -4828,7 +4834,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Extract_Information? Cached_Status = Pack_SBRW_Unpacker.Extract_Status();
                             if ((Cached_Status != null) && !Pack_SBRW_Unpacker.Cancel)
                             {
-                                ProgressBar.Value = Cached_Status.Extract_Percentage;
+                                ProgressBar.Value = Cached_Status.Extract_Percentage.Clamp(0, 100);
 
                                 if (!string.IsNullOrWhiteSpace(Cached_Status.File_Current_Name))
                                 {
@@ -4889,7 +4895,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                                 Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
 
-                                ProgressBar.Value = ModNet_Download_Status.Download_Percentage;
+                                ProgressBar.Value = ModNet_Download_Status.Download_Percentage.Clamp(0, 100);
                                 ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
                                 ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
 
@@ -5043,7 +5049,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     " (" + Cached_Status.Download_Percentage + "%) - " +
                                     Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
 
-                                ProgressBar.Value = Cached_Status.Download_Percentage;
+                                ProgressBar.Value = Cached_Status.Download_Percentage.Clamp(0, 100);
                                 ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
                                 ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
 
