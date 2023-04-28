@@ -943,7 +943,7 @@ namespace SBRW.Launcher.App.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recevied Invalid JSON Game Server Info..
+        ///   Looks up a localized string similar to Received Invalid JSON Game Server Info..
         /// </summary>
         internal static string MainScreen_Text_ServerStatus_Description_Unstable {
             get {

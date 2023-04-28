@@ -2846,7 +2846,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             Label_Status_Game_Server.Text = "Server Connection:\n - Unstable";
                             Label_Status_Game_Server.ForeColor = Color_Text.S_Warning;
-                            Label_Status_Game_Server_Data.Text = "Recevied Invalid JSON Game Server Info.";
+                            Label_Status_Game_Server_Data.Text = "Received Invalid JSON Game Server Info.";
                             if (Picture_Icon_Server.BackgroundImage != Image_Icon.Server_Warning)
                             {
                                 Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Warning;
