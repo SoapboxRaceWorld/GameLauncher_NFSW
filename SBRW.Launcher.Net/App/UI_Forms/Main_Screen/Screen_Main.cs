@@ -1770,8 +1770,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 Picture_Information_Window.Image = Image_Other.Information_Window_Error;
                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                MessageBox.Show(this, "GameLauncher has detected that the 2015-2019 VC++ Redistributable Package is not installed\n" +
-                    "Please manually Install the Packages for your Operating System",
+                MessageBox.Show(this, "GameLauncher has detected that the 2015-2019 (or newer) VC++ Redistributable Package is not installed or may be damaged\n" +
+                    "Please manually Install or Repair the Packages for your Operating System",
                     "VC++ Redistributable Package Check", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Picture_Information_Window.Image = Image_Other.Information_Window_Success;
                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Save_Account.Live_Data.User_Raw_Email).ToUpper();

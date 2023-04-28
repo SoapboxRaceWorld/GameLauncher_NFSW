@@ -279,7 +279,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
             }
             else
             {
-                LogToFileAddons.Parent_Log_Screen(1, "REDISTRIBUTABLE", "32-bit 2015-2019 VC++ Redistributable Package is Installed");
+                LogToFileAddons.Parent_Log_Screen(1, "REDISTRIBUTABLE", "32-bit VC++ Redistributable Package is Installed");
             }
 
             if (Environment.Is64BitOperatingSystem)
@@ -451,7 +451,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                 }
                 else
                 {
-                    LogToFileAddons.Parent_Log_Screen(1, "REDISTRIBUTABLE", "64-bit 2015-2019 VC++ Redistributable Package is Installed");
+                    LogToFileAddons.Parent_Log_Screen(1, "REDISTRIBUTABLE", "64-bit VC++ Redistributable Package is Installed");
                 }
             }
 
