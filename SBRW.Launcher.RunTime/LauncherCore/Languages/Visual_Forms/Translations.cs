@@ -88,7 +88,7 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Languages.Visual_Forms
         /// <returns></returns>
         public static int Speech_Files_Size()
         {
-            return Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName.ToLowerInvariant()) switch
+            return Speech_Files(InformationCache.Lang.TwoLetterISOLanguageName.ToLowerInvariant()) switch
             {
                 "de" => 105948386,
                 "ru" => 121367723,

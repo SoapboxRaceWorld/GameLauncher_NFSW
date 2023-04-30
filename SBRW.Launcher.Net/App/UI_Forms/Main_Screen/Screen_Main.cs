@@ -3540,7 +3540,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     (MessageBox.Show(this, "Seems like we are unable to determine the Games Folder Size" +
                         "\nDo you have the Game Files Already Downloaded?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes))
                 {
-                    Game_Folder_Size = 3295097405;
+                    Game_Folder_Size = 3296810469;
+                }
+                else
+                {
+                    Log.Debug($"Game Folder Size: {Game_Folder_Size}");
                 }
 
                 if (UI_MODE != 3)
@@ -3548,8 +3552,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     UI_MODE = 3;
                 }
 
-                if (!File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe")) ||
-                    Game_Folder_Size <= 3295097404)
+                if (!Game_Folder_Size.GameInstall_Found() || !File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe")))
                 {
                     if (UI_MODE != 10)
                     {
