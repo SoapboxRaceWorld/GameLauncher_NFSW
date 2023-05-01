@@ -584,7 +584,14 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
             */
             if (Screen_Main.Screen_Instance != null)
             {
-                Screen_Main.Screen_Instance.Button_Settings.BackgroundImage = Image_Icon.Gear;
+                if (Screen_Main.Screen_Instance.Button_Settings.InvokeRequired)
+                {
+                    Screen_Main.Screen_Instance.Button_Settings.SafeInvokeAction(() => Screen_Main.Screen_Instance.Button_Settings.BackgroundImage = Image_Icon.Gear);
+                }
+                else
+                {
+                    Screen_Main.Screen_Instance.Button_Settings.BackgroundImage = Image_Icon.Gear;
+                }
             }
         }
 
