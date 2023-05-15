@@ -1877,10 +1877,76 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     }
 
+                    /* ModNet Cache File Comparison */
+                    DateTime Time_Check = DateTime.Now.Date;
+                    string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "ModNet");
+                    string Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
+                    string Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Modules.json");
+                    bool ModNet_Offline = false;
+
+                    if (File.Exists(Time_Stamp))
+                    {
+                        try
+                        {
+                            Time_Check = DateTime.Parse(File.ReadLines(Time_Stamp).First()).Date;
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+
                     try
                     {
-                        ModulesJSON = ModNetJsonURI.DownloadString(ModNetURI);
-                        Label_Download_Information.Text = "JSON: Retrieved ModNet Files Information".ToUpper();
+                        try
+                        {
+                            ModulesJSON = ModNetJsonURI.DownloadString(ModNetURI);
+                            Label_Download_Information.Text = "JSON: Retrieved ModNet Files Information".ToUpper();
+                        }
+                        catch
+                        {
+                            ModNet_Offline = true;
+                            if (File.Exists(Server_List_Cache))
+                            {
+                                Log.Warning("MODNET FILE CACHE: Found");
+
+                                bool Allow_ModNet_Cache = false;
+                                if (Time_Check < DateTime.Now.Date)
+                                {
+                                    Display_Color_Icons(3);
+                                    Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
+                                    if (MessageBox.Show(this, "Launcher has found a ModNet Cache File.\nHowever, its a day old.\nWould you like to use the old File Cache?",
+                                        "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                                    {
+                                        Allow_ModNet_Cache = true;
+                                    }
+                                    Display_Color_Icons();
+                                    Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Save_Account.Live_Data.User_Raw_Email).ToUpper();
+                                }
+                                else
+                                {
+                                    Allow_ModNet_Cache = true;
+                                }
+
+                                if (Allow_ModNet_Cache)
+                                {
+                                    try
+                                    {
+                                        Log.Warning("MODNET FILE CACHE: Loading");
+                                        ModulesJSON = File.ReadAllText(Server_List_Cache);
+                                        Log.Warning("MODNET FILE CACHE: Loaded");
+                                    }
+                                    catch
+                                    {
+                                        throw;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
                     }
                     catch (Exception Error)
                     {
@@ -1916,45 +1982,32 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     {
                         try
                         {
-                            await Task.Run(() => 
+                            if (!ModNet_Offline)
                             {
-                                try
+                                await Task.Run(() =>
                                 {
-                                    DateTime Time_Check = DateTime.Now.Date;
-                                    string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "ModNet");
-                                    string Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
-                                    if (File.Exists(Time_Stamp))
+                                    try
                                     {
-                                        try
+                                        if ((Time_Check < DateTime.Now.Date) || !File.Exists(Time_Stamp))
                                         {
-                                            Time_Check = DateTime.Parse(File.ReadLines(Time_Stamp).First()).Date;
-                                        }
-                                        catch
-                                        {
+                                            if (!Directory.Exists(Launcher_Data_Folder))
+                                            {
+                                                Directory.CreateDirectory(Launcher_Data_Folder);
+                                            }
 
+                                            File.WriteAllText(Server_List_Cache, ModulesJSON);
+                                            File.WriteAllText(Time_Stamp, DateTime.Now.ToString());
                                         }
                                     }
-
-                                    if ((Time_Check < DateTime.Now.Date) || !File.Exists(Time_Stamp))
+                                    catch { }
+                                    finally
                                     {
-                                        if (!Directory.Exists(Launcher_Data_Folder))
-                                        {
-                                            Directory.CreateDirectory(Launcher_Data_Folder);
-                                        }
-
-                                        string Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Modules.json");
-                                        File.WriteAllText(Server_List_Cache, ModulesJSON);
-                                        File.WriteAllText(Time_Stamp, DateTime.Now.ToString());
-                                    }
-                                }
-                                catch { }
-                                finally
-                                {
 #if !(RELEASE_UNIX || DEBUG_UNIX)
-                                    GC.Collect();
+                                        GC.Collect();
 #endif
-                                }
-                            });
+                                    }
+                                });
+                            }
 
                             Label_Download_Information.Text = ("ModNet: Checking Local Files. This may take awhile.").ToUpper();
 

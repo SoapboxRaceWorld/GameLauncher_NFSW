@@ -407,6 +407,7 @@ namespace SBRW.Launcher.App.UI_Forms.SecurityCenter_Screen
             this.GroupBox_Launcherlog.TabIndex = 215;
             this.GroupBox_Launcherlog.TabStop = false;
             this.GroupBox_Launcherlog.Text = "Log:";
+            this.GroupBox_Launcherlog.Visible = false;
             // 
             // TextBox_Live_Log
             // 
