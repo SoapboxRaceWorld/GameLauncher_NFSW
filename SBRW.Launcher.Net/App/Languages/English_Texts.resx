@@ -293,7 +293,7 @@
     <value>Online: {0}\n Registered: {1}</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Description_Unstable" xml:space="preserve">
-    <value>Recevied Invalid JSON Game Server Info.</value>
+    <value>Received Invalid JSON Game Server Info.</value>
   </data>
   <data name="MainScreen_Text_ServerStatus_Offline" xml:space="preserve">
     <value>Server Status:\n - Offline ( OFF )</value>

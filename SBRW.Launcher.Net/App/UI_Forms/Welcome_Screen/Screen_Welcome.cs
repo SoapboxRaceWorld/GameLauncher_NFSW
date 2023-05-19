@@ -79,8 +79,8 @@ namespace SBRW.Launcher.App.UI_Forms.Welcome_Screen
                 Button_Save.Text = "Save Settings";
             }
             
-            CheckBox_LZMA_Downloader.Checked = InformationCache.EnableLZMADownloader;
-            CheckBox_Alt_WebCalls.Checked = InformationCache.EnableAltWebCalls;
+            CheckBox_LZMA_Downloader.Checked = InformationCache.EnableLZMADownloader();
+            CheckBox_Alt_WebCalls.Checked = InformationCache.EnableAltWebCalls();
 
             /*******************************/
             /* Set Font                     /

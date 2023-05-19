@@ -579,9 +579,19 @@ namespace SBRW.Launcher.App.UI_Forms.VerifyHash_Screen
             Presence_Launcher.Status(27);
             Save_Settings.Live_Data.Game_Integrity = "Good";
             Save_Settings.Save();
+            /* @DavidCarbon OR @Zacam 
+            * Ini File Save Error Happens Above
+            */
             if (Screen_Main.Screen_Instance != null)
             {
-                Screen_Main.Screen_Instance.Button_Settings.BackgroundImage = Image_Icon.Gear;
+                if (Screen_Main.Screen_Instance.Button_Settings.InvokeRequired)
+                {
+                    Screen_Main.Screen_Instance.Button_Settings.SafeInvokeAction(() => Screen_Main.Screen_Instance.Button_Settings.BackgroundImage = Image_Icon.Gear);
+                }
+                else
+                {
+                    Screen_Main.Screen_Instance.Button_Settings.BackgroundImage = Image_Icon.Gear;
+                }
             }
         }
 

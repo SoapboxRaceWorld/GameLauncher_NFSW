@@ -1246,19 +1246,22 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             {
                                 try
                                 {
-                                    NotifyIcon_Notification.Visible = D_Live_Events.Valid;
-                                    NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
-                                    NotifyIcon_Notification.BalloonTipTitle = "Force Restart - " + Launcher_Value.Game_Server_Name;
-                                    NotifyIcon_Notification.BalloonTipText = "Game will shutdown by " + (D_Live_Events.Session_End_Time ?? DateTime.Now.AddMinutes(5)).ToString("t") + ". Please restart it manually before the launcher does it.";
-                                    NotifyIcon_Notification.ShowBalloonTip(TimeSpan.FromMinutes(2).Seconds);
-                                    NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
+                                    if (NotifyIcon_Notification != default)
                                     {
-                                        return;
-                                    };
-                                    NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
-                                    {
-                                        return;
-                                    };
+                                        NotifyIcon_Notification.Visible = D_Live_Events.Valid;
+                                        NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                        NotifyIcon_Notification.BalloonTipTitle = "Force Restart - " + Launcher_Value.Game_Server_Name;
+                                        NotifyIcon_Notification.BalloonTipText = "Game will shutdown by " + (D_Live_Events.Session_End_Time ?? DateTime.Now.AddMinutes(5)).ToString("t") + ". Please restart it manually before the launcher does it.";
+                                        NotifyIcon_Notification.ShowBalloonTip(TimeSpan.FromMinutes(2).Seconds);
+                                        NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
+                                        {
+                                            return;
+                                        };
+                                        NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
+                                        {
+                                            return;
+                                        };
+                                    }
                                 }
                                 catch (Exception Error)
                                 {
@@ -1462,15 +1465,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 {
                     /* Checking (Pinging Blue) */
                     case 1:
-                        if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Checking_Outline)
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(0))
                         {
                             if (Picture_Bar_Outline.InvokeRequired)
                             {
-                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline, this);
+                                Picture_Bar_Outline.SafeInvokeAction(() => 
+                                {
+                                    Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                                    Picture_Bar_Outline.Tag = Image_ProgressBar.Checking_Outline.Tag;
+                                }, this);
                             }
                             else
                             {
                                 Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                                Picture_Bar_Outline.Tag = Image_ProgressBar.Checking_Outline.Tag;
                             }
                         }
 
@@ -1495,30 +1503,40 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         if (Login_Icon_Color)
                         {
-                            if (Picture_Information_Window.Image != Image_Other.Information_Window)
+                            if (Picture_Information_Window.Tag == default || !Picture_Information_Window.Tag.Equals(0))
                             {
                                 if (Picture_Information_Window.InvokeRequired)
                                 {
-                                    Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window, this);
+                                    Picture_Information_Window.SafeInvokeAction(() =>
+                                    {
+                                        Picture_Information_Window.Image = Image_Other.Information_Window;
+                                        Picture_Information_Window.Tag = 0;
+                                    }, this);
                                 }
                                 else
                                 {
                                     Picture_Information_Window.Image = Image_Other.Information_Window;
+                                    Picture_Information_Window.Tag = 0;
                                 }
                             }
                         }
                         break;
                     /* Error (Red) */
                     case 2:
-                        if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Error_Outline)
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(3))
                         {
                             if (Picture_Bar_Outline.InvokeRequired)
                             {
-                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Error_Outline, this);
+                                Picture_Bar_Outline.SafeInvokeAction(() =>
+                                {
+                                    Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Error_Outline;
+                                    Picture_Bar_Outline.Tag = Image_ProgressBar.Error_Outline.Tag;
+                                }, this);
                             }
                             else
                             {
                                 Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Error_Outline;
+                                Picture_Bar_Outline.Tag = Image_ProgressBar.Error_Outline.Tag;
                             }
                         }
 
@@ -1543,30 +1561,40 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         if (Login_Icon_Color)
                         {
-                            if (Picture_Information_Window.Image != Image_Other.Information_Window_Error)
+                            if (Picture_Information_Window.Tag == default || !Picture_Information_Window.Tag.Equals(3))
                             {
                                 if (Picture_Information_Window.InvokeRequired)
                                 {
-                                    Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Error, this);
+                                    Picture_Information_Window.SafeInvokeAction(() =>
+                                    {
+                                        Picture_Information_Window.Image = Image_Other.Information_Window_Error;
+                                        Picture_Information_Window.Tag = 3;
+                                    }, this);
                                 }
                                 else
                                 {
                                     Picture_Information_Window.Image = Image_Other.Information_Window_Error;
+                                    Picture_Information_Window.Tag = 3;
                                 }
                             }
                         }
                         break;
                     /* Warning (Yellow) */
                     case 3:
-                        if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Warning_Outline)
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(2))
                         {
                             if (Picture_Bar_Outline.InvokeRequired)
                             {
-                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline, this);
+                                Picture_Bar_Outline.SafeInvokeAction(() =>
+                                {
+                                    Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline;
+                                    Picture_Bar_Outline.Tag = Image_ProgressBar.Warning_Outline.Tag;
+                                }, this);
                             }
                             else
                             {
                                 Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline;
+                                Picture_Bar_Outline.Tag = Image_ProgressBar.Warning_Outline.Tag;
                             }
                         }
 
@@ -1591,30 +1619,40 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         if (Login_Icon_Color)
                         {
-                            if (Picture_Information_Window.Image != Image_Other.Information_Window_Warning)
+                            if (Picture_Information_Window.Tag == default || !Picture_Information_Window.Tag.Equals(2))
                             {
                                 if (Picture_Information_Window.InvokeRequired)
                                 {
-                                    Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Warning, this);
+                                    Picture_Information_Window.SafeInvokeAction(() =>
+                                    {
+                                        Picture_Information_Window.Image = Image_Other.Information_Window_Warning;
+                                        Picture_Information_Window.Tag = 2;
+                                    }, this);
                                 }
                                 else
                                 {
                                     Picture_Information_Window.Image = Image_Other.Information_Window_Warning;
+                                    Picture_Information_Window.Tag = 2;
                                 }
                             }
                         }
                         break;
                     /* Unknown (Gray) */
                     case 4:
-                        if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Preload_Outline)
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(4))
                         {
                             if (Picture_Bar_Outline.InvokeRequired)
                             {
-                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Preload_Outline, this);
+                                Picture_Bar_Outline.SafeInvokeAction(() =>
+                                {
+                                    Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Preload_Outline;
+                                    Picture_Bar_Outline.Tag = Image_ProgressBar.Preload_Outline.Tag;
+                                }, this);
                             }
                             else
                             {
                                 Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Preload_Outline;
+                                Picture_Bar_Outline.Tag = Image_ProgressBar.Preload_Outline.Tag;
                             }
                         }
 
@@ -1639,30 +1677,40 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         if (Login_Icon_Color)
                         {
-                            if (Picture_Information_Window.Image != Image_Other.Information_Window_Unknown)
+                            if (Picture_Information_Window.Tag == default || !Picture_Information_Window.Tag.Equals(4))
                             {
                                 if (Picture_Information_Window.InvokeRequired)
                                 {
-                                    Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Unknown, this);
+                                    Picture_Information_Window.SafeInvokeAction(() =>
+                                    {
+                                        Picture_Information_Window.Image = Image_Other.Information_Window_Unknown;
+                                        Picture_Information_Window.Tag = 4;
+                                    }, this);
                                 }
                                 else
                                 {
                                     Picture_Information_Window.Image = Image_Other.Information_Window_Unknown;
+                                    Picture_Information_Window.Tag = 4;
                                 }
                             }
                         }
                         break;
                     /* Complete (Green) */
                     default:
-                        if (Picture_Bar_Outline.BackgroundImage != Image_ProgressBar.Complete_Outline)
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(1))
                         {
                             if (Picture_Bar_Outline.InvokeRequired)
                             {
-                                Picture_Bar_Outline.SafeInvokeAction(() => Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Complete_Outline, this);
+                                Picture_Bar_Outline.SafeInvokeAction(() =>
+                                {
+                                    Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Complete_Outline;
+                                    Picture_Bar_Outline.Tag = Image_ProgressBar.Complete_Outline.Tag;
+                                }, this);
                             }
                             else
                             {
                                 Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Complete_Outline;
+                                Picture_Bar_Outline.Tag = Image_ProgressBar.Complete_Outline.Tag;
                             }
                         }
 
@@ -1687,15 +1735,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
 
                         if (Login_Icon_Color)
                         {
-                            if (Picture_Information_Window.Image != Image_Other.Information_Window_Success)
+                            if (Picture_Information_Window.Tag == default || !Picture_Information_Window.Tag.Equals(1))
                             {
                                 if (Picture_Information_Window.InvokeRequired)
                                 {
-                                    Picture_Information_Window.SafeInvokeAction(() => Picture_Information_Window.Image = Image_Other.Information_Window_Success, this);
+                                    Picture_Information_Window.SafeInvokeAction(() =>
+                                    {
+                                        Picture_Information_Window.Image = Image_Other.Information_Window_Success;
+                                        Picture_Information_Window.Tag = 1;
+                                    }, this);
                                 }
                                 else
                                 {
                                     Picture_Information_Window.Image = Image_Other.Information_Window_Success;
+                                    Picture_Information_Window.Tag = 1;
                                 }
                             }
                         }
@@ -1767,8 +1820,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 Picture_Information_Window.Image = Image_Other.Information_Window_Error;
                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
-                MessageBox.Show(this, "GameLauncher has detected that the 2015-2019 VC++ Redistributable Package is not installed\n" +
-                    "Please manually Install the Packages for your Operating System",
+                MessageBox.Show(this, "GameLauncher has detected that the 2015-2019 (or newer) VC++ Redistributable Package is not installed or may be damaged\n" +
+                    "Please manually Install or Repair the Packages for your Operating System",
                     "VC++ Redistributable Package Check", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Picture_Information_Window.Image = Image_Other.Information_Window_Success;
                 Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Save_Account.Live_Data.User_Raw_Email).ToUpper();
@@ -1824,10 +1877,76 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     }
 
+                    /* ModNet Cache File Comparison */
+                    DateTime Time_Check = DateTime.Now.Date;
+                    string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "ModNet");
+                    string Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
+                    string Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Modules.json");
+                    bool ModNet_Offline = false;
+
+                    if (File.Exists(Time_Stamp))
+                    {
+                        try
+                        {
+                            Time_Check = DateTime.Parse(File.ReadLines(Time_Stamp).First()).Date;
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+
                     try
                     {
-                        ModulesJSON = ModNetJsonURI.DownloadString(ModNetURI);
-                        Label_Download_Information.Text = "JSON: Retrieved ModNet Files Information".ToUpper();
+                        try
+                        {
+                            ModulesJSON = ModNetJsonURI.DownloadString(ModNetURI);
+                            Label_Download_Information.Text = "JSON: Retrieved ModNet Files Information".ToUpper();
+                        }
+                        catch
+                        {
+                            ModNet_Offline = true;
+                            if (File.Exists(Server_List_Cache))
+                            {
+                                Log.Warning("MODNET FILE CACHE: Found");
+
+                                bool Allow_ModNet_Cache = false;
+                                if (Time_Check < DateTime.Now.Date)
+                                {
+                                    Display_Color_Icons(3);
+                                    Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Is_Email.Mask(Save_Account.Live_Data.User_Raw_Email)).ToUpper();
+                                    if (MessageBox.Show(this, "Launcher has found a ModNet Cache File.\nHowever, its a day old.\nWould you like to use the old File Cache?",
+                                        "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                                    {
+                                        Allow_ModNet_Cache = true;
+                                    }
+                                    Display_Color_Icons();
+                                    Label_Information_Window.Text = string.Format(LoginWelcomeTime + "\n{0}", Save_Account.Live_Data.User_Raw_Email).ToUpper();
+                                }
+                                else
+                                {
+                                    Allow_ModNet_Cache = true;
+                                }
+
+                                if (Allow_ModNet_Cache)
+                                {
+                                    try
+                                    {
+                                        Log.Warning("MODNET FILE CACHE: Loading");
+                                        ModulesJSON = File.ReadAllText(Server_List_Cache);
+                                        Log.Warning("MODNET FILE CACHE: Loaded");
+                                    }
+                                    catch
+                                    {
+                                        throw;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
                     }
                     catch (Exception Error)
                     {
@@ -1863,45 +1982,32 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     {
                         try
                         {
-                            await Task.Run(() => 
+                            if (!ModNet_Offline)
                             {
-                                try
+                                await Task.Run(() =>
                                 {
-                                    DateTime Time_Check = DateTime.Now.Date;
-                                    string Launcher_Data_Folder = Path.Combine("Launcher_Data", "JSON", "ModNet");
-                                    string Time_Stamp = Path.Combine(Launcher_Data_Folder, "Time_Stamp.txt");
-                                    if (File.Exists(Time_Stamp))
+                                    try
                                     {
-                                        try
+                                        if ((Time_Check < DateTime.Now.Date) || !File.Exists(Time_Stamp))
                                         {
-                                            Time_Check = DateTime.Parse(File.ReadLines(Time_Stamp).First()).Date;
-                                        }
-                                        catch
-                                        {
+                                            if (!Directory.Exists(Launcher_Data_Folder))
+                                            {
+                                                Directory.CreateDirectory(Launcher_Data_Folder);
+                                            }
 
+                                            File.WriteAllText(Server_List_Cache, ModulesJSON);
+                                            File.WriteAllText(Time_Stamp, DateTime.Now.ToString());
                                         }
                                     }
-
-                                    if ((Time_Check < DateTime.Now.Date) || !File.Exists(Time_Stamp))
+                                    catch { }
+                                    finally
                                     {
-                                        if (!Directory.Exists(Launcher_Data_Folder))
-                                        {
-                                            Directory.CreateDirectory(Launcher_Data_Folder);
-                                        }
-
-                                        string Server_List_Cache = Path.Combine(Launcher_Data_Folder, "Modules.json");
-                                        File.WriteAllText(Server_List_Cache, ModulesJSON);
-                                        File.WriteAllText(Time_Stamp, DateTime.Now.ToString());
-                                    }
-                                }
-                                catch { }
-                                finally
-                                {
 #if !(RELEASE_UNIX || DEBUG_UNIX)
-                                    GC.Collect();
+                                        GC.Collect();
 #endif
-                                }
-                            });
+                                    }
+                                });
+                            }
 
                             Label_Download_Information.Text = ("ModNet: Checking Local Files. This may take awhile.").ToUpper();
 
@@ -2843,7 +2949,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         {
                             Label_Status_Game_Server.Text = "Server Connection:\n - Unstable";
                             Label_Status_Game_Server.ForeColor = Color_Text.S_Warning;
-                            Label_Status_Game_Server_Data.Text = "Recevied Invalid JSON Game Server Info.";
+                            Label_Status_Game_Server_Data.Text = "Received Invalid JSON Game Server Info.";
                             if (Picture_Icon_Server.BackgroundImage != Image_Icon.Server_Warning)
                             {
                                 Picture_Icon_Server.BackgroundImage = Image_Icon.Server_Warning;
@@ -3147,95 +3253,92 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     UI_MODE = 3;
                 }
 
-                if (InformationCache.EnableLZMADownloader)
+                if (Label_Download_Information.InvokeRequired)
                 {
-                    if (Label_Download_Information.InvokeRequired)
+                    Label_Download_Information.Invoke(new Action(delegate ()
                     {
-                        Label_Download_Information.Invoke(new Action(delegate ()
-                        {
-                            Label_Download_Information_Support.Text = "Looking for correct Speech Files...".ToUpper();
-                        }));
+                        Label_Download_Information_Support.Text = "Looking for correct Speech Files...".ToUpper();
+                    }));
+                }
+                else
+                {
+                    Label_Download_Information_Support.Text = "Looking for correct Speech Files...".ToUpper();
+                }
+
+                try
+                {
+                    speechFile = Translations.Speech_Files(Save_Settings.Live_Data.Launcher_Language);
+
+                    Uri URLCall = new Uri(Save_Settings.Live_Data.Launcher_CDN + "/" + speechFile + "/index.xml");
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
+                                Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
+                    var Client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8,
+                        CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                    };
+                    if (!Launcher_Value.Launcher_Alternative_Webcalls())
+                    {
+                        Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
                     }
                     else
                     {
-                        Label_Download_Information_Support.Text = "Looking for correct Speech Files...".ToUpper();
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     }
 
                     try
                     {
-                        speechFile = Translations.Speech_Files(Save_Settings.Live_Data.Launcher_Language);
+                        string response = Client.DownloadString(URLCall);
 
-                        Uri URLCall = new Uri(Save_Settings.Live_Data.Launcher_CDN + "/" + speechFile + "/index.xml");
-                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Launcher_Value.Launcher_WebCall_Timeout_Enable ?
-                                    Launcher_Value.Launcher_WebCall_Timeout() : 60).TotalMilliseconds;
-                        var Client = new WebClient
+                        XmlDocument speechFileXml = new XmlDocument();
+                        speechFileXml.LoadXml(response);
+
+                        if (speechFileXml != default)
                         {
-                            Encoding = Encoding.UTF8,
-                            CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                        };
-                        if (!Launcher_Value.Launcher_Alternative_Webcalls())
-                        {
-                            Client = new WebClientWithTimeout { Encoding = Encoding.UTF8, CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                            XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                            speechSize = Convert.ToInt32(speechSizeNode.InnerText);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                         }
                         else
                         {
-                            Client.Headers.Add("user-agent", "SBRW Launcher " +
-                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        }
-
-                        try
-                        {
-                            string response = Client.DownloadString(URLCall);
-
-                            XmlDocument speechFileXml = new XmlDocument();
-                            speechFileXml.LoadXml(response);
-
-                            if (speechFileXml != default)
-                            {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                                XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                                speechSize = Convert.ToInt32(speechSizeNode.InnerText);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-                            }
-                            else
-                            {
-                                speechFile = Translations.Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName);
-                                speechSize = Translations.Speech_Files_Size();
-                            }
-                        }
-                        catch
-                        {
-                            throw;
-                        }
-                        finally
-                        {
-                            Client?.Dispose();
+                            speechFile = Translations.Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName);
+                            speechSize = Translations.Speech_Files_Size();
                         }
                     }
-                    catch (Exception Error)
+                    catch
                     {
-                        LogToFileAddons.OpenLog("Download Speech Files", string.Empty, Error, string.Empty, true);
-                        speechFile = Translations.Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName??string.Empty);
-                        speechSize = Translations.Speech_Files_Size();
+                        throw;
                     }
-
-                    if (Label_Download_Information.InvokeRequired)
+                    finally
                     {
-                        Label_Download_Information.Invoke(new Action(delegate ()
-                        {
-                            Label_Download_Information_Support.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
-                        }));
+                        Client?.Dispose();
                     }
-                    else
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Download Speech Files", string.Empty, Error, string.Empty, true);
+                    speechFile = Translations.Speech_Files(InformationCache.Lang.ThreeLetterISOLanguageName ?? string.Empty);
+                    speechSize = Translations.Speech_Files_Size();
+                }
+
+                if (Label_Download_Information.InvokeRequired)
+                {
+                    Label_Download_Information.Invoke(new Action(delegate ()
                     {
                         Label_Download_Information_Support.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
-                    }
+                    }));
+                }
+                else
+                {
+                    Label_Download_Information_Support.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
                 }
 
                 string SoundSpeechPath = Path.Combine(Save_Settings.Live_Data.Game_Path, "Sound", "Speech", "copspeechsth_" + speechFile + ".big");
-                if (!File.Exists(SoundSpeechPath) && InformationCache.EnableLZMADownloader && LZMA_Downloader != null)
+                if (!File.Exists(SoundSpeechPath) && LZMA_Downloader != null)
                 {
                     if (Label_Download_Information.InvokeRequired)
                     {
@@ -3495,19 +3598,22 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         OnDownloadFinished();
                         try
                         {
-                            NotifyIcon_Notification.Visible = true;
-                            NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
-                            NotifyIcon_Notification.BalloonTipTitle = "SBRW Launcher";
-                            NotifyIcon_Notification.BalloonTipText = "Your game is now ready to launch!";
-                            NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
+                            if (NotifyIcon_Notification != default)
                             {
-                                return;
-                            };
-                            NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
-                            {
-                                return;
-                            };
-                            NotifyIcon_Notification.ShowBalloonTip(5000);
+                                NotifyIcon_Notification.Visible = true;
+                                NotifyIcon_Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                NotifyIcon_Notification.BalloonTipTitle = "SBRW Launcher";
+                                NotifyIcon_Notification.BalloonTipText = "Your game is now ready to launch!";
+                                NotifyIcon_Notification.BalloonTipClicked += (x, D_Live_Events) =>
+                                {
+                                    return;
+                                };
+                                NotifyIcon_Notification.BalloonTipClosed += (x, D_Live_Events) =>
+                                {
+                                    return;
+                                };
+                                NotifyIcon_Notification.ShowBalloonTip(5000);
+                            }
                         }
                         catch (Exception Error)
                         {
@@ -3537,7 +3643,11 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     (MessageBox.Show(this, "Seems like we are unable to determine the Games Folder Size" +
                         "\nDo you have the Game Files Already Downloaded?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes))
                 {
-                    Game_Folder_Size = 3295097405;
+                    Game_Folder_Size = 3296810469;
+                }
+                else
+                {
+                    Log.Debug($"Game Folder Size: {Game_Folder_Size}");
                 }
 
                 if (UI_MODE != 3)
@@ -3545,8 +3655,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                     UI_MODE = 3;
                 }
 
-                if (!File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe")) &&
-                    Game_Folder_Size <= 3295097404)
+                if (!Game_Folder_Size.GameInstall_Found() || !File.Exists(Path.Combine(Save_Settings.Live_Data.Game_Path, "nfsw.exe")))
                 {
                     if (UI_MODE != 10)
                     {
@@ -3575,7 +3684,8 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     Web_File_Size = 3862102244,
                                     Web_URL = Save_Settings.Live_Data.Launcher_CDN + "/GameFiles.sbrwpack",
                                     File_Hash = "88C886B6D131C052365C3D6D14E14F67A4E2C253",
-                                    File_Removal = true
+                                    File_Removal = true,
+                                    Download_Retry_Attempts = 100
                                 };
                                 /* @DavidCarbon or @Zacam (Translation Strings Required) */
                                 Pack_SBRW_Downloader.Internal_Error += (_, D_Live_Events) =>
@@ -3673,7 +3783,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                             UI_MODE = 2;
                                         }
                                         /* Unpack Local GameFiles Pack */
-                                        Game_Pack_Unpacker(D_Live_Events.Download_Location ?? InformationCache.Default_Game_Archive_Path);
+                                        Game_Pack_Unpacker(D_Live_Events.Download_Location ?? InformationCache.Default_Game_Archive_Path());
                                     }
                                 };
                                 /* Main Note: Current Revision File Size (in long) is: 3862102244 */
@@ -3791,7 +3901,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                 }
 
                 /* Use Local Packed Archive for Install Source - DavidCarbon */
-                if (!InformationCache.EnableLZMADownloader && !From_PackDownloader)
+                if (!InformationCache.EnableLZMADownloader() && !From_PackDownloader)
                 {
                     try
                     {
@@ -4766,11 +4876,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             UI_MODE = 0;
                         }
 
-                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Error_Outline;
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(3))
+                        {
+                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Error_Outline;
+                            Picture_Bar_Outline.Tag = Image_ProgressBar.Error_Outline.Tag;
+                        }
 
                         ProgressBar.Value = 100;
-                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Error_Top;
-                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Error_Bottom;
+                        if (ProgressBar.ID != 3)
+                        {
+                            ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Error_Top;
+                            ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Error_Bottom;
+                            ProgressBar.ID = 3;
+                        }
+                        
                         break;
                     /* Pack Downloader (In-Progress) */
                     case 1:
@@ -4789,9 +4908,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     " (" + Cached_Status.Download_Percentage + "%) - " +
                                     Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
 
-                                ProgressBar.Value = Cached_Status.Download_Percentage;
-                                ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
-                                ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                                ProgressBar.Value = Cached_Status.Download_Percentage.Clamp(0, 100);
+
+                                if (ProgressBar.ID != 0)
+                                {
+                                    ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                                    ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                                    ProgressBar.ID = 0;
+                                }
+
+                                if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(0))
+                                {
+                                    Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                                    Picture_Bar_Outline.Tag = Image_ProgressBar.Checking_Outline.Tag;
+                                }
 
                                 Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Cached_Status.Download_Percentage));
                             }
@@ -4799,11 +4929,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         break;
                     /* Pack Downloader (Progress Complete) */
                     case 2:
-                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
-
                         ProgressBar.Value = 0;
-                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
-                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+
+                        if (ProgressBar.ID != 0)
+                        {
+                            ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                            ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                            ProgressBar.ID = 0;
+                        }
+
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(0))
+                        {
+                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                            Picture_Bar_Outline.Tag = Image_ProgressBar.Checking_Outline.Tag;
+                        }
 
                         Label_Download_Information.Text = "Checking Package Integrity".ToUpperInvariant();
                         Label_Download_Information_Support.Text = "Downloaded: SBRW Game Files Package".ToUpperInvariant();
@@ -4815,13 +4954,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             UI_MODE = 0;
                         }
 
-                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
-
                         Label_Download_Information.Text = "Loading".ToUpperInvariant();
-
                         ProgressBar.Value = 0;
-                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
-                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+
+                        if (ProgressBar.ID != 0)
+                        {
+                            ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                            ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                            ProgressBar.ID = 0;
+                        }
+
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(0))
+                        {
+                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                            Picture_Bar_Outline.Tag = Image_ProgressBar.Checking_Outline.Tag;
+                        }
                         break;
                     /* Unpack Archive */
                     case 4:
@@ -4830,7 +4977,7 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             Extract_Information? Cached_Status = Pack_SBRW_Unpacker.Extract_Status();
                             if ((Cached_Status != null) && !Pack_SBRW_Unpacker.Cancel)
                             {
-                                ProgressBar.Value = Cached_Status.Extract_Percentage;
+                                ProgressBar.Value = Cached_Status.Extract_Percentage.Clamp(0, 100);
 
                                 if (!string.IsNullOrWhiteSpace(Cached_Status.File_Current_Name))
                                 {
@@ -4842,6 +4989,19 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Label_Download_Information_Support.Text = Cached_Status.Extract_Percentage + "% [" + Cached_Status.File_Current + " / " + Cached_Status.File_Total + "]".ToUpperInvariant();
 
                                 Presence_Launcher.Status(1, string.Format("Unpacking Game: {0}%", Cached_Status.Extract_Percentage));
+
+                                if (ProgressBar.ID != 0)
+                                {
+                                    ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                                    ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                                    ProgressBar.ID = 0;
+                                }
+
+                                if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(0))
+                                {
+                                    Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                                    Picture_Bar_Outline.Tag = Image_ProgressBar.Checking_Outline.Tag;
+                                }
                             }
                         }
                         break;
@@ -4852,11 +5012,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             UI_MODE = 0;
                         }
 
-                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Complete_Outline;
-
                         ProgressBar.Value = 100;
-                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Sucess_Top;
-                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Sucess_Bottom;
+
+                        if (ProgressBar.ID != 1)
+                        {
+                            ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Sucess_Top;
+                            ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Sucess_Bottom;
+                            ProgressBar.ID = 1;
+                        }
+
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(1))
+                        {
+                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Complete_Outline;
+                            Picture_Bar_Outline.Tag = Image_ProgressBar.Complete_Outline.Tag;
+                        }
                         break;
                     /* Generic Warning */
                     case 6:
@@ -4865,11 +5034,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             UI_MODE = 0;
                         }
 
-                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline;
-
                         ProgressBar.Value = 100;
-                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Warning_Top;
-                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Warning_Bottom;
+
+                        if (ProgressBar.ID != 2)
+                        {
+                            ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Warning_Top;
+                            ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Warning_Bottom;
+                            ProgressBar.ID = 2;
+                        }
+
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(2))
+                        {
+                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Warning_Outline;
+                            Picture_Bar_Outline.Tag = Image_ProgressBar.Warning_Outline.Tag;
+                        }
                         break;
                     /* ModNet Progress (Downloading) */
                     case 7:
@@ -4889,11 +5067,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                 Label_Download_Information_Support.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpperInvariant();
                                 Label_Download_Information.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + Time_Conversion.FormatFileSize(ModNet_Download_Status.File_Size_Current) + " of " + Time_Conversion.FormatFileSize(ModNet_Download_Status.File_Size_Total)).ToUpperInvariant();
 
-                                Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                                ProgressBar.Value = ModNet_Download_Status.Download_Percentage.Clamp(0, 100);
 
-                                ProgressBar.Value = ModNet_Download_Status.Download_Percentage;
-                                ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
-                                ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                                if (ProgressBar.ID != 0)
+                                {
+                                    ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                                    ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                                    ProgressBar.ID = 0;
+                                }
+
+                                if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(0))
+                                {
+                                    Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                                    Picture_Bar_Outline.Tag = Image_ProgressBar.Checking_Outline.Tag;
+                                }
 
                                 if (ModNet_Download_Status.Download_Percentage >= 100)
                                 {
@@ -4954,13 +5141,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                             UI_MODE = 0;
                         }
 
-                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
-
                         Label_Download_Information.Text = "Calculating Game Folder Size".ToUpperInvariant();
-
                         ProgressBar.Value = 0;
-                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
-                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+
+                        if (ProgressBar.ID != 0)
+                        {
+                            ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                            ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                            ProgressBar.ID = 0;
+                        }
+
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(0))
+                        {
+                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                            Picture_Bar_Outline.Tag = Image_ProgressBar.Checking_Outline.Tag;
+                        }
                         break;
                     case 10:
                         if (UI_MODE != 0)
@@ -4969,12 +5164,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
 
                         Label_Download_Information_Support.Text = "Checking Game Files Package Hash".ToUpper();
-
-                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Preload_Outline;
-
                         ProgressBar.Value = 100;
-                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Unknown_Top;
-                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Unknown_Bottom;
+
+                        if (ProgressBar.ID != 4)
+                        {
+                            ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Unknown_Top;
+                            ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Unknown_Bottom;
+                            ProgressBar.ID = 4;
+                        }
+
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(4))
+                        {
+                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Preload_Outline;
+                            Picture_Bar_Outline.Tag = Image_ProgressBar.Preload_Outline.Tag;
+                        }
                         break;
                     case 11:
                         if (UI_MODE != 0)
@@ -4983,12 +5186,20 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                         }
 
                         Label_Download_Information_Support.Text = "Downloading: Core Game Files Package".ToUpper();
-
-                        Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
-
                         ProgressBar.Value = 0;
-                        ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
-                        ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+
+                        if (ProgressBar.ID != 0)
+                        {
+                            ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                            ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                            ProgressBar.ID = 0;
+                        }
+
+                        if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(0))
+                        {
+                            Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                            Picture_Bar_Outline.Tag = Image_ProgressBar.Checking_Outline.Tag;
+                        }
                         break;
                     case 12:
                         if (UI_MODE != 0)
@@ -5045,10 +5256,21 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
                                     " (" + Cached_Status.Download_Percentage + "%) - " +
                                     Time_Conversion.EstimateFinishTime(Cached_Status.File_Size_Current, Cached_Status.File_Size_Total, Cached_Status.Start_Time)).ToUpperInvariant();
 
-                                ProgressBar.Value = Cached_Status.Download_Percentage;
-                                ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
-                                ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                                ProgressBar.Value = Cached_Status.Download_Percentage.Clamp(0, 100);
 
+                                if (ProgressBar.ID != 0)
+                                {
+                                    ProgressBar.BackColor = Color_Winform_Other.ProgressBar_Loading_Top;
+                                    ProgressBar.ForeColor = Color_Winform_Other.ProgressBar_Loading_Bottom;
+                                    ProgressBar.ID = 0;
+                                }
+
+                                if (Picture_Bar_Outline.Tag == default || !Picture_Bar_Outline.Tag.Equals(0))
+                                {
+                                    Picture_Bar_Outline.BackgroundImage = Image_ProgressBar.Checking_Outline;
+                                    Picture_Bar_Outline.Tag = Image_ProgressBar.Checking_Outline.Tag;
+                                }
+                                
                                 Presence_Launcher.Status(2, string.Format("Downloaded {0}% of the Game!", Cached_Status.Download_Percentage));
                             }
                         }

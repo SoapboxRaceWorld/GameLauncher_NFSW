@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net6.0-windows;net461</TargetFrameworks>
+    <TargetFrameworks>net461</TargetFrameworks>
     <!-- NoWarn below suppresses project-wide -->
     <NoWarn>$(NoWarn);NU1701;SYSLIB0006;SYSLIB0014</NoWarn>
     <Nullable>enable</Nullable>
@@ -19,8 +19,8 @@
 	You can specify this option only for projects that target .NET Framework 4.5 or later.
     <PlatformTarget>x86</PlatformTarget>-->
     <Copyright>© Soapbox Race World</Copyright>
-    <GlobalVersion>2.2.1</GlobalVersion>
-    <GlobalVersion Condition=" '$(GlobalVersion)' == '' ">2.2.1.$([System.DateTime]::UtcNow.ToString(mmff))</GlobalVersion>
+    <GlobalVersion>2.2.2</GlobalVersion>
+    <GlobalVersion Condition=" '$(GlobalVersion)' == '' ">2.2.0.$([System.DateTime]::UtcNow.ToString(mmff))</GlobalVersion>
     <Version>$(GlobalVersion)</Version>
     <AssemblyVersion>$(GlobalVersion)</AssemblyVersion>
     <FileVersion>$(GlobalVersion)</FileVersion>
@@ -74,11 +74,11 @@
     <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
     <PackageReference Include="SBRW.Launcher.Core" Version="0.3.0" />
     <PackageReference Include="SBRW.Launcher.Core.Discord" Version="0.3.0" />
-    <PackageReference Include="SBRW.Launcher.Core.Downloader" Version="0.3.6" />
+    <PackageReference Include="SBRW.Launcher.Core.Downloader" Version="0.3.7" />
     <PackageReference Include="SBRW.Launcher.Core.Downloader.LZMA" Version="0.3.1" />
-    <PackageReference Include="SBRW.Launcher.Core.Extra" Version="0.3.5" />
+    <PackageReference Include="SBRW.Launcher.Core.Extra" Version="0.3.6" />
     <PackageReference Include="SBRW.Launcher.Core.Proxy" Version="0.3.0" />
-    <PackageReference Include="SBRW.Launcher.Core.Theme" Version="0.1.5" />
+    <PackageReference Include="SBRW.Launcher.Core.Theme" Version="0.2.0" />
     <PackageReference Include="SBRW.Nancy" Version="2.0.13" />
     <PackageReference Include="SBRW.Nancy.Hosting.Self" Version="2.0.11" />
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />

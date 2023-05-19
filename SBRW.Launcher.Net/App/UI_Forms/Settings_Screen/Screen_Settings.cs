@@ -221,14 +221,14 @@ namespace SBRW.Launcher.App.UI_Forms.Settings_Screen
             NewGameFilesPath = Save_Settings.Live_Data.Game_Path;
             NewLauncherPath = Locations.LauncherFolder;
 
-            CheckBox_Proxy.Checked = InformationCache.DisableProxy;
-            CheckBox_RPC.Checked = InformationCache.DisableDiscordRPC;
-            CheckBox_Alt_WebCalls.Checked = InformationCache.EnableAltWebCalls;
-            CheckBox_Opt_Insider.Checked = InformationCache.EnableInsiderPreview;
-            CheckBox_Theme_Support.Checked = InformationCache.EnableThemeSupport;
-            CheckBox_LZMA_Downloader.Checked = InformationCache.EnableLZMADownloader;
-            CheckBox_JSON_Update_Cache.Checked = InformationCache.DisableFrequencyJSONUpdate;
-            CheckBox_Proxy_Domain.Checked = InformationCache.EnableProxyDomain;
+            CheckBox_Proxy.Checked = InformationCache.DisableProxy();
+            CheckBox_RPC.Checked = InformationCache.DisableDiscordRPC();
+            CheckBox_Alt_WebCalls.Checked = InformationCache.EnableAltWebCalls();
+            CheckBox_Opt_Insider.Checked = InformationCache.EnableInsiderPreview();
+            CheckBox_Theme_Support.Checked = InformationCache.EnableThemeSupport();
+            CheckBox_LZMA_Downloader.Checked = InformationCache.EnableLZMADownloader();
+            CheckBox_JSON_Update_Cache.Checked = InformationCache.DisableFrequencyJSONUpdate();
+            CheckBox_Proxy_Domain.Checked = InformationCache.EnableProxyDomain();
             CheckBox_Host_to_IP.Checked = !Save_Settings.Legacy_Host_To_IP();
 
             int Proxy_Port_Convert = 0;

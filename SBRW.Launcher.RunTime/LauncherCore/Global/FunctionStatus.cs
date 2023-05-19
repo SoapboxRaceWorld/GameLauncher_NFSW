@@ -32,34 +32,34 @@ namespace SBRW.Launcher.RunTime.LauncherCore.Global
         public static bool SelectedServerEnforceProxy { get; set; }
         /* Holds a collection of Server Status of Servers */
         public static Dictionary<string, int> ServerStatusBook { get; set; } = new Dictionary<string, int>();
-        public static bool DisableProxy { get { return Save_Settings.Live_Data.Launcher_Proxy == "1"; } }
-        public static bool DisableDiscordRPC { get { return Save_Settings.Live_Data.Launcher_Discord_Presence == "1"; } }
-        public static bool DisableFrequencyJSONUpdate { get { return Save_Settings.Live_Data.Launcher_JSON_Frequency_Update_Cache == "1"; } }
-        public static bool EnableAltWebCalls { get { return Save_Settings.Live_Data.Launcher_WebClient_Method == "WebClientWithTimeout"; } }
-        public static bool EnableInsiderPreview { get { return Save_Settings.Live_Data.Launcher_Insider == "1" || Save_Settings.Live_Data.Launcher_Insider == "2"; } }
-        public static bool EnableThemeSupport { get { return Save_Settings.Live_Data.Launcher_Theme_Support == "1"; } }
-        public static bool EnableLZMADownloader { get { return Save_Settings.Live_Data.Launcher_LZMA_Downloader == "1"; } }
-        public static bool EnableProxyDomain { get { return Save_Settings.Live_Data.Launcher_Proxy_Domain == "1"; } }
+        public static bool DisableProxy() => Save_Settings.Live_Data.Launcher_Proxy == "1";
+        public static bool DisableDiscordRPC() => Save_Settings.Live_Data.Launcher_Discord_Presence == "1";
+        public static bool DisableFrequencyJSONUpdate() => Save_Settings.Live_Data.Launcher_JSON_Frequency_Update_Cache == "1";
+        public static bool EnableAltWebCalls() => Save_Settings.Live_Data.Launcher_WebClient_Method == "WebClientWithTimeout";
+        public static bool EnableInsiderPreview() => (Save_Settings.Live_Data.Launcher_Insider == "1" || Save_Settings.Live_Data.Launcher_Insider == "2");
+        public static bool EnableThemeSupport() => Save_Settings.Live_Data.Launcher_Theme_Support == "1";
+        public static bool EnableLZMADownloader() => Save_Settings.Live_Data.Launcher_LZMA_Downloader == "1";
+        public static bool EnableProxyDomain() => Save_Settings.Live_Data.Launcher_Proxy_Domain == "1";
         /// <summary>
         /// Default Path Location for Game Files Archive File
         /// </summary>
         /// <remarks>Example: C:\Soapbox Race World\Game Files\.Launcher\Downloads\GameFiles.sbrwpack</remarks>
-        public static string Default_Game_Archive_Path { get { return Path.Combine(Save_Settings.Live_Data.Game_Path, ".Launcher", "Downloads", "GameFiles.sbrwpack"); } }
+        public static string Default_Game_Archive_Path() => Path.Combine(Save_Settings.Live_Data.Game_Path, ".Launcher", "Downloads", "GameFiles.sbrwpack");
         /// <summary>
         /// Secondary Path Location for Game Files Archive File
         /// </summary>
         /// <remarks>Example: C:\Soapbox Race World\Launcher\Launcher_Data\Archive\Game Files\GameFiles.sbrwpack</remarks>
-        public static string Secondary_Game_Archive_Path { get { return Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "GameFiles.sbrwpack"); } }
+        public static string Secondary_Game_Archive_Path() => Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "GameFiles.sbrwpack");
         /// <summary>
         /// Secondary Path Location for Game Files Archive File
         /// </summary>
         /// <remarks>Example: C:\Soapbox Race World\Launcher\Launcher_Data\Archive\Game Files\GameFiles.sbrwpack</remarks>
-        public static string Secondary_Game_Archive_Path_Old { get { return Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "Game Files", "GameFiles.sbrwpack"); } }
+        public static string Secondary_Game_Archive_Path_Old() => Path.Combine(Locations.LauncherFolder, "Launcher_Data", "Archive", "Game Files", "GameFiles.sbrwpack");
         /// <summary>
         /// Legacy File path that existed for launchers 2.1.4.X - 2.1.5.X
         /// </summary>
         /// <remarks>Example: C:\Soapbox Race World\Launcher\GameFiles.sbrwpack</remarks>
-        public static string Legacy_Game_Archive_Path { get { return Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack"); } }
+        public static string Legacy_Game_Archive_Path() => Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack");
     }
 
     /* This is Used to call Certain Functions (Such as Completion Status or Function Callbacks) */

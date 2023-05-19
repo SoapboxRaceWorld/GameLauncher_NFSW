@@ -9,7 +9,7 @@
         /// <summary>
         /// 
         /// </summary>
-        public const string File = "https://files.worldunited.gg";
+        public const string File = "https://cdn.soapboxrace.world/helper-files";
         /// <summary>
         /// 
         /// </summary>

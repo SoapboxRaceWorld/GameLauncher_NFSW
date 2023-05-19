@@ -145,7 +145,7 @@ namespace SBRW.Launcher.Net
             }
         }
 
-        static void Start()
+        static void Start(string[] args)
         {
             try
             {
@@ -167,7 +167,7 @@ namespace SBRW.Launcher.Net
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
 #region Core application Settings set By the Developer
             /* Application and Thread Language */
@@ -221,7 +221,7 @@ namespace SBRW.Launcher.Net
             #region Application Library File Checks and Process
             if (Debugger.IsAttached && !NFSW.IsRunning())
             {
-                Start();
+                Start(args);
             }
             else
             {
@@ -358,11 +358,11 @@ namespace SBRW.Launcher.Net
                                         "SBRW.Nancy.dll - 2.0.13",
                                         "SBRW.Nancy.Hosting.Self.dll - 2.0.11",
                                         "SBRW.Launcher.Core.dll - 0.3.0",
-                                        "SBRW.Launcher.Core.Extra.dll - 0.3.5",
+                                        "SBRW.Launcher.Core.Extra.dll - 0.3.6",
                                         "SBRW.Launcher.Core.Discord.dll - 0.3.0",
                                         "SBRW.Launcher.Core.Proxy.dll - 0.3.0",
-                                        "SBRW.Launcher.Core.Theme.dll - 0.1.5",
-                                        "SBRW.Launcher.Core.Downloader.dll - 0.3.6",
+                                        "SBRW.Launcher.Core.Theme.dll - 0.2.0",
+                                        "SBRW.Launcher.Core.Downloader.dll - 0.3.7",
                                         "SBRW.Launcher.Core.Downloader.LZMA.dll - 0.3.1"
                                 };
 
@@ -430,7 +430,7 @@ namespace SBRW.Launcher.Net
                                 }
                                 else
                                 {
-                                    Start();
+                                    Start(args);
                                 }
                             }
                             else
