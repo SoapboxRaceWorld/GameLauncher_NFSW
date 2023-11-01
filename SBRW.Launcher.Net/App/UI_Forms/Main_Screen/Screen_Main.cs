@@ -982,6 +982,16 @@ namespace SBRW.Launcher.App.UI_Forms.Main_Screen
             {
                 Presence_Launcher.Start(false, Presence_Launcher.ApplicationID());
 
+                /* Reset Sever Mods File Download Count (Visual Only) */
+                CurrentModFileCount = 0;
+                TotalModFileCount = 0;
+
+                if (ModFilesDownloadUrls != default)
+                {
+                    /* If Server Mod List is not Empty, Empty it just in case */
+                    ModFilesDownloadUrls.Clear();
+                }
+
                 try
                 {
                     if (UI_MODE != 12)
