@@ -27,8 +27,8 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
     /// </summary>
     public enum RedistributablePackageVersion
     {
-        VC2015to2019x86,
-        VC2015to2019x64,
+        VC2015to2022x86,
+        VC2015to2022x64,
     };
 
     /// <summary>
@@ -47,11 +47,11 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
         {
             switch (Redistributable_Version)
             {
-                case RedistributablePackageVersion.VC2015to2019x86:
+                case RedistributablePackageVersion.VC2015to2022x86:
                     InstalledVersion = Registry_Core.Read("Version",
                             Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", "14.0", "VC", "Runtimes", "x86"));
-                    goto case RedistributablePackageVersion.VC2015to2019x64;
-                case RedistributablePackageVersion.VC2015to2019x64:
+                    goto case RedistributablePackageVersion.VC2015to2022x64;
+                case RedistributablePackageVersion.VC2015to2022x64:
                     if (string.IsNullOrWhiteSpace(InstalledVersion))
                     {
                         InstalledVersion = Registry_Core.Read("Version",
@@ -67,7 +67,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                 InstalledVersion = InstalledVersion.Trim('v');
                             }
 
-                            if (InstalledVersion.CompareTo("14.20") >= 0)
+                            if (InstalledVersion.CompareTo("14.40") >= 0)
                             {
                                 return true;
                             }
@@ -111,9 +111,9 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
         {
 #if !(RELEASE_UNIX || DEBUG_UNIX)
             LogToFileAddons.Parent_Log_Screen(2, "REDISTRIBUTABLE", "Is Installed or Not");
-            Presence_Launcher.Status(0, "Checking Redistributable Package Visual Code 2015 to 2019");
+            Presence_Launcher.Status(0, "Checking Redistributable Package Visual Code 2015 to 2022");
 
-            if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
+            if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2022x86))
             {
                 if (MessageBox.Show(Translations.Database("Redistributable_VC_32") +
                     "\n\n" + Translations.Database("Redistributable_VC_P2") +
@@ -171,7 +171,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                 Client?.Dispose();
 
 #if !(RELEASE_UNIX || DEBUG_UNIX)
-                                GC.Collect(); 
+                                GC.Collect();
 #endif
                             }
                         }
@@ -201,7 +201,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                 Process proc = Process.Start(new ProcessStartInfo
                                 {
                                     Verb = "runas",
-                                    Arguments = "/quiet",
+                                    Arguments = "/norestart",
                                     FileName = "VC_redist.x86.exe"
                                 });
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
@@ -284,7 +284,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
 
             if (Environment.Is64BitOperatingSystem)
             {
-                if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64))
+                if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2022x64))
                 {
                     if (MessageBox.Show(Translations.Database("Redistributable_VC_64") +
                         "\n\n" + Translations.Database("Redistributable_VC_P2") +
@@ -371,7 +371,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                     var proc = Process.Start(new ProcessStartInfo
                                     {
                                         Verb = "runas",
-                                        Arguments = "/quiet",
+                                        Arguments = "/norestart",
                                         FileName = "VC_redist.x64.exe"
                                     });
 
@@ -424,7 +424,7 @@ namespace SBRW.Launcher.RunTime.SystemPlatform.Windows
                                 finally
                                 {
 #if !(RELEASE_UNIX || DEBUG_UNIX)
-                                    GC.Collect(); 
+                                    GC.Collect();
 #endif
                                 }
                             });
